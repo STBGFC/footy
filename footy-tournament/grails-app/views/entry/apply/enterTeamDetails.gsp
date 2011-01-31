@@ -1,10 +1,7 @@
-
-
-<%@ page import="tournament.Entry" %>
+<%@ page import="org.davisononline.footy.tournament.Entry" %>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <meta name="layout" content="main" />
         <g:set var="entityName" value="${message(code: 'entry.label', default: 'Entry')}" />
         <title><g:message code="default.create.label" args="[entityName]" /></title>
     </head>

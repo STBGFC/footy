@@ -1,5 +1,5 @@
 
-<%@ page import="tournament.Entry" %>
+<%@ page import="org.davisononline.footy.tournament.Entry" %>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
