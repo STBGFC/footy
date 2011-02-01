@@ -47,6 +47,17 @@ class Person implements Comparable, Serializable {
     String fullName() {
         "${givenName} ${familyName}"
     }
+    
+    /**
+     * @param name
+     */
+    transient void setName(name) {
+        if (!name || name.size() == 0) return
+        def parts = name.split()
+        familyName = parts[-1]
+        if (parts.length > 1)
+            givenName = parts[0..parts.length - 2].join(' ')
+    }
 
     /**
      * @see java.lang.Object#toString()

@@ -53,6 +53,26 @@ class PersonTests extends GrailsUnitTestCase {
         assertEquals "Davison, Darren", getGood().sortedName()
     }
     
+    void testSetName() {
+        def p = new Person()
+        
+        // no error..
+        p.setName null
+        p.setName ""
+        
+        p.setName "foo"
+        assertNull p.givenName
+        assertEquals "foo", p.familyName
+        
+        p.setName "foo bar"
+        assertEquals "foo", p.givenName
+        assertEquals "bar", p.familyName
+        
+        p.setName "foo bar baz"
+        assertEquals "foo bar", p.givenName
+        assertEquals "baz", p.familyName
+    }
+    
     public static getGood() {
         new Person(
             familyName: "Davison", 

@@ -24,6 +24,30 @@ class AddressTests extends GrailsUnitTestCase {
         // blank postcode
         a = getGood()
         a.postCode = ""
+        assertTrue a.validate()
+    }
+    
+    void testParseGood() {
+        mockForConstraintsTests(Address)
+        def a = Address.parse("123 st.\nTown\nGU1 1DB")
+        assertEquals "123 st.", a.address
+        
+        a = Address.parse("123 st.\nVillage\nTown\nGU1 1DB")
+        assertEquals "123 st., Village", a.address
+        
+        a = Address.parse("123 st.\nGU1 1DB")
+        assertNull a.town
+    }
+    
+    void testParseTooFewParts() {
+        def a = Address.parse("xxxxxxx")
+        assertNull a
+    }
+    
+    void testParseBadPcode() {
+        mockForConstraintsTests(Address)
+        def a = Address.parse("xxxx\nXXXXXX")
+        assertNotNull a
         assertFalse a.validate()
     }
     
