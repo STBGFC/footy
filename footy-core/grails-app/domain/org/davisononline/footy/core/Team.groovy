@@ -5,6 +5,8 @@ package org.davisononline.footy.core
  */
 class Team implements Serializable {
 
+    League league
+    String division
     String name
     Person manager
     SortedSet coaches
@@ -13,6 +15,7 @@ class Team implements Serializable {
     boolean girlsTeam = false
 
     static constraints = {
+        division(nullable: true)
         name(blank: false, size: 2..30, unique: 'ageBand')
         players(nullable: true)
 		coaches(nullable: true)

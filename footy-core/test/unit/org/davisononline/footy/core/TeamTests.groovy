@@ -41,6 +41,7 @@ class TeamTests extends GrailsUnitTestCase {
         // unique outside ageBand
         t.name = "Reds"
         t.ageBand = 9
+        t.league = new League(name:"EBYFL")
         assertTrue t.validate()
 		
 		// too young

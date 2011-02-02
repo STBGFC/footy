@@ -14,4 +14,8 @@ class League {
 		name(size: 2..50)
 		contact(nullable: true)
     }
+    
+    String toString() {
+        name
+    }
 }
