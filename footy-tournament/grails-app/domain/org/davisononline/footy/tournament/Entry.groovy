@@ -3,7 +3,7 @@ package org.davisononline.footy.tournament
 /**
  * @author darren
  */
-class Entry {
+class Entry implements Serializable {
 
     def payment
     def contact

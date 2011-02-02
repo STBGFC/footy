@@ -7,11 +7,12 @@ package org.davisononline.footy.tournament
  * 
  * @author darren
  */
-class Tournament {
+class Tournament implements Serializable {
 
     String name
     Date startDate
     Date endDate
+    boolean openForEntry = false
     
     static hasMany = [entries: Entry]
     

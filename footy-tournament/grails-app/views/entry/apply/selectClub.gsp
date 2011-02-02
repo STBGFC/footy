@@ -1,3 +1,4 @@
+<%@ page import="org.davisononline.footy.core.*" %>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -26,7 +27,7 @@
             <td  class="value">
             <g:select 
                 name="club.id" 
-                from="${tournament.Club.list(sort:'name')}" 
+                from="${Club.list(sort:'name')}" 
                 optionKey="id"
                 optionValue="name"
                 />

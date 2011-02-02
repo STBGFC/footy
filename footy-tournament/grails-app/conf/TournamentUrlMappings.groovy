@@ -1,13 +1,6 @@
-class UrlMappings {
+class TournamentUrlMappings {
 
 	static mappings = {
-		"/$controller/$action?/$id?"{
-			constraints {
-				// apply constraints here
-			}
-		}
-
-		"/"(view:"/index")
-		"500"(view:'/error')
+		//"/tournament/$id/apply" (controller: "entry", action: "apply")
 	}
 }
