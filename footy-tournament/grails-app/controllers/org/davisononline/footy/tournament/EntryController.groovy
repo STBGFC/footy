@@ -88,7 +88,8 @@ class EntryController {
         createClub {
             on("submit") { ClubCommand clubCommand ->
                 flow.clubCommand = clubCommand
-                if (!clubCommand.validate()) return error()
+                if (!clubCommand.validate()) 
+                    return error()
                 
                 // create domain
                 def a = Address.parse(clubCommand.clubSecretaryAddress)
@@ -119,9 +120,7 @@ class EntryController {
                 else no()
             }
             on("yes").to "selectTeam"
-            on("no") {
-                [teamInstance: new TeamCommand(club: flow.clubInstance)]
-            }.to "enterTeamDetails"
+            on("no").to "createTeam"
         }
         
         createTeam {
@@ -146,11 +145,36 @@ class EntryController {
         }
         
         enterTeamDetails {
-            on("submit") {
-                def t = new Team(params)
-                if (!t.validate()) return error()
-                t.save()
-                flow.entryInstance.addToTeams t
+            on("submit") { TeamCommand teamCommand ->
+                flow.teamCommand = teamCommand
+                if (!teamCommand.validate()) 
+                    return error()
+                    
+                // create domain
+                def mgr = new Person(
+                    email: teamCommand.email
+                )
+                mgr.fullName = teamCommand.contactName
+                if (!mgr.validate()) {
+                    log.error mgr.errors
+                    return error()
+                }
+                mgr.save(flush:true)
+                
+                def team = new Team(
+                    league: League.get(teamCommand.leagueId),
+                    name: teamCommand.teamName,
+                    division: teamCommand.division,
+                    manager: mgr
+                )
+                
+                if (!team.validate()) {
+                    log.error team.errors
+                    return error()
+                }
+                team.save()
+                flow.entryInstance.teams << team
+                
             }.to "confirmTeam"
         }
 
@@ -219,27 +243,21 @@ class TeamCommand implements Serializable {
     
     // manager
     String contactName
-    String phoneNumber
-    String mobileNumber
     String email
 
     // team
     int ageBand
     boolean girlsTeam = false
     String teamName
-    League league
+    int leagueId
     String division
 
     static constraints = {
         club(nullable:false)
         ageBand(inList:(7..18).toList())
-        teamName(blank:false, unique:['club','ageGroup'])
-        league(inList:["East Berks", "North East Hants", "Peter Houseman", "West Surrey", "Surrey Primary", "Other (please state below)"])
+        teamName(blank:false)
         division(blank:false)
-
         contactName(blank:false)
-        phoneNumber(blank:true)
-        mobileNumber(blank:false)
         email(email:true,blank:false)
     }
 
