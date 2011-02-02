@@ -27,20 +27,53 @@ class AddressTests extends GrailsUnitTestCase {
         assertTrue a.validate()
     }
     
-    void testParseGood() {
+    void testParseOneLine() {
+        mockForConstraintsTests(Address)
+        def a = Address.parse("x")
+        assertEquals "x", a.address
+        assertTrue a.validate()
+    }
+    
+    void testParseBlankLines() {
+        mockForConstraintsTests(Address)
+        def a = Address.parse("x\n\n\nGU1 1db\n\n\n")
+        assertEquals "x, GU1 1db", a.address
+        assertNull a.town
+        assertEquals "GU1 1DB", a.postCode
+        assertTrue a.validate()
+    }
+    
+    void testParse3parts() {
         mockForConstraintsTests(Address)
         def a = Address.parse("123 st.\nTown\nGU1 1DB")
         assertEquals "123 st.", a.address
-        
-        a = Address.parse("123 st.\nVillage\nTown\nGU1 1DB")
+        assertTrue a.validate()
+    }
+    
+    void testParse4parts() {
+        mockForConstraintsTests(Address)
+        def a = Address.parse("123 st.\nVillage\nTown\nGU1 1DB")
         assertEquals "123 st., Village", a.address
-        
-        a = Address.parse("123 st.\nGU1 1DB")
+        assertTrue a.validate()
+    }
+    
+    void testParse2parts() {
+        mockForConstraintsTests(Address)
+        def a = Address.parse("123 st.\nGU1 1DB")
         assertNull a.town
+        assertTrue a.validate()
+    }
+    
+    void testNullPostCodeForNPE() {
+        def a = new Address()
+        a.setPostCode(null)
+        assertNull a.postCode // ie no NPE thrown
     }
     
     void testParseTooFewParts() {
-        def a = Address.parse("xxxxxxx")
+        def a = Address.parse("")
+        assertNull a
+        a = Address.parse(null)
         assertNull a
     }
     
@@ -48,7 +81,8 @@ class AddressTests extends GrailsUnitTestCase {
         mockForConstraintsTests(Address)
         def a = Address.parse("xxxx\nXXXXXX")
         assertNotNull a
-        assertFalse a.validate()
+        assertEquals "xxxx\nXXXXXX", a.address
+        assertTrue a.validate()
     }
     
     void testUpperCasePostCode() {

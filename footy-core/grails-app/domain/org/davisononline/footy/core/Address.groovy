@@ -16,6 +16,7 @@ class Address implements Serializable {
         address(blank: false)
         town(nullable: true)
         postCode(
+            nullable: true,
             matches: '^([A-PR-UWYZ]([0-9]{1,2}|([A-HK-Y][0-9]|[A-HK-Y][0-9]([0-9]|[ABEHMNPRV-Y]))|[0-9][A-HJKS-UW])\\ [0-9][ABD-HJLNP-UW-Z]{2}|(GIR\\ 0AA)|(SAN\\ TA1)|(BFPO\\ (C\\/O\\ )?[0-9]{1,4})|((ASCN|BBND|[BFS]IQQ|PCRN|STHL|TDCU|TKCA)\\ 1ZZ))$'
         )
     }
@@ -25,20 +26,33 @@ class Address implements Serializable {
      * set of fields with PostCode as the last one.
      * 
      * @param input
-     * @return an Address with best effort parsing, so 
-     * is NOT guaranteed to pass a validate() method.
+     * @return a valid Address with best effort parsing
      */
     static Address parse(input) {
         try {
-            def parts = input.split('\n')
-            def a = new Address(
-                postCode: parts[parts.length - 1]
-            )
-            if (parts.length > 2)
-                a.town = parts[parts.length - 2]
+            if (!input || input=="") return null
+            
+            def parts = input.split('\n').toList()
+            parts.retainAll {
+                it.trim() != ''
+            }
+            
+            def a
+            if (parts.size() == 1) {
+                return new Address(address: input)
+            }
+            else {
+                a = new Address(
+                    postCode: parts[parts.size() - 1]
+                )
+            }
+            if (parts.size() > 2)
+                a.town = parts[parts.size() - 2]
         
-            a.address = parts[0..parts.length-3].join(', ')
-
+            a.address = parts[0..parts.size()-3].join(', ')
+            
+            if (!a.validate())
+                a = new Address(address: input)
             return a 
         }
         catch (Exception ex) {
@@ -51,7 +65,7 @@ class Address implements Serializable {
      * upper case all post codes
      */
     void setPostCode(String postCode) {
-        this.postCode = postCode.toUpperCase()
+        this.postCode = postCode?.toUpperCase()
     }
 
     /**

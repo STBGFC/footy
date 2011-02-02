@@ -19,7 +19,7 @@ class Person implements Comparable, Serializable {
     
     static constraints = {
         familyName(blank: false, size: 2..50)
-        givenName(blank: false, size: 2..50)
+        givenName(nullable: true, blank: false, size: 2..50)
         knownAsName(nullable: true, blank: true)
         email(nullable: true, email: true, blank: false, unique: true)
         address(nullable: true)
@@ -44,14 +44,14 @@ class Person implements Comparable, Serializable {
     /**
      * @return
      */
-    String fullName() {
+    transient String getFullName() {
         "${givenName} ${familyName}"
     }
     
     /**
      * @param name
      */
-    transient void setName(name) {
+    transient void setFullName(name) {
         if (!name || name.size() == 0) return
         def parts = name.split()
         familyName = parts[-1]
@@ -66,6 +66,6 @@ class Person implements Comparable, Serializable {
         if (knownAsName?.size() > 1)
             "${knownAsName} ${familyName}"
         else
-            fullName()
+            getFullName()
     }
 }

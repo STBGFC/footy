@@ -54,23 +54,35 @@ class PersonTests extends GrailsUnitTestCase {
     }
     
     void testSetName() {
+        mockForConstraintsTests(Person)
         def p = new Person()
         
         // no error..
-        p.setName null
-        p.setName ""
+        p.setFullName null
+        p.setFullName ""
         
-        p.setName "foo"
+        p.setFullName "foo"
         assertNull p.givenName
         assertEquals "foo", p.familyName
+        assertTrue p.validate()
         
-        p.setName "foo bar"
+        p.setFullName "foo bar"
         assertEquals "foo", p.givenName
         assertEquals "bar", p.familyName
+        assertTrue p.validate()
         
-        p.setName "foo bar baz"
+        p.setFullName "foo bar baz"
         assertEquals "foo bar", p.givenName
         assertEquals "baz", p.familyName
+        assertTrue p.validate()
+        
+        // property access
+        p.fullName = "foo bar"
+        assertEquals "foo bar", p.fullName
+        assertEquals "foo", p.givenName
+        assertEquals "bar", p.familyName
+        assertTrue p.validate()
+        
     }
     
     public static getGood() {
