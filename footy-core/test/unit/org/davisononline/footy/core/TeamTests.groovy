@@ -15,7 +15,7 @@ class TeamTests extends GrailsUnitTestCase {
 		def existing = new Team(name:"Reds", ageBand:8, manager:new Person())
 		mockForConstraintsTests(Team, [existing])
 		
-		def t = new Team(name:'')
+		def t = new Team(name:'', club: new Club())
 		assertFalse t.validate()
 		assertEquals "blank", t.errors["name"]
 		assertEquals "nullable", t.errors["manager"]
@@ -61,7 +61,7 @@ class TeamTests extends GrailsUnitTestCase {
 	}
 
     void testToString() {
-		def reds = new Team(name:'Reds', ageBand: 8)
+		def reds = new Team(name:'Reds', ageBand: 8, club: new Club(name:'STBGFC'))
 		assertEquals("U8 Reds", reds.toString())
 		def ravens = new Team(name:'Ravens', ageBand: 13, girlsTeam: true)
 		assertEquals("U13 Ravens (Girls)", ravens.toString())

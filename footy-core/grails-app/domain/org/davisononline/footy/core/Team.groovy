@@ -5,6 +5,8 @@ package org.davisononline.footy.core
  */
 class Team implements Serializable {
 
+    // a team can play in a different League to the one
+    // their Club is affiliated with
     League league
     String division
     String name
@@ -13,6 +15,8 @@ class Team implements Serializable {
     SortedSet players
     int ageBand = 8
     boolean girlsTeam = false
+    
+    static belongsTo = [club: Club]
 
     static constraints = {
         division(nullable: true)

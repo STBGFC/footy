@@ -18,8 +18,6 @@ class Club implements Serializable {
     List teams = []
     byte[] logo
     String colours 
-    
-    static hasMany = [teams: Team]
 
     static constraints = {
         name(size: 2..50, unique: true)
