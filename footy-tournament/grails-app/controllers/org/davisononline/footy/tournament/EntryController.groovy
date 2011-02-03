@@ -51,22 +51,19 @@ class EntryController {
     def applyFlow = {
         
         setup {
+            // TODO: fix selection of tournament
+            // TODO: handle tourney not open for applications.
             action {
-                if (!params.id) {
-                    flash.message = "No such tournament"
-                    oops()
-                }
-                def t = Tournament.get(params.id)
+                def t = Tournament.get(1)
                 if (!t || !t.openForEntry) {
                     flash.message = "Tournament not found, or not open for entry" // TODO: replace with message code
-                    oops() 
+                    return oops() 
                 }
                 flow.tournament = t
                 flow.entryInstance = new Entry(tournament: t)
             }
             on("oops") {
-                println 'oops'
-                render flash.message
+                render (view:'/error')
             }
             on("success").to("selectClub")
         }
@@ -105,10 +102,12 @@ class EntryController {
                 )
                 // unique constraints etc
                 if (!c.validate()) {
+                    // TODO: add the domain binding errors to the command object
                     log.error "Failed to validate club: ${c.errors}"
                     return error()
                 }
                 flow.clubInstance = c
+                flow.newClub = c
                 c.save()
             }.to "createTeam"  // no teams to select if club has just been created
         }
@@ -125,7 +124,7 @@ class EntryController {
         
         createTeam {
             action {
-                [teamInstance: new TeamCommand(club: flow.clubInstance)]
+                [teamInstance: new TeamCommand(clubId: flow.clubInstance.id)]
             }
             on("success").to "enterTeamDetails"
         }
@@ -156,12 +155,16 @@ class EntryController {
                 )
                 mgr.fullName = teamCommand.contactName
                 if (!mgr.validate()) {
+                    // TODO: add the domain binding errors to the command object
                     log.error mgr.errors
+                    teamCommand.errors = mgr.errors
                     return error()
                 }
+                // DO NOT DO THIS...
                 mgr.save(flush:true)
                 
                 def team = new Team(
+                    club: flow.clubInstance,
                     league: League.get(teamCommand.leagueId),
                     name: teamCommand.teamName,
                     division: teamCommand.division,
@@ -169,13 +172,15 @@ class EntryController {
                 )
                 
                 if (!team.validate()) {
+                    // TODO: add the domain binding errors to the command object
                     log.error team.errors
+                    teamCommand.errors = team.errors
                     return error()
                 }
                 team.save()
                 flow.entryInstance.teams << team
                 
-            }.to "confirmTeam"
+            }.to "confirmEntry"
         }
 
         confirmEntry {
@@ -184,12 +189,12 @@ class EntryController {
                 // are not serializable.. we do the work in
                 // the PayPalFilters class instead.
                 flow.entryInstance.save(flush:true)
-                session.buyerId = entry.id
+                session.buyerId = flow.entryInstance.id
             }.to("enterPaymentDetails")
             
-            // if the club was added (not selected) the following
-            // should go back to "enterTeamDetails" instead
-            on("createMore").to("selectTeam")
+            // if (flow.newClub == null) the following
+            // should go back to "selectTeam" instead
+            on("createMore").to("createTeam")
         }
 
         enterPaymentDetails()
@@ -239,7 +244,7 @@ class ClubCommand implements Serializable {
  */
 class TeamCommand implements Serializable {
     
-    Club club
+    int clubId
     
     // manager
     String contactName
@@ -253,7 +258,6 @@ class TeamCommand implements Serializable {
     String division
 
     static constraints = {
-        club(nullable:false)
         ageBand(inList:(7..18).toList())
         teamName(blank:false)
         division(blank:false)

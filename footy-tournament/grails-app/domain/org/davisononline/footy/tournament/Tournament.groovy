@@ -13,6 +13,7 @@ class Tournament implements Serializable {
     Date startDate
     Date endDate
     boolean openForEntry = false
+    double costPerTeam = 10.00
     
     static hasMany = [entries: Entry]
     
