@@ -6,18 +6,11 @@
         <title><g:message code="default.create.label" args="[entityName]" /></title>
     </head>
     <body>
-        <div class="body">
-            <h1><g:message code="default.create.label" args="[entityName]" /></h1>
-            <g:if test="${flash.message}">
-            <div class="message">${flash.message}</div>
-            </g:if>
             <g:form action="apply" >
-                <div class="dialog">
                 <p>
                     Enter the details for your club below, including the affiliation county and
                     number if you have them.
                 </p>
-                ${clubCommand}
                     <table>
                         <tbody>
                         
@@ -83,11 +76,9 @@
                         
                         </tbody>
                     </table>
-                </div>
                 <div class="buttons">
                     <span class="button"><g:submitButton name="submit" class="save" value="${message(code: 'default.button.create.label', default: 'Create')}" /></span>
                 </div>
             </g:form>
-        </div>
     </body>
 </html>

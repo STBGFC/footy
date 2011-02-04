@@ -6,11 +6,7 @@
     </head>
 
     <body>
-        <div class="body">
-        <h1><g:message code="select.club.heading" default="Select Club" /></h1>
-
         <g:form action="apply">
-        <div class="dialog">
         <p>
             First, select the club that your team is a part of from the list
             below.  If your club is not shown, you will need to add it by
@@ -39,12 +35,10 @@
             </tr>
         </tbody>
         </table>
-        </div>
         <div class="buttons">
             <span class="button"><g:submitButton name="selected" class="save" value="Continue.."></g:submitButton></span>
         </div>
         </g:form>
-        </div>
     </body>
 </html>
 

@@ -77,6 +77,7 @@ class EntryController {
                 }
                 flow.clubInstance = c
             }.to "checkTeams"
+        
             on("createNew") {
                 flow.clubInstance = null
             }.to "createClub"
@@ -124,7 +125,7 @@ class EntryController {
         
         createTeam {
             action {
-                [teamInstance: new TeamCommand(clubId: flow.clubInstance.id)]
+                flow.teamInstance = new TeamCommand(clubId: flow.clubInstance.id)
             }
             on("success").to "enterTeamDetails"
         }
@@ -184,17 +185,19 @@ class EntryController {
         }
 
         confirmEntry {
+            on("back").to("enterTeamDetails")
+            
+            // if (flow.newClub == null) the following
+            // should go back to "selectTeam" instead
+            on("createMore").to("createTeam")
+            
             on("submit") {
                 // hack because paypal plugin domain objects
                 // are not serializable.. we do the work in
                 // the PayPalFilters class instead.
                 flow.entryInstance.save(flush:true)
-                session.buyerId = flow.entryInstance.id
+                session['org.davisononline.footy.tournament.buyerId'] = flow.entryInstance.id
             }.to("enterPaymentDetails")
-            
-            // if (flow.newClub == null) the following
-            // should go back to "selectTeam" instead
-            on("createMore").to("createTeam")
         }
 
         enterPaymentDetails()

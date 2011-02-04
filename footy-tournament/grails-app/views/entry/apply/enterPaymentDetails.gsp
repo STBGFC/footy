@@ -5,17 +5,19 @@
     </head>
 
     <body>
-        <div class="body">
-        <h1><g:message code="enter.payment.heading" default="Enter Payment" /></h1>
-
-        <div class="dialog">
         <p>
-            You have submitted <strong>${entries.size()}</strong> team${entries.size()==1 ? '':'s'} at a total 
-            of <strong>&pound;${entries.size() * 28.00}</strong>
+            You are entering the following team(s) into <strong>${entryInstance.tournament.name}</strong>
         </p>
         <ul>
-        <g:each in="${entries}"><li>${it.club.name} ${it.ageGroup} ${it.teamName}</li></g:each>
+            <g:each var="team" in="${entryInstance.teams}">
+            <li>${team.club.name} ${team}</li>
+            </g:each>
         </ul>
+        <p>
+            <g:set var="numTeams" value="${entryInstance.teams.size()}"/>
+            You have <strong>${numTeams}</strong> team${numTeams > 1 ? 's' : ''} (@ <g:formatNumber number="${entryInstance.tournament.costPerTeam}" type="currency" currencyCode="GBP" /> each)  
+            <strong>Total: <g:formatNumber number="${numTeams*entryInstance.tournament.costPerTeam}" type="currency" currencyCode="GBP" /></strong>
+        </p>
         <table>
         <tbody>
             <tr class="prop">
@@ -37,8 +39,6 @@
             You will receive email confirmation as soon as payment clears (which is
             normally immediate in the case of PayPal)
         </p>
-        </div>
-        </div>
     </body>
 </html>
 

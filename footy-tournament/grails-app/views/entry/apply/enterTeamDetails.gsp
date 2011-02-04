@@ -3,17 +3,10 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <g:set var="entityName" value="${message(code: 'entry.label', default: 'Entry')}" />
-        <title><g:message code="default.create.label" args="[entityName]" /></title>
+        <title><g:message code="enter.teamdetails.label" default="Enter Team Details" /></title>
     </head>
     <body>
-        <div class="body">
-            <h1><g:message code="default.create.label" args="[entityName]" /></h1>
-            <g:if test="${flash.message}">
-            <div class="message">${flash.message}</div>
-            </g:if>
             <g:form action="apply" >
-                <div class="dialog">
                 <p>
                     Enter your team name, league &amp; division, and contact details here.  Most of the 
                     fields are mandatory.  Please ensure you check details carefully before submitting
@@ -37,7 +30,7 @@
                                     <label for="ageBand"><g:message code="entry.ageBand.label" default="Age Group" /></label>
                                 </td>
                                 <td  class="value ${hasErrors(bean: teamCommand, field: 'ageBand', 'errors')}">
-                                    Under: <g:select name="ageBand" from="${(7..18).toList()}" value="${teamCommand?.ageBand}" valueMessagePrefix="entry.ageBand"  />
+                                    Under: <g:select class="short" name="ageBand" from="${(7..18).toList()}" value="${teamCommand?.ageBand}" valueMessagePrefix="entry.ageBand"  />
                                     <g:checkBox name="girlsTeam" value="${teamCommand?.girlsTeam}" /> (Girls)
                                 </td>
                             </tr>
@@ -94,11 +87,9 @@
                         
                         </tbody>
                     </table>
-                </div>
                 <div class="buttons">
                     <span class="button"><g:submitButton name="submit" class="save" value="${message(code: 'default.button.create.label', default: 'Create')}" /></span>
                 </div>
             </g:form>
-        </div>
     </body>
 </html>
