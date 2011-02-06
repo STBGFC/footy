@@ -6,6 +6,7 @@
         <title><g:message code="enter.teamdetails.label" default="Enter Team Details" /></title>
     </head>
     <body>
+        <div class="dialog">
             <g:form action="apply" >
                 <p>
                     Enter your team name, league &amp; division, and contact details here.  Most of the 
@@ -91,5 +92,6 @@
                     <span class="button"><g:submitButton name="submit" class="save" value="${message(code: 'default.button.create.label', default: 'Create')}" /></span>
                 </div>
             </g:form>
+        </div>
     </body>
 </html>

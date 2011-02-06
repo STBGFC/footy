@@ -19,44 +19,23 @@ class PayPalFilters {
                     currency: Currency.getInstance("GBP")
                 )
 
-                def entries = Entry.findAllByBuyerId(session['org.davisononline.footy.tournament.buyerId'])
-                entries.each { e->
+                def entry = Entry.get(session['org.davisononline.footy.tournament.buyerId'])
+                entry.teams.each { t->
                     payment.addToPaymentItems(
                         new PaymentItem(
-                            itemName: "${e.club.name} ${e.ageGroup} ${e.teamName}", 
-                            itemNumber: "STBGFC Tournament",
-                            amount: 28.00
+                            itemName: "${t.club.name} U${t.ageBand} ${t.name}", 
+                            itemNumber: "${entry.tournament.name} Tournament",
+                            amount: entry.tournament.costPerTeam
                         )
                     )
                 }
                 payment.save(flush:true)
                 params.transactionId = payment.transactionId
 
-                entries.each { e-> 
-                    e.payment = payment
-                    e.save() 
-                }
+                entry.payment = payment
+                entry.save() 
 
                 return true
-            }
-        }
-
-        buyFilter(controller:"paypal", action:"buy") {
-            before = {
-                // ensure we have at least one
-                def e = Entry.findBySessionKey(params.buyerId)
-                if (!e) 
-                    throw new IllegalStateException("Cannot find entry for this payment!")
-            }
-
-            after = {
-                log.debug("### after buy:")
-                log.debug(params)
-                def entries = Entry.findAllBySessionKey(params.buyerId)
-                entries.each { e -> 
-                    e.payment = request.payment
-                    e.save()
-                }
             }
         }
 
@@ -64,17 +43,17 @@ class PayPalFilters {
             after = {
                 def payment = request.payment
                 if(payment && payment.status == org.grails.paypal.Payment.COMPLETE) {
-                    def entries = Entry.findAllByPayment(request.payment)
+                    def entry = Entry.findByPayment(request.payment)
                     def toSend = []
-                    entries.each { e ->
-                        log.debug("Processed $e for payment")
+                    log.debug("Processed $e for payment")
 
-                        if (!e.emailSent) {
-                            // confirm email.. needs factoring out of the filter
-                            def email = [
-                                to:      ['darren@davisononline.org'], // s/be [e.email] but only send to me for now!, 
-                                subject: "Entry Confirmation", 
-                                text:    """(Automatic email, please do not reply to this address)
+                    if (!entry.emailConfirmationSent) {
+                        // TODO: confirm email.. needs factoring out of the filter
+                        def email = [
+                            // TODO: change to [entry.contact.email]. Only sending to me for now!,
+                            to:      ['darren@davisononline.org'],  
+                            subject: "Entry Confirmation", 
+                            text:    """(Automatic email, please do not reply to this address)
 
 Dear ${e.contactName},
 
@@ -85,11 +64,10 @@ competition and that payment has been received.
 We'll see you there!
 STBGFC Tournament Committee.
 """
-                            ]
-                            e.emailSent = true
-                            toSend << email
-                        }
-                        e.save()
+                        ]
+                        entry.emailConfirmationSent = true
+                        toSend << email
+                        entry.save()
                     }
                     emailService.sendEmails(toSend)
                     request.entries = entries
@@ -103,11 +81,12 @@ STBGFC Tournament Committee.
 
         transactionCancelledFilter(controller:'paypal', action:'cancel') {
             after = {
-                def e = Entry.get(params.buyerId)
+                def e = Entry.get(session['org.davisononline.footy.tournament.buyerId'])
                 if (e) {
-                    // may want to just mark a status on it instead
-                    log.debug("Deleting entry ${e}")
-                    //e.delete()
+                    log.debug("Transaction cancelled on entry ${e}")
+                    e.payment?.status = Payment.CANCELLED
+                    e.payment?.save(flush:true)
+                    e.save()
                 }
             }
         }

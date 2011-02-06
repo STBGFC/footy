@@ -57,14 +57,12 @@ class EntryController {
                 def t = Tournament.get(1)
                 if (!t || !t.openForEntry) {
                     flash.message = "Tournament not found, or not open for entry" // TODO: replace with message code
-                    return oops() 
+                    oops() 
                 }
                 flow.tournament = t
                 flow.entryInstance = new Entry(tournament: t)
             }
-            on("oops") {
-                render (view:'/error')
-            }
+            on("oops").to("error")
             on("success").to("selectClub")
         }
 
@@ -161,8 +159,6 @@ class EntryController {
                     teamCommand.errors = mgr.errors
                     return error()
                 }
-                // DO NOT DO THIS...
-                mgr.save(flush:true)
                 
                 def team = new Team(
                     club: flow.clubInstance,
@@ -173,11 +169,11 @@ class EntryController {
                 )
                 
                 if (!team.validate()) {
-                    // TODO: add the domain binding errors to the command object
                     log.error team.errors
                     teamCommand.errors = team.errors
                     return error()
                 }
+                mgr.save(flush:true)
                 team.save()
                 flow.entryInstance.teams << team
                 
@@ -201,6 +197,10 @@ class EntryController {
         }
 
         enterPaymentDetails()
+        
+        error() {
+            render (view:'/error')
+        }
         
     }
 

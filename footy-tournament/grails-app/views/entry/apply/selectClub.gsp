@@ -6,6 +6,7 @@
     </head>
 
     <body>
+        <div class="dialog">
         <g:form action="apply">
         <p>
             First, select the club that your team is a part of from the list
@@ -39,6 +40,7 @@
             <span class="button"><g:submitButton name="selected" class="save" value="Continue.."></g:submitButton></span>
         </div>
         </g:form>
+        </div>
     </body>
 </html>
 

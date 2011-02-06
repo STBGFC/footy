@@ -6,6 +6,7 @@
         <title><g:message code="default.create.label" args="[entityName]" /></title>
     </head>
     <body>
+        <div class="dialog">
             <g:form action="apply" >
                 <p>
                     Enter the details for your club below, including the affiliation county and
@@ -80,5 +81,6 @@
                     <span class="button"><g:submitButton name="submit" class="save" value="${message(code: 'default.button.create.label', default: 'Create')}" /></span>
                 </div>
             </g:form>
+        </div>
     </body>
 </html>
