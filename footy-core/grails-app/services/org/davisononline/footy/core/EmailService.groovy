@@ -9,6 +9,20 @@ import org.springframework.mail.SimpleMailMessage
 *
 * Work is planned in the Grails roadmap to implement first-class email
 * support, so there's no point in making this code any more sophisticated
+*
+* <your_app>/grails-app/conf/spring/resources.groovy should contain 
+* something like:
+*
+*  beans = {
+*      mailSender(org.springframework.mail.javamail.JavaMailSenderImpl) {
+*          host = 'mail.davisononline.org'
+*      }
+*
+*      mailMessage(org.springframework.mail.SimpleMailMessage) { 
+*          from = 'SomeClub Tournament <tournament@club.co.uk>' 
+*      }
+*  }
+*
 */
 class EmailService {
     boolean transactional = false
