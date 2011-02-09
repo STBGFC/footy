@@ -12,15 +12,17 @@ class TeamTests extends GrailsUnitTestCase {
     }
 	
 	void testConstraints() {
-		def existing = new Team(name:"Reds", ageBand:8, manager:new Person())
+        def c = new Club(name:'FooClub')
+		def existing = new Team(club: c, name:"Reds", ageBand:8, manager:new Person())
 		mockForConstraintsTests(Team, [existing])
 		
-		def t = new Team(name:'', club: new Club())
+		def t = new Team(name:'', club: c)
 		assertFalse t.validate()
 		assertEquals "blank", t.errors["name"]
 		assertEquals "nullable", t.errors["manager"]
 
 		t.manager = new Person()
+        t.league = new League(name:"EBYFL")
 
 		// too long
 		t.name = "ppppppppppppppppppppppppppppppppppp"
@@ -32,7 +34,7 @@ class TeamTests extends GrailsUnitTestCase {
 		assertFalse t.validate()
 		assertEquals "size", t.errors["name"]
 
-        // not unique
+        // not unique, age band
         t.name = "Reds"
         t.ageBand = 8
         assertFalse t.validate()
@@ -41,8 +43,13 @@ class TeamTests extends GrailsUnitTestCase {
         // unique outside ageBand
         t.name = "Reds"
         t.ageBand = 9
-        t.league = new League(name:"EBYFL")
         assertTrue t.validate()
+        
+        // unique only within club
+        t.club = new Club(name:'BarClub')
+        t.name = "Reds"
+        t.ageBand = 8
+        assertTrue t.validate()        
 		
 		// too young
 		t.ageBand = 5

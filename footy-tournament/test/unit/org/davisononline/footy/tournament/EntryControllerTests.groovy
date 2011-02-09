@@ -13,16 +13,63 @@ class EntryControllerTests extends ControllerUnitTestCase {
     protected void tearDown() {
         super.tearDown()
     }
+    
+    // TODO: implement flow tests
+    void testEntryFlow() {
+        assert true
+    }
+    
+    void testClubCommandConstraints() {
+        mockForConstraintsTests(ClubCommand)
+        def cc = new ClubCommand(
+            name: "Foo",
+            colours: "Red",
+            clubSecretaryName: "Fred Bassett",
+            clubSecretaryEmail: "fred@bassett.com",
+            clubSecretaryAddress: "124 Some Rd",
+            countyAffiliatedTo: "Berkshire",
+            countyAffiliationNumber: "124234"
+        )
+        assertTrue cc.validate()
+        
+        // too short/long
+        cc.name = "K"
+        assertFalse cc.validate()
+        cc.name = "ppppppppppssssssssssllllllllllppppppppppllllllllllsssss"
+        assertFalse cc.validate()
+        cc.name = "foo"
+        assertTrue cc.validate()
+        
+        cc.colours = "R"
+        assertFalse cc.validate()
+        cc.colours = "wwwwwwwwwwppppppppppddddddddddlllll"
+        assertFalse cc.validate()
+        cc.colours = "Red"
+        assertTrue cc.validate()
+        
+        cc.clubSecretaryName = "sss"
+        assertFalse cc.validate()
+        cc.clubSecretaryName = "ppppppppppppppppppppddddddddddddddddddddooooooooooooooo"
+        assertFalse cc.validate()
+        cc.clubSecretaryName = "dddddddddd"
+        assertTrue cc.validate()        
+        
+        // email
+        cc.clubSecretaryEmail = ""
+        assertFalse cc.validate()
+        cc.clubSecretaryEmail = "fffbbb"
+        assertFalse cc.validate()
+        cc.clubSecretaryEmail = "foo@bar.co.uk"
+        assertTrue cc.validate()
+    }
 
     void testTeamCommandConstraints() {
         mockForConstraintsTests(TeamCommand)
         def tc = new TeamCommand(
             club: new Club(secretary: new Person(), name: "STBGFC"),
             ageBand: 8,
-            teamName: "Reds",
+            name: "Reds",
             division: "C",
-            contactName: "Joe Bloggs",
-            email: "joe@bloggs.com",
             leagueId: 1
         )
         assertTrue tc.validate()
@@ -36,9 +83,9 @@ class EntryControllerTests extends ControllerUnitTestCase {
         tc.ageBand = 8
         assertTrue tc.validate()
         
-        tc.teamName = ''
+        tc.name = ''
         assertFalse tc.validate()
-        tc.teamName = 'Reds'
+        tc.name = 'Reds'
         assertTrue tc.validate()
         
         tc.division = ''
@@ -46,15 +93,15 @@ class EntryControllerTests extends ControllerUnitTestCase {
         tc.division = 'C'
         assertTrue tc.validate()
         
-        tc.contactName = ''
-        assertFalse tc.validate()
-        tc.contactName = 'Joe Bloggs'
-        assertTrue tc.validate()
+    }
+    
+    void testRegCommandConstraints() {
+        mockForConstraintsTests(RegisterCommand)
+        def rc = new RegisterCommand(teamIds:[1,2,3])
+        assertTrue rc.validate()
         
-        tc.email = 'blah'
-        assertFalse tc.validate()
-        tc.email = 'joe@bloggs.com'
-        assertTrue tc.validate()
-        
+        rc.teamIds = []
+        assertFalse rc.validate()
+        assertEquals "minSize", rc.errors["teamIds"]
     }
 }

@@ -33,7 +33,7 @@ grails.project.dependency.resolution = {
         // runtime 'mysql:mysql-connector-java:5.1.5'
     }
     plugins {
-        runtime 'paypal:paypal:0.6'
+        compile 'paypal:paypal:0.6'
         runtime 'org.grails.plugins:webflow:latest.integration'
         //runtime 'org.davisononline:footy-core:1.0'
     }

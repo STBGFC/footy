@@ -47,6 +47,16 @@
                         
                             <tr class="prop">
                                 <td  class="name">
+                                    <label for="clubSecretaryEmail"><g:message code="club.clubSecretaryEmail.label" default="Club Secretary Email" /></label>
+                                </td>
+                                <td  class="value ${hasErrors(bean: clubCommand, field: 'clubSecretaryEmail', 'errors')}">
+                                    <g:textField name="clubSecretaryEmail" value="${clubCommand?.clubSecretaryEmail}" />
+                                    <g:render template="/fieldError" model="['instance':clubCommand,'field':'clubSecretaryEmail']"/>
+                                </td>
+                            </tr>
+                        
+                            <tr class="prop">
+                                <td  class="name">
                                     <label for="clubSecretaryAddress"><g:message code="club.clubSecretaryAddress.label" default="Club Secretary Address" /></label>
                                 </td>
                                 <td  class="value ${hasErrors(bean: clubCommand, field: 'clubSecretaryAddress', 'errors')}">

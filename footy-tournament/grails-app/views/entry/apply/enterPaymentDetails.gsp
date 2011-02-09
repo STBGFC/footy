@@ -22,7 +22,7 @@
         </div>
         <g:form controller="paypal" action="uploadCart">
         <input type="image" class="paypal"
-            src="https://www.paypal.com/en_US/i/btn/btn_buynow_LG.gif"
+            src="https://www.paypalobjects.com/WEBSCR-640-20110124-1/en_US/i/btn/btn_xpressCheckout.gif"
             alt="PayPal - The safer, easier way to pay"/>
         <img alt="" border=0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1"/>
         </g:form>

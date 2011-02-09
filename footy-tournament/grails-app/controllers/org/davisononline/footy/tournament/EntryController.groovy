@@ -1,3 +1,15 @@
+/**
+ * @author darren
+ *
+ */
+/**
+ * @author darren
+ *
+ */
+/**
+ * @author darren
+ *
+ */
 package org.davisononline.footy.tournament
 
 import org.davisononline.footy.core.*
@@ -51,19 +63,34 @@ class EntryController {
     def applyFlow = {
         
         setup {
-            // TODO: fix selection of tournament
-            // TODO: handle tourney not open for applications.
+            // TODO: fix selection of tournament / not open for applications.
             action {
                 def t = Tournament.get(1)
                 if (!t || !t.openForEntry) {
                     flash.message = "Tournament not found, or not open for entry" // TODO: replace with message code
                     oops() 
                 }
-                flow.tournament = t
                 flow.entryInstance = new Entry(tournament: t)
             }
             on("oops").to("error")
-            on("success").to("selectClub")
+            on("success").to("enterContactDetails")
+        }
+        
+        enterContactDetails {
+            on("submit") {
+                // check first if person already known
+                def p = Person.findByEmail(params.email)
+                if (!p)
+                    p = new Person(params)
+                
+                flow.personInstance = p
+                if (!p.validate())
+                    return error()
+                
+                p.save(flush: true)
+                flow.entryInstance.contact = p
+                
+            }.to("selectClub")
         }
 
         selectClub {
@@ -87,13 +114,19 @@ class EntryController {
                 if (!clubCommand.validate()) 
                     return error()
                 
-                // create domain
-                def a = Address.parse(clubCommand.clubSecretaryAddress)
-                a.save(flush:true)
-                def secr = new Person()
-                secr.fullName = clubCommand.clubSecretaryName
-                secr.address = a
-                secr.save(flush:true)
+                // check first if person already known
+                def secr = Person.findByEmail(clubCommand.clubSecretaryEmail)
+                if (!secr) {
+                    log.debug "Person with email [${clubCommand.clubSecretaryEmail}] not known - creating"
+                    secr = new Person()
+                    // create domain
+                    def a = Address.parse(clubCommand.clubSecretaryAddress)
+                    a.save(flush:true)
+                    secr.fullName = clubCommand.clubSecretaryName
+                    secr.address = a
+                    secr.save(flush:true)
+                }
+                
                 def c = new Club(
                     name: clubCommand.name,
                     colours: clubCommand.colours,
@@ -101,20 +134,24 @@ class EntryController {
                 )
                 // unique constraints etc
                 if (!c.validate()) {
-                    // TODO: add the domain binding errors to the command object
+                    flow.clubCommand.errors = c.errors
                     log.error "Failed to validate club: ${c.errors}"
                     return error()
                 }
                 flow.clubInstance = c
                 flow.newClub = c
-                c.save()
+                c.save(flush: true)
             }.to "createTeam"  // no teams to select if club has just been created
         }
         
         checkTeams {
             action {
-                def teamList = Team.findAllByClub(flow.clubInstance)
-                if (teamList?.size() > 0) yes() 
+                def teamList = Team.findAllByClub(flow.clubInstance, [sort:"ageBand", order:"asc"])
+                if (teamList?.size() > 0) {
+                    flow.teamList = teamList
+                    flow.allEntries = flow.entryInstance.tournament.teamsEntered()
+                    yes()
+                } 
                 else no()
             }
             on("yes").to "selectTeam"
@@ -129,14 +166,14 @@ class EntryController {
         }
         
         selectTeam {
-            on("selected") {
-                def t = Team.get(params.team.id)
-                if (!t) {
+            on("selected") { RegisterCommand regCmd ->
+                def teams = Team.getAll(regCmd.teamIds?.toList())
+                if (!teams || teams.size() == 0) {
                     flash.message = "No such team found!?"
                     return error()
                 }
-                flow.teamInstance = t
-            }.to "confirmTeam"
+                teams.each { team -> flow.entryInstance.addToTeams(team) }
+            }.to "confirmEntry"
             on("createNew") {
                 flow.teamInstance = null
             }.to "enterTeamDetails"            
@@ -147,25 +184,14 @@ class EntryController {
                 flow.teamCommand = teamCommand
                 if (!teamCommand.validate()) 
                     return error()
-                    
-                // create domain
-                def mgr = new Person(
-                    email: teamCommand.email
-                )
-                mgr.fullName = teamCommand.contactName
-                if (!mgr.validate()) {
-                    // TODO: add the domain binding errors to the command object
-                    log.error mgr.errors
-                    teamCommand.errors = mgr.errors
-                    return error()
-                }
                 
                 def team = new Team(
                     club: flow.clubInstance,
                     league: League.get(teamCommand.leagueId),
-                    name: teamCommand.teamName,
+                    name: teamCommand.name,
                     division: teamCommand.division,
-                    manager: mgr
+                    ageBand: teamCommand.ageBand,
+                    manager: flow.personInstance
                 )
                 
                 if (!team.validate()) {
@@ -173,9 +199,8 @@ class EntryController {
                     teamCommand.errors = team.errors
                     return error()
                 }
-                mgr.save(flush:true)
-                team.save()
-                flow.entryInstance.teams << team
+                team.save(flush: true)
+                flow.entryInstance.addToTeams(team)
                 
             }.to "confirmEntry"
         }
@@ -214,6 +239,7 @@ class ClubCommand implements Serializable {
     String name
     String colours
     String clubSecretaryName
+    String clubSecretaryEmail
     String clubSecretaryAddress
     String countyAffiliatedTo
     String countyAffiliationNumber
@@ -222,6 +248,7 @@ class ClubCommand implements Serializable {
         name(blank:false, size:2..50)
         colours(blank:false, size:2..30)
         clubSecretaryName(blank:false, size:5..50)
+        clubSecretaryEmail(blank: false, email: true)
         /*
          * ensure what is submitted can be parsed as some
          * sort of Address
@@ -248,24 +275,31 @@ class ClubCommand implements Serializable {
 class TeamCommand implements Serializable {
     
     int clubId
-    
-    // manager
-    String contactName
-    String email
 
     // team
     int ageBand
     boolean girlsTeam = false
-    String teamName
+    String name
     int leagueId
     String division
 
     static constraints = {
         ageBand(inList:(7..18).toList())
-        teamName(blank:false)
+        name(blank:false)
         division(blank:false)
-        contactName(blank:false)
-        email(email:true,blank:false)
     }
 
+}
+
+
+/**
+ * command object for the selectTeams form
+ * @author darren
+ */
+class RegisterCommand implements Serializable {
+    int[] teamIds
+    
+    static constraints = {
+        teamIds(minSize: 1)
+    }
 }

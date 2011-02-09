@@ -38,11 +38,11 @@
                         
                             <tr class="prop">
                                 <td  class="name">
-                                    <label for="teamName"><g:message code="entry.teamName.label" default="Team Name" /></label>
+                                    <label for="name"><g:message code="entry.teamName.label" default="Team Name" /></label>
                                 </td>
-                                <td  class="value ${hasErrors(bean: teamCommand, field: 'teamName', 'errors')}">
-                                    <g:textField name="teamName" value="${teamCommand?.teamName}" />
-                                    <g:render template="/fieldError" model="['instance':teamCommand,'field':'teamName']"/>
+                                <td  class="value ${hasErrors(bean: teamCommand, field: 'name', 'errors')}">
+                                    <g:textField name="name" value="${teamCommand?.name}" />
+                                    <g:render template="/fieldError" model="['instance':teamCommand,'field':'name']"/>
                                 </td>
                             </tr>
                         
@@ -65,27 +65,6 @@
                                     <g:render template="/fieldError" model="['instance':teamCommand,'field':'division']"/>
                                 </td>
                             </tr>
-                        
-                            <tr class="prop">
-                                <td  class="name">
-                                    <label for="contactName"><g:message code="entry.contactName.label" default="Contact Name" /></label>
-                                </td>
-                                <td  class="value ${hasErrors(bean: teamCommand, field: 'contactName', 'errors')}">
-                                    <g:textField name="contactName" value="${teamCommand?.contactName}" />
-                                    <g:render template="/fieldError" model="['instance':teamCommand,'field':'contactName']"/>
-                                </td>
-                            </tr>
-                        
-                            <tr class="prop">
-                                <td  class="name">
-                                    <label for="email"><g:message code="entry.email.label" default="Email" /></label>
-                                </td>
-                                <td  class="value ${hasErrors(bean: teamCommand, field: 'email', 'errors')}">
-                                    <g:textField name="email" value="${teamCommand?.email}" />
-                                    <g:render template="/fieldError" model="['instance':teamCommand,'field':'email']"/>
-                                </td>
-                            </tr>
-                        
                         </tbody>
                     </table>
                 <div class="buttons">

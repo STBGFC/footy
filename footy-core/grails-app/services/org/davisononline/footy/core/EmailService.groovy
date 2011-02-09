@@ -23,17 +23,17 @@ class EmailService {
     def sendEmails(mails) {
         // Build the mail messages
         def messages = []
-        for (mail in mails) {
-            // Create a thread safe "sandbox" of the message
-            SimpleMailMessage message = new SimpleMailMessage(mailMessage)
-            message.to = mail.to
-            message.text = mail.text
-            message.subject = mail.subject
-            messages << message
-        }
-        // Send them all together
         try {
-            log.debug "about to send ${messages.size()} messages to:n${messages.to.join('n')}"
+            for (mail in mails) {
+                // Create a thread safe "sandbox" of the message
+                SimpleMailMessage message = new SimpleMailMessage(mailMessage)
+                message.to = mail.to
+                message.text = mail.text
+                message.subject = mail.subject
+                messages << message
+            }
+            // Send them all together
+            log.debug "about to send ${messages.size()} messages to: ${messages.to.join('\n')}"
             mailSender.send(messages as SimpleMailMessage[])
 
         } catch (MailException ex) {

@@ -20,7 +20,7 @@ class Team implements Serializable {
 
     static constraints = {
         division(nullable: true)
-        name(blank: false, size: 2..30, unique: 'ageBand')
+        name(blank: false, size: 2..30, unique: ['ageBand','club'])
         players(nullable: true)
 		coaches(nullable: true)
         ageBand(min: 6, max:18)

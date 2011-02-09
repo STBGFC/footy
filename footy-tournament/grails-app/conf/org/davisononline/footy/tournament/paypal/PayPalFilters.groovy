@@ -1,14 +1,16 @@
-package org.davisononline.footy.tournament
+package org.davisononline.footy.tournament.paypal
 
+import org.davisononline.footy.tournament.*
 import org.davisononline.footy.core.*
 import org.grails.paypal.*
 
+ 
 /**
  * @author darren
  */
 class PayPalFilters {
 
-    EmailService emailService
+    def tournamentService
 
     def filters = {
 
@@ -33,7 +35,7 @@ class PayPalFilters {
                 params.transactionId = payment.transactionId
 
                 entry.payment = payment
-                entry.save() 
+                entry.save(flush:true) 
 
                 return true
             }
@@ -44,33 +46,15 @@ class PayPalFilters {
                 def payment = request.payment
                 if(payment && payment.status == org.grails.paypal.Payment.COMPLETE) {
                     def entry = Entry.findByPayment(request.payment)
-                    def toSend = []
-                    log.debug("Processed $e for payment")
+                    log.debug("Processed ${entry} for payment")
 
                     if (!entry.emailConfirmationSent) {
-                        // TODO: confirm email.. needs factoring out of the filter
-                        def email = [
-                            // TODO: change to [entry.contact.email]. Only sending to me for now!,
-                            to:      ['darren@davisononline.org'],  
-                            subject: "Entry Confirmation", 
-                            text:    """(Automatic email, please do not reply to this address)
-
-Dear ${e.contactName},
-
-Thank you for your entry to the STBGFC tournament.  This email confirms that
-the ${e.club.name} "${e.teamName}" are entered into the ${e.ageGroup}
-competition and that payment has been received.
-
-We'll see you there!
-STBGFC Tournament Committee.
-"""
-                        ]
+                        tournamentService.sendConfirmEmail(entry)
                         entry.emailConfirmationSent = true
-                        toSend << email
                         entry.save()
                     }
-                    emailService.sendEmails(toSend)
-                    request.entries = entries
+
+                    request.entry = entry
                 }
                 
                 log.debug("### after IPN:")

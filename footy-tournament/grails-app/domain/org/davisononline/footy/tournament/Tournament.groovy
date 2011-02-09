@@ -22,4 +22,12 @@ class Tournament implements Serializable {
             v >= t.startDate
         })
     }
+    
+    def teamsEntered() {
+        def results = []
+        entries.each { e ->
+            results << e.teams
+        }
+        results
+    }
 }
