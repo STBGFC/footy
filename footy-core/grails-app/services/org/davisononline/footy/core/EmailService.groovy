@@ -15,7 +15,7 @@ import org.springframework.mail.SimpleMailMessage
 *
 *  beans = {
 *      mailSender(org.springframework.mail.javamail.JavaMailSenderImpl) {
-*          host = 'mail.davisononline.org'
+*          host = 'mail.yourdomain.com'
 *      }
 *
 *      mailMessage(org.springframework.mail.SimpleMailMessage) { 
