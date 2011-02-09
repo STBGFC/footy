@@ -59,6 +59,7 @@ class EntryController {
 
     /**
      * main application flow
+     * TODO: replace text with message codes and defaults in messages.properties
      */
     def applyFlow = {
         
