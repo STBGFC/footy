@@ -1,15 +1,3 @@
-/**
- * @author darren
- *
- */
-/**
- * @author darren
- *
- */
-/**
- * @author darren
- *
- */
 package org.davisononline.footy.tournament
 
 import org.davisononline.footy.core.*
@@ -28,23 +16,7 @@ class EntryController {
     def index = {
         redirect(action:"apply")
     }
-
-    // admin only
-    def list = {
-        def entries = Entry.list(params)
-        [entryInstanceList: entries, entryInstanceTotal: entries.size()]
-    }
-
-    // admin only
-    def show = {
-        if (!params.id) {
-            flash.message = "No such Entry!"
-            redirect(action: "list")
-        }
-        else
-            [entryInstance:Entry.get(params.id)]
-    }
-
+    
     // admin only
     def delete = {
         if (!params.id)
@@ -54,7 +26,7 @@ class EntryController {
             flash.message = "No such Entry!"
         e.delete()
         flash.message = "Entry deleted"
-        redirect(action: "list")
+        redirect(controller: "tournament", action: "entryList")
     }
 
     /**
