@@ -47,6 +47,9 @@ class PersonTests extends GrailsUnitTestCase {
         assertEquals "Darren Fred Davison", p.toString()
         p.knownAsName = "Joe"
         assertEquals "Joe Davison", p.toString()
+        p.givenName = null
+        p.knownAsName = null
+        assertEquals "Davison", p.toString()
     }
     
     void testSortedName() {

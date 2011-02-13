@@ -26,7 +26,7 @@
                     <g:sortableColumn property="name" title="${message(code: 'tournament.name.label', default: 'Name')}" />
                     <g:sortableColumn property="startDate" title="${message(code: 'tournament.startDate.label', default: 'Start Date')}" />
                     <g:sortableColumn property="costPerTeam" title="${message(code: 'tournament.costPerTeam.label', default: 'Cost Per Team')}" />
-                    <th>&nbsp;</th>
+                    <th>actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -37,9 +37,12 @@
                     <td><g:formatNumber currencyCode="GBP" type="currency" number="${tournamentInstance.costPerTeam}"/></td>
                     <td>
                         <g:if test="${!tournamentInstance.entries}">
-                        <g:link action="edit" id="${tournamentInstance.id}"><g:message code="tournament.label.edit" default="edit details"/></g:link>
+                        <g:link action="edit" id="${tournamentInstance.id}"><img alt="edit details" title="edit details" src="${resource(dir:'images',file:'edit.png')}"/></g:link>
                         </g:if>
-                        <g:link action="show" id="${tournamentInstance.id}"><g:message code="tournament.label.edit" default="view entries"/></g:link>
+                        <g:else>
+                        <g:link action="show" id="${tournamentInstance.id}"><img alt="view teams" title="view teams" src="${resource(dir:'images',file:'view.png')}"/></g:link>
+                        <g:link action="entryList" id="${tournamentInstance.id}"><img alt="payment status" title="payment status" src="${resource(dir:'images',file:'payments.png')}"/></g:link>
+                        </g:else>
                     </td>
                 </tr>
             </g:each>

@@ -45,7 +45,7 @@ class Person implements Comparable, Serializable {
      * @return
      */
     transient String getFullName() {
-        "${givenName} ${familyName}"
+        "${givenName ?: ''} ${familyName}".trim()
     }
     
     /**

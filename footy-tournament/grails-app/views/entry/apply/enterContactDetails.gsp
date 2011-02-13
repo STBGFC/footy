@@ -3,14 +3,14 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title><g:message code="enter.contactdetails.label" default="Enter Contact Details" /></title>
+        <title><g:message code="enter.contactdetails.label" default="${entryInstance.tournament.name} Tournament" /></title>
     </head>
     <body>
         <div class="dialog">
             <g:form action="apply" >
+                <h2>Welcome to our tournament entry application.</h2>
                 <p>
-                    Welcome to our tournament entry application.  Please start by completing
-                    your own contact details below.
+                    Please start by completing your own contact details below.
                 </p>
                     <table>
                         <tbody>

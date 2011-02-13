@@ -11,14 +11,11 @@
             teams or proceed to payment.
         </p>
         <g:form action="apply">
-        <table><tbody>
+        <ul id="confirmEntryList">
         <g:each in="${entryInstance.teams}" var="team">
-            <tr class="prop">
-                <td class="name"><g:message code="entry.teamName.label" default="Team Name" /></td>
-                <td class="value"><strong>${team.club} ${team} (${team.league} Div. ${team.division})</strong></td>
-            </tr>   
+            <li>${team.club} ${team} (${team.league} Div. ${team.division})</li> 
         </g:each>       
-        </tbody></table>
+        </ul>
         <div class="buttons">
             <span class="button"><g:submitButton name="createMore" class="create" value="Add More Teams"></g:submitButton></span>
             <span class="button"><g:submitButton name="submit" class="save" value="Continue to Payment"></g:submitButton></span>

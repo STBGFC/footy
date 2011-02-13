@@ -23,7 +23,6 @@
                         <th>${message(code: 'org.davisononline.footy.tournament.entry.contactName.label', default: 'Contact')}</th>
                         <th>${message(code: 'org.davisononline.footy.tournament.entry.teams.label', default: 'Teams')}</th>
                         <g:sortableColumn property="payment" title="${message(code: 'org.davisononline.footy.tournament.entry.payment.label', default: 'Payment Status')}" />
-                        <th/>
                     </tr>
                 </thead>
                 <tbody>
@@ -38,11 +37,11 @@
                             </g:each>
                         </td>
                         <td>
-                            ${entry.payment?.status}
-                        </td>
-                        <td>
+                            <g:if test="${entry.payment}">
+                            <img title="${entry.payment?.status}" alt="${entry.payment?.status}" src="${resource(dir:'images',file:'payment-' + entry.payment?.status?.toLowerCase() + '.png')}"/>
+                            </g:if>
                             <g:if test="${entry.payment?.status != org.grails.paypal.Payment.COMPLETE}">
-                            <g:link action="delete" controller="entry" id="${entry.id}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');">delete</g:link>
+                            &nbsp;(<g:link action="delete" controller="entry" id="${entry.id}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');">delete</g:link>)
                             </g:if>
                         </td>
                     </tr>

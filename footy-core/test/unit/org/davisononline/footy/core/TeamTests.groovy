@@ -73,4 +73,40 @@ class TeamTests extends GrailsUnitTestCase {
 		def ravens = new Team(name:'Ravens', ageBand: 13, girlsTeam: true)
 		assertEquals("U13 Ravens (Girls)", ravens.toString())
     }
+    
+    /**
+     * equals based on name, club, girlsTeam and age band
+     */
+    void testEquals() {
+        def c = new Club(name:'STBGFC')
+        def reds = new Team(name:'Reds', ageBand: 8, club: c)
+        def reds2 = new Team(name:'Reds', ageBand: 8, club: c)
+        assertEquals reds, reds2
+        
+        reds.division = "B"
+        reds2.division = "A"
+        assertEquals reds, reds2
+        
+        reds.girlsTeam = false
+        reds2.girlsTeam = true
+        assert reds != reds2
+        
+        reds2.girlsTeam = false
+        assertEquals reds, reds2
+        
+        reds.name = "Foo"
+        assert reds != reds2
+        
+        reds2.name = "Foo"
+        assertEquals reds, reds2
+        
+        reds.ageBand = 9
+        assert reds != reds2
+        
+        reds2.ageBand = 9
+        assertEquals reds, reds2
+        
+        reds2.club = new Club(name: "Foo")
+        assert reds != reds2
+    }
 }

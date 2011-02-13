@@ -22,11 +22,16 @@ class EntryController {
         if (!params.id)
             flash.message = "No such Entry!"
         def e = Entry.get(params.id)
-        if (!e)
+        if (!e) {
             flash.message = "No such Entry!"
-        e.delete()
-        flash.message = "Entry deleted"
-        redirect(controller: "tournament", action: "entryList")
+            redirect(controller: "tournament", action: "list")            
+        }
+        else {
+            def tid = e.tournament.id
+            e.delete()
+            flash.message = "Entry deleted"
+            redirect(controller: "tournament", action: "entryList", id: tid)
+        }
     }
 
     /**
@@ -164,6 +169,7 @@ class EntryController {
                     name: teamCommand.name,
                     division: teamCommand.division,
                     ageBand: teamCommand.ageBand,
+                    girlsTeam: teamCommand.girlsTeam,
                     manager: flow.personInstance
                 )
                 

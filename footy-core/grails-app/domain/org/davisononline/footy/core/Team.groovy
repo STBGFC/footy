@@ -36,4 +36,19 @@ class Team implements Serializable {
     public String toString() {
         "U${ageBand} ${name}" + (girlsTeam ? " (Girls)" : "")
     }
+
+    /**
+     * mainly for use in collections and comparisons
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(otherTeam) {
+        return (otherTeam?.name == name && 
+            otherTeam.ageBand == ageBand &&
+            otherTeam.girlsTeam == girlsTeam &&
+            otherTeam.club == club)   
+    }
+    
+    
 }

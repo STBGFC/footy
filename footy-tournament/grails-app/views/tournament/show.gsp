@@ -17,11 +17,12 @@
             The following teams are entered in this competition so far (note that not all money may have been received,
             check <g:link controller="tournament" action="entryList" id="${tournamentInstance.id}">here</g:link> to see status of payments)
         </p>
-        <ul>
-        <g:each in="${tournamentInstance.teamsEntered()}" var="team">
-            <li>${team}</li>
+        <g:each in="${(7..18)}" var="age">
+            <g:render template="teamTables" model="['teams':teamList.grep{it.ageBand == age && !it.girlsTeam}, 'age': age]" />
         </g:each>
-        </ul>
+        <g:each in="${(12..18)}" var="age">
+            <g:render template="teamTables" model="['teams':teamList.grep{it.ageBand == age && it.girlsTeam}, 'age': age]" />
+        </g:each>
         </div>
     </body>
 </html>

@@ -16,12 +16,12 @@
         </p>
         <p>
             If you need to add a team that's not currently listed, please click
-            the "Add New Team.." button below.
+            the "Add New Team.." button below, however you will need to select
+            any teams below FIRST.
         </p>
-        
-        <ul>
+        <ul id="teamSelect">
         <g:each in="${teamList}" var="team">
-            <g:if test="${teamsEntered?.contains(team)}">
+            <g:if test="${allEntries?.flatten().contains(team)}">
             <li class="teamRegistered">
                 ${team}
             </li>

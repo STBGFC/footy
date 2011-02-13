@@ -28,6 +28,6 @@ class Tournament implements Serializable {
         entries.each { e ->
             results << e.teams
         }
-        results
+        results.flatten()
     }
 }
