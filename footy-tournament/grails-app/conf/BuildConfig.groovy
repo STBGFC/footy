@@ -35,6 +35,7 @@ grails.project.dependency.resolution = {
     plugins {
         compile 'paypal:paypal:0.6'
         runtime 'org.grails.plugins:webflow:latest.integration'
+        runtime 'org.grails.plugins:export:latest.integration'
         //runtime 'org.davisononline:footy-core:1.0'
     }
 }

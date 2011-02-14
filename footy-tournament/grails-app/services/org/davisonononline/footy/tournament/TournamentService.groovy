@@ -12,10 +12,10 @@ class TournamentService {
         def email = [
             // TODO: change to [entry.contact.email]. Only sending to me for now!,
             to:      ['darren@davisononline.org'],  
-            subject: "Entry Confirmation", 
+            subject: "Tournament Entry Confirmation", 
             text:    """(Automatic email, please do not reply to this address)
 
-Dear ${entry.contact},
+Hi ${entry.contact.knownAsName ?: entry.contact.firstName},
 
 Thank you for your entry to the STBGFC tournament.  This email confirms that
 the the following teams are entered into the ${entry.tournament.name} 

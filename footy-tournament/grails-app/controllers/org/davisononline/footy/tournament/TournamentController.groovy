@@ -1,9 +1,15 @@
 package org.davisononline.footy.tournament
 
+import org.codehaus.groovy.grails.commons.ConfigurationHolder
+
+
 /**
  * @author darren
  */
 class TournamentController {
+    
+    // from the export plugin
+    def exportService
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
@@ -67,7 +73,14 @@ class TournamentController {
         def teamList = t.teamsEntered().sort { a,b-> 
             a.ageBand == b.ageBand? 0 : a.ageBand < b.ageBand ? -1 : 1 
         }
-        render (view: 'show', model: [tournamentInstance: t, teamList: teamList])
+        
+        if(params?.format && params.format != "html"){ 
+            response.contentType = ConfigurationHolder.config.grails.mime.types[params.format] 
+            response.setHeader("Content-disposition", "attachment; filename=${URLEncoder.encode(t.name,'UTF-8')}.${params.extension}")            
+            exportService.export(params.format, response.outputStream, teamList, [:], [:]) 
+        }
+        else
+            render (view: 'show', model: [tournamentInstance: t, teamList: teamList])        
     }
 
     /**
