@@ -14,7 +14,7 @@
             <span class="menuButton"><g:link class="list" action="list"><g:message code="default.list.label" args="[entityName]" /></g:link></span>
         </div>
         
-        <g:if test="teamList.size() > 0">
+        <g:if test="${teamList.size() > 0}">
         <p>
             The following teams are entered in this competition so far (note that not all money may have been received,
             check <g:link controller="tournament" action="entryList" id="${tournamentInstance.id}">here</g:link> to see status of payments)
@@ -22,10 +22,13 @@
         <g:each in="${(7..18)}" var="age">
             <g:render template="teamTables" model="['teams':teamList.grep{it.ageBand == age && !it.girlsTeam}, 'age': age]" />
         </g:each>
-        <g:each in="${(12..18)}" var="age">
+        <g:each in="${(11..18)}" var="age">
             <g:render template="teamTables" model="['teams':teamList.grep{it.ageBand == age && it.girlsTeam}, 'age': age]" />
         </g:each>
-        <export:formats params="[id:tournamentInstance.id]" formats="['csv', 'excel', 'ods', 'pdf']" />
+        <p>
+            You can export the data above to Excel or PDF using the buttons below
+        </p>
+        <export:formats params="[id:tournamentInstance.id]" formats="['excel', 'pdf']" />
         </div>
         </g:if>
         

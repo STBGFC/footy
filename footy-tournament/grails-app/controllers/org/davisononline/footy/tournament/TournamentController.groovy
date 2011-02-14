@@ -74,10 +74,38 @@ class TournamentController {
             a.ageBand == b.ageBand? 0 : a.ageBand < b.ageBand ? -1 : 1 
         }
         
-        if(params?.format && params.format != "html"){ 
+        /*
+         * export of the current tournament values
+         */
+        if(params?.format && params.format != "html"){
+            List fields = ["ageBand", "name", "league", "division", "manager"] 
+            Map labels = ["ageBand": "Age Group", "name": "Team", "league": "League", "division": "Division", "manager": "Manager"]
+
+            // Formatter closure 
+            def teamName = { team, value -> 
+                return "${team.club} ${team.name}"
+            }
+            def ageBandLabel = { team, value ->
+                return "U${value}" + (team.girlsTeam ? " (Girls)" : "")
+            }
+
+            Map formatters = [name: teamName, ageBand: ageBandLabel] 
+            Map parameters = [title: t.name, "column.widths": [0.1, 0.4, 0.2, 0.1, 0.2]]
+        
             response.contentType = ConfigurationHolder.config.grails.mime.types[params.format] 
-            response.setHeader("Content-disposition", "attachment; filename=${URLEncoder.encode(t.name,'UTF-8')}.${params.extension}")            
-            exportService.export(params.format, response.outputStream, teamList, [:], [:]) 
+            response.setHeader(
+                "Content-disposition", 
+                "attachment; filename=${URLEncoder.encode(t.name,'UTF-8')}.${params.extension}"
+            )            
+            exportService.export(
+                params.format, 
+                response.outputStream, 
+                teamList, 
+                fields, 
+                labels, 
+                formatters, 
+                parameters
+            ) 
         }
         else
             render (view: 'show', model: [tournamentInstance: t, teamList: teamList])        
