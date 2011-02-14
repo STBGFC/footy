@@ -26,7 +26,14 @@ class Team implements Serializable {
         ageBand(min: 6, max:18)
     }
     
-    def beforeValidate() {
+    def beforeUpdate() {
+        checkAgeOfGirlsTeam()
+    }
+    def beforeInsert() {
+        checkAgeOfGirlsTeam()
+    }
+    
+    private checkAgeOfGirlsTeam() {
         if (ageBand < 11) girlsTeam = false
     }
 

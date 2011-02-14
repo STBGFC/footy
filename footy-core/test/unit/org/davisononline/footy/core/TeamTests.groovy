@@ -66,6 +66,27 @@ class TeamTests extends GrailsUnitTestCase {
 		assertTrue t.validate()
 		
 	}
+    
+    void testGirlsTeamAgeBand() {
+        mockDomain(Team)
+        def t = new Team(
+            league: new League(name:"EBYFL"),
+            club: new Club(name:'FooClub'), 
+            name:"Reds", 
+            ageBand:8, 
+            manager:new Person()
+            )
+        assertTrue t.validate()
+        t.girlsTeam = true
+        t.save()
+        assertFalse t.girlsTeam
+        
+        t.ageBand = 14
+        t.girlsTeam = true
+        t.save()
+        assertTrue t.girlsTeam
+        
+    }
 
     void testToString() {
 		def reds = new Team(name:'Reds', ageBand: 8, club: new Club(name:'STBGFC'))
