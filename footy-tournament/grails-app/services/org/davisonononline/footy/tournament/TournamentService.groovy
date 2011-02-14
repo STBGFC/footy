@@ -15,7 +15,7 @@ class TournamentService {
             subject: "Tournament Entry Confirmation", 
             text:    """(Automatic email, please do not reply to this address)
 
-Hi ${entry.contact.knownAsName ?: entry.contact.firstName},
+Hi ${entry.contact.knownAsName ?: entry.contact.givenName},
 
 Thank you for your entry to the STBGFC tournament.  This email confirms that
 the the following teams are entered into the ${entry.tournament.name} 
