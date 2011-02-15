@@ -8,3 +8,15 @@
 //
 //    ant.mkdir(dir:"${basedir}/grails-app/jobs")
 //
+
+/*
+ * this REALLY shouldn't be necessary.  If the grails plugin
+ * architecture was slightly better thought out, the host
+ * application would be able to utilise the paypal views from 
+ * within here.
+ */
+ant.mkdir(dir: "${basedir}/grails-app/views/paypal")
+ant.copy(
+    file:  "${pluginBasedir}/grails-app/views/paypal/*",
+    todir: "${basedir}/grails-app/conf"
+)
