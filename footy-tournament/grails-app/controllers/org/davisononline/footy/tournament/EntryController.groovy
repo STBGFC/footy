@@ -41,12 +41,15 @@ class EntryController {
     def applyFlow = {
         
         setup {
-            // TODO: fix selection of tournament / not open for applications.
             action {
-                def t = Tournament.get(1)
-                if (!t || !t.openForEntry) {
-                    flash.message = "Tournament not found, or not open for entry" // TODO: replace with message code
-                    oops() 
+                if (!params.id) {
+                    log.error "no tournament id supplied"
+                    return oops()
+                }
+                def t = Tournament.get(params.id)
+                if (! t?.openForEntry) {
+                    log.error "Tournament not found, or not open for entry" 
+                    return oops() 
                 }
                 flow.entryInstance = new Entry(tournament: t)
             }
