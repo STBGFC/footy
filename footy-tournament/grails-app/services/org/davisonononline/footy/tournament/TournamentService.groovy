@@ -1,19 +1,19 @@
 package org.davisonononline.footy.tournament
 
-import org.davisononline.footy.core.EmailService
-
 class TournamentService {
 
     static transactional = false
     
-    def EmailService
-
+    def mailService
+    
     def sendConfirmEmail(entry) {
-        def email = [
-            // TODO: change to [entry.contact.email]. Only sending to me for now!,
-            to:      ['darren@davisononline.org'],  
-            subject: "Tournament Entry Confirmation", 
-            text:    """(Automatic email, please do not reply to this address)
+        
+        mailService.sendMail {
+            // ensure mail address override is set in dev/test in Config.groovy
+            to      entry.contact.email
+            from    "tournament@stbgfc.co.uk"
+            subject "Tournament Entry Confirmation"
+            body    """(Automatic email, please do not reply to this address)
 
 Hi ${entry.contact.knownAsName ?: entry.contact.givenName},
 
@@ -26,8 +26,6 @@ ${entry.teams.join('\n')}
 We'll see you there!
 STBGFC Tournament Committee.
 """
-        ]
-            
-        emailService.sendEmails([email])
+        }
     }
 }
