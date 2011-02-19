@@ -1,21 +1,21 @@
 class FootyRegistrationGrailsPlugin {
     // the plugin version
-    def version = "0.1"
+    def version = "1.0"
     // the version or versions of Grails the plugin is designed for
     def grailsVersion = "1.3.5 > *"
     // the other plugins this plugin depends on
-    def dependsOn = [:]
+    def dependsOn = ['footy-core': "0.1 > *", paypal: "0.6 > *", webflow: "1.3 > *", export: "0.8 > *"]
     // resources that are excluded from plugin packaging
     def pluginExcludes = [
             "grails-app/views/error.gsp"
     ]
 
-    // TODO Fill in these fields
-    def author = "Your name"
-    def authorEmail = ""
-    def title = "Plugin summary/headline"
+    def author = "Darren Davison"
+    def authorEmail = "darren@davisononline.org"
+    def title = "Player registration module for the league management system"
     def description = '''\\
-Brief description of the plugin.
+Provides registration forms, payment (via PayPal) screens and flow
+management.
 '''
 
     // URL to the plugin's documentation
