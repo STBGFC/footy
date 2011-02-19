@@ -11,6 +11,7 @@ import org.davisononline.footy.core.*
 class EntryController {
     
     def identityService
+    def personService
     
 
     def index = {
@@ -61,14 +62,12 @@ class EntryController {
             on("submit") {
                 // check first if person already known
                 def p = Person.findByEmail(params.email)
-                if (!p)
+                if (!p) {
                     p = new Person(params)
+                    if (!personService.saveOrUpdate(p))
+                        return error()
+                }
                 
-                flow.personInstance = p
-                if (!p.validate())
-                    return error()
-                
-                p.save(flush: true)
                 flow.entryInstance.contact = p
                 
             }.to("selectClub")
@@ -102,10 +101,9 @@ class EntryController {
                     secr = new Person()
                     // create domain
                     def a = Address.parse(clubCommand.clubSecretaryAddress)
-                    a.save(flush:true)
                     secr.fullName = clubCommand.clubSecretaryName
                     secr.address = a
-                    secr.save(flush:true)
+                    personService.saveOrUpdate(secr)
                 }
                 
                 def c = new Club(
@@ -173,7 +171,7 @@ class EntryController {
                     division: teamCommand.division,
                     ageBand: teamCommand.ageBand,
                     girlsTeam: teamCommand.girlsTeam,
-                    manager: flow.personInstance
+                    manager: flow.entryInstance.contact
                 )
                 
                 if (!team.validate()) {
