@@ -73,7 +73,6 @@ abstract class AbstractPersonCommand implements Serializable {
 
 class PlayerCommand extends AbstractPersonCommand {
     Date dob
-    String leagueRegistrationNumber
     
     /**
      * @return age at cutoff
