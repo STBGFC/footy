@@ -17,7 +17,7 @@
                         
                             <tr class="prop">
                                 <td  class="name">
-                                    <label for="contactName"><g:message code="entry.contactGivenName.label" default="Given Name" /></label>
+                                    <label for="givenName"><g:message code="entry.contactGivenName.label" default="Given Name" /></label>
                                 </td>
                                 <td  class="value ${hasErrors(bean: personInstance, field: 'givenName', 'errors')}">
                                     <g:textField name="givenName" value="${personInstance?.givenName}" />
