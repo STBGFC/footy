@@ -64,10 +64,12 @@ class EntryController {
                 def p = Person.findByEmail(params.email)
                 if (!p) {
                     p = new Person(params)
-                    if (!personService.saveOrUpdate(p))
+                    if (!personService.saveOrUpdate(p)) {
+                        flow.personInstance = p
                         return error()
+                    }
                 }
-                
+
                 flow.entryInstance.contact = p
                 
             }.to("selectClub")
