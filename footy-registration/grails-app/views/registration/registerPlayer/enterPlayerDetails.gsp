@@ -15,11 +15,11 @@
                 
                         <tr class="prop">
                             <td  class="name">
-                                <label for="contactName"><g:message code="entry.contactGivenName.label" default="Given Name" /></label>
+                                <label for="givenName"><g:message code="entry.contactGivenName.label" default="Given Name" /></label>
                             </td>
-                            <td  class="value ${hasErrors(bean: playerInstance, field: 'givenName', 'errors')}">
-                                <g:textField name="givenName" value="${playerInstance?.givenName}" />
-                                <g:render template="/fieldError" model="['instance':playerInstance,'field':'givenName']" plugin="footy-core"/>
+                            <td  class="value ${hasErrors(bean: playerCommand, field: 'givenName', 'errors')}">
+                                <g:textField name="givenName" value="${playerCommand?.givenName}" />
+                                <g:render template="/fieldError" model="['instance':playerCommand,'field':'givenName']" plugin="footy-core"/>
                             </td>
                         </tr>
                     
@@ -27,9 +27,9 @@
                             <td  class="name">
                                 <label for="familyName"><g:message code="entry.contactFamilyName.label" default="Family Name" /></label>
                             </td>
-                            <td  class="value ${hasErrors(bean: playerInstance, field: 'familyName', 'errors')}">
-                                <g:textField name="familyName" value="${playerInstance?.familyName}" />
-                                <g:render template="/fieldError" model="['instance':playerInstance,'field':'familyName']" plugin="footy-core"/>
+                            <td  class="value ${hasErrors(bean: playerCommand, field: 'familyName', 'errors')}">
+                                <g:textField name="familyName" value="${playerCommand?.familyName}" />
+                                <g:render template="/fieldError" model="['instance':playerCommand,'field':'familyName']" plugin="footy-core"/>
                             </td>
                         </tr>
                     
@@ -37,9 +37,9 @@
                             <td  class="name">
                                 <label for="knownAsName"><g:message code="entry.contactKnownAsName.label" default="Known As" /></label>
                             </td>
-                            <td  class="value ${hasErrors(bean: playerInstance, field: 'knownAsName', 'errors')}">
-                                <g:textField name="familyName" value="${playerInstance?.knownAsName}" />
-                                <g:render template="/fieldError" model="['instance':playerInstance,'field':'knownAsName']" plugin="footy-core"/>
+                            <td  class="value ${hasErrors(bean: playerCommand, field: 'knownAsName', 'errors')}">
+                                <g:textField name="knownAsName" value="${playerCommand?.knownAsName}" />
+                                <g:render template="/fieldError" model="['instance':playerCommand,'field':'knownAsName']" plugin="footy-core"/>
                             </td>
                         </tr>
                     
@@ -47,8 +47,8 @@
                             <td valign="top" class="name">
                               <label for="dob"><g:message code="registration.playerDob.label" default="Date of Birth" /></label>
                             </td>
-                            <td valign="top" class="value ${hasErrors(bean: playerInstance, field: 'dob', 'errors')}">
-                                <g:datePicker name="dob" precision="day" value="${playerInstance?.dob}"  />
+                            <td valign="top" class="value ${hasErrors(bean: playerCommand, field: 'dob', 'errors')}">
+                                <g:datePicker name="dob" precision="day" value="${playerCommand?.dob}"  />
                             </td>
                         </tr>
                     
