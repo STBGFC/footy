@@ -72,11 +72,21 @@ abstract class AbstractPersonCommand implements Serializable {
     String givenName
     String familyName
     String knownAsName
+
+    static constraints = {
+        givenName(nullable:false, blank:false, size:1..50)
+        familyName(nullable:false, blank:false, size:1..50)
+        knownAsName(nullable:true, size:1..50)
+    }
 }
 
 class PlayerCommand extends AbstractPersonCommand {
     Date dob
     Long parentId
+
+    static constraints = {
+        dob(nullable: false)
+    }
 
     /**
      * @return age at cutoff
@@ -95,4 +105,10 @@ class PersonCommand extends AbstractPersonCommand {
     String phone1
     String phone2
     String address
+
+    static constraints = {
+        email(email:true, blank: false)
+        phone1(blank: false)
+        phone2(nullable: true)
+    }
 }
