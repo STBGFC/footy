@@ -19,7 +19,7 @@
         <tbody>
             <tr class="prop">
             <td  class="name">
-                <label for="club"><g:message code="club.select.label" default="Club" /></label>
+                <label for="club.id"><g:message code="club.select.label" default="Club" /></label>
             </td>
             <td  class="value">
             <g:select 

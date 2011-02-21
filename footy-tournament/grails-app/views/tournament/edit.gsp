@@ -37,7 +37,7 @@
                                 <td valign="top" class="name">
                                   <label for="startDate"><g:message code="tournament.startDate.label" default="Start Date" /></label>
                                 </td>
-                                <td valign="top" class="value ${hasErrors(bean: tournamentInstance, field: 'startDate', 'errors')}">
+                                <td valign="top" class="value date ${hasErrors(bean: tournamentInstance, field: 'startDate', 'errors')}">
                                     <g:datePicker name="startDate" precision="day" value="${tournamentInstance?.startDate}"  />
                                 </td>
                             </tr>
@@ -46,7 +46,7 @@
                                 <td valign="top" class="name">
                                   <label for="endDate"><g:message code="tournament.endDate.label" default="End Date" /></label>
                                 </td>
-                                <td valign="top" class="value ${hasErrors(bean: tournamentInstance, field: 'endDate', 'errors')}">
+                                <td valign="top" class="value date ${hasErrors(bean: tournamentInstance, field: 'endDate', 'errors')}">
                                     <g:datePicker name="endDate" precision="day" value="${tournamentInstance?.endDate}"  />
                                 </td>
                             </tr>

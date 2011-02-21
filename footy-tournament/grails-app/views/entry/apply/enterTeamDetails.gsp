@@ -18,7 +18,7 @@
                         
                             <tr class="prop">
                                 <td  class="name">
-                                    <label for="club"><g:message code="entry.club.label" default="Club" /></label>
+                                    <label for="club.id"><g:message code="entry.club.label" default="Club" /></label>
                                 </td>
                                 <td  class="value ${hasErrors(bean: teamCommand, field: 'club', 'errors')}">
                                     <strong>${clubInstance.name}</strong>
@@ -42,17 +42,17 @@
                                 </td>
                                 <td  class="value ${hasErrors(bean: teamCommand, field: 'name', 'errors')}">
                                     <g:textField name="name" value="${teamCommand?.name}" />
-                                    <g:render template="/fieldError" model="['instance':teamCommand,'field':'name']"/>
+                                    <g:render template="/fieldError" model="['instance':teamCommand,'field':'name']" plugin="footy-core"/>
                                 </td>
                             </tr>
                         
                             <tr class="prop">
                                 <td  class="name">
-                                    <label for="league"><g:message code="entry.league.label" default="League" /></label>
+                                    <label for="leagueId"><g:message code="entry.league.label" default="League" /></label>
                                 </td>
                                 <td  class="value ${hasErrors(bean: teamCommand, field: 'leagueId', 'errors')}">
                                     <g:select name="leagueId" from="${League.list()}" value="${teamCommand?.leagueId}" optionValue="name" optionKey="id" valueMessagePrefix="entry.league"  />
-                                    <g:render template="/fieldError" model="['instance':teamCommand,'field':'leagueId']"/>
+                                    <g:render template="/fieldError" model="['instance':teamCommand,'field':'leagueId']" plugin="footy-core"/>
                                 </td>
                             </tr>
                         
@@ -62,13 +62,13 @@
                                 </td>
                                 <td  class="value ${hasErrors(bean: teamCommand, field: 'division', 'errors')}">
                                     <g:textField name="division" value="${teamCommand?.division}" />
-                                    <g:render template="/fieldError" model="['instance':teamCommand,'field':'division']"/>
+                                    <g:render template="/fieldError" model="['instance':teamCommand,'field':'division']" plugin="footy-core"/>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                 <div class="buttons">
-                    <span class="button"><g:submitButton name="submit" class="save" value="${message(code: 'default.button.create.label', default: 'Create')}" /></span>
+                    <span class="button"><g:submitButton name="submit" class="save" value="${message(code: 'team.button.submit.label', default: 'Submit Team')}" /></span>
                 </div>
             </g:form>
         </div>
