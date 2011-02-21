@@ -3,3 +3,6 @@ target
 .settings
 classes
 *plugin.xml
+.idea
+*.iml
+out/

@@ -10,23 +10,26 @@ class RegistrationController {
 
     def personService
     
-    def index = { }
+    def index = {
+        redirect (action:'registerPlayer')
+    }
     
     /**
      * main web flow for player registration 
      */
     def registerPlayerFlow = {
-        
+
         /*
          * main form for player details, not including team
          */
         enterPlayerDetails {
             on("submit") { PlayerCommand playerCommand ->
+                flow.playerCommand = playerCommand
                 if (!playerCommand.validate())
                     return error()
             }.to "checkGuardianNeeded"
         }
-        
+
         /*
          * if player age < [cutoff] we must have at least one
          * parent/guardian details too
@@ -34,7 +37,7 @@ class RegistrationController {
         checkGuardianNeeded {
             action {
                 // TODO: replace with Config.groovy item
-                if (flow.playerCommand.age() < 16 && !playerCommand.parentId)
+                if (flow.playerCommand.age() < 16 && !flow.playerCommand.parentId)
                     return yes()
                 else
                     return no()
@@ -42,27 +45,27 @@ class RegistrationController {
             on("yes").to "enterGuardianDetails"
             on("no").to "assignTeam"
         }
-        
+
         /*
          * add parent/guardian details and assign to player
          */
         enterGuardianDetails {
             on ("continue") { PersonCommand personCommand ->
-                
+
             }.to "assignTeam"
         }
-        
+
         /*
          * select a team and enter league reg number if available
          */
         assignTeam {
             on ("continue") {
-                
-            }.to "payment"
+
+            }.to "enterPaymentDetails"
         }
-        
-        payment()
-    } 
+
+        enterPaymentDetails()
+    }
 }
 
 abstract class AbstractPersonCommand implements Serializable {
@@ -73,7 +76,8 @@ abstract class AbstractPersonCommand implements Serializable {
 
 class PlayerCommand extends AbstractPersonCommand {
     Date dob
-    
+    Long parentId
+
     /**
      * @return age at cutoff
      */
