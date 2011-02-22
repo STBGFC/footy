@@ -9,9 +9,9 @@
         <div class="dialog">
             <g:form action="registerPlayer"> 
                 <p>
-                    If the player is already assigned to a team and has a 
+                    If <strong>${playerCommand.givenName}</strong> is already assigned to a team and has a
                     league registration number, you can enter those here. If
-                    you don't know them, just hit "Continue.."
+                    you don't know them, just hit "${message(code: 'default.button.continue.label', default: 'Continue')}"
                 </p>
 
                 <table>

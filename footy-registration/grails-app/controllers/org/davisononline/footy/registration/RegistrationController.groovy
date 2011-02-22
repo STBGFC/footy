@@ -42,7 +42,13 @@ class RegistrationController {
                 else
                     return no()
             }
-            on("yes").to "enterGuardianDetails"
+
+            on("yes") {
+                flow.personCommand = new PersonCommand(
+                    familyName: flow.playerCommand.familyName
+                )
+            }.to "enterGuardianDetails"
+
             on("no").to "assignTeam"
         }
 
@@ -51,6 +57,9 @@ class RegistrationController {
          */
         enterGuardianDetails {
             on ("continue") { PersonCommand personCommand ->
+                flow.personCommand = personCommand
+                if (!personCommand.validate())
+                    return error()
 
             }.to "assignTeam"
         }
@@ -71,21 +80,21 @@ class RegistrationController {
 abstract class AbstractPersonCommand implements Serializable {
     String givenName
     String familyName
-    String knownAsName
 
     static constraints = {
         givenName(nullable:false, blank:false, size:1..50)
         familyName(nullable:false, blank:false, size:1..50)
-        knownAsName(nullable:true, size:1..50)
     }
 }
 
 class PlayerCommand extends AbstractPersonCommand {
     Date dob
     Long parentId
+    String knownAsName
 
     static constraints = {
         dob(nullable: false)
+        knownAsName(nullable:true, size:1..50)
     }
 
     /**

@@ -17,9 +17,9 @@
                             <td  class="name">
                                 <label for="givenName"><g:message code="org.davisononline.org.footy.core.contactGivenName.label" default="Given Name" /></label>
                             </td>
-                            <td  class="value ${hasErrors(bean: playerInstance, field: 'givenName', 'errors')}">
-                                <g:textField name="givenName" value="${playerInstance?.givenName}" />
-                                <g:render template="/fieldError" model="['instance':playerInstance,'field':'givenName']" plugin="footy-core"/>
+                            <td  class="value ${hasErrors(bean: playerCommand, field: 'givenName', 'errors')}">
+                                <g:textField name="givenName" value="${playerCommand?.givenName}" />
+                                <g:render template="/fieldError" model="['instance':playerCommand,'field':'givenName']" plugin="footy-core"/>
                             </td>
                         </tr>
                     
@@ -27,9 +27,9 @@
                             <td  class="name">
                                 <label for="familyName"><g:message code="org.davisononline.org.footy.core.contactFamilyName.label" default="Family Name" /></label>
                             </td>
-                            <td  class="value ${hasErrors(bean: playerInstance, field: 'familyName', 'errors')}">
-                                <g:textField name="familyName" value="${playerInstance?.familyName}" />
-                                <g:render template="/fieldError" model="['instance':playerInstance,'field':'familyName']" plugin="footy-core"/>
+                            <td  class="value ${hasErrors(bean: playerCommand, field: 'familyName', 'errors')}">
+                                <g:textField name="familyName" value="${playerCommand?.familyName}" />
+                                <g:render template="/fieldError" model="['instance':playerCommand,'field':'familyName']" plugin="footy-core"/>
                             </td>
                         </tr>
                     
@@ -37,9 +37,9 @@
                             <td  class="name">
                                 <label for="knownAsName"><g:message code="org.davisononline.org.footy.core.contactKnownAsName.label" default="Known As" /></label>
                             </td>
-                            <td  class="value ${hasErrors(bean: playerInstance, field: 'knownAsName', 'errors')}">
-                                <g:textField name="knownAsName" value="${playerInstance?.knownAsName}" />
-                                <g:render template="/fieldError" model="['instance':playerInstance,'field':'knownAsName']" plugin="footy-core"/>
+                            <td  class="value ${hasErrors(bean: playerCommand, field: 'knownAsName', 'errors')}">
+                                <g:textField name="knownAsName" value="${playerCommand?.knownAsName}" />
+                                <g:render template="/fieldError" model="['instance':playerCommand,'field':'knownAsName']" plugin="footy-core"/>
                             </td>
                         </tr>
                     
@@ -48,7 +48,7 @@
                               <label for="dob"><g:message code="org.davisononline.org.footy.registration.playerDob.label" default="Date of Birth" /></label>
                             </td>
                             <td valign="top" class="value date">
-                                <g:datePicker name="dob" precision="day" years="${(new Date().year-19+1900)..(new Date().year-5+1900)}" value="${playerInstance?.dob}"  />
+                                <g:datePicker name="dob" precision="day" years="${(new Date().year-19+1900)..(new Date().year-5+1900)}" value="${playerCommand?.dob}"  />
                             </td>
                         </tr>
 
