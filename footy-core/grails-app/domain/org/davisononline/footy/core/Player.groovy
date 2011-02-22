@@ -25,6 +25,7 @@ class Player {
         person(nullable: false)
         guardian(nullable: true,
             validator: { val, obj ->
+                // TODO: make age cutoff configurable
 				return !(obj.team?.ageBand < 16 && val == null)
 			}
         )

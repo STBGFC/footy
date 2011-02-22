@@ -63,6 +63,20 @@ class RegistrationControllerTests extends ControllerUnitTestCase {
 
     }
 
+    void testToPerson() {
+        def p = new PersonCommand(
+                givenName: 'Fred',
+                familyName: 'Bassett',
+                email:"foo@bar.com",
+                phone1: '0876544332',
+                address: Address.parse("123 Some St., GU1 1DB")
+        )
+        def person = p.toPerson()
+        assertEquals 'Fred', person.givenName
+        assertEquals 'Bassett', person.familyName
+        assertEquals 'foo@bar.com', person.email
+    }
+
     void testPlayerCommandAgeCalculation() {
         mockForConstraintsTests(PlayerCommand)
         def p = new PlayerCommand(

@@ -1,5 +1,7 @@
 package org.davisononline.footy.registration
 
+import org.davisononline.footy.core.*
+
 /**
  * flows for the redgistration and creation of players, parents and other
  * staff at the club.
@@ -49,6 +51,7 @@ class RegistrationController {
                 )
             }.to "enterGuardianDetails"
 
+            // TODO: if no guardian required, must get player contact details instead
             on("no").to "assignTeam"
         }
 
@@ -57,11 +60,17 @@ class RegistrationController {
          */
         enterGuardianDetails {
             on ("continue") { PersonCommand personCommand ->
-                flow.personCommand = personCommand
-                if (!personCommand.validate())
+                if (!handleGuardian(flow, personCommand))
                     return error()
-
+                flow.personCommand = null
             }.to "assignTeam"
+
+            on ("addanother") {PersonCommand personCommand ->
+                if (!handleGuardian(flow, personCommand))
+                    return error()
+                flow.personCommand.email = ''
+                flow.personCommand.givenName = ''
+            }.to "enterGuardianDetails"
         }
 
         /*
@@ -69,11 +78,47 @@ class RegistrationController {
          */
         assignTeam {
             on ("continue") {
+                // TODO: don't allow teams from other clubs created as part of tournament entries
+                def team = (params['team.id'] ? Team.get(params['team.id']) : null)
+                // create domain from flow objects
+                def player = new Player (
+                        dateOfBirth: flow.playerCommand.dob,
+                        team: team,
+                        dateJoinedClub: new Date(),
+                        leagueRegistrationNumber: params.leagueRegistration ?: ''
+                )
+                player.person = new Person(
+                        givenName: flow.playerCommand.givenName,
+                        familyName: flow.playerCommand.familyName,
+                        knownAsName: flow.playerCommand.familyName
+                )
+                player.guardian = flow.guardian1?.toPerson()
+                player.secondGuardian = flow.guardian2?.toPerson()
+
+                player.guardian.save()
+                player.secondGuardian.save()
+                player.person.save(flush: true)
+                player.save(flush: true)
 
             }.to "enterPaymentDetails"
         }
 
         enterPaymentDetails()
+    }
+
+    /*
+     * manage 1 or 2 guardians
+     */
+    def handleGuardian(flow, personCommand) {
+        flow.personCommand = personCommand
+        if (!personCommand.validate())
+            return false
+
+        // first or second guardian?
+        if (!flow.guardian1)
+            flow.guardian1 = personCommand
+        else
+            flow.guardian2 = personCommand
     }
 }
 
@@ -119,5 +164,20 @@ class PersonCommand extends AbstractPersonCommand {
         email(email:true, blank: false)
         phone1(blank: false)
         phone2(nullable: true)
+    }
+
+    /**
+     *
+     * @return a Person domain object (possibly invalid) from the command
+     */
+    def toPerson() {
+        new Person(
+                givenName: givenName,
+                familyName: familyName,
+                email: email,
+                phone1: phone1,
+                phone2: phone2,
+                address: Address.parse(address)
+                )
     }
 }

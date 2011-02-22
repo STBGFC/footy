@@ -31,6 +31,7 @@
                                 <label for="team.id"><g:message code="org.davisononline.footy.core.team.label" default="Team" /></label>
                             </td>
                             <td  class="value">
+                                <%-- TODO: don't allow teams from other clubs created as part of tournament entries --%>
                                 <g:select name="team.id" from="${Team.list()}" noSelection="[null:'-- unassigned --']" optionKey="id"/>
                             </td>
                         </tr>
