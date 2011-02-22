@@ -7,18 +7,27 @@
     </head>
     <body>
         <div class="dialog">
-            <g:form action="registerPlayer">
-                <p>
-                    The following player has been registered.  You can 
-                    click the PayPal button in order to make payment now
-                    either from a PayPal account or a credit card.
-                </p>
-        
-                <div class="buttons">
-                    <span class="button"><g:submitButton name="submit" class="save" value="${message(code: 'default.button.create.label', default: 'Continue')}" /></span>
-                </div>
-            </g:form>
+            <p>
+                <strong>${playerInstance}</strong> has been registered.  You can
+                click the PayPal button in order to make payment now
+                either from a PayPal account or a credit card.
+            </p>
+            <p>
+                <strong>Total: <g:formatNumber number="${registrationCost}" type="currency" currencyCode="GBP" /></strong>
+            </p>
         </div>
+
+        <g:form controller="paypal" action="uploadCart">
+        <input type="image" class="paypal"
+            src="https://www.paypalobjects.com/WEBSCR-640-20110124-1/en_US/i/btn/btn_xpressCheckout.gif"
+            alt="PayPal - The safer, easier way to pay"/>
+        <img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1"/>
+        </g:form>
+
+        <p>
+            You will receive email confirmation as soon as payment clears (which is
+            normally immediate in the case of PayPal)
+        </p>
     </body>
 </html>
         
