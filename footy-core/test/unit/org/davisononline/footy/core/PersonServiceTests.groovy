@@ -11,7 +11,8 @@ class PersonServiceTests extends GrailsUnitTestCase {
         super.tearDown()
     }
 
-    void testSomething() {
-
+    void testNull() {
+        def ps = new PersonService()
+        assertFalse(ps.saveOrUpdate(null))
     }
 }

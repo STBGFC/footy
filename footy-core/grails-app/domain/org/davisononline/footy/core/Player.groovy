@@ -5,7 +5,7 @@ package org.davisononline.footy.core
  *
  * @author Darren Davison
  */
-class Player {
+class Player implements Serializable {
 
     Person person
     Date dateOfBirth
@@ -14,10 +14,11 @@ class Player {
     Person secondGuardian
     Team team
     Date dateJoinedClub = new Date()
+    Date lastRegistrationDate = null
     String leagueRegistrationNumber = ''
 
     /*
-     * guardian should be nullable:true if the player is >=16.
+     * guardian should be nullable:true if the player is >= Person.MINOR_UNTIL.
      * If guardian is null, email should be mandatory, else
      * not.
      */
@@ -25,14 +26,14 @@ class Player {
         person(nullable: false)
         guardian(nullable: true,
             validator: { val, obj ->
-                // TODO: make age cutoff configurable
-				return !(obj.team?.ageBand < 16 && val == null)
-			}
+                return !(obj.team?.ageBand < Person.MINOR_UNTIL && val == null)
+            }
         )
         secondGuardian(nullable: true)
         notes(blank: true)
         dateOfBirth(nullable:false)
         team(nullable:true)
+        lastRegistrationDate(nullable: true)
     }
 
     static mapping = { notes type: 'text' }

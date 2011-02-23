@@ -38,8 +38,7 @@ class RegistrationController {
          */
         checkGuardianNeeded {
             action {
-                // TODO: replace with Config.groovy item
-                if (flow.playerCommand.age() < 16 && !flow.playerCommand.parentId)
+                if (flow.playerCommand.age() < Person.MINOR_UNTIL && !flow.playerCommand.parentId)
                     return yes()
                 else
                     return no()
@@ -79,7 +78,8 @@ class RegistrationController {
         assignTeam {
             on ("continue") {
                 // TODO: don't allow teams from other clubs created as part of tournament entries
-                def team = (params['team.id'] ? Team.get(params['team.id']) : null)
+                def team = Team.get(params.teamId)
+
                 // create domain from flow objects
                 def player = new Player (
                         dateOfBirth: flow.playerCommand.dob,
@@ -90,14 +90,14 @@ class RegistrationController {
                 player.person = new Person(
                         givenName: flow.playerCommand.givenName,
                         familyName: flow.playerCommand.familyName,
-                        knownAsName: flow.playerCommand.familyName
+                        knownAsName: flow.playerCommand.knownAsName
                 )
                 player.guardian = flow.guardian1?.toPerson()
                 player.secondGuardian = flow.guardian2?.toPerson()
 
-                player.guardian.save()
-                player.secondGuardian.save()
-                player.person.save(flush: true)
+                personService.saveOrUpdate(player.guardian)
+                personService.saveOrUpdate(player.secondGuardian)
+                personService.saveOrUpdate(player.person)
                 player.save(flush: true)
 
             }.to "enterPaymentDetails"
@@ -146,7 +146,7 @@ class PlayerCommand extends AbstractPersonCommand {
      * @return age at cutoff
      */
     int age() {
-        // TODO: make cutoff configurable
+        // TODO: make cutoff date configurable
         def now = new Date()
         def c = 1900 + (now.month > 7 ? 1 : 0)
         def cutoff = new Date("${now.year+c}/08/31")

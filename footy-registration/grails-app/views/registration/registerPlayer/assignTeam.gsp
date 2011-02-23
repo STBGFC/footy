@@ -28,11 +28,12 @@
 
                         <tr class="prop">
                             <td  class="name">
-                                <label for="team.id"><g:message code="org.davisononline.footy.core.team.label" default="Team" /></label>
+                                <label for="teamId"><g:message code="org.davisononline.footy.core.team.label" default="Team" /></label>
                             </td>
                             <td  class="value">
                                 <%-- TODO: don't allow teams from other clubs created as part of tournament entries --%>
-                                <g:select name="team.id" from="${Team.list()}" noSelection="[null:'-- unassigned --']" optionKey="id"/>
+                                <%-- TODO: teams should be from correct age band (+1) --%>
+                                <g:select name="teamId" from="${Team.list()}" noSelection="['-1':'-- unassigned --']" optionKey="id" />
                             </td>
                         </tr>
 

@@ -87,6 +87,10 @@ class PersonTests extends GrailsUnitTestCase {
         assertTrue p.validate()
         
     }
+
+    void testConfig() {
+        assertEquals 16, Person.MINOR_UNTIL
+    }
     
     public static getGood() {
         new Person(

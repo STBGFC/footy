@@ -20,7 +20,7 @@ class PersonService {
      * @return true if success, false otherwise
      */
     def saveOrUpdate(person) {
-        if (person.hasErrors() || !person.validate()) {
+        if (!person || person.hasErrors() || !person.validate()) {
             return false
         }
         log.debug("checking address")

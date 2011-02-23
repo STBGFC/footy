@@ -84,7 +84,5 @@ class RegistrationControllerTests extends ControllerUnitTestCase {
             familyName: 'Bassett',
             dob: new Date(2003, 0, 20)
         )
-        // TODO: make cutoff configurable
-
     }
 }

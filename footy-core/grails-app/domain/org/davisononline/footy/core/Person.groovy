@@ -1,5 +1,6 @@
 package org.davisononline.footy.core
 
+import org.codehaus.groovy.grails.commons.ConfigurationHolder
 
 /**
  * Person
@@ -7,7 +8,9 @@ package org.davisononline.footy.core
  * @author Darren Davison
  */
 class Person implements Comparable, Serializable {
-    
+
+    static int MINOR_UNTIL = ConfigurationHolder.config?.org?.davisononline?.footy?.core?.person?.minor ?: 16
+
     String givenName
     String familyName
     String knownAsName
