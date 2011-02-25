@@ -21,4 +21,8 @@ class Entry implements Serializable {
     static constraints = {
         payment(nullable: true)
     }
+
+    static mapping = {
+        payment cascade: "all,delete-orphan"
+    }
 }

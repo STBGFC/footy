@@ -1,7 +1,6 @@
 package org.davisononline.footy.tournament.paypal
 
 import org.davisononline.footy.tournament.*
-import org.davisononline.footy.core.*
 import org.grails.paypal.*
 
  
@@ -13,33 +12,6 @@ class PayPalFilters {
     def tournamentService
 
     def filters = {
-
-        uploadCartFilter(controller:"paypal", action:"uploadCart") {
-            before = {
-                def payment = new Payment(
-                    buyerId: session['org.davisononline.footy.tournament.buyerId'],
-                    currency: Currency.getInstance("GBP")
-                )
-
-                def entry = Entry.get(session['org.davisononline.footy.tournament.buyerId'])
-                entry.teams.each { t->
-                    payment.addToPaymentItems(
-                        new PaymentItem(
-                            itemName: "${t.club.name} U${t.ageBand} ${t.name}", 
-                            itemNumber: "${entry.tournament.name} Tournament",
-                            amount: entry.tournament.costPerTeam
-                        )
-                    )
-                }
-                payment.save(flush:true)
-                params.transactionId = payment.transactionId
-
-                entry.payment = payment
-                entry.save(flush:true) 
-
-                return true
-            }
-        }
 
         paymentReceivedFilter(controller:'paypal', action:'(success|notify)') {
             after = {
@@ -65,13 +37,8 @@ class PayPalFilters {
 
         transactionCancelledFilter(controller:'paypal', action:'cancel') {
             after = {
-                def e = Entry.get(session['org.davisononline.footy.tournament.buyerId'])
-                if (e) {
-                    log.debug("Transaction cancelled on entry ${e}")
-                    e.payment?.status = Payment.CANCELLED
-                    e.payment?.save(flush:true)
-                    e.save()
-                }
+                request.payment?.status = Payment.CANCELLED
+                request.payment?.save(flush:true)
             }
         }
     }

@@ -20,7 +20,7 @@
 	            <strong>Total: <g:formatNumber number="${numTeams*entryInstance.tournament.costPerTeam}" type="currency" currencyCode="GBP" /></strong>
 	        </p>
         </div>
-        <g:form controller="paypal" action="uploadCart">
+        <g:form controller="paypal" action="uploadCart" params="[transactionId:payment.transactionId]">
         <input type="image" class="paypal"
             src="https://www.paypalobjects.com/WEBSCR-640-20110124-1/en_US/i/btn/btn_xpressCheckout.gif"
             alt="PayPal - The safer, easier way to pay"/>

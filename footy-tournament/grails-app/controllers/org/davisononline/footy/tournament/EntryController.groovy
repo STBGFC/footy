@@ -1,6 +1,8 @@
 package org.davisononline.footy.tournament
 
 import org.davisononline.footy.core.*
+import org.grails.paypal.Payment
+import org.grails.paypal.PaymentItem
 
 /**
  * Entry controller supplies the main web flow for the tournament entry
@@ -37,24 +39,25 @@ class EntryController {
 
     /**
      * main application flow
-     * TODO: replace text with message codes and defaults in messages.properties
      */
     def applyFlow = {
+
+        // TODO: replace text with message codes and defaults in messages.properties
         
         setup {
             action {
                 if (!params.id) {
                     log.error "no tournament id supplied"
-                    return oops()
+                    throw new IllegalStateException("Which tournament did you mean?")
                 }
                 def t = Tournament.get(params.id)
                 if (! t?.openForEntry) {
                     log.error "Tournament not found, or not open for entry" 
-                    return oops() 
+                    throw new IllegalStateException("Tournament not found, or not open for entry")
                 }
                 flow.entryInstance = new Entry(tournament: t)
             }
-            on("oops").to("error")
+            on(Exception).to("error")
             on("success").to("enterContactDetails")
         }
         
@@ -195,11 +198,25 @@ class EntryController {
             on("createMore").to("createTeam")
             
             on("submit") {
-                // hack because paypal plugin domain objects
-                // are not serializable.. we do the work in
-                // the PayPalFilters class instead.
-                flow.entryInstance.save(flush:true)
-                session['org.davisononline.footy.tournament.buyerId'] = flow.entryInstance.id
+                def entry = flow.entryInstance
+                def payment = new Payment (
+                    buyerId: entry.contact          .id,
+                    currency: Currency.getInstance("GBP")
+                )
+                entry.teams.each { t->
+                    payment.addToPaymentItems(
+                        new PaymentItem (
+                            itemName: "${t.club.name} U${t.ageBand} ${t.name}",
+                            itemNumber: "${entry.tournament.name}",
+                            amount: entry.tournament.costPerTeam
+                        )
+                    )
+                }
+                payment.save()
+                entry.payment = payment
+                entry.save(flush:true)
+                [payment:payment]
+
             }.to("enterPaymentDetails")
         }
 
