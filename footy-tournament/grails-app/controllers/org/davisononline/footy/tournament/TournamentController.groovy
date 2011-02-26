@@ -2,7 +2,6 @@ package org.davisononline.footy.tournament
 
 import org.codehaus.groovy.grails.commons.ConfigurationHolder
 
-
 /**
  * @author darren
  */

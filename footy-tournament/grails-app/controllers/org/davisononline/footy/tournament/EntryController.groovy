@@ -14,6 +14,7 @@ class EntryController {
     
     def identityService
     def personService
+    def tournamentService
     
 
     def index = {
@@ -226,6 +227,40 @@ class EntryController {
             render (view:'/error')
         }
         
+    }
+
+    /**
+     * successful paypal payment made
+     * @param params
+     */
+    def paypalSuccess = {
+        def payment = Payment.findByTransactionId(params.transactionId)
+        if(payment?.status == org.grails.paypal.Payment.COMPLETE) {
+            def entry = Entry.findByPayment(payment)
+            log.debug("Processed ${entry} for payment")
+
+            if (!entry.emailConfirmationSent) {
+                tournamentService.sendConfirmEmail(entry)
+                entry.emailConfirmationSent = true
+                entry.save()
+            }
+
+            render view: 'paypal/success', model:[entry:entry]
+        }
+        else {
+            flash.message = "Unable to find Entry for this transaction"
+            render view: "/error"
+        }
+    }
+
+    /**
+     * cancelled transaction
+     *
+     * @param params
+     * @return
+     */
+    def paypalCancel = {
+        render view: "paypal/cancel"
     }
 
 }

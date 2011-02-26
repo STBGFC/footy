@@ -7,7 +7,7 @@
         <div class="dialog">
     	<p>
                Your purchase is complete and entry to the tournament is confirmed
-               for your team(s).  Payment transaction ID is: <strong>${payment.transactionId}</strong>
+               for your team(s).  Payment transaction ID is: <strong>${entry.payment.transactionId}</strong>
            </p>
            <p>
                A confirmation email has been sent to the individual contact email
