@@ -98,10 +98,9 @@ class RegistrationController {
                         knownAsName: flow.playerCommand.knownAsName
                 )
 
+                player.guardian = flow.guardian
                 if (!player.guardian)
                     player.guardian = flow.guardian1?.toPerson()
-                else
-                    player.guardian = flow.guardian
 
                 player.secondGuardian = flow.guardian2?.toPerson()
                 if (!player.save(flush: true))
