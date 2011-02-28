@@ -31,9 +31,8 @@
                                 <label for="teamId"><g:message code="org.davisononline.footy.core.team.label" default="Team" /></label>
                             </td>
                             <td  class="value">
-                                <%-- TODO: don't allow teams from other clubs created as part of tournament entries --%>
                                 <%-- TODO: teams should be from correct age band (+1) --%>
-                                <g:select name="teamId" from="${Team.list()}" noSelection="['-1':'-- unassigned --']" optionKey="id" />
+                                <g:select name="teamId" from="${Team.findByClub(Club.getHomeClub())}" noSelection="['-1':'-- unassigned --']" optionKey="id" />
                             </td>
                         </tr>
 

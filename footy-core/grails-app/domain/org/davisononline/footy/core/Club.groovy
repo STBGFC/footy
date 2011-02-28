@@ -1,5 +1,7 @@
 package org.davisononline.footy.core
 
+import org.codehaus.groovy.grails.commons.ConfigurationHolder
+
 /**
  * Club
  * 
@@ -19,6 +21,8 @@ class Club implements Serializable {
     byte[] logo
     String colours 
 
+    static String homeClubName = ConfigurationHolder.config?.org?.davisononline?.footy?.core?.homeclubname
+
     static constraints = {
         name(size: 2..50, unique: true)
         website(url: true, nullable: true)
@@ -30,6 +34,19 @@ class Club implements Serializable {
         childProtectionOfficer(nullable: true)
         logo(nullable: true)
         colours(blank: false)
+    }
+
+    /**
+     * static method to return the instance of the Club marked as the
+     * 'home' club in the application configuration
+     *
+     * @return the home Club
+     */
+    static Club getHomeClub() {
+        if (!homeClubName)
+            throw new IllegalStateException("Home club name not specified in config: please add 'org.davisononline.footy.core.homeclubname=XXX' to configuration")
+
+        Club.findByName(homeClubName)
     }
 
     public String toString() {
