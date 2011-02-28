@@ -33,10 +33,6 @@
         <img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1"/>
         </g:form>
 
-        <p>
-            You will receive email confirmation as soon as payment clears (which is
-            normally immediate in the case of PayPal)
-        </p>
     </body>
 </html>
         

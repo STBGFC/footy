@@ -62,15 +62,22 @@ class RegistrationController {
          * add parent/guardian details and assign to player
          */
         enterGuardianDetails {
+            def errors
             on ("continue") { PersonCommand personCommand ->
-                if (!handleGuardian(flow, personCommand))
+                errors = handleGuardian(flow, personCommand)
+                if (errors) {
+                    personCommand.errors = errors
                     return error()
+                }
                 flow.personCommand = null
             }.to "assignTeam"
 
             on ("addanother") {PersonCommand personCommand ->
-                if (!handleGuardian(flow, personCommand))
+                errors = handleGuardian(flow, personCommand)
+                if (errors) {
+                    personCommand.errors = errors
                     return error()
+                }
                 flow.personCommand.email = ''
                 flow.personCommand.givenName = ''
             }.to "enterGuardianDetails"
@@ -81,8 +88,6 @@ class RegistrationController {
          */
         assignTeam {
             on ("continue") {
-                // TODO: don't allow teams from other clubs created as part of tournament entries
-                // TODO: only show teams the player is eligible for (ageband + 1)
                 def team = Team.get(params.teamId)
 
                 // create domain from flow objects
@@ -133,8 +138,9 @@ class RegistrationController {
      */
     def handleGuardian(flow, personCommand) {
         flow.personCommand = personCommand
-        if (!personCommand.validate())
-            return false
+        def person = personCommand.toPerson()
+        if (!person.validate())
+            return person.errors()
 
         // first or second guardian?
         if (!flow.guardian1)
@@ -206,12 +212,6 @@ class PersonCommand extends AbstractPersonCommand {
     String phone1
     String phone2
     String address
-
-    static constraints = {
-        email(email:true, blank: false)
-        phone1(blank: false)
-        phone2(nullable: true)
-    }
 
     /**
      *
