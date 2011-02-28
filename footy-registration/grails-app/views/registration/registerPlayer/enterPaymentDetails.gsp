@@ -8,7 +8,7 @@
     <body>
         <div class="dialog">
             <p>
-                <strong>${playerInstance}</strong> has been registered.  You can
+                <strong>${player}</strong> has been registered.  You can
                 click the PayPal button in order to make payment now
                 either from a PayPal account or a credit card.
             </p>
@@ -17,7 +17,16 @@
             </p>
         </div>
 
-        <g:form controller="paypal" action="uploadCart">
+        <g:form
+                controller="paypal"
+                action="uploadCart"
+                params="[
+                    transactionId: payment.transactionId,
+                    returnController: 'registration',
+                    returnAction: 'paypalSuccess',
+                    cancelController: 'registration',
+                    cancelAction: 'paypalCancel'
+                ]">
         <input type="image" class="paypal"
             src="https://www.paypalobjects.com/WEBSCR-640-20110124-1/en_US/i/btn/btn_xpressCheckout.gif"
             alt="PayPal - The safer, easier way to pay"/>

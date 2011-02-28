@@ -29,6 +29,10 @@ class Person implements Comparable, Serializable {
         phone1(nullable: true, blank: false)
         phone2(nullable: true, blank: true)
     }
+
+    static mapping = {
+        address cascade: "all,delete-orphan"
+    }
     
     /**
      * comparable to sort on family name, then given name

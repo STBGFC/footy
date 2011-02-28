@@ -36,7 +36,12 @@ class Player implements Serializable {
         lastRegistrationDate(nullable: true)
     }
 
-    static mapping = { notes type: 'text' }
+    static mapping = {
+        notes type: 'text'
+        person cascade: 'all,delete-orphan'
+        guardian cascade: 'save-update'
+        secondGuardian: cascade: 'save-update'
+    }
     
     /**
      * @see java.lang.Object#toString()

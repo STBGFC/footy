@@ -74,6 +74,7 @@ class EntryController {
                     }
                 }
 
+                flow.personInstance = p
                 flow.entryInstance.contact = p
                 
             }.to("selectClub")
@@ -201,7 +202,7 @@ class EntryController {
             on("submit") {
                 def entry = flow.entryInstance
                 def payment = new Payment (
-                    buyerId: entry.contact          .id,
+                    buyerId: entry.contact.id,
                     currency: Currency.getInstance("GBP")
                 )
                 entry.teams.each { t->

@@ -1,7 +1,8 @@
 <html>
 	<head>
 		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
-		<title>Transaction Complete</title>
+		<title><g:message code="org.davisononline.footy.tournament.title.paymentsuccess"
+                default="Transaction Complete"/></title>
 	</head>
 	<body>
         <div class="dialog">

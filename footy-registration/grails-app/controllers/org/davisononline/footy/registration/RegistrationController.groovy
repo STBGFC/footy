@@ -1,6 +1,9 @@
 package org.davisononline.footy.registration
 
 import org.davisononline.footy.core.*
+import org.grails.paypal.Payment
+import org.grails.paypal.PaymentItem
+import org.codehaus.groovy.grails.commons.ConfigurationHolder
 
 /**
  * flows for the redgistration and creation of players, parents and other
@@ -9,8 +12,6 @@ import org.davisononline.footy.core.*
  * @author darren
  */
 class RegistrationController {
-
-    def personService
     
     def index = {
         redirect (action:'registerPlayer')
@@ -51,7 +52,10 @@ class RegistrationController {
             }.to "enterGuardianDetails"
 
             // TODO: if no guardian required, must get player contact details instead
-            on("no").to "assignTeam"
+            on("no") {
+                if (flow.playerCommand.parentId)
+                    flow.guardian = Person.get(flow.playerCommand.parentId)
+            }.to "assignTeam"
         }
 
         /*
@@ -78,6 +82,7 @@ class RegistrationController {
         assignTeam {
             on ("continue") {
                 // TODO: don't allow teams from other clubs created as part of tournament entries
+                // TODO: only show teams the player is eligible for (ageband + 1)
                 def team = Team.get(params.teamId)
 
                 // create domain from flow objects
@@ -92,13 +97,30 @@ class RegistrationController {
                         familyName: flow.playerCommand.familyName,
                         knownAsName: flow.playerCommand.knownAsName
                 )
-                player.guardian = flow.guardian1?.toPerson()
-                player.secondGuardian = flow.guardian2?.toPerson()
 
-                personService.saveOrUpdate(player.guardian)
-                personService.saveOrUpdate(player.secondGuardian)
-                personService.saveOrUpdate(player.person)
-                player.save(flush: true)
+                if (!player.guardian)
+                    player.guardian = flow.guardian1?.toPerson()
+                else
+                    player.guardian = flow.guardian
+
+                player.secondGuardian = flow.guardian2?.toPerson()
+                if (!player.save(flush: true))
+                    log.error player.errors
+
+                def payment = new Payment (
+                    buyerId: player.guardian.id,
+                    currency: Currency.getInstance("GBP")
+                )
+                payment.addToPaymentItems(
+                    new PaymentItem (
+                        itemName: "${player} Registration",
+                        itemNumber: "${player.id}",
+                        amount: ConfigurationHolder.config.org.davisononline.footy.registration.annualcost
+                    )
+                )
+                payment.save(flush:true)
+
+                [payment:payment, player:player]
 
             }.to "enterPaymentDetails"
         }
@@ -119,6 +141,31 @@ class RegistrationController {
             flow.guardian1 = personCommand
         else
             flow.guardian2 = personCommand
+    }
+
+    /**
+     * successful paypal payment made
+     * @param params
+     */
+    def paypalSuccess = {
+        def payment = Payment.findByTransactionId(params.transactionId)
+        if(payment?.status == org.grails.paypal.Payment.COMPLETE) {
+            render view: 'paypal/success'
+        }
+        else {
+            flash.message = "Unable to find Entry for this transaction"
+            render view: "/error"
+        }
+    }
+
+    /**
+     * cancelled transaction
+     *
+     * @param params
+     * @return
+     */
+    def paypalCancel = {
+        render view: "paypal/cancel"
     }
 }
 
