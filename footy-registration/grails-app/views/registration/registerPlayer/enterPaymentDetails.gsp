@@ -13,7 +13,7 @@
                 either from a PayPal account or a credit card.
             </p>
             <p>
-                <strong>Total: <g:formatNumber number="${registrationCost}" type="currency" currencyCode="GBP" /></strong>
+                <strong>Total: <g:formatNumber number="${payment.paymentItems[0].amount}" type="currency" currencyCode="GBP" /></strong>
             </p>
         </div>
 

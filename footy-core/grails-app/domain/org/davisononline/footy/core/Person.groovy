@@ -51,14 +51,14 @@ class Person implements Comparable, Serializable {
     /**
      * @return
      */
-    transient String getFullName() {
+    def getFullName() {
         "${givenName ?: ''} ${familyName}".trim()
     }
     
     /**
      * @param name
      */
-    transient void setFullName(name) {
+    def setFullName(name) {
         if (!name || name.size() == 0) return
         def parts = name.split()
         familyName = parts[-1]

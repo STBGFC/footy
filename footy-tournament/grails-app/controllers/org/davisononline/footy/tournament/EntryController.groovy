@@ -68,7 +68,7 @@ class EntryController {
                 def p = Person.findByEmail(params.email)
                 if (!p) {
                     p = new Person(params)
-                    if (!personService.saveOrUpdate(p)) {
+                    if (!p.save()) {
                         flow.personInstance = p
                         return error()
                     }

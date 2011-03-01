@@ -54,7 +54,7 @@ class RegistrationController {
             // TODO: if no guardian required, must get player contact details instead
             on("no") {
                 if (flow.playerCommand.parentId)
-                    flow.guardian = Person.get(flow.playerCommand.parentId)
+                    flow.guardian1 = Person.get(flow.playerCommand.parentId)
             }.to "assignTeam"
         }
 
@@ -70,6 +70,10 @@ class RegistrationController {
                     return error()
                 }
                 flow.personCommand = null
+
+                // TODO: ensure teams are from correct age band and home club only
+                flow.availableTeams = Team.findAllByClub(Club.getHomeClub())
+
             }.to "assignTeam"
 
             on ("addanother") {PersonCommand personCommand ->
@@ -103,11 +107,9 @@ class RegistrationController {
                         knownAsName: flow.playerCommand.knownAsName
                 )
 
-                player.guardian = flow.guardian
-                if (!player.guardian)
-                    player.guardian = flow.guardian1?.toPerson()
+                player.guardian = flow.guardian1
+                player.secondGuardian = flow.guardian2
 
-                player.secondGuardian = flow.guardian2?.toPerson()
                 if (!player.save(flush: true))
                     log.error player.errors
 
@@ -143,9 +145,9 @@ class RegistrationController {
 
         // first or second guardian?
         if (!flow.guardian1)
-            flow.guardian1 = personCommand
+            flow.guardian1 = person
         else
-            flow.guardian2 = personCommand
+            flow.guardian2 = person
     }
 
     /**
