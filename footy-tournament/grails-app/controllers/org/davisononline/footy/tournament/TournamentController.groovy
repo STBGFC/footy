@@ -123,6 +123,16 @@ class TournamentController {
         else
             render (view: 'edit', model:[tournamentInstance: t])
     }
+
+    /**
+     * close tournament to new entries
+     */
+    def close = {
+        def t = checkInstance(params)
+        t.openForEntry = false
+        t.save()
+        redirect(action: "list", params: params)
+    }
     
     /**
      * update details

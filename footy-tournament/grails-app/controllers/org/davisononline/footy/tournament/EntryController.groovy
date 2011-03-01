@@ -23,19 +23,28 @@ class EntryController {
     
     // admin only
     def delete = {
-        if (!params.id)
-            flash.message = "No such Entry!"
-        def e = Entry.get(params.id)
+        def e = checkEntry(params)
+        def tid = e.tournament.id
+        e.delete()
+        flash.message = "Entry deleted"
+        redirect(controller: "tournament", action: "entryList", id: tid)
+    }
+
+    // admin only
+    def paymentMade = {
+        def e = checkEntry (params)
+        e.payment.status = Payment.COMPLETE
+        e.payment.save()
+        redirect(controller: "tournament", action: "entryList")
+    }
+
+    private checkEntry(params) {
+        def e = Entry.get(params?.id)
         if (!e) {
             flash.message = "No such Entry!"
-            redirect(controller: "tournament", action: "list")            
+            redirect(controller: "tournament", action: "list")
         }
-        else {
-            def tid = e.tournament.id
-            e.delete()
-            flash.message = "Entry deleted"
-            redirect(controller: "tournament", action: "entryList", id: tid)
-        }
+        return e
     }
 
     /**

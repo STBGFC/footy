@@ -43,6 +43,9 @@
                         <g:link action="show" id="${tournamentInstance.id}"><img alt="view teams" title="view teams" src="${resource(dir:'images',file:'view.png')}"/></g:link>
                         <g:link action="entryList" id="${tournamentInstance.id}"><img alt="payment status" title="payment status" src="${resource(dir:'images',file:'payments.png')}"/></g:link>
                         </g:else>
+                        <g:if test="${tournamentInstance.openForEntry}">
+                        <g:link action="close" id="${tournamentInstance.id}"><img alt="close tournament to new entries" title="close tournament to new entries" src="${resource(dir:'images',file:'close.png')}"/></g:link>
+                        </g:if>
                     </td>
                 </tr>
             </g:each>
