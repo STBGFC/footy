@@ -18,6 +18,7 @@ class Person implements Comparable, Serializable {
     String phone1
     String phone2
     Address address
+    boolean eligibleParent = false
     
     
     static constraints = {

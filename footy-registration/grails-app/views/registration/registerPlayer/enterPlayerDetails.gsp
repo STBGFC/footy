@@ -57,8 +57,7 @@
                                 <label for="parentId"><g:message code="org.davisononline.org.footy.core.playerGuardian.label" default="Parent/Guardian" /></label>
                             </td>
                             <td  class="value">
-                                <%-- TODO: only list Persons from the home club that are not already players --%>
-                                <g:select name="parentId" from="${Person.list()}" noSelection="[null:'-- Not listed or not applicable --']" optionKey="id"/>
+                                <g:select name="parentId" from="${Person.findAllEligibleParent()}" noSelection="[null:'-- Not listed or not applicable --']" optionKey="id"/>
                             </td>
                         </tr>
                     

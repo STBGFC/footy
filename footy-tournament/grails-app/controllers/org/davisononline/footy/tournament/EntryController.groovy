@@ -13,7 +13,6 @@ import org.grails.paypal.PaymentItem
 class EntryController {
     
     def identityService
-    def personService
     def tournamentService
     
 
@@ -119,7 +118,7 @@ class EntryController {
                     def a = Address.parse(clubCommand.clubSecretaryAddress)
                     secr.fullName = clubCommand.clubSecretaryName
                     secr.address = a
-                    personService.saveOrUpdate(secr)
+                    secr.save(flush: true)
                 }
                 
                 def c = new Club(

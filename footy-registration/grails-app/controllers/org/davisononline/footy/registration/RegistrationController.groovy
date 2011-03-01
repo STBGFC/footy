@@ -141,13 +141,14 @@ class RegistrationController {
         flow.personCommand = personCommand
         def person = personCommand.toPerson()
         if (!person.validate())
-            return person.errors()
+            return person.errors
 
         // first or second guardian?
         if (!flow.guardian1)
             flow.guardian1 = person
         else
             flow.guardian2 = person
+        return null
     }
 
     /**
@@ -225,7 +226,8 @@ class PersonCommand extends AbstractPersonCommand {
                 email: email,
                 phone1: phone1,
                 phone2: phone2,
-                address: Address.parse(address)
+                address: Address.parse(address),
+                eligibleParent: true
                 )
     }
 }
