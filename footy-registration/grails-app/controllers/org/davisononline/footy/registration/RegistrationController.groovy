@@ -158,7 +158,7 @@ class RegistrationController {
     def paypalSuccess = {
         def payment = Payment.findByTransactionId(params.transactionId)
         if(payment?.status == org.grails.paypal.Payment.COMPLETE) {
-            render view: 'paypal/success'
+            render view: 'paypal/success', model:[payment:payment]
         }
         else {
             flash.message = "Unable to find Entry for this transaction"
