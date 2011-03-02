@@ -34,7 +34,7 @@ class EntryController {
         def e = checkEntry (params)
         e.payment.status = Payment.COMPLETE
         e.payment.save()
-        redirect(controller: "tournament", action: "entryList")
+        redirect(controller: "tournament", action: "entryList", id: e.tournament.id)
     }
 
     private checkEntry(params) {
