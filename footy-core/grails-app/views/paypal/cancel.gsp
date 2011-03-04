@@ -7,10 +7,8 @@
     <body>
         <div class="dialog">
             <p>
-                <g:message code="org.davisononline.footy.registration.body.paymentcancelled"
-                    default="Your purchase transaction has been cancelled and registration
-                for the player remains unpaid.  Please contact us to arrange payment
-                soon or the player may be removed."/>
+                <g:message code="org.davisononline.footy.core.body.paymentcancelled"
+                    default="Your purchase transaction has been cancelled and payment remains outstanding.  Please call if you wish to make alternative arrangements to pay"/>
             </p>
         </div>
 	</body>

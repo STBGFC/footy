@@ -254,7 +254,7 @@ class EntryController {
                 entry.save()
             }
 
-            render view: 'paypal/success', model:[entry:entry]
+            render view: '/paypal/success', model:[payment: payment], plugin: 'footy-core'
         }
         else {
             flash.message = "Unable to find Entry for this transaction"
@@ -269,7 +269,7 @@ class EntryController {
      * @return
      */
     def paypalCancel = {
-        render view: "paypal/cancel"
+        render view: '/paypal/cancel', plugin: 'footy-core'
     }
 
 }

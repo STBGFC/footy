@@ -1,4 +1,4 @@
-<%@ page import="org.davisononline.footy.core.utils.PaymentUtils" %>
+<%@ page import="org.grails.paypal.Payment; org.davisononline.footy.core.utils.PaymentUtils" %>
 
         <table id="invoice">
             <tbody>
@@ -35,6 +35,7 @@
             </tbody>
         </table>
         <div id="checkout">
+        <g:if test="${payment.status != Payment.COMPLETE}">
         <g:form
                 controller="paypal"
                 action="uploadCart"
@@ -53,3 +54,9 @@
                 alt="Click to pay via PayPal - the safer, easier way to pay"/>
         </g:form>
         </div>
+        </g:if>
+        <g:else>
+            <p>
+                <g:message code="org.davisononline.footy.core.invoicepaid" default="This invoice has already been paid.  Thank you."/>
+            </p>
+        </g:else>

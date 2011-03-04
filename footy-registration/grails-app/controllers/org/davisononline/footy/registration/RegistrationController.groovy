@@ -158,7 +158,7 @@ class RegistrationController {
     def paypalSuccess = {
         def payment = Payment.findByTransactionId(params.transactionId)
         if(payment?.status == org.grails.paypal.Payment.COMPLETE) {
-            render view: 'paypal/success', model:[payment:payment]
+            render view: '/paypal/success', model:[payment:payment], plugin: 'footy-core'
         }
         else {
             flash.message = "Unable to find Entry for this transaction"
@@ -173,7 +173,7 @@ class RegistrationController {
      * @return
      */
     def paypalCancel = {
-        render view: "paypal/cancel"
+        render view: '/paypal/cancel', plugin: 'footy-core'
     }
 }
 
