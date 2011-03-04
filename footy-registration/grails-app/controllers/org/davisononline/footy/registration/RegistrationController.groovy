@@ -114,7 +114,7 @@ class RegistrationController {
                     log.error player.errors
 
                 def payment = new Payment (
-                    buyerId: player.guardian.id,
+                    buyerId: player.guardian?.id ?: player.id,
                     currency: Currency.getInstance("GBP")
                 )
                 payment.addToPaymentItems(
@@ -128,10 +128,10 @@ class RegistrationController {
 
                 [payment:payment, player:player]
 
-            }.to "enterPaymentDetails"
+            }.to "invoice"
         }
 
-        enterPaymentDetails()
+        invoice()
     }
 
     /*

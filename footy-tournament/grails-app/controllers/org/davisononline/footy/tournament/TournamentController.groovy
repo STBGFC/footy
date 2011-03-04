@@ -1,6 +1,7 @@
 package org.davisononline.footy.tournament
 
 import org.codehaus.groovy.grails.commons.ConfigurationHolder
+import org.grails.paypal.*
 
 /**
  * @author darren

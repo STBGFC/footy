@@ -227,10 +227,10 @@ class EntryController {
                 entry.save(flush:true)
                 [payment:payment]
 
-            }.to("enterPaymentDetails")
+            }.to("invoice")
         }
 
-        enterPaymentDetails()
+        invoice()
         
         error() {
             render (view:'/error')
