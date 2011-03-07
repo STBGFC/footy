@@ -9,7 +9,7 @@
         <p>
             You are entering the following team(s) into <strong>${entryInstance.tournament.name}</strong>
         </p>
-        <g:render template="/invoice" model="[controller:'entry']" plugin="footy-core" />
+        <g:render template="/invoice" model="[controller:'invoice']" plugin="footy-core" />
         <p>
             You will receive email confirmation as soon as payment clears (which is
             normally immediate in the case of PayPal)

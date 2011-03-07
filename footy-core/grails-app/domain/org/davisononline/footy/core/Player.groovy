@@ -26,7 +26,7 @@ class Player implements Serializable {
         person(nullable: false)
         guardian(nullable: true,
             validator: { val, obj ->
-                return !(obj.team?.ageBand < Person.MINOR_UNTIL && val == null)
+                return !(obj.age < Person.MINOR_UNTIL && val == null)
             }
         )
         secondGuardian(nullable: true)
@@ -41,6 +41,15 @@ class Player implements Serializable {
         person cascade: 'all,delete-orphan'
         guardian cascade: 'save-update'
         secondGuardian: cascade: 'save-update'
+    }
+
+    def getAge() {
+        // TODO: make cutoff date configurable
+        // TODO: calculate properly
+        def now = new Date()
+        def c = 1900 + (now.month > 7 ? 1 : 0)
+        def cutoff = new Date("${now.year+c}/08/31")
+        Math.floor((cutoff-dateOfBirth)/365.24)
     }
     
     /**

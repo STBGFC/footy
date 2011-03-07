@@ -10,6 +10,10 @@
             <g:form action="apply" >
                 <h2>Welcome to our tournament entry application.</h2>
                 <p>
+                    You are creating team entries for our <strong>${entryInstance.tournament.name}</strong> tournament
+                    which is ${entryInstance.tournament.startDate == entryInstance.tournament.endDate ? "on " + formatDate(date:entryInstance.tournament.startDate, format:"dd MMMM yyyy") : "from " + formatDate(date:entryInstance.tournament.startDate, format:"dd-") + formatDate(date:entryInstance.tournament.endDate, format: "dd MMMM yyyy")}
+                </p>
+                <p>
                     Please start by completing your own contact details below.
                 </p>
                     <table>

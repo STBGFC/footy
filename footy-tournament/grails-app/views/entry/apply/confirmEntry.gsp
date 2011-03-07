@@ -6,9 +6,11 @@
     </head>
 
     <body>
+        <div class="dialog">
         <p>
             The following teams are ready to be entered.  Please choose whether to add more 
-            teams or proceed to payment.
+            teams or proceed to payment. Once you move to the payment screen, you will no
+            longer be able to go back and make changes.
         </p>
         <g:form action="apply">
         <ul id="confirmEntryList">
@@ -21,5 +23,6 @@
             <span class="button"><g:submitButton name="submit" class="save" value="Continue to Payment"></g:submitButton></span>
         </div>
         </g:form>
+        </div>
     </body>
 </html>

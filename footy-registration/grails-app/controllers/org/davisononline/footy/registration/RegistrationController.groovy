@@ -151,30 +151,6 @@ class RegistrationController {
         return null
     }
 
-    /**
-     * successful paypal payment made
-     * @param params
-     */
-    def paypalSuccess = {
-        def payment = Payment.findByTransactionId(params.transactionId)
-        if(payment?.status == org.grails.paypal.Payment.COMPLETE) {
-            render view: '/paypal/success', model:[payment:payment], plugin: 'footy-core'
-        }
-        else {
-            flash.message = "Unable to find Entry for this transaction"
-            render view: "/error"
-        }
-    }
-
-    /**
-     * cancelled transaction
-     *
-     * @param params
-     * @return
-     */
-    def paypalCancel = {
-        render view: '/paypal/cancel', plugin: 'footy-core'
-    }
 }
 
 abstract class AbstractPersonCommand implements Serializable {

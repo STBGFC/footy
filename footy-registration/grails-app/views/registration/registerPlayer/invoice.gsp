@@ -12,7 +12,7 @@
                 click the PayPal button in order to make payment now
                 either from a PayPal account or a credit card.
             </p>
-            <g:render template="/invoice" model="[controller:'registration']" plugin="footy-core" />
+            <g:render template="/invoice" model="[controller:'invoice']" plugin="footy-core" />
         </div>
     </body>
 </html>

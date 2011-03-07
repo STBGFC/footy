@@ -3,12 +3,13 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <g:set var="entityName" value="${message(code: 'club.label', default: 'Club')}" />
-        <title><g:message code="default.paymentdetails.label" default="Enter Player Details" /></title>
+        <title><g:message code="default.paymentdetails.label" default="New Player Registration" /></title>
     </head>
     <body>
         <div class="dialog">
             <g:form action="registerPlayer">
-                <p>Enter details of the new player in the fields below.</p>
+                <p><g:message code="org.davisononline.footy.registration.views.registration.registerPlayer.enterPlayerDetails.para1"
+                        default="Enter details of the new player in the fields below." /></p>
                 
                 <table>
                     <tbody>    

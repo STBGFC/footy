@@ -9,9 +9,8 @@
     <body>
         <div class="list">
 	        <p>
-	            Entries for this tournament are displayed in the table below with payment status.  You can
-	            delete an entry (and all teams on it from the tournament) if the payment has not been
-	            made.
+                <g:message code="org.davisononline.footy.tournament.views.entry.apply.entryList.para1"
+                    default="Entries for this tournament are displayed in the table below with payment status.  You can delete an entry (and all teams on it from the tournament) if the payment has not been made."/>
 	        </p>
 	        <div class="nav">
 	            <span class="menuButton"><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></span>
@@ -38,7 +37,9 @@
                         </td>
                         <td>
                             <g:if test="${entry.payment}">
-                            <img title="${entry.payment?.status}" alt="${entry.payment?.status}" src="${resource(dir:'images',file:'payment-' + entry.payment?.status?.toLowerCase() + '.png')}"/>
+                                <g:link controller="invoice" action="show" id="${entry.payment?.transactionId}">
+                                    <img title="${entry.payment?.status}" alt="${entry.payment?.status} (click to see invoice)" src="${resource(dir:'images',file:'payment-' + entry.payment?.status?.toLowerCase() + '.png')}"/>
+                                </g:link>
                             </g:if>
                             <g:if test="${entry.payment?.status != org.grails.paypal.Payment.COMPLETE}">
                             &nbsp;(<g:link action="paymentMade" controller="entry" id="${entry.id}" onclick="return confirm('${message(code: 'default.button.manualpayment.confirm.message', default: 'Are you sure you want to mark payment as received?')}');">mark payment received</g:link>)

@@ -9,8 +9,7 @@
         <div class="dialog">
             <g:form action="apply" >
                 <p>
-                    Enter the details for your club below, including the affiliation county and
-                    number if you have them.
+                    Enter the details for your club below, including the affiliation county and number if you have them.
                 </p>
                     <table>
                         <tbody>
