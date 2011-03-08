@@ -126,12 +126,14 @@ class RegistrationController {
                 )
                 payment.save(flush:true)
 
-                [payment:payment, player:player]
+                [payment:payment]
 
             }.to "invoice"
         }
 
-        invoice()
+        invoice {
+            redirect (controller: 'invoice', action: 'show', id: flow.payment.transactionId)
+        }
     }
 
     /*

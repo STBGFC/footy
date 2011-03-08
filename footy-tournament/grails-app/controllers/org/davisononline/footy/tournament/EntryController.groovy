@@ -230,7 +230,9 @@ class EntryController {
             }.to("invoice")
         }
 
-        invoice()
+        invoice {
+            redirect (controller: 'invoice', action: 'show', id: flow.payment.transactionId)
+        }
         
         error() {
             render (view:'/error')

@@ -12,7 +12,6 @@ class InvoiceController {
         if (!payment) {
             redirect view: '/404'
         }
-        
         [payment: payment]
     }
 

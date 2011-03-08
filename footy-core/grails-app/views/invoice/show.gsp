@@ -10,8 +10,7 @@
             <p>
                 A copy of the invoice is shown below
             </p>
-            <g:render template="/invoice" model="[controller:'invoice']" />
+            <g:render template="invoiceBody" model="[controller:'invoice']" />
         </div>
     </body>
 </html>
-        
