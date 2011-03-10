@@ -120,12 +120,13 @@ class RegistrationController {
                     log.error player.errors
 
                 def payment = new Payment (
-                    buyerId: player.guardian?.id ?: player.id,
+                    buyerId: player.id,
                     currency: Currency.getInstance("GBP")
                 )
                 payment.addToPaymentItems(
                     new PaymentItem (
                         itemName: "${player} Registration",
+                        // TODO: re-registration will cause duplicate key
                         itemNumber: "${player.id}",
                         // TODO: change to data driven
                         amount: ConfigurationHolder.config.org.davisononline.footy.registration.annualcost
@@ -139,7 +140,7 @@ class RegistrationController {
         }
 
         invoice {
-            redirect (controller: 'invoice', action: 'show', id: flow.payment.transactionId)
+            redirect (controller: 'invoice', action: 'show', id: flow.payment.transactionId, params:[returnController: 'registration'])
         }
     }
 
@@ -160,59 +161,22 @@ class RegistrationController {
         return null
     }
 
-}
+    def paypalSuccess = {
+        def payment = Payment.findByTransactionId(params.transactionId)
+        // update registration date for the player
+        def player = Player.get(payment.buyerId)
+        if (!player.lastRegistrationDate)
+            player.lastRegistrationDate = new Date()
+        else {
+            def nextYear = player.lastRegistrationDate[YEAR] + 1
+            player.lastRegistrationDate.set(year: nextYear)
+        }
 
-abstract class AbstractPersonCommand implements Serializable {
-    String givenName
-    String familyName
-
-    static constraints = {
-        givenName(nullable:false, blank:false, size:1..50)
-        familyName(nullable:false, blank:false, size:1..50)
-    }
-}
-
-class PlayerCommand extends AbstractPersonCommand {
-    Date dob
-    Long parentId
-    String knownAsName
-
-    static constraints = {
-        dob(nullable: false)
-        knownAsName(nullable:true, size:1..50)
+        render view: '/paypal/success', model:[payment: payment]
     }
 
-    /**
-     * @return age at cutoff
-     */
-    int age() {
-        // TODO: make cutoff date configurable
-        def now = new Date()
-        def c = 1900 + (now.month > 7 ? 1 : 0)
-        def cutoff = new Date("${now.year+c}/08/31")
-        Math.floor((cutoff-dob)/365.24)
+    def paypalCancel = {
+        render view: '/paypal/cancel'
     }
-}
 
-class PersonCommand extends AbstractPersonCommand {
-    String email
-    String phone1
-    String phone2
-    String address
-
-    /**
-     *
-     * @return a Person domain object (possibly invalid) from the command
-     */
-    def toPerson() {
-        new Person(
-                givenName: givenName,
-                familyName: familyName,
-                email: email,
-                phone1: phone1,
-                phone2: phone2,
-                address: Address.parse(address),
-                eligibleParent: true
-                )
-    }
 }

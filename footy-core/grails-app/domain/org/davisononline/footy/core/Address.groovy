@@ -79,7 +79,7 @@ class Address implements Serializable {
      * @see java.lang.Object#toString()
      */
     String toString() {
-        "${address}\n${town}.\n${postCode}"
+        address + (town ? "\n${town}" : "") + (postCode ? "\n${postCode}" : "")
     }
 
 }

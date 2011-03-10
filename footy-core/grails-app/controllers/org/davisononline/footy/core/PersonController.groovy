@@ -20,9 +20,9 @@ class PersonController {
     }
 
     def listplayer = {
-        params.max = Math.min(params.max ? params.int('max') : 10, 100)
-        def l = Person.findAllEligibleParent(params)
-        [personInstanceList: l, personInstanceTotal: l.size()]
+        params.max = Math.min(params.max ? params.int('max') : 25, 100)
+        def l = Player.list(params)
+        [playerInstanceList: l, playerInstanceTotal: l.size()]
     }
 
     def create = {
@@ -55,7 +55,12 @@ class PersonController {
         }
     }
 
-    def update = {
+    def editplayer = {
+        // TODO: implement editplayer
+        render "editplayer NOT IMPLEMENTED YET"
+    }
+
+    def update = { PersonCommand cmd ->
         def personInstance = Person.get(params.id)
         if (personInstance) {
             if (params.version) {
@@ -67,13 +72,15 @@ class PersonController {
                     return
                 }
             }
-            personInstance.properties = params
+            
+            def submitted = cmd.toPerson()
+            personInstance.properties = submitted.properties
             if (!personInstance.hasErrors() && personInstance.save(flush: true)) {
                 flash.message = "${message(code: 'default.updated.message', args: [message(code: 'person.label', default: ''), personInstance])}"
                 redirect(action: "listperson")
             }
             else {
-                render(view: "edit", model: [personInstance: personInstance])
+                render(view: "edit", model: [personCommand: personInstance])
             }
         }
         else {
