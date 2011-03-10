@@ -19,23 +19,19 @@
                 <table class="list">
                     <thead>
                         <tr>
-                            <g:sortableColumn property="familyName" title="${message(code: 'person.familyName.label', default: 'Family Name')}" />
-                            <g:sortableColumn property="givenName" title="${message(code: 'person.givenName.label', default: 'Given Name(s)')}" />
-                            <g:sortableColumn property="knownAsName" title="${message(code: 'person.knownAsName.label', default: 'Known As')}" />
+                            <g:sortableColumn property="familyName" title="${message(code: 'person.name.label', default: 'Name')}" />
                             <g:sortableColumn property="email" title="${message(code: 'person.email.label', default: 'Email')}" />
+                            <g:sortableColumn property="phone1" title="${message(code: 'person.phone1.label', default: 'Tel.')}" />
                             <th><g:message code="person.address.label" default="Address" /></th>
-                            <th><g:message code="actions.label" default="&nbsp;" /></th>
                         </tr>
                     </thead>
                     <tbody>
                     <g:each in="${personInstanceList}" status="i" var="personInstance">
                         <tr class="${(i % 2) == 0 ? 'odd' : 'even'}">
-                            <td>${fieldValue(bean: personInstance, field: "familyName")}</td>
-                            <td>${fieldValue(bean: personInstance, field: "givenName")}</td>
-                            <td>${fieldValue(bean: personInstance, field: "knownAsName")}</td>
+                            <td><g:link action="edit" id="${personInstance.id}">${personInstance}</g:link></td>
                             <td>${fieldValue(bean: personInstance, field: "email")}</td>
+                            <td>${fieldValue(bean: personInstance, field: "phone1")}</td>
                             <td>${fieldValue(bean: personInstance, field: "address")}</td>
-                            <td><g:link action="edit" id="${personInstance.id}">edit</g:link></td>
                         </tr>
                     </g:each>
                     </tbody>
