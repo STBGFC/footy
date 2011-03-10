@@ -25,6 +25,9 @@ grails.project.dependency.resolution = {
     }
     dependencies {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes eg.
-        compile 'org.grails.plugins:mail:1.0-SNAPSHOT'
+        //compile 'org.grails.plugins:mail:1.0-SNAPSHOT'
+        //compile 'paypal:paypal:latest.integration'
+        //runtime 'org.grails.plugins:webflow:latest.integration'
+
     }
 }

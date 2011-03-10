@@ -4,7 +4,7 @@ class FootyCoreGrailsPlugin {
     // the version or versions of Grails the plugin is designed for
     def grailsVersion = "1.3 > *"
     // the other plugins this plugin depends on
-    def dependsOn = [mail: "1.0-SNAPSHOT > *"]
+    def dependsOn = [mail: "1.0-SNAPSHOT > *", paypal: "0.6.1 > *"]
     // resources that are excluded from plugin packaging
     def pluginExcludes = [
             "grails-app/views/error.gsp"
