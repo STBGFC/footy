@@ -69,7 +69,6 @@ class RegistrationController {
                     personCommand.errors = errors
                     return error()
                 }
-                flow.personCommand = null
 
                 // TODO: ensure teams are from correct age band and home club only
                 flow.availableTeams = Team.findAllByClub(Club.getHomeClub())
@@ -95,17 +94,9 @@ class RegistrationController {
                 def team = Team.get(params.teamId)
 
                 // create domain from flow objects
-                def player = new Player (
-                        dateOfBirth: flow.playerCommand.dob,
-                        team: team,
-                        dateJoinedClub: new Date(),
-                        leagueRegistrationNumber: params.leagueRegistration ?: ''
-                )
-                player.person = new Person(
-                        givenName: flow.playerCommand.givenName,
-                        familyName: flow.playerCommand.familyName,
-                        knownAsName: flow.playerCommand.knownAsName
-                )
+                def player = flow.playerCommand.toPlayer()
+                player.team = team
+                player.leagueRegistrationNumber = params.leagueRegistration ?: ''
 
                 if (flow.guardian1) {
                     flow.guardian1.save(flush:true)

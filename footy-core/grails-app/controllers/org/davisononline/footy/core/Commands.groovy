@@ -16,12 +16,13 @@ abstract class AbstractPersonCommand implements Serializable {
 }
 
 class PlayerCommand extends AbstractPersonCommand {
-    Date dob
+    Date dateOfBirth
     Long parentId
+    Long secondParentId
     String knownAsName
 
     static constraints = {
-        dob(nullable: false)
+        dateOfBirth(nullable: false)
         knownAsName(nullable:true, size:1..50)
     }
 
@@ -33,7 +34,23 @@ class PlayerCommand extends AbstractPersonCommand {
         def now = new Date()
         def c = 1900 + (now.month > 7 ? 1 : 0)
         def cutoff = new Date("${now.year+c}/08/31")
-        Math.floor((cutoff-dob)/365.24)
+        Math.floor((cutoff-dateOfBirth)/365.24)
+    }
+
+    /**
+     * @return a Player domain object (possibly invalid) from the command
+     */
+    def toPlayer() {
+        def person = new Person(
+                givenName: givenName,
+                familyName: familyName,
+                knownAsName: knownAsName
+        )
+        new Player(
+                person: person,
+                dateJoinedClub: new Date(),
+                dateOfBirth: dateOfBirth
+        )
     }
 }
 

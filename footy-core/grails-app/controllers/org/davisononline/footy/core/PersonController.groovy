@@ -1,7 +1,7 @@
 package org.davisononline.footy.core
 
 /**
- * admin controller for Person and Player operations
+ * admin controller for Person operations
  */
 //@Seured([CLUB_ADMIN])
 class PersonController {
@@ -12,17 +12,11 @@ class PersonController {
         redirect(action: "list", params: params)
     }
 
-    def listperson = {
+    def list = {
         params.max = Math.min(params.max ? params.int('max') : 25, 100)
         if (!params.sort) params.sort = 'familyName'
         def l = Person.findAllEligibleParent(params)
         [personInstanceList: l, personInstanceTotal: l.size()]
-    }
-
-    def listplayer = {
-        params.max = Math.min(params.max ? params.int('max') : 25, 100)
-        def l = Player.list(params)
-        [playerInstanceList: l, playerInstanceTotal: l.size()]
     }
 
     def create = {
@@ -53,11 +47,6 @@ class PersonController {
         else {
             return [personCommand: personInstance]
         }
-    }
-
-    def editplayer = {
-        // TODO: implement editplayer
-        render "editplayer NOT IMPLEMENTED YET"
     }
 
     def update = { PersonCommand cmd ->

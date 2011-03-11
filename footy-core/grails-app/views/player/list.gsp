@@ -30,7 +30,7 @@
                     <tbody>
                     <g:each in="${playerInstanceList}" status="i" var="player">
                         <tr class="${(i % 2) == 0 ? 'odd' : 'even'}">
-                            <td><g:link action="editplayer" id="${player.id}">${player.person}</g:link></td>
+                            <td><g:link action="edit" id="${player.id}">${player.person}</g:link></td>
                             <td><g:formatDate date="${player.dateOfBirth}" format="dd/MM/yyyy"/></td>
                             <td><g:formatDate date="${player.dateJoinedClub}" format="dd/MM/yyyy"/></td>
                             <td><g:formatDate date="${player.lastRegistrationDate}" format="dd/MM/yyyy"/></td>
