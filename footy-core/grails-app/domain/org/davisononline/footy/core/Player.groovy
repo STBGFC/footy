@@ -46,6 +46,7 @@ class Player implements Serializable {
     def getAge() {
         // TODO: make cutoff date configurable
         // TODO: calculate properly
+        if (!dateOfBirth) return -1
         def now = new Date()
         def c = 1900 + (now.month > 7 ? 1 : 0)
         def cutoff = new Date("${now.year+c}/08/31")

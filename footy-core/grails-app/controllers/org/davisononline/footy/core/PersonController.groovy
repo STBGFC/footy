@@ -34,7 +34,7 @@ class PersonController {
         else {
             p.save(flush: true)
             flash.message = "${message(code: 'default.created.message', args: [message(code: 'person.label', default: 'Person'), p])}"
-            redirect(action: "listperson")
+            redirect(action: "list")
         }
     }
 
@@ -66,7 +66,7 @@ class PersonController {
             personInstance.properties = submitted.properties
             if (!personInstance.hasErrors() && personInstance.save(flush: true)) {
                 flash.message = "${message(code: 'default.updated.message', args: [message(code: 'person.label', default: ''), personInstance])}"
-                redirect(action: "listperson")
+                redirect(action: "list")
             }
             else {
                 render(view: "edit", model: [personCommand: personInstance])
@@ -74,7 +74,7 @@ class PersonController {
         }
         else {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'person.label', default: 'Person'), params.id])}"
-            redirect(action: "listperson")
+            redirect(action: "list")
         }
     }
 
@@ -92,6 +92,6 @@ class PersonController {
         else {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'person.label', default: 'Person'), params.id])}"
         }
-        redirect(action: "listperson")
+        redirect(action: "list")
     }
 }

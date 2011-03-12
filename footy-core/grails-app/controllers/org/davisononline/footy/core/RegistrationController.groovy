@@ -22,14 +22,32 @@ class RegistrationController {
      */
     def registerPlayerFlow = {
 
+        setup {
+            action {
+                [playerInstance: new Player(person: new Person())]
+            }
+            on ("success").to "enterPlayerDetails"
+        }
+
         /*
          * main form for player details, not including team
          */
         enterPlayerDetails {
-            on("submit") { PlayerCommand playerCommand ->
-                flow.playerCommand = playerCommand
-                if (!playerCommand.validate())
+            on("submit") {
+                def player = new Player(params)
+                flow.playerInstance = player
+                // have to fudge the validation a little.. null parent is ok
+                // for now, we haven't asked for those details yet.
+                if (!player.guardian) player.guardian = new Person()
+                if (!player.validate() || !player.person.validate()) {
+                    // odd.. if i don't do this, the errors object is not visible in the view.
+                    // TODO: log this in grails JIRA
+                    flow.person = player.person
                     return error()
+                }
+
+                player.guardian = null
+                
             }.to "checkGuardianNeeded"
         }
 
@@ -39,7 +57,7 @@ class RegistrationController {
          */
         checkGuardianNeeded {
             action {
-                if (flow.playerCommand.age() < Person.MINOR_UNTIL && !flow.playerCommand.parentId)
+                if (flow.playerInstance.age < Person.MINOR_UNTIL && !flow.playerInstance.guardian && !flow.playerInstance.secondGuardian)
                     return yes()
                 else
                     return no()
@@ -47,15 +65,12 @@ class RegistrationController {
 
             on("yes") {
                 flow.personCommand = new PersonCommand(
-                    familyName: flow.playerCommand.familyName
+                    familyName: flow.playerInstance.person.familyName
                 )
             }.to "enterGuardianDetails"
 
             // TODO: if no guardian required, must get player contact details instead
-            on("no") {
-                if (flow.playerCommand.parentId)
-                    flow.guardian1 = Person.get(flow.playerCommand.parentId)
-            }.to "assignTeam"
+            on("no").to "assignTeam"
         }
 
         /*
@@ -91,19 +106,19 @@ class RegistrationController {
          */
         assignTeam {
             on ("continue") {
-                def team = Team.get(params.teamId)
 
                 // create domain from flow objects
-                def player = flow.playerCommand.toPlayer()
-                player.team = team
-                player.leagueRegistrationNumber = params.leagueRegistration ?: ''
+                def player = flow.playerInstance
+                player.properties = params
+                //player.team = params.team
+                //player.leagueRegistrationNumber = params.leagueRegistrationNumber ?: ''
 
                 if (flow.guardian1) {
-                    flow.guardian1.save(flush:true)
+                    //flow.guardian1.save(flush:true)
                     player.guardian = flow.guardian1
                 }
                 if (flow.guardian2) {
-                    flow.guardian2.save(flush:true)
+                    //flow.guardian2.save(flush:true)
                     player.secondGuardian = flow.guardian2
                 }
 

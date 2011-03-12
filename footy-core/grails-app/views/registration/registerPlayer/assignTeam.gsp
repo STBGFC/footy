@@ -9,32 +9,14 @@
         <div class="dialog">
             <g:form action="registerPlayer"> 
                 <p>
-                    If <strong>${playerCommand.givenName}</strong> is already assigned to a team and has a
+                    If <strong>${playerInstance.person.givenName}</strong> is already assigned to a team and has a
                     league registration number, you can enter those here. If
                     you don't know them, just hit "${message(code: 'default.button.continue.label', default: 'Continue')}"
                 </p>
 
                 <table>
                     <tbody>
-
-                        <tr class="prop">
-                            <td  class="name">
-                                <label for="leagueRegistration"><g:message code="org.davisononline.footy.core.leagueRegistration.label" default="League Registration Number" /></label>
-                            </td>
-                            <td  class="value">
-                                <g:textField name="leagueRegistration" />
-                            </td>
-                        </tr>
-
-                        <tr class="prop">
-                            <td  class="name">
-                                <label for="teamId"><g:message code="org.davisononline.footy.core.team.label" default="Team" /></label>
-                            </td>
-                            <td  class="value">
-                                <g:select name="teamId" from="${availableTeams}" noSelection="['-1':'-- unassigned --']" optionKey="id" />
-                            </td>
-                        </tr>
-
+                        <g:render template="/teamFields" />
                     </tbody>
                 </table>
         

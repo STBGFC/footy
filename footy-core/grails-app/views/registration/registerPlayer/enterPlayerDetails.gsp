@@ -14,16 +14,6 @@
                 <table>
                     <tbody>    
                         <g:render template="/playerFormBody"/>
-
-                        <tr class="prop">
-                            <td  class="name">
-                                <label for="parentId"><g:message code="org.davisononline.org.footy.core.playerGuardian.label" default="Parent/Guardian" /></label>
-                            </td>
-                            <td  class="value">
-                                <g:select name="parentId" from="${Person.findAllEligibleParent()}" noSelection="[null:'-- Not listed or not applicable --']" optionKey="id"/>
-                            </td>
-                        </tr>
-                    
                     </tbody>
                 </table>
         

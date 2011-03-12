@@ -12,32 +12,6 @@ class RegistrationControllerTests extends ControllerUnitTestCase {
         super.tearDown()
     }
 
-    void testPlayerCommandConstraints() {
-        mockForConstraintsTests(PlayerCommand)
-        def p = new PlayerCommand(
-            givenName: 'Fred',
-            familyName: 'Bassett',
-            dob: new Date(1970, 0, 20)
-        )
-        assertTrue p.validate()
-
-        p.givenName = null
-        assertFalse p.validate()
-        p.givenName = ''
-        assertFalse p.validate()
-        p.givenName = 'Fredxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
-        assertFalse p.validate()
-        p.givenName = 'Fred'
-        assertTrue p.validate()
-
-        p.familyName = null
-        assertFalse p.validate()
-        p.familyName = ''
-        assertFalse p.validate()
-        p.familyName = 'Bassett'
-        assertTrue p.validate()
-    }
-
     void testPersonCommandConstraints() {
         mockForConstraintsTests(PersonCommand)
         def p = new PersonCommand(
@@ -75,14 +49,5 @@ class RegistrationControllerTests extends ControllerUnitTestCase {
         assertEquals 'Fred', person.givenName
         assertEquals 'Bassett', person.familyName
         assertEquals 'foo@bar.com', person.email
-    }
-
-    void testPlayerCommandAgeCalculation() {
-        mockForConstraintsTests(PlayerCommand)
-        def p = new PlayerCommand(
-            givenName: 'Fred',
-            familyName: 'Bassett',
-            dob: new Date(2003, 0, 20)
-        )
     }
 }

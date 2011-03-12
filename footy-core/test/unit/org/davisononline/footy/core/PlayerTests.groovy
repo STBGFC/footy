@@ -18,10 +18,11 @@ class PlayerTests extends GrailsUnitTestCase {
         assertTrue p.validate()
 
         p.guardian = null
+        p.dateOfBirth = new Date(92, 1, 1)
         p.team = new Team(name:'foo', manager:PersonTests.getGood(), ageBand: 17)
         assertTrue p.validate()
         
-        p.team.ageBand = 14
+        p.dateOfBirth = new Date(104, 1, 1)
         assertFalse p.validate()
         assertEquals "validator", p.errors["guardian"]
         
@@ -50,5 +51,10 @@ class PlayerTests extends GrailsUnitTestCase {
             guardian: PersonTests.getGood(),
             dateOfBirth: new Date(),
         )
+    }
+
+    void testAgeCalculation() {
+        def p = getGood()
+        p.dateOfBirth = new Date(2003, 0, 20)
     }
 }

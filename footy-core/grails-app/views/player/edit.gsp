@@ -3,7 +3,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <g:set var="entityName" value="${message(code: 'player.label', default: 'Player')}" />
-        <title>Edit ${playerInstance}</title>
+        <title>Edit ${playerInstance.person}</title>
     </head>
     <body>
         <div class="dialog">
@@ -23,70 +23,17 @@
                     <table>
                         <tbody>
 
-                            <tr class="prop">
-                                <td  class="name">
-                                    <label for="person.givenName"><g:message code="org.davisononline.org.footy.core.contactGivenName.label" default="Given Name(s)" /></label>
-                                </td>
-                                <td  class="value ${hasErrors(bean: playerInstance, field: 'person.givenName', 'errors')}">
-                                    <g:textField name="person.givenName" value="${playerInstance?.person.givenName}" />
-                                    <g:render template="/fieldError" model="['instance':playerInstance,'field':'person.givenName']"/>
-                                </td>
-                            </tr>
+                            <g:render template="/playerFormBody"/>
 
                             <tr class="prop">
                                 <td  class="name">
-                                    <label for="person.familyName"><g:message code="org.davisononline.org.footy.core.contactFamilyName.label" default="Family Name" /></label>
-                                </td>
-                                <td  class="value ${hasErrors(bean: playerInstance, field: 'person.familyName', 'errors')}">
-                                    <g:textField name="person.familyName" value="${playerInstance?.person.familyName}" />
-                                    <g:render template="/fieldError" model="['instance':playerInstance,'field':'person.familyName']"/>
-                                </td>
-                            </tr>
-
-                            <tr class="prop">
-                                <td  class="name">
-                                    <label for="person.knownAsName"><g:message code="org.davisononline.org.footy.core.contactKnownAsName.label" default="Known As" /></label>
-                                </td>
-                                <td  class="value ${hasErrors(bean: playerInstance, field: 'person.knownAsName', 'errors')}">
-                                    <g:textField name="person.knownAsName" value="${playerInstance?.person.knownAsName}" />
-                                    <g:render template="/fieldError" model="['instance':playerInstance,'field':'person.knownAsName']"/>
-                                </td>
-                            </tr>
-
-                            <tr class="prop">
-                                <td valign="top" class="name">
-                                    <label for="dateOfBirth"><g:message code="org.davisononline.org.footy.registration.playerDob.label" default="Date of Birth" /></label>
-                                </td>
-                                <td valign="top" class="value date">
-                                    <g:datePicker name="dateOfBirth" precision="day" years="${(new Date().year-19+1900)..(new Date().year-5+1900)}" value="${playerInstance?.dateOfBirth}"  />
-                                </td>
-                            </tr>
-
-                            <tr class="prop">
-                                <td  class="name">
-                                    <label for="parentId"><g:message code="org.davisononline.org.footy.core.playerGuardian.label" default="Parent/Guardian" /></label>
+                                    <label for="secondGuardian.id"><g:message code="org.davisononline.org.footy.core.playerSecondGuardian.label" default="Second Parent/Guardian" /></label>
                                 </td>
                                 <td  class="value">
-                                    <g:select name="parentId" from="${parents}" noSelection="[null:'-- Not listed or not applicable --']" optionKey="id" value="${playerInstance?.guardian?.id}"/>
+                                    <g:select name="secondGuardian.id" from="${Person.findAllEligibleParent()}" noSelection="[null:'-- Not listed or not applicable --']" optionKey="id" value="${playerInstance?.secondGuardian?.id}"/>
                                 </td>
-                            </tr>
 
-                            <tr class="prop">
-                                <td  class="name">
-                                    <label for="secondParentId"><g:message code="org.davisononline.org.footy.core.playerSecondGuardian.label" default="Second Parent/Guardian" /></label>
-                                </td>
-                                <td  class="value">
-                                    <g:select name="secondParentId" from="${parents}" noSelection="[null:'-- Not listed or not applicable --']" optionKey="id" value="${playerInstance?.secondGuardian?.id}"/>
-                                </td>
-                            </tr>
-
-                            <tr class="prop">
-                                <td valign="top" class="name">
-                                  <label for="lastRegistrationDate"><g:message code="org.davisononline.org.footy.registration.playerLastRegistration.label" default="Date of Last Registration" /></label>
-                                </td>
-                                <td valign="top" class="value date">
-                                    <g:datePicker name="lastRegistrationDate" precision="day" years="${(new Date().year-3+1900)..(new Date().year+1900)}" value="${playerInstance?.lastRegistrationDate}"  />
-                                </td>
+                                <g:render template="/teamFields" />
                             </tr>
                         </tbody>
                     </table>

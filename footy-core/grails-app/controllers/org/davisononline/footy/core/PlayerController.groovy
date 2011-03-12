@@ -15,25 +15,6 @@ class PlayerController {
         [playerInstanceList: l, playerInstanceTotal: l.size()]
     }
 
-    def create = {
-        def playerInstance = new Player()
-        playerInstance.properties = params
-        render(view: 'edit', model:[playerInstance: playerInstance])
-    }
-
-    def save = { PlayerCommand cmd ->
-        def p = cmd.toPlayer()
-        if (!p.validate()) {
-            cmd.errors = p.errors
-            render(view: "edit", model: [playerCommand: p])
-        }
-        else {
-            p.save(flush: true)
-            flash.message = "${message(code: 'default.created.message', args: [message(code: 'player.label', default: 'Player'), p])}"
-            redirect(action: "list")
-        }
-    }
-
     def edit = {
         def playerInstance = Player.get(params.id)
         if (!playerInstance) {
@@ -41,11 +22,11 @@ class PlayerController {
             redirect(action: "list")
         }
         else {
-            return [playerInstance: playerInstance, parents: Person.findAllEligibleParent()]
+            return [playerInstance: playerInstance]
         }
     }
 
-    def update = { PlayerCommand cmd ->
+    def update = {
         def playerInstance = Player.get(params.id)
         if (playerInstance) {
             if (params.version) {
@@ -58,17 +39,14 @@ class PlayerController {
                 }
             }
 
-            def submitted = cmd.toPlayer()
-            playerInstance.properties = submitted.properties
-            playerInstance.guardian = Person.get(cmd.parentId)
-            playerInstance.secondGuardian = Person.get(cmd.secondParentId)
+            playerInstance.properties = params
 
-            if (!playerInstance.hasErrors() && playerInstance.save(flush: true)) {
+            if (!playerInstance.hasErrors() && !playerInstance.person.hasErrors() && playerInstance.save(flush: true)) {
                 flash.message = "${message(code: 'default.updated.message', args: [message(code: 'player.label', default: ''), playerInstance])}"
                 redirect(action: "list")
             }
             else {
-                render(view: "edit", model: [playerCommand: playerInstance])
+                render(view: "edit", model: [playerInstance: playerInstance])
             }
         }
         else {
