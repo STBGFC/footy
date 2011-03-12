@@ -24,11 +24,13 @@ class PaymentUtils {
     }
 
     static calculateTax(payment) {
+        if (!payment) return 0
         def act = calculateSubTotal(payment) * (payment.tax)
         Math.round(act * 100) / 100
     }
 
     static calculateTotal(payment) {
+        if (!payment) return 0
         def act = calculateSubTotal(payment) * (payment.tax + 1)
         Math.round(act * 100) / 100
     }

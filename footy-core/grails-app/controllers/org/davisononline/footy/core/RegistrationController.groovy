@@ -64,7 +64,7 @@ class RegistrationController {
             }
 
             on("yes") {
-                flow.personCommand = new PersonCommand(
+                flow.personCommand = new PersonCommand (
                     familyName: flow.playerInstance.person.familyName
                 )
             }.to "enterGuardianDetails"
@@ -84,9 +84,6 @@ class RegistrationController {
                     personCommand.errors = errors
                     return error()
                 }
-
-                // TODO: ensure teams are from correct age band and home club only
-                flow.availableTeams = Team.findAllByClub(Club.getHomeClub())
 
             }.to "assignTeam"
 
@@ -132,7 +129,6 @@ class RegistrationController {
                 payment.addToPaymentItems(
                     new PaymentItem (
                         itemName: "${player} Registration",
-                        // TODO: re-registration will cause duplicate key
                         itemNumber: "${player.id}",
                         // TODO: change to data driven
                         amount: ConfigurationHolder.config.org.davisononline.footy.registration.annualcost
@@ -185,4 +181,42 @@ class RegistrationController {
         render view: '/paypal/cancel'
     }
 
+}
+
+
+/**
+ * @author darren
+ * @since 10/03/11
+ */
+class PersonCommand implements Serializable {
+    String givenName
+    String familyName
+    String email
+    String phone1
+    String phone2
+    String address
+
+    static constraints = {
+        givenName(nullable:false, blank:false, size:1..50)
+        familyName(nullable:false, blank:false, size:1..50)
+        email(nullable: false, blank: false, email: true)
+        phone1(nullable: true, blank: false)
+        phone2(nullable: true)
+    }
+
+    /**
+     *
+     * @return a Person domain object (possibly invalid) from the command
+     */
+    def toPerson() {
+        new Person(
+                givenName: givenName,
+                familyName: familyName,
+                email: email,
+                phone1: phone1,
+                phone2: phone2,
+                address: Address.parse(address),
+                eligibleParent: true
+                )
+    }
 }
