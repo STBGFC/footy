@@ -16,7 +16,7 @@ class PersonController {
         params.max = Math.min(params.max ? params.int('max') : 25, 100)
         if (!params.sort) params.sort = 'familyName'
         def l = Person.findAllEligibleParent(params)
-        [personInstanceList: l, personInstanceTotal: l.size()]
+        [personInstanceList: l, personInstanceTotal: Person.countByEligibleParent(true)]
     }
 
     def create = {

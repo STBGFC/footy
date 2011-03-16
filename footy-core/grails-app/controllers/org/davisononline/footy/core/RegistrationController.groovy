@@ -22,7 +22,13 @@ class RegistrationController {
      */
     def registerPlayerFlow = {
 
-        setup {
+        start {
+            on ("continue") {
+                flow.registrationTier = RegistrationTier.get(params.regTierId)
+            }.to "setupPlayer"
+        }
+
+        setupPlayer {
             action {
                 [playerInstance: new Player(person: new Person())]
             }
@@ -36,9 +42,14 @@ class RegistrationController {
             on("submit") {
                 def player = new Player(params)
                 flow.playerInstance = player
+
                 // have to fudge the validation a little.. null parent is ok
                 // for now, we haven't asked for those details yet.
-                if (!player.guardian) player.guardian = new Person()
+                def tempGuardian = false
+                if (!player.guardian) {
+                    player.guardian = new Person()
+                    tempGuardian = true
+                }
                 if (!player.validate() || !player.person.validate()) {
                     // odd.. if i don't do this, the errors object is not visible in the view.
                     // TODO: log this in grails JIRA
@@ -46,7 +57,8 @@ class RegistrationController {
                     return error()
                 }
 
-                player.guardian = null
+                if (tempGuardian)
+                    player.guardian = null
                 
             }.to "checkGuardianNeeded"
         }
@@ -124,16 +136,19 @@ class RegistrationController {
 
                 def payment = new Payment (
                     buyerId: player.id,
-                    currency: Currency.getInstance("GBP")
+                    transactionIdPrefix: "REG",
+                    currency: Currency.getInstance(ConfigurationHolder.config.org?.davisononline?.footy?.registration?.currency ?: "GBP")
                 )
-                payment.addToPaymentItems(
+                def regItem =
                     new PaymentItem (
-                        itemName: "${player} Registration",
-                        itemNumber: "${player.id}",
-                        // TODO: change to data driven
-                        amount: ConfigurationHolder.config.org.davisononline.footy.registration.annualcost
+                        itemName: "${player} ${flow.registrationTier} Registration",
+                        itemNumber: "${flow.registrationTier.id}",
+                        amount: flow.registrationTier.amount
                     )
-                )
+                if (player.sibling && flow.registrationTier.siblingDiscount != 0) {
+                    regItem.discountAmount = flow.registrationTier.siblingDiscount
+                }
+                payment.addToPaymentItems(regItem)
                 payment.save(flush:true)
 
                 [payment:payment]

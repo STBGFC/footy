@@ -16,6 +16,7 @@ class Player implements Serializable {
     Date dateJoinedClub = new Date()
     Date lastRegistrationDate = null
     String leagueRegistrationNumber = ''
+    Player sibling // for discount calculation
 
     /*
      * guardian should be nullable:true if the player is >= Person.MINOR_UNTIL.
@@ -34,6 +35,7 @@ class Player implements Serializable {
         dateOfBirth(nullable:false)
         team(nullable:true)
         lastRegistrationDate(nullable: true)
+        sibling(nullable: true)
     }
 
     static mapping = {

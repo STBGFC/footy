@@ -8,13 +8,22 @@
                 <th class="amount">amount</th>
             </tr>
             <g:each in="${payment.paymentItems}" var="item">
-                <tr class="invoiceBody">
-                    <td>${item.itemNumber}</td>
-                    <td>${item.itemName}</td>
-                    <td class="amount">
-                        ${item.quantity} x <g:formatNumber number="${item.amount}" type="currency" currencyCode="${payment.currency}" />
-                    </td>
-                </tr>
+            <tr class="invoiceBody">
+                <td>${item.itemNumber}</td>
+                <td>${item.itemName}</td>
+                <td class="amount">
+                    ${item.quantity} x <g:formatNumber number="${item.amount}" type="currency" currencyCode="${payment.currency}" />
+                </td>
+            </tr>
+            <g:if test="${item.discountAmount > 0}">
+            <tr class="invoiceBody">
+                <td>&nbsp;</td>
+                <td>${item.itemName} Discount</td>
+                <td class="amount">
+                    <g:formatNumber number="${-item.discountAmount}" type="currency" currencyCode="${payment.currency}" />
+                </td>
+            </tr>
+            </g:if>
             </g:each>
             <tr class="invoiceBody">
                 <td class="spacer">&nbsp;</td>

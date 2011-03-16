@@ -12,7 +12,7 @@ class PlayerController {
         params.max = Math.min(params.max ? params.int('max') : 25, 100)
         if (!params.sort) params.sort = 'person.familyName'
         def l = Player.list(params)
-        [playerInstanceList: l, playerInstanceTotal: l.size()]
+        [playerInstanceList: l, playerInstanceTotal: Player.count()]
     }
 
     def edit = {

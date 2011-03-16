@@ -46,3 +46,13 @@
                                 <g:render template="/fieldError" model="['instance':playerInstance,'field':'guardian']"/>
                             </td>
                         </tr>
+
+                        <tr class="prop">
+                            <td  class="name">
+                                <label for="sibling.id"><g:message code="org.davisononline.org.footy.core.playerGuardian.label" default="Sibling (for discount)" /></label>
+                            </td>
+                            <td  class="value">
+                                <g:select name="sibling.id" from="${Player.list()}" noSelection="[null:'-- Not applicable --']" optionKey="id" value="${playerInstance?.sibling?.id}"/>
+                                <g:render template="/fieldError" model="['instance':playerInstance,'field':'sibling']"/>
+                            </td>
+                        </tr>
