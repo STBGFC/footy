@@ -1,3 +1,5 @@
+import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
+
 class FootyCoreGrailsPlugin {
     // the plugin version
     def version = "1.0"
@@ -35,7 +37,11 @@ class FootyCoreGrailsPlugin {
     }
 
     def doWithApplicationContext = { applicationContext ->
-        // Implement post initialization spring config (optional)
+        SpringSecurityUtils.securityConfig.userLookup.userDomainClassName = 'org.davisononline.footy.core.SecUser'
+        SpringSecurityUtils.securityConfig.userLookup.authorityJoinClassName = 'org.davisononline.footy.core.SecUserSecRole'
+        SpringSecurityUtils.securityConfig.authority.className = 'org.davisononline.footy.core.SecRole'
+        SpringSecurityUtils.securityConfig.auth.loginFormUrl = '/'
+        SpringSecurityUtils.securityConfig.failureHandler.defaultFailureUrl = '/'
     }
 
     def onChange = { event ->
