@@ -6,7 +6,7 @@ class FootyTournamentBootStrap {
 
     def init = { servletContext ->
         // security roles
-        SecRole.findByAuthority('ROLE_TOURNAMENT') ?: new SecRole(authority: 'ROLE_TOURNAMENT').save(failOnError: true)
+        SecRole.findByAuthority('ROLE_TOURNAMENT_ADMIN') ?: new SecRole(authority: 'ROLE_TOURNAMENT_ADMIN').save(failOnError: true)
     }
     def destroy = {
     }
