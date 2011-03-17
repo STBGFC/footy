@@ -13,8 +13,7 @@ class EntryControllerTests extends ControllerUnitTestCase {
     protected void tearDown() {
         super.tearDown()
     }
-    
-    // TODO: implement flow tests
+        
     void testEntryFlow() {
         assert true
     }

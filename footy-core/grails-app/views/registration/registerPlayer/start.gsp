@@ -9,7 +9,7 @@
         <div class="dialog">
             <g:form action="registerPlayer">
                 <p>
-                    Please select the registration type (your coach or manager can advise you if unsure)
+                    Please select the registration type (your coach or manager can advise you if you're unsure which one to pick)
                 </p>
 
                 <table>
