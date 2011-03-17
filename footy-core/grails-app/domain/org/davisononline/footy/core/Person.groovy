@@ -19,7 +19,10 @@ class Person implements Comparable, Serializable {
     String phone2
     Address address
     Boolean eligibleParent = false
-    
+
+    // security credential
+    SecUser user
+
     
     static constraints = {
         familyName(blank: false, size: 2..50)
@@ -29,6 +32,7 @@ class Person implements Comparable, Serializable {
         address(nullable: true)
         phone1(nullable: true, blank: false)
         phone2(nullable: true, blank: true)
+        user(nullable: true)
     }
 
     static mapping = {

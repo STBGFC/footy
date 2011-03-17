@@ -1,5 +1,8 @@
 package org.davisononline.footy.core
 
+import grails.plugins.springsecurity.Secured
+
+@Secured(['ROLE_CLUB_ADMIN'])
 class PlayerController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]

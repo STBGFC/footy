@@ -2,10 +2,12 @@ package org.davisononline.footy.tournament
 
 import org.codehaus.groovy.grails.commons.ConfigurationHolder
 import org.grails.paypal.*
+import grails.plugins.springsecurity.Secured
 
 /**
  * @author darren
  */
+@Secured(['ROLE_TOURNAMENT_ADMIN'])
 class TournamentController {
     
     // from the export plugin

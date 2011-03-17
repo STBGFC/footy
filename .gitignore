@@ -6,3 +6,4 @@ classes
 .idea
 *.iml
 out/
+stacktrace.log
