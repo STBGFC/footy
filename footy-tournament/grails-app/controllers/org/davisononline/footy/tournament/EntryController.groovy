@@ -3,6 +3,7 @@ package org.davisononline.footy.tournament
 import org.davisononline.footy.core.*
 import org.grails.paypal.Payment
 import org.grails.paypal.PaymentItem
+import grails.plugins.springsecurity.Secured
 
 /**
  * Entry controller supplies the main web flow for the tournament entry
@@ -20,7 +21,7 @@ class EntryController {
         redirect(action:"apply")
     }
     
-    // admin only
+    @Secured(["ROLE_CLUB_ADMIN"])
     def delete = {
         def e = checkEntry(params)
         def tid = e.tournament.id
@@ -29,7 +30,7 @@ class EntryController {
         redirect(controller: "tournament", action: "entryList", id: tid)
     }
 
-    // admin only
+    @Secured(["ROLE_CLUB_ADMIN"])
     def paymentMade = {
         def e = checkEntry (params)
         e.payment.status = Payment.COMPLETE

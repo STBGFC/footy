@@ -63,7 +63,7 @@ class TournamentController {
      */
     def entryList = {
         def t = checkInstance(params)
-        [entries: t.entries]
+        [entries: t.entries.sort()]
     }
 
     /**
