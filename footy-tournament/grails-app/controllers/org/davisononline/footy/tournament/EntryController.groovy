@@ -58,16 +58,17 @@ class EntryController {
             action {
                 if (!params.id) {
                     log.error "no tournament id supplied"
-                    throw new IllegalStateException("Which tournament did you mean?")
+                    return notFound()
                 }
                 def t = Tournament.get(params.id)
                 if (! t?.openForEntry) {
                     log.error "Tournament not found, or not open for entry" 
-                    throw new IllegalStateException("Tournament not found, or not open for entry")
+                    return notFound()
                 }
                 flow.entryInstance = new Entry(tournament: t)
             }
             on(Exception).to("error")
+            on("notFound").to("notFound")
             on("success").to("enterContactDetails")
         }
         
@@ -212,7 +213,8 @@ class EntryController {
                 def entry = flow.entryInstance
                 def payment = new Payment (
                     buyerId: entry.contact.id,
-                    currency: Currency.getInstance("GBP")
+                    currency: Currency.getInstance("GBP"),
+                    transactionIdPrefix: "TRN"
                 )
                 entry.teams.each { t->
                     payment.addToPaymentItems(
@@ -234,9 +236,13 @@ class EntryController {
         invoice {
             redirect (controller: 'invoice', action: 'show', id: flow.payment.transactionId)
         }
+
+        notFound {
+            redirect view: "/404"
+        }
         
         error() {
-            render (view:'/error')
+            render view:'/error'
         }
         
     }

@@ -40,8 +40,6 @@ class FootyCoreGrailsPlugin {
         SpringSecurityUtils.securityConfig.userLookup.userDomainClassName = 'org.davisononline.footy.core.SecUser'
         SpringSecurityUtils.securityConfig.userLookup.authorityJoinClassName = 'org.davisononline.footy.core.SecUserSecRole'
         SpringSecurityUtils.securityConfig.authority.className = 'org.davisononline.footy.core.SecRole'
-        SpringSecurityUtils.securityConfig.auth.loginFormUrl = '/'
-        SpringSecurityUtils.securityConfig.failureHandler.defaultFailureUrl = '/'
     }
 
     def onChange = { event ->
