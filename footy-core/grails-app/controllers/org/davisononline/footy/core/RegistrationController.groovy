@@ -50,7 +50,7 @@ class RegistrationController {
                     player.guardian = new Person()
                     tempGuardian = true
                 }
-                if (!player.validate() || !player.person.validate()) {
+                if (!player.validate() | !player.person?.validate()) {
                     // odd.. if i don't do this, the errors object is not visible in the view.
                     // TODO: log this in grails JIRA
                     flow.person = player.person
@@ -207,6 +207,7 @@ class PersonCommand implements Serializable {
     String givenName
     String familyName
     String email
+    String occupation
     String phone1
     String phone2
     String address
@@ -215,6 +216,7 @@ class PersonCommand implements Serializable {
         givenName(nullable:false, blank:false, size:1..50)
         familyName(nullable:false, blank:false, size:1..50)
         email(nullable: false, blank: false, email: true)
+        occupation(nullable: true)
         phone1(nullable: true, blank: false)
         phone2(nullable: true)
     }
@@ -228,6 +230,7 @@ class PersonCommand implements Serializable {
                 givenName: givenName,
                 familyName: familyName,
                 email: email,
+                occupation: occupation,
                 phone1: phone1,
                 phone2: phone2,
                 address: Address.parse(address),

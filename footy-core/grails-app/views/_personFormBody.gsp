@@ -40,10 +40,30 @@
 
                         <tr class="prop">
                             <td  class="name">
+                                <label for="occupation"><g:message code="org.davisononline.org.footy.core.occupation.label" default="Occupation" /></label>
+                            </td>
+                            <td  class="value ${hasErrors(bean: personCommand, field: 'occupation', 'errors')}">
+                                <g:textField name="occupation" value="${personCommand?.occupation}" />
+                                <g:render template="/fieldError" model="['instance':personCommand,'field':'occupation']"/>
+                            </td>
+                        </tr>
+
+                        <tr class="prop">
+                            <td  class="name">
                                 <label for="address"><g:message code="org.davisononline.org.footy.core.address.label" default="Home Address" /></label>
                             </td>
                             <td  class="value ${hasErrors(bean: personCommand, field: 'address', 'errors')}">
                                 <g:textArea name="address" value="${personCommand?.address}" rows="4" cols="30"/>
                                 <g:render template="/fieldError" model="['instance':personCommand,'field':'address']"/>
+                            </td>
+                        </tr>
+
+                        <tr class="prop">
+                            <td  class="name">
+                                <label for="notes"><g:message code="org.davisononline.footy.core.notes.label" default="Notes" /></label>
+                            </td>
+                            <td  class="value ${hasErrors(bean: personCommand, field: 'notes', 'errors')}">
+                                <g:textArea name="notes" value="${personCommand?.address}" rows="4" cols="30"/>
+                                <g:render template="/fieldError" model="['instance':personCommand,'field':'notes']"/>
                             </td>
                         </tr>

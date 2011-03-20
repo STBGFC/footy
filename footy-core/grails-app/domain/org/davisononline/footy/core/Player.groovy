@@ -7,9 +7,8 @@ package org.davisononline.footy.core
  */
 class Player implements Serializable {
 
-    Person person
+    Person person = new Person()
     Date dateOfBirth
-    String notes = ''
     Person guardian
     Person secondGuardian
     Team team
@@ -17,6 +16,11 @@ class Player implements Serializable {
     Date lastRegistrationDate = null
     String leagueRegistrationNumber = ''
     Player sibling // for discount calculation
+    String notes = ''
+    String ethnicOrigin
+    String doctor
+    String doctorTelephone
+    String medical = ''
 
     /*
      * guardian should be nullable:true if the player is >= Person.MINOR_UNTIL.
@@ -31,14 +35,19 @@ class Player implements Serializable {
             }
         )
         secondGuardian(nullable: true)
-        notes(blank: true)
         dateOfBirth(nullable:false)
+        ethnicOrigin(nullable: true, blank: true)
+        doctor(blank: false)
+        doctorTelephone(blank: false)
+        medical(blank: true)
         team(nullable:true)
         lastRegistrationDate(nullable: true)
         sibling(nullable: true)
+        notes(blank: true)
     }
 
     static mapping = {
+        medical type: 'text'
         notes type: 'text'
         person cascade: 'all,delete-orphan'
         guardian cascade: 'save-update'

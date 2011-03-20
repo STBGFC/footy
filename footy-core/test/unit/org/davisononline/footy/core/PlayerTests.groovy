@@ -50,6 +50,8 @@ class PlayerTests extends GrailsUnitTestCase {
             person: PersonTests.getGood(),
             guardian: PersonTests.getGood(),
             dateOfBirth: new Date(),
+            doctor: 'Dr. Doolittle',
+            doctorTelephone: '09092348208'
         )
     }
 
