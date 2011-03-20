@@ -43,9 +43,9 @@
             </tr>
             </tbody>
         </table>
-        <div id="checkout">
         <g:if test="${payment.status != Payment.COMPLETE}">
-        <g:form
+        <div id="checkout">
+            <g:form
                 controller="paypal"
                 action="uploadCart"
                 params="[
@@ -61,7 +61,14 @@
             <input type="image" class="paypal"
                 src="${resource(dir:'images', file:'paypalcheckout.gif', plugin: 'footy-core')}"
                 alt="Click to pay via PayPal - the safer, easier way to pay"/>
-        </g:form>
+            </g:form>
+            <p>
+                <em>
+                <g:message
+                        code="org.davisononline.footy.core.invoicefooter.text"
+                        default="You don't need a PayPal account to pay!  Once you get to the PayPal site, you can simply enter credit card details without needing to register or login"/>
+                </em>
+            </p>
         </div>
         </g:if>
         <g:else>
