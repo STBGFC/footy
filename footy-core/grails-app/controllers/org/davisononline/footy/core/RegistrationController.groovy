@@ -211,6 +211,7 @@ class PersonCommand implements Serializable {
     String phone1
     String phone2
     String address
+    String notes = ''
 
     static constraints = {
         givenName(nullable:false, blank:false, size:1..50)
