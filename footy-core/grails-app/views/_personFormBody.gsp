@@ -63,7 +63,7 @@
                                 <label for="notes"><g:message code="org.davisononline.footy.core.notes.label" default="Notes" /></label>
                             </td>
                             <td  class="value ${hasErrors(bean: personCommand, field: 'notes', 'errors')}">
-                                <g:textArea name="notes" value="${personCommand?.address}" rows="4" cols="30"/>
+                                <g:textArea name="notes" value="${personCommand?.notes}" rows="4" cols="30"/>
                                 <g:render template="/fieldError" model="['instance':personCommand,'field':'notes']"/>
                             </td>
                         </tr>
