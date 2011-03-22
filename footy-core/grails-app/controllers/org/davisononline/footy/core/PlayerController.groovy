@@ -25,7 +25,10 @@ class PlayerController {
             redirect(action: "list")
         }
         else {
-            return [playerInstance: playerInstance]
+            // use only valid teams
+            def age = playerInstance.getAgeAtNextCutoff()
+            def vt = Team.findAllByClubAndAgeBandBetween(Club.getHomeClub(), age, age+1)
+            return [playerInstance: playerInstance, validTeams: vt]
         }
     }
 
