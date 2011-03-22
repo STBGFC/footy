@@ -18,7 +18,7 @@ class PaymentUtils {
         // sub total items
         def tot = 0
         payment.paymentItems.each { item ->
-            tot += ((item.amount * item.quantity) - item.discountAmount)
+            tot += ((item.amount * item.quantity) - item.discountAmount ?: 0)
         }
         tot
     }

@@ -1,10 +1,15 @@
+import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
+
 class FootyCoreGrailsPlugin {
     // the plugin version
     def version = "1.0"
     // the version or versions of Grails the plugin is designed for
     def grailsVersion = "1.3 > *"
     // the other plugins this plugin depends on
-    def dependsOn = [mail: "1.0-SNAPSHOT > *", paypal: "0.6.1 > *"]
+    def dependsOn = [
+        mail: "1.0-SNAPSHOT > *", 
+        paypal: "0.6.3 > *", 
+    ]
     // resources that are excluded from plugin packaging
     def pluginExcludes = [
             "grails-app/views/error.gsp"
@@ -32,7 +37,9 @@ class FootyCoreGrailsPlugin {
     }
 
     def doWithApplicationContext = { applicationContext ->
-        // Implement post initialization spring config (optional)
+        SpringSecurityUtils.securityConfig.userLookup.userDomainClassName = 'org.davisononline.footy.core.SecUser'
+        SpringSecurityUtils.securityConfig.userLookup.authorityJoinClassName = 'org.davisononline.footy.core.SecUserSecRole'
+        SpringSecurityUtils.securityConfig.authority.className = 'org.davisononline.footy.core.SecRole'
     }
 
     def onChange = { event ->

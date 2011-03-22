@@ -4,6 +4,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <g:set var="entityName" value="${message(code: 'club.label', default: 'Club')}" />
         <title><g:message code="default.guardiandetails.label" default="Enter Parent/Guardian Details" /></title>
+        <script type="text/javascript">var focusField='givenName'</script>
     </head>
     <body>
         <div class="dialog">
@@ -15,7 +16,7 @@
                 <g:if test="${!guardian1}">
                 <p>
                     <g:message code="org.davisononline.footy.registration.views.registration.registerPlayer.para2"
-    default="Once entered, you can choose to continue or submit and then add a second parent or guardian.  Click the appropriate button after filling in the form." />
+                        default="Once entered, you can choose to continue or submit and then add a second parent or guardian.  Click the appropriate button after filling in the form." />
                 </p>
                 </g:if>
                              

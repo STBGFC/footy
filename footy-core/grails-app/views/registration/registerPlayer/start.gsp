@@ -3,13 +3,15 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <g:set var="entityName" value="${message(code: 'club.label', default: 'Club')}" />
-        <title><g:message code="default.registrationtype.label" default="Registration Type" /></title>
+        <title><g:message code="org.davisononline.org.footy.core.registration.label" default="Registration Type" /></title>
     </head>
     <body>
         <div class="dialog">
             <g:form action="registerPlayer">
                 <p>
-                    Please select the registration type (your coach or manager can advise you if you're unsure which one to pick)
+                   <g:message
+                           code="org.davisononline.footy.core.registrationtype.text"
+                           default="Please select the registration type (your coach or manager can advise you if you're unsure which one to pick)"/>
                 </p>
 
                 <table>

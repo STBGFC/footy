@@ -24,6 +24,11 @@
 	</natures>
 	<linkedResources>
 		<link>
+			<name>.link_to_grails_plugins</name>
+			<type>2</type>
+			<locationURI>GRAILS_ROOT/1.3.7/projects/footy-tournament/plugins</locationURI>
+		</link>
+		<link>
 			<name>tomcat-1.3.5-src-groovy</name>
 			<type>2</type>
 			<locationURI>GRAILS_ROOT/1.3.5/projects/footy_tournament/plugins/tomcat-1.3.5/src/groovy</locationURI>

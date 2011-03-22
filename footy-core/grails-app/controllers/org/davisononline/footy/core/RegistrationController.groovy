@@ -50,7 +50,7 @@ class RegistrationController {
                     player.guardian = new Person()
                     tempGuardian = true
                 }
-                if (!player.validate() || !player.person.validate()) {
+                if (!player.validate() | !player.person?.validate()) {
                     // odd.. if i don't do this, the errors object is not visible in the view.
                     // TODO: log this in grails JIRA
                     flow.person = player.person
@@ -69,7 +69,7 @@ class RegistrationController {
          */
         checkGuardianNeeded {
             action {
-                if (flow.playerInstance.age < Person.MINOR_UNTIL && !flow.playerInstance.guardian && !flow.playerInstance.secondGuardian)
+                if (flow.playerInstance.isMinor() && !flow.playerInstance.guardian && !flow.playerInstance.secondGuardian)
                     return yes()
                 else
                     return no()
@@ -82,7 +82,8 @@ class RegistrationController {
             }.to "enterGuardianDetails"
 
             // TODO: if no guardian required, must get player contact details instead
-            on("no").to "assignTeam"
+            on("no").to "prepTeam"
+
         }
 
         /*
@@ -97,7 +98,7 @@ class RegistrationController {
                     return error()
                 }
 
-            }.to "assignTeam"
+            }.to "prepTeam"
 
             on ("addanother") {PersonCommand personCommand ->
                 errors = handleGuardian(flow, personCommand)
@@ -113,6 +114,16 @@ class RegistrationController {
         /*
          * select a team and enter league reg number if available
          */
+        prepTeam {
+            action {
+                // use only valid teams
+                def age = flow.playerInstance.getAgeAtNextCutoff()
+                def vt = Team.findAllByClubAndAgeBandBetween(Club.getHomeClub(), age, age+1)
+                [validTeams: vt]
+            }
+            on("success").to("assignTeam")
+        }
+
         assignTeam {
             on ("continue") {
 
@@ -131,8 +142,10 @@ class RegistrationController {
                     player.secondGuardian = flow.guardian2
                 }
 
-                if (!player.save(flush: true))
+                if (!player.save(flush: true)) {
                     log.error player.errors
+                    return error()
+                }
 
                 def payment = new Payment (
                     buyerId: player.id,
@@ -207,14 +220,17 @@ class PersonCommand implements Serializable {
     String givenName
     String familyName
     String email
+    String occupation
     String phone1
     String phone2
     String address
+    String notes = ''
 
     static constraints = {
         givenName(nullable:false, blank:false, size:1..50)
         familyName(nullable:false, blank:false, size:1..50)
         email(nullable: false, blank: false, email: true)
+        occupation(nullable: true)
         phone1(nullable: true, blank: false)
         phone2(nullable: true)
     }
@@ -228,6 +244,7 @@ class PersonCommand implements Serializable {
                 givenName: givenName,
                 familyName: familyName,
                 email: email,
+                occupation: occupation,
                 phone1: phone1,
                 phone2: phone2,
                 address: Address.parse(address),

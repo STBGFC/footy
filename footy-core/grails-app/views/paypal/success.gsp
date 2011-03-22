@@ -7,7 +7,7 @@
 	<body>
         <div class="dialog">
     	<p>
-               Your purchase is complete and registration is confirmed.
+               Thank you!  Your purchase is complete and registration is confirmed.
                Payment transaction ID is: <strong>${payment.transactionId}</strong>
            </p>
            <p>

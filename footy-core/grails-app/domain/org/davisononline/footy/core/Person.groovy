@@ -15,11 +15,16 @@ class Person implements Comparable, Serializable {
     String familyName
     String knownAsName
     String email
+    String occupation
     String phone1
     String phone2
     Address address
     Boolean eligibleParent = false
+    String notes = ''
     
+    // security credential
+    SecUser user
+
     
     static constraints = {
         familyName(blank: false, size: 2..50)
@@ -27,11 +32,15 @@ class Person implements Comparable, Serializable {
         knownAsName(nullable: true, blank: true)
         email(nullable: true, email: true, blank: false, unique: true)
         address(nullable: true)
+        occupation(nullable: true, blank: true)
         phone1(nullable: true, blank: false)
         phone2(nullable: true, blank: true)
+        user(nullable: true)
+        notes(blank: true)
     }
 
     static mapping = {
+        notes type: 'text'
         address cascade: "all,delete-orphan"
     }
     

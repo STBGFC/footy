@@ -57,6 +57,7 @@ class PersonTests extends GrailsUnitTestCase {
     }
     
     void testSetName() {
+        mockDomain(Person)
         mockForConstraintsTests(Person)
         def p = new Person()
         

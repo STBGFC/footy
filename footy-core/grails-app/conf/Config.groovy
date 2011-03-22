@@ -24,3 +24,8 @@ log4j = {
 }
 grails.views.default.codec="none" // none, html, base64
 grails.views.gsp.encoding="UTF-8"
+
+// Added by the Spring Security Core plugin:
+grails.plugins.springsecurity.userLookup.userDomainClassName = 'org.davisononline.footy.core.SecUser'
+grails.plugins.springsecurity.userLookup.authorityJoinClassName = 'org.davisononline.footy.core.SecUserSecRole'
+grails.plugins.springsecurity.authority.className = 'org.davisononline.footy.core.SecRole'
