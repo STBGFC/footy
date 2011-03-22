@@ -3,14 +3,13 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title><g:message code="enter.contactdetails.label" default="${entryInstance.tournament.name} Tournament" /></title>
+        <title><g:message code="enter.contactdetails.label" default="${entryInstance.tournament.name} Entry" /></title>
     </head>
     <body>
         <div class="dialog">
             <g:form action="apply" >
-                <h2>Welcome to our tournament entry application.</h2>
                 <p>
-                    You are creating team entries for our <strong>${entryInstance.tournament.name}</strong> tournament
+                    You are creating team entries for our <strong>${entryInstance.tournament.name}</strong>
                     which is ${entryInstance.tournament.startDate == entryInstance.tournament.endDate ? "on " + formatDate(date:entryInstance.tournament.startDate, format:"dd MMMM yyyy") : "from " + formatDate(date:entryInstance.tournament.startDate, format:"dd-") + formatDate(date:entryInstance.tournament.endDate, format: "dd MMMM yyyy")}
                 </p>
                 <p>
