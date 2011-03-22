@@ -57,6 +57,15 @@ class PlayerTests extends GrailsUnitTestCase {
 
     void testAgeCalculation() {
         def p = getGood()
-        p.dateOfBirth = new Date(2003, 0, 20)
+        p.dateOfBirth = new Date(103, 0, 20)
+        assertEquals(8, p.getAgeAtNextCutoff())
+        p.dateOfBirth = new Date(102, 10, 20)
+        assertEquals(8, p.getAgeAtNextCutoff())
+        p.dateOfBirth = new Date(103, 10, 20)
+        assertEquals(7, p.getAgeAtNextCutoff())
+        p.dateOfBirth = new Date(103, 7, 31)
+        assertEquals(8, p.getAgeAtNextCutoff())
+        p.dateOfBirth = new Date(103, 8, 1)
+        assertEquals(7, p.getAgeAtNextCutoff())
     }
 }
