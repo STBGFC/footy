@@ -15,6 +15,7 @@ class Team implements Serializable {
     SortedSet players
     int ageBand = 8
     boolean girlsTeam = false
+    boolean vetsTeam = false
     
     static belongsTo = [club: Club]
 
@@ -41,7 +42,10 @@ class Team implements Serializable {
      * @see java.lang.Object#toString()
      */
     public String toString() {
-        "U${ageBand} ${name}" + (girlsTeam ? " (Girls)" : "")
+        if (!vetsTeam)
+            "U${ageBand} ${name}" + (girlsTeam ? " (Girls)" : "")
+        else
+            "${name} (" + (girlsTeam ? "Girls, " : "") + "Vets)"
     }
 
     /**

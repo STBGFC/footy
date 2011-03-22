@@ -188,6 +188,7 @@ class EntryController {
                     division: teamCommand.division,
                     ageBand: teamCommand.ageBand,
                     girlsTeam: teamCommand.girlsTeam,
+                    vetsTeam: teamCommand.vetsTeam,
                     manager: flow.entryInstance.contact
                 )
                 
@@ -331,6 +332,7 @@ class TeamCommand implements Serializable {
     // team
     int ageBand
     boolean girlsTeam = false
+    boolean vetsTeam = false
     String name
     int leagueId
     String division

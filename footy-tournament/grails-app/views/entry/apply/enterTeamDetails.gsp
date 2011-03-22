@@ -32,7 +32,9 @@
                                 </td>
                                 <td  class="value ${hasErrors(bean: teamCommand, field: 'ageBand', 'errors')}">
                                     Under: <g:select class="short" name="ageBand" from="${(7..18).toList()}" value="${teamCommand?.ageBand}" valueMessagePrefix="entry.ageBand"  />
+                                    <br/>
                                     <g:checkBox name="girlsTeam" value="${teamCommand?.girlsTeam}" /> (Girls)
+                                    <g:checkBox name="vetsTeam" value="${teamCommand?.vetsTeam}" /> (Vets/Parents)
                                 </td>
                             </tr>
                         
