@@ -24,18 +24,19 @@ class Team implements Serializable {
         name(blank: false, size: 2..30, unique: ['ageBand','club'])
         players(nullable: true)
 		coaches(nullable: true)
-        ageBand(min: 6, max:18)
+        ageBand(inList: [6,7,8,9,10,11,12,13,14,15,16,17,18,35])
     }
     
     def beforeUpdate() {
-        checkAgeOfGirlsTeam()
+        checkAges()
     }
     def beforeInsert() {
-        checkAgeOfGirlsTeam()
+        checkAges()
     }
     
-    private checkAgeOfGirlsTeam() {
+    private checkAges() {
         if (ageBand < 11) girlsTeam = false
+        if (vetsTeam) ageBand = 35
     }
 
     /**
@@ -58,6 +59,7 @@ class Team implements Serializable {
         return (otherTeam?.name == name && 
             otherTeam.ageBand == ageBand &&
             otherTeam.girlsTeam == girlsTeam &&
+            otherTeam.vetsTeam == vetsTeam &&
             otherTeam.club == club)   
     }
     

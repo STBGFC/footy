@@ -54,15 +54,18 @@ class TeamTests extends GrailsUnitTestCase {
 		// too young
 		t.ageBand = 5
 		assertFalse t.validate()
-		assertEquals "min", t.errors["ageBand"]
+		assertEquals "inList", t.errors["ageBand"]
 		
 		// too old
 		t.ageBand = 19
 		assertFalse t.validate()
-		assertEquals "max", t.errors["ageBand"]
+		assertEquals "inList", t.errors["ageBand"]
+
+		// vet
+		t.ageBand = 35
+		assertTrue t.validate()
 		
         t.ageBand = 10
-
 		assertTrue t.validate()
 		
 	}
@@ -86,6 +89,21 @@ class TeamTests extends GrailsUnitTestCase {
         t.save()
         assertTrue t.girlsTeam
         
+    }
+
+    void testVetsTeamAgeBand() {
+        mockDomain(Team)
+        def t = new Team(
+            league: new League(name:"EBYFL"),
+            club: new Club(name:'FooClub'),
+            name:"Reds",
+            ageBand:8,
+            manager:new Person()
+            )
+        assertTrue t.validate()
+        t.vetsTeam = true
+        t.save()
+        assertEquals(35, t.ageBand)        
     }
 
     void testToString() {
