@@ -38,7 +38,7 @@
                         <td>
                             <g:if test="${entry.payment}">
                                 <g:link controller="invoice" action="show" id="${entry.payment?.transactionId}">
-                                    <img title="${entry.payment?.status}" alt="${entry.payment?.status} (click to see invoice)" src="${resource(dir:'images',file:'payment-' + entry.payment?.status?.toLowerCase() + '.png')}"/>
+                                    <img title="${entry.payment?.status}" alt="${entry.payment?.status} (click to see invoice)" src="${resource(dir:'images',file:'payment-' + entry.payment?.status?.toLowerCase() + '.png', plugin:'footy-core')}"/>
                                 </g:link>
                             </g:if>
                             <g:if test="${entry.payment?.status != org.grails.paypal.Payment.COMPLETE}">

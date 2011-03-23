@@ -1,5 +1,5 @@
 
-<%@ page import="org.davisononline.footy.core.Person" %>
+<%@ page import="org.grails.paypal.Payment; org.davisononline.footy.core.Person" %>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -9,7 +9,7 @@
     <body>
         <div class="list">
             <p>
-                Players who play with the club
+                <g:message code="org.davisononline.footy.core.playerlist.text" default="Players who play with the club"/>
             </p>
             <div class="nav">
                 <span class="menuButton"><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></span>
@@ -36,7 +36,19 @@
                             <td>
                                 ${player.guardian}<br/>${player.guardian?.phone1}</br><a href="mailto:${player.guardian?.email}">${player.guardian?.email}</a>
                             </td>
-                            <td><g:formatDate date="${player.lastRegistrationDate}" format="dd/MM/yyyy"/></td>
+                            <td>
+                                <g:formatDate date="${player.lastRegistrationDate}" format="dd/MM/yyyy"/>
+                                <%-- TODO: ensure most recent only is displayed --%>
+                                <g:set value="${Payment.findByBuyerId(player.id)}" var="payment"/>
+                                <g:link controller="invoice" action="show" id="${payment?.transactionId}">
+                                    <img title="Payment ${payment?.status}" alt="${payment?.status} (click to see invoice)" src="${resource(dir:'images',file:'payment-' + payment?.status?.toLowerCase() + '.png', plugin:'footy-core')}"/>
+                                </g:link>
+                                <g:if test="${payment?.status != org.grails.paypal.Payment.COMPLETE}">
+                                <br/><g:link action="paymentMade" controller="player" id="${payment.transactionId}" onclick="return confirm('${message(code: 'default.button.manualpayment.confirm.message', default: 'Are you sure you want to mark payment as received?')}');">mark payment received</g:link>
+                                <br/><g:link action="delete" controller="player" id="${player.id}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');">delete player</g:link>
+                                </g:if>
+
+                            </td>
                             <td>${fieldValue(bean: player, field: "leagueRegistrationNumber")}</td>
                             <td>${fieldValue(bean: player, field: "team")}</td>
                         </tr>
