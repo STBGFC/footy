@@ -154,7 +154,7 @@ class RegistrationController {
                 )
                 def regItem =
                     new PaymentItem (
-                        itemName: "${player} ${flow.registrationTier} Registration",
+                        itemName: "${player} ${flow.registrationTier}",
                         itemNumber: "${flow.registrationTier.id}",
                         amount: flow.registrationTier.amount
                     )

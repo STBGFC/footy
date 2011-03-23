@@ -13,6 +13,10 @@
                     fields are mandatory.  Please ensure you check details carefully before submitting
                     the entry.
                 </p>
+                <p>
+                    If you are creating a "Parents/Vets" team, then you will still be forced to choose an
+                    age band, a league and a division, but this information will be ignored by the system.
+                </p>
                     <table>
                         <tbody>
                         

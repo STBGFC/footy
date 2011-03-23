@@ -15,7 +15,7 @@
         <g:form action="apply">
         <ul id="confirmEntryList">
         <g:each in="${entryInstance.teams}" var="team">
-            <li>${team.club} ${team} (${team.league} Div. ${team.division})</li> 
+            <li>${team.club} ${team} <g:if test="${!team.vetsTeam}">(${team.league} Div. ${team.division})</g:if></li>
         </g:each>       
         </ul>
         <div class="buttons">

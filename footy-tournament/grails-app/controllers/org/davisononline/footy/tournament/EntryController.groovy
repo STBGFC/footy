@@ -163,6 +163,9 @@ class EntryController {
         
         selectTeam {
             on("selected") { RegisterCommand regCmd ->
+                if (!regCmd.validate())
+                    return createNew()
+                
                 def teams = Team.getAll(regCmd.teamIds?.toList())
                 if (!teams || teams.size() == 0) {
                     flash.message = "No such team found!?"
@@ -220,7 +223,7 @@ class EntryController {
                 entry.teams.each { t->
                     payment.addToPaymentItems(
                         new PaymentItem (
-                            itemName: "${t.club.name} U${t.ageBand} ${t.name}",
+                            itemName: "${t.club.name} ${t}",
                             itemNumber: "${entry.tournament.name}",
                             amount: entry.tournament.costPerTeam
                         )
