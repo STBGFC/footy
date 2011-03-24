@@ -238,7 +238,7 @@ class EntryController {
         }
 
         invoice {
-            redirect (controller: 'invoice', action: 'show', id: flow.payment.transactionId)
+            redirect (controller: 'invoice', action: 'show', id: flow.payment.transactionId, params:[returnController: 'entry'])
         }
 
         notFound {
@@ -262,12 +262,18 @@ class EntryController {
             log.debug("Processed ${entry} for payment")
 
             if (!entry.emailConfirmationSent) {
-                tournamentService.sendConfirmEmail(entry)
-                entry.emailConfirmationSent = true
-                entry.save()
+                try {
+                    tournamentService.sendConfirmEmail(entry)
+                    entry.emailConfirmationSent = true
+                    entry.save()
+                } catch (Exception ex) {
+                    log.error(ex)
+                }
             }
 
-            render view: '/paypal/success', model:[payment: payment], plugin: 'footy-core'
+            // WTF does the render give me a 404?!?
+            //render view: '/paypal/success', model:[payment: payment], plugin: 'footy-core'
+            redirect controller: 'invoice', action: 'paypalSuccess', params: params
         }
         else {
             flash.message = "Unable to find Entry for this transaction"
