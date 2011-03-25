@@ -52,7 +52,7 @@ class Player implements Serializable {
         notes type: 'text'
         person cascade: 'all,delete-orphan'
         guardian cascade: 'save-update'
-        secondGuardian: cascade: 'save-update'
+        secondGuardian cascade: 'save-update'
     }
 
     /**
