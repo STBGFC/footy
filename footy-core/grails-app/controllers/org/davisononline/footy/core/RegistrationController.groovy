@@ -130,15 +130,11 @@ class RegistrationController {
                 // create domain from flow objects
                 def player = flow.playerInstance
                 player.properties = params
-                //player.team = params.team
-                //player.leagueRegistrationNumber = params.leagueRegistrationNumber ?: ''
 
                 if (flow.guardian1) {
-                    //flow.guardian1.save(flush:true)
                     player.guardian = flow.guardian1
                 }
                 if (flow.guardian2) {
-                    //flow.guardian2.save(flush:true)
                     player.secondGuardian = flow.guardian2
                 }
 
@@ -154,7 +150,7 @@ class RegistrationController {
                 )
                 def regItem =
                     new PaymentItem (
-                        itemName: "${player} ${flow.registrationTier} Registration",
+                        itemName: "${player} ${flow.registrationTier}",
                         itemNumber: "${flow.registrationTier.id}",
                         amount: flow.registrationTier.amount
                     )

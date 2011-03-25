@@ -163,6 +163,9 @@ class EntryController {
         
         selectTeam {
             on("selected") { RegisterCommand regCmd ->
+                if (!regCmd.validate())
+                    return createNew()
+                
                 def teams = Team.getAll(regCmd.teamIds?.toList())
                 if (!teams || teams.size() == 0) {
                     flash.message = "No such team found!?"
@@ -220,7 +223,7 @@ class EntryController {
                 entry.teams.each { t->
                     payment.addToPaymentItems(
                         new PaymentItem (
-                            itemName: "${t.club.name} U${t.ageBand} ${t.name}",
+                            itemName: "${t.club.name} ${t}",
                             itemNumber: "${entry.tournament.name}",
                             amount: entry.tournament.costPerTeam
                         )
@@ -235,7 +238,7 @@ class EntryController {
         }
 
         invoice {
-            redirect (controller: 'invoice', action: 'show', id: flow.payment.transactionId)
+            redirect (controller: 'invoice', action: 'show', id: flow.payment.transactionId, params:[returnController: 'entry'])
         }
 
         notFound {
@@ -259,12 +262,18 @@ class EntryController {
             log.debug("Processed ${entry} for payment")
 
             if (!entry.emailConfirmationSent) {
-                tournamentService.sendConfirmEmail(entry)
-                entry.emailConfirmationSent = true
-                entry.save()
+                try {
+                    tournamentService.sendConfirmEmail(entry)
+                    entry.emailConfirmationSent = true
+                    entry.save()
+                } catch (Exception ex) {
+                    log.error(ex)
+                }
             }
 
-            render view: '/paypal/success', model:[payment: payment], plugin: 'footy-core'
+            // WTF does the render give me a 404?!?
+            //render view: '/paypal/success', model:[payment: payment], plugin: 'footy-core'
+            redirect controller: 'invoice', action: 'paypalSuccess', params: params
         }
         else {
             flash.message = "Unable to find Entry for this transaction"

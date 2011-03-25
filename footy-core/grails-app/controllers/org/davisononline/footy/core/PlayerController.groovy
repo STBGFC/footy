@@ -1,11 +1,12 @@
 package org.davisononline.footy.core
 
 import grails.plugins.springsecurity.Secured
+import org.grails.paypal.Payment
 
 @Secured(['ROLE_CLUB_ADMIN'])
 class PlayerController {
 
-    static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
+    static allowedMethods = [save: "POST", update: "POST"]
 
     def index = {
         redirect(action: "list", params: params)
@@ -25,7 +26,10 @@ class PlayerController {
             redirect(action: "list")
         }
         else {
-            return [playerInstance: playerInstance]
+            // use only valid teams
+            def age = playerInstance.getAgeAtNextCutoff()
+            def vt = Team.findAllByClubAndAgeBandBetween(Club.getHomeClub(), age, age+1)
+            return [playerInstance: playerInstance, validTeams: vt]
         }
     }
 
@@ -72,6 +76,25 @@ class PlayerController {
         else {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'player.label', default: 'Player'), params.id])}"
         }
+        redirect(action: "list")
+    }
+
+    /**
+     * manually marks a registration payment as having been made (i.e. outside
+     * of the PayPal/credit card route)
+     */
+    def paymentMade = {
+        def payment = Payment.findByTransactionId(params.id)
+        if (payment) {
+            payment.status = Payment.COMPLETE
+            payment.save()
+            def player = Player.get(payment.buyerId)
+            if (player)
+                player.lastRegistrationDate = new Date()
+        }
+        else
+            flash.message = "No such payment found with transaction id ${params.id}"
+
         redirect(action: "list")
     }
 }
