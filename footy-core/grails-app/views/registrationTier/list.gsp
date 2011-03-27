@@ -9,7 +9,7 @@
     <body>
         <div class="list">
             <p>
-                <g:message code="org.davisononoline.footy.core.registrationtier.text" default="Current registration tiers"/>
+                <g:message code="org.davisononoline.footy.core.registrationtierlistview.text" default="Current registration tiers"/>
             </p>
             <div class="nav">
                 <span class="menuButton"><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></span>
