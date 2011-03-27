@@ -13,7 +13,7 @@
                         default="Enter details of the new player in the fields below." /></p>
                 <table>
                     <tbody>    
-                        <g:render template="/playerFormBody"/>
+                        <g:render template="/player/playerFormBody" plugin="footy-core"/>
                     </tbody>
                 </table>
         

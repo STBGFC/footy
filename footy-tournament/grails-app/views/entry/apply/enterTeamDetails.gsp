@@ -19,7 +19,7 @@
                 </p>
                     <table>
                         <tbody>
-                            <g:render template="/team/editTeam" plugin="footy-core"/>
+                            <g:render template="/team/teamFormBody" plugin="footy-core"/>
                         </tbody>
                     </table>
                 <div class="buttons">

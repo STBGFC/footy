@@ -4,7 +4,7 @@
                             </td>
                             <td  class="value ${hasErrors(bean: personCommand, field: 'givenName', 'errors')}">
                                 <g:textField name="givenName" value="${personCommand?.givenName}" />
-                                <g:render template="/fieldError" model="['instance':personCommand,'field':'givenName']"/>
+                                <g:render template="/shared/fieldError" model="['instance':personCommand,'field':'givenName']" plugin="footy-core"/>
                             </td>
                         </tr>
 
@@ -14,7 +14,7 @@
                             </td>
                             <td  class="value ${hasErrors(bean: personCommand, field: 'familyName', 'errors')}">
                                 <g:textField name="familyName" value="${personCommand?.familyName}" />
-                                <g:render template="/fieldError" model="['instance':personCommand,'field':'familyName']"/>
+                                <g:render template="/shared/fieldError" model="['instance':personCommand,'field':'familyName']" plugin="footy-core"/>
                             </td>
                         </tr>
 
@@ -24,7 +24,7 @@
                             </td>
                             <td  class="value ${hasErrors(bean: personCommand, field: 'phone1', 'errors')}">
                                 <g:textField name="phone1" value="${personCommand?.phone1}" />
-                                <g:render template="/fieldError" model="['instance':personCommand,'field':'phone1']"/>
+                                <g:render template="/shared/fieldError" model="['instance':personCommand,'field':'phone1']" plugin="footy-core"/>
                             </td>
                         </tr>
 
@@ -34,7 +34,7 @@
                             </td>
                             <td  class="value ${hasErrors(bean: personCommand, field: 'email', 'errors')}">
                                 <g:textField name="email" value="${personCommand?.email}" />
-                                <g:render template="/fieldError" model="['instance':personCommand,'field':'email']"/>
+                                <g:render template="/shared/fieldError" model="['instance':personCommand,'field':'email']" plugin="footy-core"/>
                             </td>
                         </tr>
 
@@ -44,7 +44,7 @@
                             </td>
                             <td  class="value ${hasErrors(bean: personCommand, field: 'occupation', 'errors')}">
                                 <g:textField name="occupation" value="${personCommand?.occupation}" />
-                                <g:render template="/fieldError" model="['instance':personCommand,'field':'occupation']"/>
+                                <g:render template="/shared/fieldError" model="['instance':personCommand,'field':'occupation']" plugin="footy-core"/>
                             </td>
                         </tr>
 
@@ -54,7 +54,7 @@
                             </td>
                             <td  class="value ${hasErrors(bean: personCommand, field: 'address', 'errors')}">
                                 <g:textArea name="address" value="${personCommand?.address}" rows="4" cols="30"/>
-                                <g:render template="/fieldError" model="['instance':personCommand,'field':'address']"/>
+                                <g:render template="/shared/fieldError" model="['instance':personCommand,'field':'address']" plugin="footy-core"/>
                             </td>
                         </tr>
 
@@ -64,6 +64,6 @@
                             </td>
                             <td  class="value ${hasErrors(bean: personCommand, field: 'notes', 'errors')}">
                                 <g:textArea name="notes" value="${personCommand?.notes}" rows="4" cols="30"/>
-                                <g:render template="/fieldError" model="['instance':personCommand,'field':'notes']"/>
+                                <g:render template="/shared/fieldError" model="['instance':personCommand,'field':'notes']" plugin="footy-core"/>
                             </td>
                         </tr>

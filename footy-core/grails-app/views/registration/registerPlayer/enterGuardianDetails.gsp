@@ -22,7 +22,7 @@
                              
                 <table>
                     <tbody>
-                        <g:render template="/personFormBody" />
+                        <g:render template="/person/personFormBody" plugin="footy-core"/>
                     </tbody>
                 </table>
                 

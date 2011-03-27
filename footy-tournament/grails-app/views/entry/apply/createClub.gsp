@@ -20,7 +20,7 @@
                                 </td>
                                 <td  class="value ${hasErrors(bean: clubCommand, field: 'name', 'errors')}">
                                     <g:textField name="name" value="${clubCommand?.name}" />
-                                    <g:render template="/fieldError" model="['instance':clubCommand,'field':'name']" plugin="footy-core"/>
+                                    <g:render template="/shared/fieldError" model="['instance':clubCommand,'field':'name']" plugin="footy-core"/>
                                 </td>
                             </tr>
                         
@@ -30,7 +30,7 @@
                                 </td>
                                 <td  class="value ${hasErrors(bean: clubCommand, field: 'colours', 'errors')}">
                                     <g:textField name="colours" value="${clubCommand?.colours}" />
-                                    <g:render template="/fieldError" model="['instance':clubCommand,'field':'colours']" plugin="footy-core"/>
+                                    <g:render template="/shared/fieldError" model="['instance':clubCommand,'field':'colours']" plugin="footy-core"/>
                                 </td>
                             </tr>
                         
@@ -40,7 +40,7 @@
                                 </td>
                                 <td  class="value ${hasErrors(bean: clubCommand, field: 'clubSecretaryName', 'errors')}">
                                     <g:textField name="clubSecretaryName" value="${clubCommand?.clubSecretaryName}" />
-                                    <g:render template="/fieldError" model="['instance':clubCommand,'field':'clubSecretaryName']" plugin="footy-core"/>
+                                    <g:render template="/shared/fieldError" model="['instance':clubCommand,'field':'clubSecretaryName']" plugin="footy-core"/>
                                 </td>
                             </tr>
                         
@@ -50,7 +50,7 @@
                                 </td>
                                 <td  class="value ${hasErrors(bean: clubCommand, field: 'clubSecretaryEmail', 'errors')}">
                                     <g:textField name="clubSecretaryEmail" value="${clubCommand?.clubSecretaryEmail}" />
-                                    <g:render template="/fieldError" model="['instance':clubCommand,'field':'clubSecretaryEmail']" plugin="footy-core"/>
+                                    <g:render template="/shared/fieldError" model="['instance':clubCommand,'field':'clubSecretaryEmail']" plugin="footy-core"/>
                                 </td>
                             </tr>
                         
@@ -60,7 +60,7 @@
                                 </td>
                                 <td  class="value ${hasErrors(bean: clubCommand, field: 'clubSecretaryAddress', 'errors')}">
                                     <g:textArea name="clubSecretaryAddress" value="${clubCommand?.clubSecretaryAddress}" rows="4" cols="30"/>
-                                    <g:render template="/fieldError" model="['instance':clubCommand,'field':'clubSecretaryAddress']" plugin="footy-core"/>
+                                    <g:render template="/shared/fieldError" model="['instance':clubCommand,'field':'clubSecretaryAddress']" plugin="footy-core"/>
                                 </td>
                             </tr>
                         
@@ -70,7 +70,7 @@
                                 </td>
                                 <td  class="value ${hasErrors(bean: clubCommand, field: 'countyAffiliatedTo', 'errors')}">
                                     <g:textField name="countyAffiliatedTo" value="${clubCommand?.countyAffiliatedTo}" />
-                                    <g:render template="/fieldError" model="['instance':clubCommand,'field':'countyAffiliatedTo']" plugin="footy-core"/>
+                                    <g:render template="/shared/fieldError" model="['instance':clubCommand,'field':'countyAffiliatedTo']" plugin="footy-core"/>
                                 </td>
                             </tr>
                         
@@ -80,7 +80,7 @@
                                 </td>
                                 <td  class="value ${hasErrors(bean: clubCommand, field: 'countyAffiliationNumber', 'errors')}">
                                     <g:textField name="countyAffiliationNumber" value="${clubCommand?.countyAffiliationNumber}" />
-                                    <g:render template="/fieldError" model="['instance':clubCommand,'field':'countyAffiliationNumber']" plugin="footy-core"/>
+                                    <g:render template="/shared/fieldError" model="['instance':clubCommand,'field':'countyAffiliationNumber']" plugin="footy-core"/>
                                 </td>
                             </tr>
                         

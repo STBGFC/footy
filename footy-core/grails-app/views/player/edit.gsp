@@ -23,7 +23,7 @@
                     <table>
                         <tbody>
 
-                            <g:render template="/playerFormBody"/>
+                            <g:render template="/player/playerFormBody"/>
 
                             <tr class="prop">
                                 <td  class="name">
@@ -33,7 +33,7 @@
                                     <g:select name="secondGuardian.id" from="${Person.findAllEligibleParent()}" noSelection="[null:'-- Not listed or not applicable --']" optionKey="id" value="${playerInstance?.secondGuardian?.id}"/>
                                 </td>
 
-                                <g:render template="/teamFields" />
+                                <g:render template="/player/teamFields" />
                             </tr>
                         </tbody>
                     </table>

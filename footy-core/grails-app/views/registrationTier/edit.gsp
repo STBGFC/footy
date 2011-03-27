@@ -28,7 +28,7 @@
                                 </td>
                                 <td valign="top" class="value ${hasErrors(bean: registrationTierInstance, field: 'name', 'errors')}">
                                     <g:textField name="name" value="${registrationTierInstance?.name}" />
-                                    <g:render template="/fieldError" model="['instance':registrationTierInstance,'field':'name']"/>
+                                    <g:render template="/shared/fieldError" model="['instance':registrationTierInstance,'field':'name']" plugin="footy-core"/>
                                 </td>
                             </tr>
                         
@@ -38,7 +38,7 @@
                                 </td>
                                 <td valign="top" class="value ${hasErrors(bean: registrationTierInstance, field: 'amount', 'errors')}">
                                     <g:textField name="amount" value="${fieldValue(bean: registrationTierInstance, field: 'amount')}" />
-                                    <g:render template="/fieldError" model="['instance':registrationTierInstance,'field':'amount']"/>
+                                    <g:render template="/shared/fieldError" model="['instance':registrationTierInstance,'field':'amount']" plugin="footy-core"/>
                                 </td>
                             </tr>
                         
@@ -48,7 +48,7 @@
                                 </td>
                                 <td valign="top" class="value ${hasErrors(bean: registrationTierInstance, field: 'repeatDiscount', 'errors')}">
                                     <g:textField name="repeatDiscount" value="${fieldValue(bean: registrationTierInstance, field: 'repeatDiscount')}" />
-                                    <g:render template="/fieldError" model="['instance':registrationTierInstance,'field':'repeatDiscount']"/>
+                                    <g:render template="/shared/fieldError" model="['instance':registrationTierInstance,'field':'repeatDiscount']" plugin="footy-core"/>
                                 </td>
                             </tr>
                         
@@ -58,7 +58,7 @@
                                 </td>
                                 <td valign="top" class="value ${hasErrors(bean: registrationTierInstance, field: 'siblingDiscount', 'errors')}">
                                     <g:textField name="siblingDiscount" value="${fieldValue(bean: registrationTierInstance, field: 'siblingDiscount')}" />
-                                    <g:render template="/fieldError" model="['instance':registrationTierInstance,'field':'siblingDiscount']"/>
+                                    <g:render template="/shared/fieldError" model="['instance':registrationTierInstance,'field':'siblingDiscount']" plugin="footy-core"/>
                                 </td>
                             </tr>
                         

@@ -31,7 +31,7 @@
                 <div class="dialog">
                     <table>
                         <tbody>
-                            <g:render template="/personFormBody" />
+                            <g:render template="personFormBody" />
                         </tbody>
                     </table>
                 </div>

@@ -5,7 +5,7 @@
                             </td>
                             <td  class="value ${hasErrors(bean: playerInstance, field: 'leagueRegistrationNumber', 'errors')}">
                                 <g:textField name="leagueRegistrationNumber" value="${playerInstance?.leagueRegistrationNumber}"/>
-                                <g:render template="/fieldError" model="['instance':playerInstance,'field':'leagueRegistrationNumber']"/>
+                                <g:render template="/shared/fieldError" model="['instance':playerInstance,'field':'leagueRegistrationNumber']" plugin="footy-core"/>
                             </td>
                         </tr>
 

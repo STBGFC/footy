@@ -27,7 +27,7 @@
                                 </td>
                                 <td  class="value ${hasErrors(bean: teamCommand, field: 'name', 'errors')}">
                                     <g:textField name="name" value="${teamCommand?.name}" />
-                                    <g:render template="/fieldError" model="['instance':teamCommand,'field':'name']" plugin="footy-core"/>
+                                    <g:render template="/shared/fieldError" model="['instance':teamCommand,'field':'name']" plugin="footy-core"/>
                                 </td>
                             </tr>
                         
@@ -37,7 +37,7 @@
                                 </td>
                                 <td  class="value ${hasErrors(bean: teamCommand, field: 'leagueId', 'errors')}">
                                     <g:select name="leagueId" from="${League.list()}" value="${teamCommand?.leagueId}" optionValue="name" optionKey="id" valueMessagePrefix="entry.league"  />
-                                    <g:render template="/fieldError" model="['instance':teamCommand,'field':'leagueId']" plugin="footy-core"/>
+                                    <g:render template="/shared/fieldError" model="['instance':teamCommand,'field':'leagueId']" plugin="footy-core"/>
                                 </td>
                             </tr>
                         
@@ -47,6 +47,6 @@
                                 </td>
                                 <td  class="value ${hasErrors(bean: teamCommand, field: 'division', 'errors')}">
                                     <g:textField name="division" value="${teamCommand?.division}" />
-                                    <g:render template="/fieldError" model="['instance':teamCommand,'field':'division']" plugin="footy-core"/>
+                                    <g:render template="/shared/fieldError" model="['instance':teamCommand,'field':'division']" plugin="footy-core"/>
                                 </td>
                             </tr>

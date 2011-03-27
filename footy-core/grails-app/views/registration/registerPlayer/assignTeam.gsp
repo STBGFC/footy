@@ -17,7 +17,7 @@
 
                 <table>
                     <tbody>
-                        <g:render template="/teamFields" />
+                        <g:render template="/player/teamFields" plugin="footy-core"/>
                     </tbody>
                 </table>
         

@@ -5,7 +5,7 @@
                             </td>
                             <td  class="value ${hasErrors(bean: playerInstance.person, field: 'givenName', 'errors')}">
                                 <g:textField name="person.givenName" value="${playerInstance?.person?.givenName}" />
-                                <g:render template="/fieldError" model="['instance':playerInstance.person,'field':'givenName']"/>
+                                <g:render template="/shared/fieldError" model="['instance':playerInstance.person,'field':'givenName']" plugin="footy-core"/>
                             </td>
                         </tr>
                         <tr class="prop">
@@ -14,7 +14,7 @@
                             </td>
                             <td  class="value ${hasErrors(bean: playerInstance.person, field: 'familyName', 'errors')}">
                                 <g:textField name="person.familyName" value="${playerInstance?.person?.familyName}" />
-                                <g:render template="/fieldError" model="['instance':playerInstance.person,'field':'familyName']"/>
+                                <g:render template="/shared/fieldError" model="['instance':playerInstance.person,'field':'familyName']" plugin="footy-core"/>
                             </td>
                         </tr>
 
@@ -24,7 +24,7 @@
                             </td>
                             <td  class="value ${hasErrors(bean: playerInstance.person, field: 'knownAsName', 'errors')}">
                                 <g:textField name="person.knownAsName" value="${playerInstance?.person?.knownAsName}" />
-                                <g:render template="/fieldError" model="['instance':playerInstance.person,'field':'knownAsName']"/>
+                                <g:render template="/shared/fieldError" model="['instance':playerInstance.person,'field':'knownAsName']" plugin="footy-core"/>
                             </td>
                         </tr>
 
@@ -43,7 +43,7 @@
                             </td>
                             <td  class="value">
                                 <g:select name="guardian.id" from="${Person.findAllEligibleParent()}" noSelection="[null:'-- Not listed or not applicable --']" optionKey="id" value="${playerInstance?.guardian?.id}"/>
-                                <g:render template="/fieldError" model="['instance':playerInstance,'field':'guardian']"/>
+                                <g:render template="/shared/fieldError" model="['instance':playerInstance,'field':'guardian']" plugin="footy-core"/>
                             </td>
                         </tr>
 
@@ -53,7 +53,7 @@
                             </td>
                             <td  class="value ${hasErrors(bean: playerInstance, field: 'ethnicOrigin', 'errors')}">
                                 <g:textField name="ethnicOrigin" value="${playerInstance?.ethnicOrigin}" />
-                                <g:render template="/fieldError" model="['instance':playerInstance,'field':'ethnicOrigin']"/>
+                                <g:render template="/shared/fieldError" model="['instance':playerInstance,'field':'ethnicOrigin']" plugin="footy-core"/>
                             </td>
                         </tr>
 
@@ -63,7 +63,7 @@
                             </td>
                             <td  class="value ${hasErrors(bean: playerInstance, field: 'doctor', 'errors')}">
                                 <g:textField name="doctor" value="${playerInstance?.doctor}" />
-                                <g:render template="/fieldError" model="['instance':playerInstance,'field':'doctor']"/>
+                                <g:render template="/shared/fieldError" model="['instance':playerInstance,'field':'doctor']" plugin="footy-core"/>
                             </td>
                         </tr>
 
@@ -73,7 +73,7 @@
                             </td>
                             <td  class="value ${hasErrors(bean: playerInstance, field: 'doctorTelephone', 'errors')}">
                                 <g:textField name="doctorTelephone" value="${playerInstance?.doctorTelephone}" />
-                                <g:render template="/fieldError" model="['instance':playerInstance,'field':'doctorTelephone']"/>
+                                <g:render template="/shared/fieldError" model="['instance':playerInstance,'field':'doctorTelephone']" plugin="footy-core"/>
                             </td>
                         </tr>
 
@@ -83,7 +83,7 @@
                             </td>
                             <td  class="value ${hasErrors(bean: playerInstance, field: 'medical', 'errors')}">
                                 <g:textArea name="medical" value="${playerInstance?.medical}" rows="4" cols="30"/>
-                                <g:render template="/fieldError" model="['instance':playerInstance,'field':'medical']"/>
+                                <g:render template="/shared/fieldError" model="['instance':playerInstance,'field':'medical']" plugin="footy-core"/>
                             </td>
                         </tr>
 
@@ -93,6 +93,6 @@
                             </td>
                             <td  class="value">
                                 <g:select name="sibling.id" from="${Player.list()}" noSelection="[null:'-- Not applicable --']" optionKey="id" value="${playerInstance?.sibling?.id}"/>
-                                <g:render template="/fieldError" model="['instance':playerInstance,'field':'sibling']"/>
+                                <g:render template="/shared/fieldError" model="['instance':playerInstance,'field':'sibling']" plugin="footy-core"/>
                             </td>
                         </tr>

@@ -22,7 +22,7 @@
                 <div class="dialog">
                     <table>
                         <tbody>
-                            <g:render template="editTeam" model="[teamCommand: teamInstance, clubInstance: Club.getHomeClub()]"/>
+                            <g:render template="teamFormBody" model="[teamCommand: teamInstance, clubInstance: Club.getHomeClub()]"/>
                             <tr class="prop">
                                 <td valign="top" class="name">
                                   <label for="manager.id"><g:message code="team.manager.label" default="Manager" /></label>
