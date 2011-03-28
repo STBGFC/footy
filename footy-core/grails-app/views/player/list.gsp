@@ -41,7 +41,7 @@
                                 <%-- TODO: ensure most recent only is displayed --%>
                                 <g:set value="${Payment.findByBuyerId(player.id)}" var="payment"/>
                                 <g:if test="${payment != null}">
-                                <g:link controller="invoice" action="show" id="${payment?.transactionId}">
+                                <g:link controller="invoice" action="show" id="${payment?.transactionId}" params="[returnController:'registration']">
                                     <img title="Payment ${payment?.status}" alt="${payment?.status?.toLowerCase()} (click to see invoice)" src="${resource(dir:'images',file:'payment-' + payment?.status?.toLowerCase() + '.png', plugin:'footy-core')}"/>
                                 </g:link>
                                 <g:if test="${payment?.status != org.grails.paypal.Payment.COMPLETE}">
