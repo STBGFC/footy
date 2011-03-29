@@ -51,7 +51,14 @@
                                 </g:if>
                             </td>
                             <td>${fieldValue(bean: player, field: "leagueRegistrationNumber")}</td>
-                            <td>${fieldValue(bean: player, field: "team")}</td>
+                            <td>
+                                <g:if test="${player?.team}">
+                                <g:link action="edit" controller="team" id="${player.team.id}">${fieldValue(bean: player, field: "team")}</g:link>
+                                </g:if>
+                                <g:else>
+                                    ${fieldValue(bean: player, field: "team")}
+                                </g:else>
+                            </td>
                         </tr>
                     </g:each>
                     </tbody>
