@@ -34,7 +34,9 @@
                             <td><g:link action="edit" id="${player.id}">${player.person}</g:link></td>
                             <td><g:formatDate date="${player.dateOfBirth}" format="dd/MM/yyyy"/></td>
                             <td>
-                                ${player.guardian}<br/>${player.guardian?.phone1}<br/><a href="mailto:${player.guardian?.email}">${player.guardian?.email}</a>
+                                <g:link controller="person" action="edit" id="${player.guardian?.id}">${player.guardian}</g:link>
+                                <br/>${player.guardian?.phone1}
+                                <br/><a href="mailto:${player.guardian?.email}">${player.guardian?.email}</a>
                             </td>
                             <td>
                                 <g:formatDate date="${player.lastRegistrationDate}" format="dd/MM/yyyy"/>

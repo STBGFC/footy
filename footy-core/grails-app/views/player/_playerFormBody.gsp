@@ -33,7 +33,7 @@
                                 <label for="dateOfBirth"><g:message code="org.davisononline.footy.registration.playerDob.label" default="Date of Birth" /></label>
                             </td>
                             <td valign="top" class="value date">
-                                <g:datePicker name="dateOfBirth" precision="day" years="${(new Date().year-19+1900)..(new Date().year-5+1900)}" value="${playerInstance?.dateOfBirth}"  />
+                                <g:datePicker name="dateOfBirth" precision="day" years="${(new Date().year-19+1900)..(new Date().year-4+1900)}" value="${playerInstance?.dateOfBirth}"  />
                             </td>
                         </tr>
 
@@ -89,7 +89,7 @@
 
                         <tr class="prop">
                             <td  class="name">
-                                <label for="sibling.id"><g:message code="org.davisononline.footy.core.playerGuardian.label" default="Sibling (must be selected to qualify for discount)" /></label>
+                                <label for="sibling.id"><g:message code="org.davisononline.footy.core.playerGuardian.label" default="Sibling (must already be registered - select here to qualify for discount)" /></label>
                             </td>
                             <td  class="value">
                                 <g:select name="sibling.id" from="${Player.list()}" noSelection="[null:'-- Not applicable --']" optionKey="id" value="${playerInstance?.sibling?.id}"/>
