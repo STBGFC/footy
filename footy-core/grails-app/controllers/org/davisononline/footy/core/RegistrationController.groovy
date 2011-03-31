@@ -4,6 +4,7 @@ import org.davisononline.footy.core.*
 import org.grails.paypal.Payment
 import org.grails.paypal.PaymentItem
 import org.codehaus.groovy.grails.commons.ConfigurationHolder
+import org.springframework.dao.DataIntegrityViolationException
 
 /**
  * flows for the redgistration and creation of players, parents and other
@@ -139,27 +140,36 @@ class RegistrationController {
                     player.secondGuardian = flow.guardian2
                 }
 
-                if (!player.save(flush: true)) {
-                    log.error player.errors
+                def payment
+                try {
+                    Player.withTransaction { status ->
+                        if (!player.save(flush: true)) {
+                            log.error player.errors
+                            status.setRollbackOnly()
+                            return error()
+                        }
+
+                        payment = new Payment (
+                                buyerId: player.id,
+                                transactionIdPrefix: "REG",
+                                currency: Currency.getInstance(ConfigurationHolder.config.org?.davisononline?.footy?.registration?.currency ?: "GBP")
+                        )
+                        def regItem =
+                        new PaymentItem (
+                                itemName: "${player} ${flow.registrationTier}",
+                                itemNumber: "${flow.registrationTier.id}",
+                                amount: flow.registrationTier.amount
+                        )
+                        if (player.sibling && flow.registrationTier.siblingDiscount != 0) {
+                            regItem.discountAmount = flow.registrationTier.siblingDiscount
+                        }
+                        payment.addToPaymentItems(regItem)
+                        payment.save(flush:true)
+                    }
+                }
+                catch (Exception ex) {
                     return error()
                 }
-
-                def payment = new Payment (
-                    buyerId: player.id,
-                    transactionIdPrefix: "REG",
-                    currency: Currency.getInstance(ConfigurationHolder.config.org?.davisononline?.footy?.registration?.currency ?: "GBP")
-                )
-                def regItem =
-                    new PaymentItem (
-                        itemName: "${player} ${flow.registrationTier}",
-                        itemNumber: "${flow.registrationTier.id}",
-                        amount: flow.registrationTier.amount
-                    )
-                if (player.sibling && flow.registrationTier.siblingDiscount != 0) {
-                    regItem.discountAmount = flow.registrationTier.siblingDiscount
-                }
-                payment.addToPaymentItems(regItem)
-                payment.save(flush:true)
 
                 [payment:payment]
 
