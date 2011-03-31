@@ -28,7 +28,8 @@ class PlayerController {
         else {
             // use only valid teams
             def age = playerInstance.getAgeAtNextCutoff()
-            def vt = Team.findAllByClubAndAgeBandBetween(Club.getHomeClub(), age, age+1)
+            def upperAge = (age < 7) ? 6 : age + 1
+            def vt = Team.findAllByClubAndAgeBandBetween(Club.getHomeClub(), age, upperAge)
             return [playerInstance: playerInstance, validTeams: vt]
         }
     }

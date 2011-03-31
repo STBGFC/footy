@@ -14,7 +14,6 @@
                                 <label for="team.id"><g:message code="org.davisononline.footy.core.team.label" default="Team" /></label>
                             </td>
                             <td  class="value">
-                                <%-- TODO: ensure teams are from correct age band and home club only --%>
                                 <g:select name="team.id" from="${validTeams}" noSelection="['null':'-- unassigned --']" optionKey="id" value="${playerInstance?.team?.id}"/>
                             </td>
                         </tr>
