@@ -30,7 +30,7 @@ class RegistrationController {
 
         setupPlayer {
             action {
-                [playerInstance: new Player(person: new Person())]
+                [playerInstance: new Player(person: new Person(eligibleParent: false))]
             }
             on ("success").to "enterPlayerDetails"
         }

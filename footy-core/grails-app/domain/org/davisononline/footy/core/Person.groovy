@@ -19,7 +19,7 @@ class Person implements Comparable, Serializable {
     String phone1
     String phone2
     Address address
-    Boolean eligibleParent = false
+    Boolean eligibleParent = true
     String notes = ''
     
     // security credential

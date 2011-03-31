@@ -10,6 +10,7 @@
         <div class="dialog">
             <p>
                 Create or edit details of the team below
+                ${managers}
             </p>
             <div class="nav">
                 <span class="menuButton"><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></span>
@@ -28,7 +29,7 @@
                                   <label for="manager.id"><g:message code="team.manager.label" default="Manager" /></label>
                                 </td>
                                 <td valign="top" class="value ${hasErrors(bean: teamInstance, field: 'manager', 'errors')}">
-                                    <g:select name="manager.id" from="${org.davisononline.footy.core.Person.list()}" optionKey="id" value="${teamInstance?.manager?.id}"  />
+                                    <g:select name="manager.id" from="${managers}" optionKey="id" value="${teamInstance?.manager?.id}"  />
                                 </td>
                             </tr>
                         
