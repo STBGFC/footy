@@ -10,7 +10,6 @@
         <div class="dialog">
             <p>
                 Create or edit details of the team below
-                ${managers}
             </p>
             <div class="nav">
                 <span class="menuButton"><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></span>
