@@ -21,10 +21,13 @@ class Person implements Comparable, Serializable {
     Address address
     Boolean eligibleParent = true
     String notes = ''
-    
+    SortedSet qualifications
+
     // security credential
     SecUser user
 
+    static hasMany = [qualifications: Qualification]
+    static fetchMode = [qualifications: 'eager']
     
     static constraints = {
         familyName(blank: false, size: 2..50)
@@ -37,6 +40,7 @@ class Person implements Comparable, Serializable {
         phone2(nullable: true, blank: true)
         user(nullable: true)
         notes(blank: true)
+        qualifications(nullable: true)
     }
 
     static mapping = {

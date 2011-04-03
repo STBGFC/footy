@@ -3,14 +3,14 @@ package org.davisononline.footy.core
 /**
  * enable new types to be created within an application
  */
-class QualificationType {
+class QualificationType implements Serializable {
 
     static final String COACHING = 'Coaching'
     static final String REFEREEING = 'Refereeing'
     static final String OTHER = 'Other'
 
     String category = OTHER
-    boolean expires = false
+    int yearsValidFor = 0 // 0 .. never expires
     String name
 
     static constraints = {

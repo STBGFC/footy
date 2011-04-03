@@ -6,12 +6,12 @@ class QualificationTests extends GrailsUnitTestCase {
 
     static lev1 = new QualificationType(
             name: 'FA Level 1',
-            expires: false,
+            yearsValidFor: 0,
             category: QualificationType.COACHING
     )
     static eAid = new QualificationType(
             name: 'Emergency Aid',
-            expires: true,
+            yearsValidFor: 3,
             category: QualificationType.OTHER
     )
 
@@ -37,14 +37,12 @@ class QualificationTests extends GrailsUnitTestCase {
         def d2 = new Date('2014/01/01')
         def q = new Qualification(
                 type: eAid,
-                attainedOn: d1,
-                expiresOn: d2
+                attainedOn: d1
         )
         assertEquals "Emergency Aid (expires: 2014/01/01)", q.toString()
     }
 
-    void testExpiryConstraint() {
-        mockForConstraintsTests(Qualification)
+    void testExpiry() {
         def d1 = new Date('2011/01/01')
         def d2 = new Date('2014/01/01')
 
@@ -53,16 +51,13 @@ class QualificationTests extends GrailsUnitTestCase {
                 type: eAid,
                 attainedOn: d1
         )
-        assertFalse q.validate()
-        assertEquals "validator", q.errors["expiresOn"]
-        q.expiresOn = d2
-        assertTrue q.validate()
+        assertEquals d2, q.expiresOn
 
         // non-expiring type
         q = new Qualification(
                 type: lev1,
                 attainedOn: d1
         )
-        assertTrue q.validate()
+        assertNull q.expiresOn
     }
 }
