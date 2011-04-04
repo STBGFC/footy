@@ -70,20 +70,19 @@ class RegistrationController {
         checkPlayerRegistered {
             action {
                 def p = flow.playerInstance
-                def pe = Player.findAll(
-                        "from Player p where p.dateOfBirth = :1 and p.guardian = :2 and p.person.familyName = :3 and p.person.givenName = :4",
-                        [p.dateOfBirth, p.guardian, p.person.familyName, p.person.givenName]
+                def pe = Player.find(
+                        "from Player p where p.dateOfBirth = :dob and p.guardian = :guardian and p.person.familyName = :familyName and p.person.givenName = :givenName",
+                        [dob: p.dateOfBirth, guardian: p.guardian, familyName: p.person.familyName, givenName: p.person.givenName]
                 )
-                if (pe)
+                if (pe) {
+                    flow.payment = Payment.findByBuyerId(pe.id)
                     return yes()
+                }
                 else
                     return no()
             }
 
-            on("yes") {
-                flow.payment = Payment.findByBuyerId(flow.playerInstance.id)
-            }.to "invoice"
-
+            on("yes").to "invoice"
             on("no").to "checkGuardianNeeded"
         }
 
