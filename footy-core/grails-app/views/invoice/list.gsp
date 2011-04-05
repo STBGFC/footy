@@ -32,11 +32,10 @@
                             <td>
                                 <img title="${payment?.status}" alt="${payment?.status?.toLowerCase()}" src="${resource(dir:'images',file:'payment-' + payment?.status?.toLowerCase() + '.png', plugin:'footy-core')}"/>
                             </td>
-                            <td>${payment?.paypalTransactionId}</td>
+                            <td><code>${payment?.paypalTransactionId}</code></td>
                             <td>
                                 ${payment?.buyerInformation?.receiverName ?: 'n/a'}<br/>
-                                ${payment?.buyerInformation?.street ?: ''}<br/>
-                                ${payment?.buyerInformation?.zip ?: ''}
+                                ${payment?.buyerInformation?.street ?: ''}, ${payment?.buyerInformation?.zip ?: ''}
                             </td>
                             <td>${payment ? formatNumber(number:PaymentUtils.calculateTotal(payment), type:'currency', currencyCode:payment.currency) : 'n/a'}</td>
                         </tr>
