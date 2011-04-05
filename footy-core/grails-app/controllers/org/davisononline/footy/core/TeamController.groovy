@@ -43,7 +43,7 @@ class TeamController {
             redirect(action: "list")
         }
         else {
-            return [teamInstance: teamInstance, managers: Person.findAllByEligibleParent(true)]
+            return [teamInstance: teamInstance, managers: Person.findAllByEligibleParent(true, [sort:'familyName'])]
         }
     }
 

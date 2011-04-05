@@ -61,7 +61,29 @@ class RegistrationController {
                 if (tempGuardian)
                     player.guardian = null
                 
-            }.to "checkGuardianNeeded"
+            }.to "checkPlayerRegistered"
+        }
+
+        /*
+         * ensure player not already in DB
+         */
+        checkPlayerRegistered {
+            action {
+                def p = flow.playerInstance
+                def pe = Player.find(
+                        "from Player p where p.dateOfBirth = :dob and p.guardian = :guardian and p.person.familyName = :familyName and p.person.givenName = :givenName",
+                        [dob: p.dateOfBirth, guardian: p.guardian, familyName: p.person.familyName, givenName: p.person.givenName]
+                )
+                if (pe) {
+                    flow.payment = Payment.findByBuyerId(pe.id)
+                    return yes()
+                }
+                else
+                    return no()
+            }
+
+            on("yes").to "invoice"
+            on("no").to "checkGuardianNeeded"
         }
 
         /*
