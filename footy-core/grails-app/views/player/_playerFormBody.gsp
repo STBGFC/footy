@@ -89,7 +89,7 @@
 
                         <tr class="prop">
                             <td  class="name">
-                                <label for="sibling.id"><g:message code="org.davisononline.footy.core.playerGuardian.label" default="Sibling (must already be registered - select here to qualify for discount)" /></label>
+                                <label for="sibling.id"><g:message code="org.davisononline.footy.core.playerSibling.label" default="Sibling (must already be registered - select here to qualify for discount)" /></label>
                             </td>
                             <td  class="value">
                                 <g:select name="sibling.id" from="${Player.list([sort:'person.familyName'])}" noSelection="[null:'-- Not applicable --']" optionKey="id" value="${playerInstance?.sibling?.id}"/>
