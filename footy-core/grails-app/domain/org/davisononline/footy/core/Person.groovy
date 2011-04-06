@@ -9,6 +9,8 @@ import org.codehaus.groovy.grails.commons.ConfigurationHolder
  */
 class Person implements Comparable, Serializable {
 
+    static searchable = true
+
     static int MINOR_UNTIL = ConfigurationHolder.config?.org?.davisononline?.footy?.core?.person?.minor ?: 16
 
     String givenName

@@ -5,6 +5,8 @@ package org.davisononline.footy.core
  */
 class Team implements Serializable {
 
+    static searchable = true
+
     // a team can play in a different League to the one
     // their Club is affiliated with
     League league

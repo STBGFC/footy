@@ -7,6 +7,10 @@ package org.davisononline.footy.core
  */
 class Player implements Serializable {
 
+    static searchable = {
+        person component: true
+    }
+
     Person person = new Person()
     Date dateOfBirth
     Person guardian
