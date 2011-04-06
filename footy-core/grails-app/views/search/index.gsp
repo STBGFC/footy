@@ -5,71 +5,58 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <title><g:if test="${params.q && params.q?.trim() != ''}">${params.q} - </g:if>Search</title>
+    <title>Search Results</title>
     <script type="text/javascript">
         var focusField = 'q'
     </script>
   </head>
   <body>
-        <div class="list">
         <g:form url='[controller: "search", action: "index"]' id="searchableForm" name="searchableForm" method="get">
             <g:textField name="q" value="${params.q}" size="50"/> <input type="submit" value="Search" />
         </g:form>
-        <div style="clear: both; display: none;" class="hint">See <a href="http://lucene.apache.org/java/docs/queryparsersyntax.html">Lucene query syntax</a> for advanced queries</div>
 
+        <div class="list">
         <g:set var="haveQuery" value="${params.q?.trim()}" />
         <g:set var="haveResults" value="${searchResult?.results}" />
-        <div class="title">
-            <span>
-                <g:if test="${haveQuery && haveResults}">
+        <div id="searchExplanation">
+            <g:if test="${haveQuery && haveResults}">
+            <p>
                 Showing <strong>${searchResult.offset + 1}</strong> - <strong>${searchResult.results.size() + searchResult.offset}</strong> of <strong>${searchResult.total}</strong>
                 results for <strong>${params.q}</strong>
-                </g:if>
-                <g:else>
-                &nbsp;
-                </g:else>
-            </span>
-        </div>
+            </p>
+            </g:if>
 
-        <g:if test="${haveQuery && !haveResults && !parseException}">
+            <g:if test="${haveQuery && !haveResults && !parseException}">
             <p>Nothing matched your query - <strong>${params.q}</strong></p>
-            <g:if test="${!searchResult?.suggestedQuery}">
+            </g:if>
+
+            <g:if test="${searchResult?.suggestedQuery}">
+            <p>
+                Did you mean <g:link controller="search" action="index" params="[q: searchResult.suggestedQuery]">${StringQueryUtils.highlightTermDiffs(params.q.trim(), searchResult.suggestedQuery)}</g:link>?
+            </p>
+            </g:if>
+
+            <g:if test="${parseException}">
+            <p>Your query - <strong>${params.q}</strong> - was not understood.</p>
             <p>Suggestions:</p>
             <ul>
-                <li>Try a suggested query: <g:link controller="search" action="index" params="[q: params.q, suggestQuery: true]">Search again with the <strong>suggestQuery</strong> option</g:link><br />
-                    <em>Note: Suggestions are only available when classes are mapped with <strong>spellCheck</strong> options, either at the class or property level.<br />
-		            The simplest way to do this is add <strong>spellCheck "include"</strong> to the domain class searchable mapping closure.<br />
-                    See the plugin/Compass documentation Mapping sections for details.</em>
+                <li>Fix the query syntax if you were trying to perform an advanced search</li>
+                <g:if test="${LuceneUtils.queryHasSpecialCharacters(params.q)}">
+                <li>Remove special characters like <strong><code>( " - [ ]</code></strong>, before searching, eg, <em><strong>${LuceneUtils.cleanQuery(params.q)}</strong></em>
+                    <br/><g:link controller="search" action="index" params="[q: LuceneUtils.cleanQuery(params.q)]">Search again with special characters removed</g:link>
                 </li>
+                <li>Escape special characters like <strong><code>( " - [ ]</code></strong> with <strong>\</strong>, eg, <em><strong>${LuceneUtils.escapeQuery(params.q)}</strong></em>
+                    <br/><g:link controller="search" action="index" params="[q: LuceneUtils.escapeQuery(params.q)]">Search again with special characters escaped</g:link>
+                </li>
+                </g:if>
             </ul>
             </g:if>
-        </g:if>
-
-        <g:if test="${searchResult?.suggestedQuery}">
-        <p>Did you mean <g:link controller="search" action="index" params="[q: searchResult.suggestedQuery]">${StringQueryUtils.highlightTermDiffs(params.q.trim(), searchResult.suggestedQuery)}</g:link>?</p>
-        </g:if>
-
-        <g:if test="${parseException}">
-        <p>Your query - <strong>${params.q}</strong> - is not valid.</p>
-        <p>Suggestions:</p>
-        <ul>
-            <li>Fix the query: see <a href="http://lucene.apache.org/java/docs/queryparsersyntax.html">Lucene query syntax</a> for examples</li>
-            <g:if test="${LuceneUtils.queryHasSpecialCharacters(params.q)}">
-            <li>Remove special characters like <strong>" - [ ]</strong>, before searching, eg, <em><strong>${LuceneUtils.cleanQuery(params.q)}</strong></em><br />
-                <em>Use the Searchable Plugin's <strong>LuceneUtils#cleanQuery</strong> helper method for this: <g:link controller="search" action="index" params="[q: LuceneUtils.cleanQuery(params.q)]">Search again with special characters removed</g:link></em>
-            </li>
-            <li>Escape special characters like <strong>" - [ ]</strong> with <strong>\</strong>, eg, <em><strong>${LuceneUtils.escapeQuery(params.q)}</strong></em><br />
-                <em>Use the Searchable Plugin's <strong>LuceneUtils#escapeQuery</strong> helper method for this: <g:link controller="search" action="index" params="[q: LuceneUtils.escapeQuery(params.q)]">Search again with special characters escaped</g:link></em><br />
-                <em>Or use the Searchable Plugin's <strong>escape</strong> option: <g:link controller="search" action="index" params="[q: params.q, escape: true]">Search again with the <strong>escape</strong> option enabled</g:link></em>
-            </li>
-            </g:if>
-        </ul>
-        </g:if>
+        </div>
 
         <g:if test="${haveResults}">
-        <div class="results">
+        <div id="searchResults">
             <g:each var="result" in="${searchResult.results}" status="index">
-            <div class="result">
+            <div class="searchResult">
                 <g:set var="className" value="${ClassUtils.getShortName(result.getClass())}" />
                 <g:set var="link" value="${createLink(controller: className[0].toLowerCase() + className[1..-1], action: 'edit', id: result.id)}" />
                 <g:set var="desc" value="${result.toString()}" />
@@ -81,17 +68,14 @@
             </g:each>
         </div>
 
-        <div>
-            <div class="paging">
-                <g:if test="${haveResults}">
-                Page:
-                <g:set var="totalPages" value="${Math.ceil(searchResult.total / searchResult.max)}" />
-                <g:if test="${totalPages == 1}"><span class="currentStep">1</span></g:if>
-                <g:else><g:paginate controller="search" action="index" params="[q: params.q]" total="${searchResult.total}" prev="&lt; previous" next="next &gt;"/></g:else>
-                </g:if>
-            </div>
+        <div class="paginateButtons">
+            <g:if test="${haveResults}">
+            Page:
+            <g:set var="totalPages" value="${Math.ceil(searchResult.total / searchResult.max)}" />
+            <g:if test="${totalPages == 1}"><span class="currentStep">1</span></g:if>
+            <g:else><g:paginate controller="search" action="index" params="[q: params.q]" total="${searchResult.total}" /></g:else>
+            </g:if>
         </div>
         </g:if>
-        </div>
     </body>
 </html>
