@@ -15,6 +15,8 @@ class SearchController {
         if (!params.q?.trim()) {
             return [:]
         }
+        params.suggestQuery = true
+        
         try {
             return [searchResult: searchableService.search(params.q, params)]
         } catch (Exception ex) {
