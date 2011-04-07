@@ -7,9 +7,6 @@
     </head>
     <body>
         <div class="list">
-            <p>
-                A copy of the invoice is shown below
-            </p>
             <g:render template="invoiceBody" model="[controller: controller]" />
         </div>
     </body>
