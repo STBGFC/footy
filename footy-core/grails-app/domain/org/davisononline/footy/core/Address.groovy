@@ -6,6 +6,12 @@ package org.davisononline.footy.core
  * @author Darren Davison
  */
 class Address implements Serializable {
+
+    // allow for suggested queries, but do not allow Address objects to show up as independant results
+    static searchable = {
+        spellCheck "include"
+        root false
+    }
     
     String name = "Home"
     String address

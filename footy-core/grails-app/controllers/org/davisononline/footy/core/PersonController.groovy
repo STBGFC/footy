@@ -40,6 +40,10 @@ class PersonController {
         }
     }
 
+    /**
+     * checks to see if the Person being edited is a Player and edits the Player
+     * instead if so.
+     */
     def edit = {
         def personInstance = Person.get(params.id)
         if (!personInstance) {
@@ -47,6 +51,9 @@ class PersonController {
             redirect(action: "list")
         }
         else {
+            def player = Player.findByPerson(personInstance)
+            if (player)
+                redirect controller: 'player', action: 'edit', id: player.id
             return [personCommand: personInstance]
         }
     }
