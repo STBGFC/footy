@@ -1,9 +1,12 @@
 package org.davisononline.footy.core
 
+import grails.plugins.springsecurity.Secured
+
 /**
  * uses the grails searchable plugin service but builds our own
  * controller and views
  */
+@Secured(['ROLE_CLUB_ADMIN'])
 class SearchController {
 
     def searchableService
