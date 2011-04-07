@@ -5,8 +5,6 @@ package org.davisononline.footy.core
  * age breaks
  */
 class RegistrationTier implements Serializable {
-
-    // TODO: controller / views.  For now, create in BootStrap
     
     String name
     double amount = 10.00
