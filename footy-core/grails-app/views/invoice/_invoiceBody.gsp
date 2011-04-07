@@ -1,5 +1,5 @@
 <%@ page import="org.grails.paypal.Payment; org.davisononline.footy.core.utils.PaymentUtils" %>
-
+        <p><g:message code="org.davisononline.footy.core.invoicenumber.label" default="Invoice Number: "/><strong>${payment.transactionId}</strong></p>
         <table id="invoice">
             <tbody>
             <tr class="invoiceHeader">
@@ -43,8 +43,8 @@
             </tr>
             </tbody>
         </table>
-        <g:if test="${payment.status != Payment.COMPLETE}">
         <div id="checkout">
+        <g:if test="${payment.status != Payment.COMPLETE}">
             <g:form
                 controller="paypal"
                 action="uploadCart"
@@ -69,10 +69,10 @@
                         default="You don't need a PayPal account to pay!  Once you get to the PayPal site, you can simply enter credit card details without needing to register or login"/>
                 </em>
             </p>
-        </div>
         </g:if>
         <g:else>
             <p>
                 <g:message code="org.davisononline.footy.core.invoicepaid" default="This invoice has already been paid.  Thank you."/>
             </p>
         </g:else>
+        </div>
