@@ -12,6 +12,9 @@ class Person implements Comparable, Serializable {
     static searchable = {
         spellCheck "include"
         address component: true
+        givenName boost: 1.5
+        knownAsName boost: 1.5
+        familyName boost: 2.0
     }
 
     static int MINOR_UNTIL = ConfigurationHolder.config?.org?.davisononline?.footy?.core?.person?.minor ?: 16
@@ -57,7 +60,7 @@ class Person implements Comparable, Serializable {
      * comparable to sort on family name, then given name
      */
     int compareTo(obj) {
-        sortedName().compareTo(obj.sortedName())
+        "${familyName}, ${givenName}".compareTo("${obj.familyName}, ${obj.givenName}")
     }
     
     /**

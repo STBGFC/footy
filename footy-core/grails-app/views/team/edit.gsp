@@ -25,13 +25,21 @@
                             <g:render template="teamFormBody" model="[teamCommand: teamInstance, clubInstance: Club.getHomeClub()]"/>
                             <tr class="prop">
                                 <td valign="top" class="name">
-                                  <label for="manager.id"><g:message code="team.manager.label" default="Manager" /></label>
+                                  <label for="manager.id"><g:message code="org.davisononline.footy.core.team.manager.label" default="Manager" /></label>
                                 </td>
                                 <td valign="top" class="value ${hasErrors(bean: teamInstance, field: 'manager', 'errors')}">
                                     <g:select name="manager.id" from="${managers}" optionKey="id" value="${teamInstance?.manager?.id}"  />
                                 </td>
                             </tr>
-                        
+
+                            <tr class="prop">
+                                <td valign="top" class="name">
+                                  <label for="coaches"><g:message code="org.davisononline.footy.core.team.coaches.label" default="Coaches" /></label>
+                                </td>
+                                <td valign="top" class="value ${hasErrors(bean: teamInstance, field: 'coaches', 'errors')}">
+                                    <g:select name="coaches" from="${managers}" optionKey="id" multiple="yes" size="8" value="${teamInstance?.coaches*.id}"  />
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>

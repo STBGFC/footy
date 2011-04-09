@@ -26,4 +26,9 @@ class SearchController {
             return [parseException: true]
         }
     }
+
+    def ri = {
+        searchableService.reindex()
+        render "OK"
+    }
 }

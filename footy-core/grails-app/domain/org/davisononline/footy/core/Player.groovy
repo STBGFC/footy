@@ -5,7 +5,7 @@ package org.davisononline.footy.core
  *
  * @author Darren Davison
  */
-class Player implements Serializable {
+class Player implements Comparable, Serializable {
 
     static searchable = {
         spellCheck "include"
@@ -91,5 +91,9 @@ class Player implements Serializable {
      */
     String toString() {
         person.toString()
+    }
+
+    int compareTo(Object t) {
+        return person.compareTo(t.person)
     }
 }

@@ -7,6 +7,8 @@ class Team implements Serializable {
 
     static searchable = {
         spellCheck "include"
+        name boost: 2.0
+
     }
 
     // a team can play in a different League to the one
@@ -22,6 +24,7 @@ class Team implements Serializable {
     boolean vetsTeam = false
     
     static belongsTo = [club: Club]
+    static hasMany = [coaches: Person, players: Player]
 
     static constraints = {
         division(nullable: true)
