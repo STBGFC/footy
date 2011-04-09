@@ -21,6 +21,7 @@
                         <g:sortableColumn property="ageBand" title="${message(code: 'team.name.label', default: 'Name')}" />
                         <g:sortableColumn property="division" title="${message(code: 'team.division.label', default: 'Division')}" />
                         <g:sortableColumn property="manager" title="${message(code: 'team.manager.label', default: 'Manager')}" />
+                        <th><g:message code="team.coaches.label" default="Coaches"/></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -29,6 +30,11 @@
                         <td><g:link action="edit" id="${teamInstance.id}">${teamInstance}</g:link></td>
                         <td>${teamInstance.league} / ${teamInstance.division}</td>
                         <td><g:link controller="person" action="edit" id="${teamInstance.manager.id}">${teamInstance.manager}</g:link></td>
+                        <td>
+                            <g:each in="${teamInstance.coaches}" var="coach">
+                            <g:link controller="person" action="edit" id="${coach.id}">${coach}</g:link><br/>
+                            </g:each>
+                        </td>
                     </tr>
                 </g:each>
                 </tbody>
