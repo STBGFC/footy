@@ -9,7 +9,7 @@ class QualificationType implements Serializable {
     static final String REFEREEING = 'Refereeing'
     static final String OTHER = 'Other'
 
-    String category = OTHER
+    String category = COACHING
     int yearsValidFor = 0 // 0 .. never expires
     String name
 
