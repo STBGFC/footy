@@ -22,7 +22,7 @@ class TeamController {
     def create = {
         def teamInstance = new Team()
         teamInstance.properties = params
-        render(view: "edit", model: [teamInstance: teamInstance])
+        render(view: "edit", model: [teamInstance: teamInstance, managers: getManagers()])
     }
 
     def save = {
@@ -32,7 +32,7 @@ class TeamController {
             redirect action: "list"
         }
         else {
-            render(view: "edit", model: [teamInstance: teamInstance])
+            render(view: "edit", model: [teamInstance: teamInstance, managers: getManagers()])
         }
     }
 
@@ -43,7 +43,7 @@ class TeamController {
             redirect(action: "list")
         }
         else {
-            return [teamInstance: teamInstance, managers: Person.findAllByEligibleParent(true, [sort:'familyName'])]
+            return [teamInstance: teamInstance, managers: getManagers()]
         }
     }
 
@@ -55,7 +55,7 @@ class TeamController {
                 if (teamInstance.version > version) {
                     
                     teamInstance.errors.rejectValue("version", "default.optimistic.locking.failure", [message(code: 'team.label', default: 'Team')] as Object[], "Another user has updated this Team while you were editing")
-                    render(view: "edit", model: [teamInstance: teamInstance])
+                    render(view: "edit", model: [teamInstance: teamInstance, managers: getManagers()])
                     return
                 }
             }
@@ -65,7 +65,7 @@ class TeamController {
                 redirect(action: "list")
             }
             else {
-                render(view: "edit", model: [teamInstance: teamInstance])
+                render(view: "edit", model: [teamInstance: teamInstance, managers: getManagers()])
             }
         }
         else {
@@ -90,5 +90,10 @@ class TeamController {
         }
 
         redirect(action: "list")
+    }
+
+    private getManagers() {
+        // TODO: replace with people that have a COACHING qualification
+        Person.findAllByEligibleParent(true, [sort:'familyName'])
     }
 }
