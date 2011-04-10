@@ -39,7 +39,7 @@ class QualificationTests extends GrailsUnitTestCase {
                 type: eAid,
                 attainedOn: d1
         )
-        assertEquals "Emergency Aid (expires: 2014/01/01)", q.toString()
+        assertEquals "Emergency Aid (expires: 2013/12/31)", q.toString()
     }
 
     void testExpiry() {
@@ -51,7 +51,7 @@ class QualificationTests extends GrailsUnitTestCase {
                 type: eAid,
                 attainedOn: d1
         )
-        assertEquals d2, q.expiresOn
+        assertEquals d2-1, q.expiresOn
 
         // non-expiring type
         q = new Qualification(
