@@ -93,7 +93,8 @@ class TeamController {
     }
 
     private getManagers() {
-        // TODO: replace with people that have a COACHING qualification
-        Person.findAllByEligibleParent(true, [sort:'familyName'])
+        Person.executeQuery(
+                "select distinct q.person from Qualification q where q.type.category=:category order by q.person.familyName asc",
+                [category: QualificationType.COACHING])
     }
 }

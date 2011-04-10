@@ -10,7 +10,7 @@ class Qualification implements Comparable, Serializable {
     Date attainedOn
     Date expiresOn
 
-    static belongsTo = Person
+    static belongsTo = [person: Person]
 
     static constraints = {
         expiresOn nullable: true
