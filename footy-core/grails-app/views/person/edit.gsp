@@ -32,6 +32,23 @@
                     <table>
                         <tbody>
                             <g:render template="personFormBody" />
+
+                            <tr class="prop">
+                                <td class="name">
+                                    <g:message code="org.davisononline.footy.core.qualifications.label" default="Qualifications Attained" /><br/>
+                                    <modalbox:createLink
+                                            controller="person"
+                                            action="assignQualification"
+                                            id="${personCommand.id}"
+                                            title="Add qualifications for ${personCommand?.givenName}"
+                                            width="450">
+                                        <g:message code="org.davisononline.footy.core.addqualifications.link" default="Add New Qualifications"/>
+                                    </modalbox:createLink>
+                                </td>
+                                <td id="qualifications" class="value">
+                                    <tmpl:qualificationsList person="${personCommand}"/>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>

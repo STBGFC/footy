@@ -103,4 +103,35 @@ class PersonController {
         }
         redirect(action: "list")
     }
+
+    def assignQualification = {
+        [qualificationTypes: QualificationType.listOrderByCategory(), personId: params.id]
+    }
+
+    def addQualification = {
+        def qual = new Qualification(params)
+        def p=Person.get(params.personId)
+        p.addToQualifications(qual).save()
+        // text/plain prevents sitemesh decoreation
+        render template: '/person/qualificationsList', plugin: 'footy-core', model: [person: p], contentType: 'text/plain'
+    }
+
+    /*
+     * URL mapping: /person/delQualification/${personId}/${qualificationId}
+     */
+    def delQualification = {
+        def p = Person.get(params.personId)
+        try {
+            def q = p.qualifications.find {it.id = Long.valueOf(params?.qualificationId)}
+            if (q) {
+                p.removeFromQualifications(q)
+                p.save()
+            }
+        }
+        catch (Exception ex) {
+            log.warn("Unable to delete qualification: $ex")
+        }
+        // text/plain prevents sitemesh decoreation
+        render template: '/person/qualificationsList', plugin: 'footy-core', model: [person: p], contentType: 'text/plain'
+    }
 }

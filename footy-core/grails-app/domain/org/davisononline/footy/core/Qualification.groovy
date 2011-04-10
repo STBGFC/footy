@@ -7,7 +7,7 @@ package org.davisononline.footy.core
 class Qualification implements Comparable, Serializable {
 
     QualificationType type
-    Date attainedOn = new Date()
+    Date attainedOn
     Date expiresOn
 
     static belongsTo = Person
@@ -23,22 +23,30 @@ class Qualification implements Comparable, Serializable {
         return attainedOn.compareTo(obj.attainedOn)        
     }
 
-    void setType(value) {
+    QualificationType getType() {
+        type
+    }
+
+    void setType(QualificationType value) {
         this.type = value
         calculateExpiresOn()
     }
 
-    void setAttainedOn(value) {
+    Date getAttainedOn() {
+        attainedOn
+    }
+    
+    void setAttainedOn(Date value) {
         this.attainedOn = value
         calculateExpiresOn()
     }
 
     private calculateExpiresOn() {
-        if (type?.yearsValidFor > 0 && attainedOn != null) {
+        if (!expiresOn && type?.yearsValidFor > 0 && attainedOn != null) {
             def c = Calendar.instance
             c.time = attainedOn
             c.add(Calendar.YEAR, type.yearsValidFor)
-            expiresOn = c.time
+            expiresOn = c.time -1
         }
     }
 
