@@ -71,8 +71,8 @@ class RegistrationController {
             action {
                 def p = flow.playerInstance
                 def pe = Player.find(
-                        "from Player p where p.dateOfBirth = :dob and p.guardian = :guardian and p.person.familyName = :familyName and p.person.givenName = :givenName",
-                        [dob: p.dateOfBirth, guardian: p.guardian, familyName: p.person.familyName, givenName: p.person.givenName]
+                        "from Player p where p.dateOfBirth = :dob and p.person.familyName = :familyName and p.person.givenName = :givenName",
+                        [dob: p.dateOfBirth, familyName: p.person.familyName, givenName: p.person.givenName]
                 )
                 if (pe) {
                     flow.payment = Payment.findByBuyerId(pe.id)
