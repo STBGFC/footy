@@ -122,10 +122,12 @@ class PersonController {
     def delQualification = {
         def p = Person.get(params.personId)
         try {
-            def q = p.qualifications.find {it.id = Long.valueOf(params?.qualificationId)}
-            if (q) {
+            Qualification.withTransaction {status ->
+                // WHY does this not cascade.. the qualification 'belongsTo' the Person
+                def q = Qualification.get(params.qualificationId)
+                q.delete()
                 p.removeFromQualifications(q)
-                p.save()
+                p.save(flush:true)
             }
         }
         catch (Exception ex) {
