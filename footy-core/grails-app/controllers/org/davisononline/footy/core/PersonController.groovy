@@ -22,9 +22,9 @@ class PersonController {
     }
 
     def create = {
-        def personInstance = new Person()
-        personInstance.properties = params
-        render(view: 'edit', model:[personInstance: personInstance])
+        def personCommand = new Person()
+        personCommand.properties = params
+        render(view: 'edit', model:[personCommand: personCommand])
     }
 
     def save = { PersonCommand cmd ->
