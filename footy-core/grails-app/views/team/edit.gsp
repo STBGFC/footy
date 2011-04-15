@@ -14,6 +14,9 @@
             <div class="nav">
                 <span class="menuButton"><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></span>
                 <span class="menuButton"><g:link class="list" action="list"><g:message code="default.list.label" args="[entityName]" /></g:link></span>
+                <g:if test="${teamInstance?.id && players.size() > 0}">
+                <span class="menuButton"><g:link class="list" action="leagueForm" id="${teamInstance?.id}"><g:message code="league.registration.form.label" default="Print registration form" /></g:link></span>
+                </g:if>
             </div>
 
             <g:form method="post" >
@@ -38,6 +41,19 @@
                                 </td>
                                 <td valign="top" class="value ${hasErrors(bean: teamInstance, field: 'coaches', 'errors')}">
                                     <g:select name="coaches" from="${managers}" optionKey="id" multiple="yes" size="8" value="${teamInstance?.coaches*.id}"  />
+                                </td>
+                            </tr>
+
+                            <tr class="prop">
+                                <td valign="top" class="name">
+                                  <g:message code="org.davisononline.footy.core.team.players.label" default="Players" />
+                                </td>
+                                <td valign="top" class="value">
+                                    <ol>
+                                    <g:each in="${players}" var="player">
+                                        <li><g:link controller="player" action="edit" id="${player.id}">${player}</g:link> (${player.guardian} - ${player.guardian.phone1})</li>
+                                    </g:each>
+                                    </ol>
                                 </td>
                             </tr>
                         </tbody>

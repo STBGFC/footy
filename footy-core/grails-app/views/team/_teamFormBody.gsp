@@ -33,11 +33,11 @@
                         
                             <tr class="prop">
                                 <td  class="name">
-                                    <label for="leagueId"><g:message code="entry.league.label" default="League" /></label>
+                                    <label for="league.id"><g:message code="entry.league.label" default="League" /></label>
                                 </td>
-                                <td  class="value ${hasErrors(bean: teamCommand, field: 'leagueId', 'errors')}">
-                                    <g:select name="leagueId" from="${League.list()}" value="${teamCommand?.leagueId}" optionValue="name" optionKey="id" valueMessagePrefix="entry.league"  />
-                                    <g:render template="/shared/fieldError" model="['instance':teamCommand,'field':'leagueId']" plugin="footy-core"/>
+                                <td  class="value ${hasErrors(bean: teamCommand, field: 'league.id', 'errors')}">
+                                    <g:select name="league.id" from="${League.list()}" value="${teamCommand?.league}" optionValue="name" optionKey="id" valueMessagePrefix="entry.league"  />
+                                    <g:render template="/shared/fieldError" model="['instance':teamCommand,'field':'league']" plugin="footy-core"/>
                                 </td>
                             </tr>
                         

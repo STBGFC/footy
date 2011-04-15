@@ -29,10 +29,10 @@
                     <tr class="${(i % 2) == 0 ? 'odd' : 'even'}">
                         <td><g:link action="edit" id="${teamInstance.id}">${teamInstance}</g:link></td>
                         <td>${teamInstance.league} / ${teamInstance.division}</td>
-                        <td><g:link controller="person" action="edit" id="${teamInstance.manager.id}">${teamInstance.manager}</g:link></td>
+                        <td><g:link controller="person" action="edit" id="${teamInstance.manager.id}">${teamInstance.manager}</g:link> (${teamInstance.manager.phone1})</td>
                         <td>
                             <g:each in="${teamInstance.coaches}" var="coach">
-                            <g:link controller="person" action="edit" id="${coach.id}">${coach}</g:link><br/>
+                            <g:link controller="person" action="edit" id="${coach.id}">${coach}</g:link> (${coach.phone1})<br/>
                             </g:each>
                         </td>
                     </tr>
