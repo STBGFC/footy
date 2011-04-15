@@ -156,7 +156,7 @@ class EntryController {
         
         createTeam {
             action {
-                flow.teamInstance = new TeamCommand(clubId: flow.clubInstance.id)
+                flow.teamInstance = new Team(club: flow.clubInstance)
             }
             on("success").to "enterTeamDetails"
         }
@@ -179,27 +179,15 @@ class EntryController {
         }
         
         enterTeamDetails {
-            on("submit") { TeamCommand teamCommand ->
-                flow.teamCommand = teamCommand
-                if (!teamCommand.validate()) 
-                    return error()
-                
-                def team = new Team(
-                    club: flow.clubInstance,
-                    league: League.get(teamCommand.leagueId),
-                    name: teamCommand.name,
-                    division: teamCommand.division,
-                    ageBand: teamCommand.ageBand,
-                    girlsTeam: teamCommand.girlsTeam,
-                    vetsTeam: teamCommand.vetsTeam,
-                    manager: flow.entryInstance.contact
-                )
-                
+            on("submit") {
+                def team = new Team(params)
+                team.manager = flow.entryInstance.contact
                 if (!team.validate()) {
                     log.error team.errors
-                    teamCommand.errors = team.errors
+                    flow.teamCommand = team
                     return error()
                 }
+
                 team.save(flush: true)
                 flow.entryInstance.addToTeams(team)
                 
@@ -329,31 +317,6 @@ class ClubCommand implements Serializable {
         "Club Command: [$name, colours:$colours, secname:$clubSecretaryName, addr:$clubSecretaryAddress, county:$countyAffiliatedTo, number:$countyAffiliationNumber]"
     }
 }
-
-/**
- * command object for the enterTeamDetails form
- * @author darren
- */
-class TeamCommand implements Serializable {
-    
-    int clubId
-
-    // team
-    int ageBand
-    boolean girlsTeam = false
-    boolean vetsTeam = false
-    String name
-    int leagueId
-    String division
-
-    static constraints = {
-        ageBand(inList:(7..18).toList())
-        name(blank:false)
-        division(blank:false)
-    }
-
-}
-
 
 /**
  * command object for the selectTeams form
