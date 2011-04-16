@@ -1,6 +1,7 @@
 import org.davisononline.footy.core.SecRole
 import org.davisononline.footy.core.SecUser
 import org.davisononline.footy.core.SecUserSecRole
+import org.davisononline.footy.core.QualificationType
 
 class FootyCoreBootStrap {
 
@@ -30,6 +31,13 @@ class FootyCoreBootStrap {
             SecUserSecRole.create adminUser, coachRole
         }
 
+        // qualifications
+        if (QualificationType.count() == 0) {
+            new QualificationType(name: "FA Level 1").save()
+            new QualificationType(name: "FA Level 2").save()
+            new QualificationType(name: "CRB", yearsValidFor: 3, category: QualificationType.OTHER).save()
+            new QualificationType(name: "Emergency Aid", yearsValidFor: 3).save()
+        }
     }
     def destroy = {
     }
