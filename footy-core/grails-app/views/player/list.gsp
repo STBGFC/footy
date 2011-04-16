@@ -43,11 +43,13 @@
                                 <%-- TODO: ensure most recent only is displayed --%>
                                 <g:set value="${Payment.findByBuyerId(player.id)}" var="payment"/>
                                 <g:if test="${payment != null}">
+                                <g:set var="cash" value="${payment.status == Payment.COMPLETE && !payment.paypalTransactionId}"/>
                                 <g:link controller="invoice" action="show" id="${payment?.transactionId}" params="[returnController:'registration']">
-                                    <img title="Payment ${payment?.status}" alt="${payment?.status?.toLowerCase()} (click to see invoice)" src="${resource(dir:'images',file:'payment-' + payment?.status?.toLowerCase() + '.png', plugin:'footy-core')}"/>
+                                    <img title="Payment ${cash ? 'by Cash/Cheque': payment.status}" alt="${payment?.status?.toLowerCase()} (click to see invoice)"
+                                         src="${resource(dir:'images',file:'payment-' + payment?.status?.toLowerCase() + (cash ? 'b' : '') + '.png', plugin:'footy-core')}"/>
                                 </g:link>
                                 <g:if test="${payment?.status != org.grails.paypal.Payment.COMPLETE}">
-                                <br/><g:link action="paymentMade" controller="player" id="${payment.transactionId}" onclick="return confirm('${message(code: 'default.button.manualpayment.confirm.message', default: 'Are you sure you want to mark payment as received?')}');">mark payment received</g:link>
+                                <br/><g:link action="paymentMade" controller="player" id="${payment.transactionId}" params="${params}" onclick="return confirm('${message(code: 'default.button.manualpayment.confirm.message', default: 'Are you sure you want to mark payment as received?')}');">mark payment received</g:link>
                                 <br/><g:link action="delete" controller="player" id="${player.id}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');">delete player</g:link>
                                 </g:if>
                                 </g:if>

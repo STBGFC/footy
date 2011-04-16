@@ -96,6 +96,6 @@ class PlayerController {
         else
             flash.message = "No such payment found with transaction id ${params.id}"
 
-        redirect(action: "list")
+        redirect(action: "list", params:params)
     }
 }
