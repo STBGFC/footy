@@ -14,6 +14,15 @@ class PersonController {
         redirect(action: "list", params: params)
     }
 
+    def qualifications = {
+        params.max = Math.min(params.max ? params.int('max') : 25, 100)
+        params.sort = 'expiresOn'
+        params.order = 'asc'
+        def sixMonths = (new Date()) + 180
+        def l = Qualification.findAllByExpiresOnLessThan(sixMonths, params)
+        [qualifications: l, qualificationsTotal: Qualification.countByExpiresOnLessThan(sixMonths)]
+    }
+
     def list = {
         params.max = Math.min(params.max ? params.int('max') : 25, 100)
         if (!params.sort) params.sort = 'familyName'
@@ -110,8 +119,26 @@ class PersonController {
 
     def addQualification = {
         def qual = new Qualification(params)
-        def p=Person.get(params.personId)
-        p.addToQualifications(qual).save()
+        def p = Person.get(params.personId)
+
+        try {
+            Qualification.withTransaction {status ->
+                // remove expiring qualifications of the same type
+                def old = p.qualifications.find {it.type == qual.type}
+                old.each {
+                    p.removeFromQualifications(it)
+                    it.delete()
+                }
+
+                // add new, save
+                p.addToQualifications(qual)
+                p.save(flush:true)
+            }
+        }
+        catch (Exception ex) {
+            log.warn("Unable to add qualification: $ex")
+        }
+
         // text/plain prevents sitemesh decoreation
         render template: '/person/qualificationsList', plugin: 'footy-core', model: [person: p], contentType: 'text/plain'
     }
