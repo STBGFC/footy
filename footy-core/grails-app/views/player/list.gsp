@@ -25,7 +25,7 @@
                             <th>${message(code: 'player.contactDetails.label', default: 'Contact')}</th>
                             <g:sortableColumn property="lastRegistrationDate" title="${message(code: 'player.lastRegistrationDate.label', default: 'Last Registration')}" />
                             <g:sortableColumn property="leagueRegistrationNumber" title="${message(code: 'player.leagueRegistrationNumber.label', default: 'League Registration #')}" />
-                            <th>Team</th>
+                            <g:sortableColumn property="team" title="${message(code: 'player.team.label', default: 'Team')}" />
                         </tr>
                     </thead>
                     <tbody>
