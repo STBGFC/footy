@@ -116,7 +116,7 @@ class RegistrationController {
             def errors
             on ("continue") { Person person ->
                 flow.personCommand = person
-                if (!person.address.validate() || !person.validate()) {
+                if (!person.address?.validate() | !person.validate()) {
                     flow.address = person.address // see earlier to do item about grails bug
                     return error()
                 }
@@ -126,7 +126,7 @@ class RegistrationController {
 
             on ("addanother") {Person person ->
                 flow.personCommand = person
-                if (!person.address.validate() || !person.validate()) {
+                if (!person.address?.validate() | !person.validate()) {
                     flow.address = person.address // see earlier to do item about grails bug
                     return error()
                 }
