@@ -2,21 +2,81 @@ package org.davisononline.footy.core
 
 import grails.plugins.springsecurity.Secured
 import org.grails.paypal.Payment
+import org.codehaus.groovy.grails.commons.ConfigurationHolder
 
 @Secured(['ROLE_CLUB_ADMIN'])
 class PlayerController {
 
     static allowedMethods = [save: "POST", update: "POST"]
 
+    def exportService
+
+    /**
+     * default action redirect to list
+     */
     def index = {
         redirect(action: "list", params: params)
     }
 
+    /**
+     * show standard web list or an export of all players in desired format
+     */
     def list = {
-        params.max = Math.min(params.max ? params.int('max') : 25, 100)
-        if (!params.sort) params.sort = 'person.familyName'
-        def l = Player.list(params)
-        [playerInstanceList: l, playerInstanceTotal: Player.count()]
+        if(params?.format && params.format != "html"){
+            List fields = ["name", "team", "guardian", "guardian.phone1", "guardian.email", "secondGuardian", "secondGuardian.phone1", "secondGuardian.email", "dateJoinedClub", "lastRegistrationDate", "doctor", "doctorTelephone", "medical"]
+            Map labels = [
+                    "name": "Name",
+                    "team": "Team",
+                    "guardian": "Parent/Guardian",
+                    "guardian.phone1": "Phone",
+                    "guardian.email": "email",
+                    "secondGuardian": "Parent/Guardian",
+                    "secondGuardian.phone1": "Phone",
+                    "secondGuardian.email": "email",
+                    "dateJoinedClub": "Date Joined",
+                    "lastRegistrationDate": "Last Registered",
+                    "doctor": "Doctor",
+                    "doctorTelephone": "Doctor's Tel.",
+                    "medical": "Medical Notes"
+            ]
+
+            // Formatter closure
+            def name = { player, value ->
+                return "${player.toString()}"
+            }
+            def formattedDate = { player, value ->
+                value?.format('dd/MM/yyyy')
+            }
+
+            Map formatters = [
+                    name: name,
+                    dateJoinedClub: formattedDate,
+                    lastRegistrationDate: formattedDate                    
+            ]
+            Map parameters = [title: "Current Players (${new Date().format('dd/MM/yyyy')})"]
+
+            response.contentType = ConfigurationHolder.config.grails.mime.types[params.format]
+            response.setHeader(
+                "Content-disposition",
+                "attachment; filename=${URLEncoder.encode('player-list','UTF-8')}.${params.extension}"
+            )
+            exportService.export(
+                params.format,
+                response.outputStream,
+                Player.list([sort:'team', order: 'asc']),
+                fields,
+                labels,
+                formatters,
+                parameters
+            )
+        }
+        else {
+            // standard list
+            params.max = Math.min(params.max ? params.int('max') : 25, 100)
+            if (!params.sort) params.sort = 'person.familyName'
+            def l = Player.list(params)
+            [playerInstanceList: l, playerInstanceTotal: Player.count()]
+        }
     }
 
     def edit = {
