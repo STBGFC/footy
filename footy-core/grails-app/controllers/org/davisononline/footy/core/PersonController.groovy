@@ -31,15 +31,13 @@ class PersonController {
     }
 
     def create = {
-        def personCommand = new Person()
-        personCommand.properties = params
-        render(view: 'edit', model:[personCommand: personCommand])
+        def p = new Person(params)
+        render(view: 'edit', model:[personCommand: p])
     }
 
-    def save = { PersonCommand cmd ->
-        def p = cmd.toPerson()
-        if (!p.validate()) {
-            cmd.errors = p.errors
+    def save = {
+        def p = new Person(params)
+        if (!p.address?.validate() | !p.validate()) {
             render(view: "edit", model: [personCommand: p])
         }
         else {
@@ -67,7 +65,7 @@ class PersonController {
         }
     }
 
-    def update = { PersonCommand cmd ->
+    def update = {
         def personInstance = Person.get(params.id)
         if (personInstance) {
             if (params.version) {
@@ -79,10 +77,8 @@ class PersonController {
                     return
                 }
             }
-            
-            def submitted = cmd.toPerson()
-            personInstance.properties = submitted.properties
-            if (!personInstance.hasErrors() && personInstance.save(flush: true)) {
+            personInstance.properties = params
+            if (personInstance.address.validate() && !personInstance.hasErrors() && personInstance.save(flush: true)) {
                 flash.message = "${message(code: 'default.updated.message', args: [message(code: 'person.label', default: ''), personInstance])}"
                 redirect(action: "list")
             }
