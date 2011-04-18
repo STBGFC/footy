@@ -50,11 +50,21 @@
 
                         <tr class="prop">
                             <td  class="name">
-                                <label for="address"><g:message code="org.davisononline.org.footy.core.address.label" default="Home Address" /></label>
+                                <label for="address.address"><g:message code="org.davisononline.org.footy.core.address.label" default="Home Address" /></label>
                             </td>
-                            <td  class="value ${hasErrors(bean: personCommand, field: 'address', 'errors')}">
-                                <g:textArea name="address" value="${personCommand?.address}" rows="4" cols="30"/>
-                                <g:render template="/shared/fieldError" model="['instance':personCommand,'field':'address']" plugin="footy-core"/>
+                            <td  class="value">
+                                House number or name:<br/>
+                                <g:textField name="address.house" value="${personCommand?.address?.house}" />
+                                <g:render template="/shared/fieldError" model="['instance':personCommand.address,'field':'house']" plugin="footy-core"/>
+                                <br/>Street:<br/>
+                                <g:textField name="address.address" value="${personCommand?.address?.address}" />
+                                <g:render template="/shared/fieldError" model="['instance':personCommand.address,'field':'address']" plugin="footy-core"/>
+                                <br/>Town:<br/>
+                                <g:textField name="address.town" value="${personCommand?.address?.town}" />
+                                <g:render template="/shared/fieldError" model="['instance':personCommand.address,'field':'town']" plugin="footy-core"/>
+                                <br/>Post Code:<br/>
+                                <g:textField name="address.postCode" value="${personCommand?.address?.postCode}" />
+                                <g:render template="/shared/fieldError" model="['instance':personCommand.address,'field':'postCode']" plugin="footy-core"/>
                             </td>
                         </tr>
 

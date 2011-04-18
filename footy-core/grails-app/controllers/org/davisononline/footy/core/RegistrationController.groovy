@@ -99,7 +99,7 @@ class RegistrationController {
             }
 
             on("yes") {
-                flow.personCommand = new PersonCommand (
+                flow.personCommand = new Person (
                     familyName: flow.playerInstance.person.familyName
                 )
             }.to "enterGuardianDetails"
@@ -114,23 +114,26 @@ class RegistrationController {
          */
         enterGuardianDetails {
             def errors
-            on ("continue") { PersonCommand personCommand ->
-                errors = handleGuardian(flow, personCommand)
-                if (errors) {
-                    personCommand.errors = errors
+            on ("continue") { Person person ->
+                flow.personCommand = person
+                if (!person.address.validate() || !person.validate()) {
+                    flow.address = person.address // see earlier to do item about grails bug
                     return error()
                 }
+                flow.guardian1 = person
 
             }.to "prepTeam"
 
-            on ("addanother") {PersonCommand personCommand ->
-                errors = handleGuardian(flow, personCommand)
-                if (errors) {
-                    personCommand.errors = errors
+            on ("addanother") {Person person ->
+                flow.personCommand = person
+                if (!person.address.validate() || !person.validate()) {
+                    flow.address = person.address // see earlier to do item about grails bug
                     return error()
                 }
+                flow.guardian2 = person
                 flow.personCommand.email = ''
                 flow.personCommand.givenName = ''
+
             }.to "enterGuardianDetails"
         }
 
@@ -203,23 +206,6 @@ class RegistrationController {
         }
     }
 
-    /*
-     * manage 1 or 2 guardians
-     */
-    def handleGuardian(flow, personCommand) {
-        flow.personCommand = personCommand
-        def person = personCommand.toPerson()
-        if (!person.validate())
-            return person.errors
-
-        // first or second guardian?
-        if (!flow.guardian1)
-            flow.guardian1 = person
-        else
-            flow.guardian2 = person
-        return null
-    }
-
     def paypalSuccess = {
         def payment = Payment.findByTransactionId(params.transactionId)
         // update registration date for the player
@@ -238,46 +224,4 @@ class RegistrationController {
         render view: '/paypal/cancel'
     }
 
-}
-
-
-/**
- * @author darren
- * @since 10/03/11
- */
-class PersonCommand implements Serializable {
-    String givenName
-    String familyName
-    String email
-    String occupation
-    String phone1
-    String phone2
-    String address
-    String notes = ''
-
-    static constraints = {
-        givenName(nullable:false, blank:false, size:1..50)
-        familyName(nullable:false, blank:false, size:1..50)
-        email(nullable: false, blank: false, email: true)
-        occupation(nullable: true)
-        phone1(nullable: true, blank: false)
-        phone2(nullable: true)
-    }
-
-    /**
-     *
-     * @return a Person domain object (possibly invalid) from the command
-     */
-    def toPerson() {
-        new Person(
-                givenName: givenName,
-                familyName: familyName,
-                email: email,
-                occupation: occupation,
-                phone1: phone1,
-                phone2: phone2,
-                address: Address.parse(address),
-                eligibleParent: true
-                )
-    }
 }

@@ -36,7 +36,7 @@
                                     <label for="league.id"><g:message code="entry.league.label" default="League" /></label>
                                 </td>
                                 <td  class="value ${hasErrors(bean: teamCommand, field: 'league.id', 'errors')}">
-                                    <g:select name="league.id" from="${League.list()}" value="${teamCommand?.league}" optionValue="name" optionKey="id" valueMessagePrefix="entry.league"  />
+                                    <g:select name="league.id" from="${League.list()}" value="${teamCommand?.league?.id}" optionValue="name" optionKey="id" valueMessagePrefix="entry.league"  />
                                     <g:render template="/shared/fieldError" model="['instance':teamCommand,'field':'league']" plugin="footy-core"/>
                                 </td>
                             </tr>
