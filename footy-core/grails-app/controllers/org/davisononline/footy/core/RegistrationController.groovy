@@ -42,6 +42,7 @@ class RegistrationController {
         enterPlayerDetails {
             on("submit") {
                 def player = new Player(params)
+                player.person.eligibleParent = false
                 flow.playerInstance = player
 
                 // have to fudge the validation a little.. null parent is ok
