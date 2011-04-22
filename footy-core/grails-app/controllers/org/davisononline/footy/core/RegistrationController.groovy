@@ -214,7 +214,7 @@ class RegistrationController {
         if (!player.lastRegistrationDate)
             player.lastRegistrationDate = new Date()
         else {
-            def nextYear = player.lastRegistrationDate[YEAR] + 1
+            def nextYear = player.lastRegistrationDate[Calendar.YEAR] + 1
             player.lastRegistrationDate.set(year: nextYear)
         }
 
