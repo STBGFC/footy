@@ -41,6 +41,7 @@ class RegistrationService {
 
             if (pi == 0) {
                 if (pg > 1) {
+                    content.endText()
                     pdfStamper.insertPage(pg, new Rectangle(0, 0))
                     pdfStamper.replacePage(pdfReader, 1, pg)
                 }
@@ -60,7 +61,7 @@ class RegistrationService {
                 content.showTextAligned(PdfContentByte.ALIGN_LEFT, today.format("dd   MM   yyyy"), 725, 45, 0)
             }
 
-            // players
+            // player
             content.showTextAligned(PdfContentByte.ALIGN_LEFT, player.toString(), xaxis[0], p1y - (pi * ysize), 0)
             content.showTextAligned(PdfContentByte.ALIGN_LEFT, player.dateOfBirth.format("dd/MM/yyyy"), xaxis[1], p1y - (pi * ysize), 0)
             content.showTextAligned(PdfContentByte.ALIGN_LEFT, player.leagueRegistrationNumber, xaxis[2], p1y - (pi * ysize), 0)
