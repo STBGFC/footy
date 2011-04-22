@@ -49,7 +49,7 @@ class TournamentController {
     def save = {
         def tournamentInstance = new Tournament(params)
         if (tournamentInstance.save(flush: true)) {
-            flash.message = "${message(code: 'default.created.message', args: [message(code: 'tournament.label', default: 'Tournament'), tournamentInstance.name])}"
+            flash.message = "${message(code: 'default.created.message', args: [message(code: 'tournament.label', default: ''), tournamentInstance.name])}"
             redirect(action: "list")
         }
         else {

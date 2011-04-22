@@ -32,17 +32,20 @@
             <tbody>
             <g:each in="${tournamentInstanceList}" status="i" var="tournamentInstance">
                 <tr class="${(i % 2) == 0 ? 'odd' : 'even'}">
-                    <td class="${tournamentInstance.openForEntry ? "openTournament" : "closedTournament"}">${tournamentInstance.name}</td>
+                    <td class="${tournamentInstance.openForEntry ? "openTournament" : "closedTournament"}">
+                        <g:if test="${!tournamentInstance.entries}">
+                        <g:link action="edit" id="${tournamentInstance.id}">${tournamentInstance.name}</g:link>
+                        </g:if>
+                        <g:else>
+                        <g:link action="show" id="${tournamentInstance.id}">${tournamentInstance.name}</g:link>
+                        </g:else>
+                    </td>
                     <td><g:formatDate date="${tournamentInstance.startDate}" format="dd/MM/yyyy"/></td>
                     <td><g:formatNumber currencyCode="GBP" type="currency" number="${tournamentInstance.costPerTeam}"/></td>
                     <td>
-                        <g:if test="${!tournamentInstance.entries}">
-                        <g:link action="edit" id="${tournamentInstance.id}"><img alt="edit details" title="edit details" src="${resource(dir:'images',file:'edit.png')}"/></g:link>
-                        </g:if>
-                        <g:else>
-                        <g:link action="show" id="${tournamentInstance.id}"><img alt="view teams" title="view teams" src="${resource(dir:'images',file:'view.png')}"/></g:link>
+                        <g:if test="${tournamentInstance.entries}">
                         <g:link action="entryList" id="${tournamentInstance.id}"><img alt="payment status" title="payment status" src="${resource(dir:'images',file:'payments.png')}"/></g:link>
-                        </g:else>
+                        </g:if>
                         <g:if test="${tournamentInstance.openForEntry}">
                         <g:link action="close" id="${tournamentInstance.id}"><img alt="close tournament to new entries" title="close tournament to new entries" src="${resource(dir:'images',file:'close.png')}"/></g:link>
                         </g:if>
