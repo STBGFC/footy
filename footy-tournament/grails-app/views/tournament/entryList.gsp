@@ -1,5 +1,5 @@
 
-<%@ page import="org.davisononline.footy.tournament.Entry" %>
+<%@ page import="org.grails.paypal.Payment; org.davisononline.footy.tournament.Entry" %>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -37,8 +37,10 @@
                         </td>
                         <td>
                             <g:if test="${entry.payment}">
+                                <g:set var="cash" value="${entry.payment.status == Payment.COMPLETE && !entry.payment.paypalTransactionId}"/>
                                 <g:link controller="invoice" action="show" id="${entry.payment?.transactionId}">
-                                    <img title="${entry.payment?.status}" alt="${entry.payment?.status} (click to see invoice)" src="${resource(dir:'images',file:'payment-' + entry.payment?.status?.toLowerCase() + '.png', plugin:'footy-core')}"/>
+                                    <img title="Payment ${cash ? 'by Cash/Cheque': entry.payment.status}" alt="${entry.payment?.status?.toLowerCase()} (click to see invoice)"
+                                         src="${resource(dir:'images',file:'payment-' + entry.payment?.status?.toLowerCase() + (cash ? 'b' : '') + '.png', plugin:'footy-core')}"/>
                                 </g:link>
                             </g:if>
                             <g:if test="${entry.payment?.status != org.grails.paypal.Payment.COMPLETE}">

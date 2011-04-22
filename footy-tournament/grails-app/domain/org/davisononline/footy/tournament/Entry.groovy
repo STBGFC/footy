@@ -8,7 +8,7 @@ import org.grails.paypal.Payment
 /**
  * @author darren
  */
-class Entry implements Serializable {
+class Entry implements Serializable, Comparable {
 
     Payment payment
     Person contact
@@ -24,5 +24,16 @@ class Entry implements Serializable {
 
     static mapping = {
         payment cascade: "all,delete-orphan"
+    }
+
+    /**
+     * sort based on the name of the person registering
+     *
+     * @param other
+     * @return
+     */
+    int compareTo(other) {
+        if (!other) return 1
+        return contact?.compareTo(other.contact)
     }
 }
