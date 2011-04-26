@@ -188,6 +188,7 @@ class EntryController {
                     return error()
                 }
 
+                // want to capture teams anyway, regardless of completion of the flow
                 team.save(flush: true)
                 flow.entryInstance.addToTeams(team)
                 
@@ -202,24 +203,8 @@ class EntryController {
             on("createMore").to("createTeam")
             
             on("submit") {
-                def entry = flow.entryInstance
-                def payment = new Payment (
-                    buyerId: entry.contact.id,
-                    currency: Currency.getInstance("GBP"),
-                    transactionIdPrefix: "TRN"
-                )
-                entry.teams.each { t->
-                    payment.addToPaymentItems(
-                        new PaymentItem (
-                            itemName: "${t.club.name} ${t}",
-                            itemNumber: "${entry.tournament.name}",
-                            amount: entry.tournament.costPerTeam
-                        )
-                    )
-                }
-                payment.save()
-                entry.payment = payment
-                entry.save(flush:true)
+
+                def payment = tournamentService.createPayment(flow.entryInstance)
                 [payment:payment]
 
             }.to("invoice")
