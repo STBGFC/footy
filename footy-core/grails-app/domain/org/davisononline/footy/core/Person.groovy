@@ -1,6 +1,7 @@
 package org.davisononline.footy.core
 
 import org.codehaus.groovy.grails.commons.ConfigurationHolder
+import org.grails.paypal.Payment
 
 /**
  * Person
@@ -34,7 +35,7 @@ class Person implements Comparable, Serializable {
     // security credential
     SecUser user
 
-    static hasMany = [qualifications: Qualification]
+    static hasMany = [qualifications: Qualification, payments: Payment]
     static fetchMode = [qualifications: 'eager']
     
     static constraints = {
