@@ -16,6 +16,14 @@ class InvoiceController {
         [paymentList: Payment.findAllByPaypalTransactionIdIsNotNull(params), paymentTotal: Payment.countByPaypalTransactionIdIsNotNull()]
     }
 
+    def unpaid = {
+        params.max = Math.min(params.max ? params.int('max') : 25, 100)
+        params.order = params.order ?: "desc"
+        params.sort = params.sort ?: "id"
+        [paymentList: Payment.findAllByStatusInList([Payment.CANCELLED, Payment.PENDING, Payment.FAILED], params),
+                paymentTotal: Payment.countByStatusInList([Payment.CANCELLED, Payment.PENDING, Payment.FAILED])]
+    }
+
     def show = {
         def payment = Payment.findByTransactionId(params?.id)
         if (!payment) {
