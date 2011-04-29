@@ -33,6 +33,7 @@
                             </td>
                             <td>
                                 <img title="${payment?.status}" alt="${payment?.status?.toLowerCase()}" src="${resource(dir:'images',file:'payment-' + payment?.status?.toLowerCase() + '.png', plugin:'footy-core')}"/>
+                                <g:link action="paymentMade" id="${payment.transactionId}" params="${params}" onclick="return confirm('${message(code: 'default.button.manualpayment.confirm.message', default: 'Are you sure you want to mark payment as received?')}');">mark payment received</g:link>
                             </td>
                             <td>
                                 <ul>

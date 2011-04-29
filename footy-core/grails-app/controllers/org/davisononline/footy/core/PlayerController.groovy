@@ -139,23 +139,4 @@ class PlayerController {
         }
         redirect(action: "list")
     }
-
-    /**
-     * manually marks a registration payment as having been made (i.e. outside
-     * of the PayPal/credit card route)
-     */
-    def paymentMade = {
-        def payment = Payment.findByTransactionId(params.id)
-        if (payment) {
-            payment.status = Payment.COMPLETE
-            payment.save()
-            def player = Player.get(payment.buyerId)
-            if (player)
-                player.lastRegistrationDate = new Date()
-        }
-        else
-            flash.message = "No such payment found with transaction id ${params.id}"
-
-        redirect(action: "list", params:params)
-    }
 }
