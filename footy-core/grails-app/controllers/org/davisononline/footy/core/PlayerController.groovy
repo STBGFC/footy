@@ -23,9 +23,10 @@ class PlayerController {
      */
     def list = {
         if(params?.format && params.format != "html"){
-            List fields = ["name", "team", "guardian", "guardian.phone1", "guardian.email", "secondGuardian", "secondGuardian.phone1", "secondGuardian.email", "dateJoinedClub", "lastRegistrationDate", "doctor", "doctorTelephone", "medical"]
+            List fields = ["name", "dateOfBirth", "team", "guardian", "guardian.phone1", "guardian.email", "secondGuardian", "secondGuardian.phone1", "secondGuardian.email", "dateJoinedClub", "currentRegistration", "doctor", "doctorTelephone", "medical"]
             Map labels = [
                     "name": "Name",
+                    "dateOfBirth": "Date of Birth",
                     "team": "Team",
                     "guardian": "Parent/Guardian",
                     "guardian.phone1": "Phone",
@@ -34,7 +35,7 @@ class PlayerController {
                     "secondGuardian.phone1": "Phone",
                     "secondGuardian.email": "email",
                     "dateJoinedClub": "Date Joined",
-                    "lastRegistrationDate": "Last Registered",
+                    "currentRegistration": "Last Registered",
                     "doctor": "Doctor",
                     "doctorTelephone": "Doctor's Tel.",
                     "medical": "Medical Notes"
@@ -50,8 +51,8 @@ class PlayerController {
 
             Map formatters = [
                     name: name,
-                    dateJoinedClub: formattedDate,
-                    lastRegistrationDate: formattedDate                    
+                    dateOfBirth: formattedDate,
+                    dateJoinedClub: formattedDate
             ]
             Map parameters = [title: "Current Players (${new Date().format('dd/MM/yyyy')})"]
 
