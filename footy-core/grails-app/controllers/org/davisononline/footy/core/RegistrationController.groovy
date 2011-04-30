@@ -32,8 +32,8 @@ class RegistrationController {
 
         setupPlayer {
             action {
-                flow.registration.player = new Player(person: new Person(eligibleParent: false))
-                [playerInstance: flow.registration.player]
+                flow.player = new Player(person: new Person(eligibleParent: false))
+                [playerInstance: flow.player]
             }
             on ("success").to "enterPlayerDetails"
         }
@@ -43,7 +43,7 @@ class RegistrationController {
          */
         enterPlayerDetails {
             on("submit") {
-                def player = flow.registration.player
+                def player = flow.player
                 player.properties = params
 
                 // have to fudge the validation a little.. null parent is ok
@@ -71,7 +71,7 @@ class RegistrationController {
          */
         checkPlayerRegistered {
             action {
-                def p = flow.registration.player
+                def p = flow.player
                 def pe = Player.find(
                         "from Player p where p.dateOfBirth = :dob and p.person.familyName = :familyName and p.person.givenName = :givenName",
                         [dob: p.dateOfBirth, familyName: p.person.familyName, givenName: p.person.givenName]
@@ -94,7 +94,7 @@ class RegistrationController {
          */
         checkGuardianNeeded {
             action {
-                def p = flow.registration.player
+                def p = flow.player
                 if (p.isMinor() && !p.guardian && !p.secondGuardian)
                     return yes()
                 else
@@ -103,7 +103,7 @@ class RegistrationController {
 
             on("yes") {
                 flow.personCommand = new Person (
-                    familyName: flow.registration.player.person.familyName
+                    familyName: flow.player.person.familyName
                 )
             }.to "enterGuardianDetails"
 
@@ -146,7 +146,7 @@ class RegistrationController {
         prepTeam {
             action {
                 // use only valid teams
-                def age = flow.registration.player.getAgeAtNextCutoff()
+                def age = flow.player.getAgeAtNextCutoff()
                 def upperAge = (age < 7) ? 6 : age + 1
                 def vt = Team.findAllByClubAndAgeBandBetween(Club.getHomeClub(), age, upperAge)
                 [validTeams: vt]
@@ -158,7 +158,7 @@ class RegistrationController {
             on ("continue") {
 
                 // create domain from flow objects
-                def player = flow.registration.player
+                Player player = flow.player
                 player.properties = params
 
                 if (flow.guardian1) {
@@ -168,6 +168,11 @@ class RegistrationController {
                     player.secondGuardian = flow.guardian2
                 }
 
+                // seems odd..
+                player.currentRegistration = flow.registration
+                flow.registration.player = player
+
+                // eventually will allow several registrations per flow..
                 def registrations = [flow.registration]
 
                 // start transaction to create/save domain
