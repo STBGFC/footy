@@ -76,15 +76,14 @@ class RegistrationController {
                         "from Player p where p.dateOfBirth = :dob and p.person.familyName = :familyName and p.person.givenName = :givenName",
                         [dob: p.dateOfBirth, familyName: p.person.familyName, givenName: p.person.givenName]
                 )
-                if (pe) {
-                    flow.payment = Payment.findByBuyerId(pe.id)
+                if (pe?.currentRegistration) {
                     return yes()
                 }
                 else
                     return no()
             }
 
-            on("yes").to "invoice"
+            on("yes").to "duplicate"
             on("no").to "checkGuardianNeeded"
         }
 
@@ -182,6 +181,10 @@ class RegistrationController {
                 [payment:payment]
 
             }.to "invoice"
+        }
+
+        duplicate {
+            // player already registered
         }
 
         invoice {
