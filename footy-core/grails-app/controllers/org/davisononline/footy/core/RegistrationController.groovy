@@ -26,7 +26,12 @@ class RegistrationController {
 
         start {
             on ("continue") {
-                flow.registration = new Registration(tier: RegistrationTier.get(params.regTierId), date: new Date())
+                def tier = RegistrationTier.get(params.regTierId)
+                def renewOn = new Date()
+                def mth = renewOn[Calendar.MONTH] + tier.monthsValidFor
+                renewOn.set(month: mth)
+                flow.registration = new Registration(tier: tier, date: renewOn)
+
             }.to "setupPlayer"
         }
 
@@ -194,15 +199,6 @@ class RegistrationController {
 
     def paypalSuccess = {
         def payment = Payment.findByTransactionId(params.transactionId)
-        // update registration date for the player
-        def player = Player.get(payment.buyerId)
-        if (!player.lastRegistrationDate)
-            player.lastRegistrationDate = new Date()
-        else {
-            def nextYear = player.lastRegistrationDate[Calendar.YEAR] + 1
-            player.lastRegistrationDate.set(year: nextYear)
-        }
-
         render view: '/paypal/success', model:[payment: payment]
     }
 
