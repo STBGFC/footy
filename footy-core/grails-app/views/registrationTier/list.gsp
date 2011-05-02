@@ -20,6 +20,7 @@
                 <thead>
                     <tr>
                         <g:sortableColumn property="name" title="${message(code: 'registrationTier.name.label', default: 'Name')}" />
+                        <th><g:message code="registrationTier.monthsValidFor.label" default="Months"/></th>
                         <g:sortableColumn property="amount" title="${message(code: 'registrationTier.amount.label', default: 'Amount')}" />
                         <g:sortableColumn property="repeatDiscount" title="${message(code: 'registrationTier.repeatDiscount.label', default: 'Repeat Discount')}" />
                         <g:sortableColumn property="siblingDiscount" title="${message(code: 'registrationTier.siblingDiscount.label', default: 'Sibling Discount')}" />
@@ -29,6 +30,7 @@
                 <g:each in="${registrationTierInstanceList}" status="i" var="registrationTierInstance">
                     <tr class="${(i % 2) == 0 ? 'odd' : 'even'}">
                         <td><g:link action="edit" id="${registrationTierInstance.id}">${fieldValue(bean: registrationTierInstance, field: "name")}</g:link></td>
+                        <td>${registrationTierInstance.monthsValidFor}</td>
                         <td><g:formatNumber number="${registrationTierInstance.amount}" type="currency" currencyCode="${currency}" /></td>
                         <td><g:formatNumber number="${registrationTierInstance.repeatDiscount}" type="currency" currencyCode="${currency}" /></td>
                         <td><g:formatNumber number="${registrationTierInstance.siblingDiscount}" type="currency" currencyCode="${currency}" /></td>

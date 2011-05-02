@@ -7,6 +7,7 @@ package org.davisononline.footy.core
 class RegistrationTier implements Serializable {
     
     String name
+    int monthsValidFor = 12
     double amount = 10.00
     double siblingDiscount = 0.00
     double repeatDiscount = 0.00
