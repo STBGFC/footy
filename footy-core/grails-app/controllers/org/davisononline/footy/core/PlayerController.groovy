@@ -110,7 +110,7 @@ class PlayerController {
 
             playerInstance.properties = params
 
-            if (!playerInstance.hasErrors() && !playerInstance.person.hasErrors() && playerInstance.save(flush: true)) {
+            if (!playerInstance.hasErrors() && !playerInstance?.person?.hasErrors() && playerInstance.save()) {
                 flash.message = "${message(code: 'default.updated.message', args: [message(code: 'player.label', default: ''), playerInstance])}"
                 redirect(action: "list")
             }

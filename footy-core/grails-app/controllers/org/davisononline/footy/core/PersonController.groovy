@@ -121,18 +121,17 @@ class PersonController {
             Qualification.withTransaction {status ->
                 // remove expiring qualifications of the same type
                 def old = p.qualifications.find {it.type == qual.type}
-                old.each {
+                old?.each {
                     p.removeFromQualifications(it)
                     it.delete()
                 }
 
                 // add new, save
                 p.addToQualifications(qual)
-                p.save(flush:true)
             }
         }
         catch (Exception ex) {
-            log.warn("Unable to add qualification: $ex")
+            log.warn "Unable to add qualification: $ex"
         }
 
         // text/plain prevents sitemesh decoreation
@@ -150,7 +149,6 @@ class PersonController {
                 def q = Qualification.get(params.qualificationId)
                 q.delete()
                 p.removeFromQualifications(q)
-                p.save(flush:true)
             }
         }
         catch (Exception ex) {
