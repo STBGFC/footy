@@ -31,6 +31,16 @@
                                     <g:render template="/shared/fieldError" model="['instance':registrationTierInstance,'field':'name']" plugin="footy-core"/>
                                 </td>
                             </tr>
+
+                            <tr class="prop">
+                                <td valign="top" class="name">
+                                  <label for="monthsValidFor"><g:message code="org.davisononline.org.footy.core.registrationTier.monthsValidFor.label" default="Number of Months Valid For" /></label>
+                                </td>
+                                <td valign="top" class="value ${hasErrors(bean: registrationTierInstance, field: 'name', 'errors')}">
+                                    <g:select name="monthsValidFor" from="${(1..12)}" value="${registrationTierInstance?.monthsValidFor}" />
+                                    <g:render template="/shared/fieldError" model="['instance':registrationTierInstance,'field':'monthsValidFor']" plugin="footy-core"/>
+                                </td>
+                            </tr>
                         
                             <tr class="prop">
                                 <td valign="top" class="name">

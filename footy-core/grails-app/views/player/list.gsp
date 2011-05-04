@@ -24,7 +24,7 @@
                             <g:sortableColumn property="person.familyName" title="${message(code: 'person.name.label', default: 'Name')}" />
                             <g:sortableColumn property="dateOfBirth" title="${message(code: 'player.dateOfBirth.label', default: 'DoB')}" />
                             <th>${message(code: 'player.contactDetails.label', default: 'Contact')}</th>
-                            <g:sortableColumn property="lastRegistrationDate" title="${message(code: 'player.lastRegistrationDate.label', default: 'Last Registration')}" />
+                            <g:sortableColumn property="currentRegistration" title="${message(code: 'player.lastRegistrationDate.label', default: 'Last Registration')}" />
                             <g:sortableColumn property="leagueRegistrationNumber" title="${message(code: 'player.leagueRegistrationNumber.label', default: 'League Registration #')}" />
                             <g:sortableColumn property="team" title="${message(code: 'player.team.label', default: 'Team')}" />
                         </tr>
@@ -40,8 +40,9 @@
                                 <br/><a href="mailto:${player.guardian?.email}">${player.guardian?.email}</a>
                             </td>
                             <td>
+                                ${player.currentRegistration ?: "Not Registered"}
+                                <%--
                                 <g:formatDate date="${player.lastRegistrationDate}" format="dd/MM/yyyy"/>
-                                <%-- TODO: ensure most recent only is displayed --%>
                                 <g:set value="${Payment.findByBuyerId(player.id)}" var="payment"/>
                                 <g:if test="${payment != null}">
                                 <g:set var="cash" value="${payment.status == Payment.COMPLETE && !payment.paypalTransactionId}"/>
@@ -54,6 +55,7 @@
                                 <br/><g:link action="delete" controller="player" id="${player.id}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');">delete player</g:link>
                                 </g:if>
                                 </g:if>
+                                --%>
                             </td>
                             <td>${fieldValue(bean: player, field: "leagueRegistrationNumber")}</td>
                             <td>

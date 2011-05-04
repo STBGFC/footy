@@ -49,6 +49,16 @@
                                     <tmpl:qualificationsList person="${personCommand}"/>
                                 </td>
                             </tr>
+                            <g:if test="${personCommand.payments}">
+                            <tr class="prop">
+                                <td class="name">
+                                    <g:message code="org.davisononline.footy.core.payments.label" default="Payments Made" />
+                                </td>
+                                <td id="payments" class="value">
+                                    <tmpl:paymentsList payments="${personCommand.payments}"/>
+                                </td>
+                            </tr>
+                            </g:if>
                             </g:if>
                         </tbody>
                     </table>

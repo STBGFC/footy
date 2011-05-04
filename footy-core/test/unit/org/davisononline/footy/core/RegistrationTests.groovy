@@ -1,14 +1,17 @@
 package org.davisononline.footy.core
 
 import grails.test.*
-import org.davisononline.footy.core.Address
 
-class RegistrationControllerTests extends ControllerUnitTestCase {
+class RegistrationTests extends GrailsUnitTestCase {
     protected void setUp() {
         super.setUp()
     }
 
     protected void tearDown() {
         super.tearDown()
+    }
+
+    void testSomething() {
+
     }
 }

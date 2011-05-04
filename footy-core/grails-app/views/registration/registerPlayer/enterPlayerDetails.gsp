@@ -3,7 +3,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <g:set var="entityName" value="${message(code: 'club.label', default: 'Club')}" />
-        <title><g:message code="default.paymentdetails.label" default="${registrationTier.name} Registration" /></title>
+        <title><g:message code="default.paymentdetails.label" default="${registration.tier.name} Registration" /></title>
         <script type="text/javascript">var focusField='person.givenName'</script>
     </head>
     <body>

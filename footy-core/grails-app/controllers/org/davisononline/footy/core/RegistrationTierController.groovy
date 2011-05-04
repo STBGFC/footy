@@ -33,7 +33,7 @@ class RegistrationTierController {
     def save = {
         def registrationTierInstance = new RegistrationTier(params)
         if (registrationTierInstance.save(flush: true)) {
-            flash.message = "${message(code: 'default.created.message', args: [message(code: 'registrationTier.label', default: 'RegistrationTier'), registrationTierInstance.id])}"
+            flash.message = "${message(code: 'default.created.message', args: [message(code: 'registrationTier.label', default: 'RegistrationTier'), registrationTierInstance.name])}"
             redirect action: "list"
         }
         else {

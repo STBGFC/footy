@@ -18,7 +18,7 @@ class Player implements Comparable, Serializable {
     Person secondGuardian
     Team team
     Date dateJoinedClub = new Date()
-    Date lastRegistrationDate = null
+    Registration currentRegistration = null
     String leagueRegistrationNumber
     Player sibling // for discount calculation
     String notes = ''
@@ -46,7 +46,7 @@ class Player implements Comparable, Serializable {
         doctorTelephone(blank: false)
         medical(blank: true)
         team(nullable:true)
-        lastRegistrationDate(nullable: true)
+        currentRegistration(nullable: true)
         leagueRegistrationNumber(nullable: true, unique: true)
         sibling(nullable: true)
         notes(blank: true)

@@ -16,6 +16,14 @@ class InvoiceController {
         [paymentList: Payment.findAllByPaypalTransactionIdIsNotNull(params), paymentTotal: Payment.countByPaypalTransactionIdIsNotNull()]
     }
 
+    def unpaid = {
+        params.max = Math.min(params.max ? params.int('max') : 25, 100)
+        params.order = params.order ?: "desc"
+        params.sort = params.sort ?: "id"
+        [paymentList: Payment.findAllByStatusInList([Payment.CANCELLED, Payment.PENDING, Payment.FAILED], params),
+                paymentTotal: Payment.countByStatusInList([Payment.CANCELLED, Payment.PENDING, Payment.FAILED])]
+    }
+
     def show = {
         def payment = Payment.findByTransactionId(params?.id)
         if (!payment) {
@@ -30,5 +38,22 @@ class InvoiceController {
 
     def paypalCancel = {
         render view: '/paypal/cancel'
+    }
+
+    /**
+     * manually marks a registration payment as having been made (i.e. outside
+     * of the PayPal/credit card route)
+     */
+    def paymentMade = {
+        def payment = Payment.findByTransactionId(params.id)
+        if (payment) {
+            payment.status = Payment.COMPLETE
+            payment.save()
+            flash.message = "Payment made for invoice ${params.id}"
+        }
+        else
+            flash.message = "No such invoice found with number ${params.id}"
+
+        redirect(action: "unpaid", params:params)
     }
 }

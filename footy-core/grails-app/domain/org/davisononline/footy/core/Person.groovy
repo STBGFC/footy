@@ -1,6 +1,7 @@
 package org.davisononline.footy.core
 
 import org.codehaus.groovy.grails.commons.ConfigurationHolder
+import org.grails.paypal.Payment
 
 /**
  * Person
@@ -30,11 +31,12 @@ class Person implements Comparable, Serializable {
     Boolean eligibleParent = true
     String notes = ''
     SortedSet qualifications
+    Set payments
 
     // security credential
     SecUser user
 
-    static hasMany = [qualifications: Qualification]
+    static hasMany = [qualifications: Qualification, payments: Payment]
     static fetchMode = [qualifications: 'eager']
     
     static constraints = {

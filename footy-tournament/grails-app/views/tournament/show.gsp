@@ -1,5 +1,5 @@
 
-<%@ page import="org.davisononline.footy.tournament.Tournament" %>
+<%@ page import="org.davisononline.footy.core.Team; org.davisononline.footy.tournament.Tournament" %>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -19,10 +19,10 @@
             The following teams are entered in this competition so far (note that not all money may have been received,
             check <g:link controller="tournament" action="entryList" id="${tournamentInstance.id}">here</g:link> to see status of payments)
         </p>
-        <g:each in="${(7..18)}" var="age">
+        <g:each in="${Team.constraints.ageBand.inList}" var="age">
             <g:render template="teamTables" model="['teams':teamList.grep{it.ageBand == age && !it.girlsTeam}, 'age': age]" />
         </g:each>
-        <g:each in="${(11..18)}" var="age">
+        <g:each in="${Team.constraints.ageBand.inList}" var="age">
             <g:render template="teamTables" model="['teams':teamList.grep{it.ageBand == age && it.girlsTeam}, 'age': age]" />
         </g:each>
         <p>

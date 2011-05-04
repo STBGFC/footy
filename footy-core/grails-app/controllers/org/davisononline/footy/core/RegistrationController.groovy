@@ -4,15 +4,16 @@ import org.davisononline.footy.core.*
 import org.grails.paypal.Payment
 import org.grails.paypal.PaymentItem
 import org.codehaus.groovy.grails.commons.ConfigurationHolder
-import org.springframework.dao.DataIntegrityViolationException
 
 /**
- * flows for the redgistration and creation of players, parents and other
+ * flows for the registration and creation of players, parents and other
  * staff at the club.
  * 
  * @author darren
  */
 class RegistrationController {
+
+    def registrationService
     
     def index = {
         redirect (action:'registerPlayer')
@@ -25,13 +26,19 @@ class RegistrationController {
 
         start {
             on ("continue") {
-                flow.registrationTier = RegistrationTier.get(params.regTierId)
+                def tier = RegistrationTier.get(params.regTierId)
+                def renewOn = new Date()
+                def mth = renewOn[Calendar.MONTH] + tier.monthsValidFor
+                renewOn.set(month: mth)
+                flow.registration = new Registration(tier: tier, date: renewOn)
+
             }.to "setupPlayer"
         }
 
         setupPlayer {
             action {
-                [playerInstance: new Player(person: new Person(eligibleParent: false))]
+                flow.player = new Player(person: new Person(eligibleParent: false))
+                [playerInstance: flow.player]
             }
             on ("success").to "enterPlayerDetails"
         }
@@ -41,9 +48,8 @@ class RegistrationController {
          */
         enterPlayerDetails {
             on("submit") {
-                def player = new Player(params)
-                player.person.eligibleParent = false
-                flow.playerInstance = player
+                def player = flow.player
+                player.properties = params
 
                 // have to fudge the validation a little.. null parent is ok
                 // for now, we haven't asked for those details yet.
@@ -70,20 +76,19 @@ class RegistrationController {
          */
         checkPlayerRegistered {
             action {
-                def p = flow.playerInstance
+                def p = flow.player
                 def pe = Player.find(
                         "from Player p where p.dateOfBirth = :dob and p.person.familyName = :familyName and p.person.givenName = :givenName",
                         [dob: p.dateOfBirth, familyName: p.person.familyName, givenName: p.person.givenName]
                 )
-                if (pe) {
-                    flow.payment = Payment.findByBuyerId(pe.id)
+                if (pe?.currentRegistration) {
                     return yes()
                 }
                 else
                     return no()
             }
 
-            on("yes").to "invoice"
+            on("yes").to "duplicate"
             on("no").to "checkGuardianNeeded"
         }
 
@@ -93,7 +98,8 @@ class RegistrationController {
          */
         checkGuardianNeeded {
             action {
-                if (flow.playerInstance.isMinor() && !flow.playerInstance.guardian && !flow.playerInstance.secondGuardian)
+                def p = flow.player
+                if (p.isMinor() && !p.guardian && !p.secondGuardian)
                     return yes()
                 else
                     return no()
@@ -101,7 +107,7 @@ class RegistrationController {
 
             on("yes") {
                 flow.personCommand = new Person (
-                    familyName: flow.playerInstance.person.familyName
+                    familyName: flow.player.person.familyName
                 )
             }.to "enterGuardianDetails"
 
@@ -144,7 +150,7 @@ class RegistrationController {
         prepTeam {
             action {
                 // use only valid teams
-                def age = flow.playerInstance.getAgeAtNextCutoff()
+                def age = flow.player.getAgeAtNextCutoff()
                 def upperAge = (age < 7) ? 6 : age + 1
                 def vt = Team.findAllByClubAndAgeBandBetween(Club.getHomeClub(), age, upperAge)
                 [validTeams: vt]
@@ -156,7 +162,7 @@ class RegistrationController {
             on ("continue") {
 
                 // create domain from flow objects
-                def player = flow.playerInstance
+                Player player = flow.player
                 player.properties = params
 
                 if (flow.guardian1) {
@@ -166,40 +172,24 @@ class RegistrationController {
                     player.secondGuardian = flow.guardian2
                 }
 
-                def payment
-                try {
-                    Player.withTransaction { status ->
-                        if (!player.save(flush: true)) {
-                            log.error player.errors
-                            status.setRollbackOnly()
-                            return error()
-                        }
+                // seems odd..
+                player.currentRegistration = flow.registration
+                flow.registration.player = player
 
-                        payment = new Payment (
-                                buyerId: player.id,
-                                transactionIdPrefix: "REG",
-                                currency: Currency.getInstance(ConfigurationHolder.config.org?.davisononline?.footy?.registration?.currency ?: "GBP")
-                        )
-                        def regItem =
-                        new PaymentItem (
-                                itemName: "${player} ${flow.registrationTier}",
-                                itemNumber: "${flow.registrationTier.id}",
-                                amount: flow.registrationTier.amount
-                        )
-                        if (player.sibling && flow.registrationTier.siblingDiscount != 0) {
-                            regItem.discountAmount = flow.registrationTier.siblingDiscount
-                        }
-                        payment.addToPaymentItems(regItem)
-                        payment.save(flush:true)
-                    }
-                }
-                catch (Exception ex) {
-                    return error()
-                }
+                // eventually will allow several registrations per flow..
+                def registrations = [flow.registration]
+
+                // start transaction to create/save domain
+                def payment
+                payment = registrationService.createPayment(registrations)
 
                 [payment:payment]
 
             }.to "invoice"
+        }
+
+        duplicate {
+            // player already registered
         }
 
         invoice {
@@ -209,15 +199,6 @@ class RegistrationController {
 
     def paypalSuccess = {
         def payment = Payment.findByTransactionId(params.transactionId)
-        // update registration date for the player
-        def player = Player.get(payment.buyerId)
-        if (!player.lastRegistrationDate)
-            player.lastRegistrationDate = new Date()
-        else {
-            def nextYear = player.lastRegistrationDate[Calendar.YEAR] + 1
-            player.lastRegistrationDate.set(year: nextYear)
-        }
-
         render view: '/paypal/success', model:[payment: payment]
     }
 
