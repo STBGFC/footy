@@ -18,7 +18,7 @@ class Person implements Comparable, Serializable {
         familyName boost: 2.0
     }
 
-    static int MINOR_UNTIL = ConfigurationHolder.config?.org?.davisononline?.footy?.core?.person?.minor ?: 16
+    static int MINOR_UNTIL = ConfigurationHolder.config?.org?.davisononline?.footy?.core?.person?.minor?.toInteger() ?: 18
 
     String givenName
     String familyName
