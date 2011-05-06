@@ -114,11 +114,14 @@ class PersonController {
     }
 
     def addQualification = {
-        def qual = new Qualification(params)
-        def p = Person.get(params.personId)
+
+        def p
 
         try {
             Qualification.withTransaction {status ->
+                
+                def qual = new Qualification(params)
+                p = Person.get(params.personId)
                 // remove expiring qualifications of the same type
                 def old = p.qualifications.find {it.type == qual.type}
                 old?.each {
