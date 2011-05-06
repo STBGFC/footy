@@ -150,8 +150,8 @@ class PersonController {
             Qualification.withTransaction {status ->
                 // WHY does this not cascade.. the qualification 'belongsTo' the Person
                 def q = Qualification.get(params.qualificationId)
-                q.delete()
                 p.removeFromQualifications(q)
+                q.delete()
             }
         }
         catch (Exception ex) {
