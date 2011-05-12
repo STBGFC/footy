@@ -20,11 +20,17 @@ class Qualification implements Comparable, Serializable {
      * sort date-wise
      */
     int compareTo(obj) {
-        def d1 = attainedOn.compareTo(obj?.attainedOn)
-        if (d1 == 0)
-            type?.name?.compareTo(obj?.type?.name)
-        else
-            d1
+        try {
+            def d1 = attainedOn.compareTo(obj?.attainedOn)
+            if (d1 == 0)
+                type?.name?.compareTo(obj?.type?.name)
+            else
+                d1
+        }
+        catch (Exception ex) {
+            log.error ex
+            return 1
+        }
     }
 
     QualificationType getType() {

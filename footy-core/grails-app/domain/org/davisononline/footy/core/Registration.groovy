@@ -17,8 +17,13 @@ class Registration implements Serializable, Comparable {
     }
 
     int compareTo(other) {
-        if (!other) return 1
-        return date.compareTo(other)
+        try {
+            date.compareTo(other.date)
+        }
+        catch (Exception ex) {
+            log.error ex
+            return 1
+        }
     }
 
     String toString() {
