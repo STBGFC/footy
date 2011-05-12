@@ -63,11 +63,13 @@ class Team implements Serializable {
      */
     @Override
     public boolean equals(otherTeam) {
-        return (otherTeam?.name == name && 
-            otherTeam.ageBand == ageBand &&
-            otherTeam.girlsTeam == girlsTeam &&
-            otherTeam.vetsTeam == vetsTeam &&
-            otherTeam.club == club)   
+        return (
+            otherTeam?.name == name &&
+            otherTeam?.ageBand == ageBand &&
+            otherTeam?.girlsTeam == girlsTeam &&
+            otherTeam?.vetsTeam == vetsTeam &&
+            otherTeam?.club == club
+        )
     }
     
     

@@ -90,10 +90,16 @@ class Player implements Comparable, Serializable {
      * @see java.lang.Object#toString()
      */
     String toString() {
-        person.toString()
+        person?.toString()
     }
 
-    int compareTo(Object t) {
-        return person.compareTo(t.person)
+    int compareTo(t) {
+        try {
+            person.compareTo(t.person)
+        }
+        catch (Exception ex) {
+            log.error ex
+            return 1
+        }
     }
 }
