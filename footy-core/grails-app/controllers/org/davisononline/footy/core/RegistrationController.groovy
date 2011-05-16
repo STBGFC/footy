@@ -82,13 +82,20 @@ class RegistrationController {
                         [dob: p.dateOfBirth, familyName: p.person.familyName, givenName: p.person.givenName]
                 )
                 if (pe?.currentRegistration) {
-                    return yes()
+                    def pmnt = PaymentItem.findByItemNumber(pe.currentRegistration.id)?.payment
+                    if (pmnt) {
+                        flow.payment
+                        return invoice()
+                    }
+                    // registered, but can't find the payment
+                    return duplicate()
                 }
                 else
                     return no()
             }
 
-            on("yes").to "duplicate"
+            on("invoice").to "invoice"
+            on("duplicate").to "duplicate"
             on("no").to "checkGuardianNeeded"
         }
 
@@ -188,9 +195,7 @@ class RegistrationController {
             }.to "invoice"
         }
 
-        duplicate {
-            // player already registered
-        }
+        duplicate() {}
 
         invoice {
             redirect (controller: 'invoice', action: 'show', id: flow.payment.transactionId, params:[returnController: 'registration'])
