@@ -22,6 +22,18 @@ class TeamController {
         [teamInstanceList: Team.list(params), teamInstanceTotal: Team.count()]
     }
 
+    @Secured(["permitAll"])
+    def show = {
+        def teamInstance = Team.findByAgeBandAndNameIlike(params.ageBand, params.teamName)
+        if (!teamInstance) {
+            response.sendError(404)
+        }
+        else {
+            return [teamInstance: teamInstance, players: Player.findAllByTeam(teamInstance, [sort:"person.familyName", order:"asc"])]
+        }
+
+    }
+
     def create = {
         def teamInstance = new Team()
         teamInstance.properties = params

@@ -7,6 +7,10 @@ class FootyCoreUrlMappings {
         // enable 2 ids to be passed to delQualification
         "/person/delQualification/$personId/$qualificationId" (controller:'person', action:'delQualification')
 
+        // nicer URL for viewing teams
+        "/u$ageBand/$teamName" (controller:'team', action: 'show')
+        "/U$ageBand/$teamName" (controller:'team', action: 'show')
+
 		"/"(view:"/index")
 		"500"(view:'/error')
 	}
