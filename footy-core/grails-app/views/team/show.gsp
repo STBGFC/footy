@@ -23,7 +23,11 @@
                 <strong>Players:</strong>
                 <g:each in="${players}" var="p"><g:link controller="player" action="edit" id="${p.id}">${p}</g:link>, </g:each>
             </p>
+            <div class="nav">
+                <span class="menuButton"><g:link class="edit" action="edit" id="${teamInstance.id}">edit this team</g:link></span>
+            </div>
             </sec:ifAnyGranted>
+
             <sec:ifNotGranted roles="ROLE_CLUB_ADMIN,ROLE_MANAGER">
             <p>
                 <strong>Manager:</strong> ${teamInstance.manager}
@@ -41,11 +45,22 @@
 
         <div id="newspanel">
             <div class="newsbox">
-                <h2>Upcoming Events</h2>
+                <h2>${teamInstance} Upcoming Events</h2>
                 <ul>
-                    <li>21/3/11 6pm-7pm: <strong>Training</strong></li>
-                    <li>12/5/11 2pm-5pm: <strong>Squad barbecue</strong></li>
-                    <li>13/5/11 9am: <strong>Match (Hawley Raiders AWAY)</strong></li>
+                    <li>none found</li>
+                </ul>
+            </div>
+            <div class="newsbox">
+                <h2>All U${teamInstance.ageBand} Teams</h2>
+                <ul>
+                    <g:each in="${Team.findAllByAgeBand(teamInstance.ageBand)}" var="t">
+                    <g:if test="${t != teamInstance}">
+                    <li><g:link action="show" params="${[ageBand:t.ageBand, teamName:t.name]}">${t.name}</g:link></li>
+                    </g:if>
+                    <g:else>
+                    <li><strong>${t.name}</strong></li>
+                    </g:else>
+                    </g:each>
                 </ul>
             </div>
         </div>
