@@ -26,7 +26,14 @@ class PersonController {
     def list = {
         params.max = Math.min(params.max ? params.int('max') : 25, 100)
         if (!params.sort) params.sort = 'familyName'
-        def l = Person.findAllByEligibleParent(true, params)
+        /*
+         * another f'ing grails bug.. I want to do Person.findAllByEligibleParent(true, params)
+         * but the pagination fails because it does the select from the db, then filters the list, so I
+         * get pages with 'gaps' where the non-eligibleParent records would be.  The hql version works
+         * but now I lose sortableColumns as that would have to be specified in the order by clause
+         * TODO: raise yet another JIRA so they can ignore this one too
+         */
+        def l = Person.findAll("from Person p where eligibleParent = ? order by p.familyName", [true], params)
         [personInstanceList: l, personInstanceTotal: Person.countByEligibleParent(true)]
     }
 
@@ -114,11 +121,14 @@ class PersonController {
     }
 
     def addQualification = {
-        def qual = new Qualification(params)
-        def p = Person.get(params.personId)
+
+        def p
 
         try {
             Qualification.withTransaction {status ->
+                
+                def qual = new Qualification(params)
+                p = Person.get(params.personId)
                 // remove expiring qualifications of the same type
                 def old = p.qualifications.find {it.type == qual.type}
                 old?.each {
@@ -147,8 +157,8 @@ class PersonController {
             Qualification.withTransaction {status ->
                 // WHY does this not cascade.. the qualification 'belongsTo' the Person
                 def q = Qualification.get(params.qualificationId)
-                q.delete()
                 p.removeFromQualifications(q)
+                q.delete()
             }
         }
         catch (Exception ex) {

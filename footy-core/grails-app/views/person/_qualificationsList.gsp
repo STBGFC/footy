@@ -5,9 +5,11 @@
                                     <g:set var="qualClass" value="${(qual.expiresOn && qual.expiresOn < now) ? 'qualExpired' : 'qualInDate'}"/>
                                         <li>
                                             <span class="${qualClass}">${qual}</span>
-                                            <%-- can't get g:remoteLink to work as required here... --%>
-                                            <a href="/stbgfc/person/delQualification/${person.id}/${qual.id}"
-                                                onclick="new Ajax.Updater('qualifications','/stbgfc/person/delQualification/${person.id}/${qual.id}',{asynchronous:true,evalScripts:true});return false;">(del)</a>
+                                            <g:remoteLink
+                                                    action="delQualification"
+                                                    params="[personId:person.id,qualificationId:qual.id]"
+                                                    update="qualifications"
+                                            >(del)</g:remoteLink>
                                         </li>
                                     </g:each>
                                     </ul>

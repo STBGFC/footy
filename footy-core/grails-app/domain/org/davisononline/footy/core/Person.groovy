@@ -18,7 +18,7 @@ class Person implements Comparable, Serializable {
         familyName boost: 2.0
     }
 
-    static int MINOR_UNTIL = ConfigurationHolder.config?.org?.davisononline?.footy?.core?.person?.minor ?: 16
+    static int MINOR_UNTIL = 18
 
     String givenName
     String familyName
@@ -62,7 +62,7 @@ class Person implements Comparable, Serializable {
      * comparable to sort on family name, then given name
      */
     int compareTo(obj) {
-        "${familyName}, ${givenName}".compareTo("${obj.familyName}, ${obj.givenName}")
+        "${familyName}, ${givenName}".compareTo("${obj?.familyName}, ${obj?.givenName}")
     }
     
     /**

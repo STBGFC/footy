@@ -13,7 +13,7 @@ class InvoiceController {
         params.max = Math.min(params.max ? params.int('max') : 25, 100)
         params.order = params.order ?: "desc"
         params.sort = params.sort ?: "id"
-        [paymentList: Payment.findAllByPaypalTransactionIdIsNotNull(params), paymentTotal: Payment.countByPaypalTransactionIdIsNotNull()]
+        [paymentList: Payment.findAllByStatus(Payment.COMPLETE, params), paymentTotal: Payment.countByStatus(Payment.COMPLETE)]
     }
 
     def unpaid = {

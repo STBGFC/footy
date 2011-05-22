@@ -1,4 +1,4 @@
-<%@ page import="org.grails.paypal.Payment; org.davisononline.footy.core.utils.PaymentUtils" %>
+<%@ page import="org.davisononline.footy.core.Club; org.grails.paypal.Payment; org.davisononline.footy.core.utils.PaymentUtils" %>
         <p><g:message code="org.davisononline.footy.core.invoicenumber.label" default="Invoice Number: "/><strong>${payment.transactionId}</strong></p>
         <table id="invoice">
             <tbody>
@@ -43,8 +43,8 @@
             </tr>
             </tbody>
         </table>
-        <div id="checkout">
         <g:if test="${payment.status != Payment.COMPLETE}">
+        <div id="checkout">
             <g:form
                 controller="paypal"
                 action="uploadCart"
@@ -62,17 +62,31 @@
                 src="${resource(dir:'images', file:'paypalcheckout.gif', plugin: 'footy-core')}"
                 alt="Click to pay via PayPal - the safer, easier way to pay"/>
             </g:form>
-            <p>
-                <em>
-                <g:message
-                        code="org.davisononline.footy.core.invoicefooter.text"
-                        default="You don't need a PayPal account to pay!  Once you get to the PayPal site, you can simply enter credit card details without needing to register or login"/>
-                </em>
-            </p>
+        </div>
+        <div class="alert"><g:message code="org.davisononline.footy.core.invoice.due.text" default="*** Invoice is now due for payment ***"/></div>
+        <h2>Pay Online</h2>
+        <p>
+            <g:message
+                    code="org.davisononline.footy.core.invoice.payonline.text"
+                    default="You don't NEED a PayPal account to pay online!  Click the 'Checkout with PayPal' button above and you can either use your PayPal account OR enter credit card details without needing to register or login"/>
+
+        </p>
+        <h2>Pay Offline</h2>
+        <p>
+            <g:message
+                code="org.davisononline.footy.core.invoice.payoffline.text"
+                default="Our strong preference is that you pay online as described above using a credit card or PayPal account.  This makes it much easier for us.  However,if you prefer not to, then you can pay cash or send a cheque (with the INVOICE NUMBER written on the back) payable to "/>
+            <strong><g:message
+                code="org.davisononline.footy.core.invoice.paycheque.text"
+                default="STBGFC"/></strong>
+        </p>
+        <p>
+            ${Club.homeClub.treasurer}
+            ${Club.homeClub.treasurer?.address}
+        </p>
         </g:if>
         <g:else>
-            <p>
-                <g:message code="org.davisononline.footy.core.invoicepaid" default="This invoice has already been paid.  Thank you."/>
-            </p>
+        <p>
+            <g:message code="org.davisononline.footy.core.invoicepaid" default="This invoice has already been paid.  Thank you."/>
+        </p>
         </g:else>
-        </div>
