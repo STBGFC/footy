@@ -17,8 +17,21 @@ class TeamController {
     }
 
     def list = {
-        params.max = Math.min(params.max ? params.int('max') : 10, 100)
+        params.max = Math.min(params.max ? params.int('max') : 25, 100)
+        params.sort = params.sort ?: 'ageBand'
         [teamInstanceList: Team.list(params), teamInstanceTotal: Team.count()]
+    }
+
+    @Secured(["permitAll"])
+    def show = {
+        def teamInstance = Team.findByAgeBandAndNameIlike(params.ageBand, params.teamName)
+        if (!teamInstance) {
+            response.sendError(404)
+        }
+        else {
+            return [teamInstance: teamInstance, players: Player.findAllByTeam(teamInstance, [sort:"person.familyName", order:"asc"])]
+        }
+
     }
 
     def create = {
@@ -63,7 +76,7 @@ class TeamController {
             }
             teamInstance.properties = params
             if (!teamInstance.hasErrors() && teamInstance.save(flush: true)) {
-                flash.message = "${message(code: 'default.updated.message', args: [message(code: 'team.label', default: 'Team'), teamInstance.id])}"
+                flash.message = "${message(code: 'default.updated.message', args: [message(code: 'team.label', default: 'Team'), teamInstance])}"
                 redirect(action: "list")
             }
             else {

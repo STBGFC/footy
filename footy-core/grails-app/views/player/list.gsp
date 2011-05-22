@@ -24,7 +24,7 @@
                             <g:sortableColumn property="person.familyName" title="${message(code: 'person.name.label', default: 'Name')}" />
                             <g:sortableColumn property="dateOfBirth" title="${message(code: 'player.dateOfBirth.label', default: 'DoB')}" />
                             <th>${message(code: 'player.contactDetails.label', default: 'Contact')}</th>
-                            <g:sortableColumn property="currentRegistration" title="${message(code: 'player.lastRegistrationDate.label', default: 'Last Registration')}" />
+                            <g:sortableColumn property="currentRegistration" title="${message(code: 'player.lastRegistrationDate.label', default: 'Registered Until')}" />
                             <g:sortableColumn property="leagueRegistrationNumber" title="${message(code: 'player.leagueRegistrationNumber.label', default: 'League Registration #')}" />
                             <g:sortableColumn property="team" title="${message(code: 'player.team.label', default: 'Team')}" />
                         </tr>

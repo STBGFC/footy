@@ -43,19 +43,6 @@
                                     <g:select name="coaches" from="${managers}" optionKey="id" multiple="yes" size="8" value="${teamInstance?.coaches*.id}"  />
                                 </td>
                             </tr>
-
-                            <tr class="prop">
-                                <td valign="top" class="name">
-                                  <g:message code="org.davisononline.footy.core.team.players.label" default="Players" />
-                                </td>
-                                <td valign="top" class="value">
-                                    <ol>
-                                    <g:each in="${players}" var="player">
-                                        <li><g:link controller="player" action="edit" id="${player.id}">${player}</g:link> (${player.guardian} - ${player.guardian.phone1})</li>
-                                    </g:each>
-                                    </ol>
-                                </td>
-                            </tr>
                         </tbody>
                     </table>
                 </div>
