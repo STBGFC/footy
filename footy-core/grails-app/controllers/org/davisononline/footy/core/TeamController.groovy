@@ -64,7 +64,7 @@ class TeamController {
             }
             teamInstance.properties = params
             if (!teamInstance.hasErrors() && teamInstance.save(flush: true)) {
-                flash.message = "${message(code: 'default.updated.message', args: [message(code: 'team.label', default: 'Team'), teamInstance.id])}"
+                flash.message = "${message(code: 'default.updated.message', args: [message(code: 'team.label', default: 'Team'), teamInstance])}"
                 redirect(action: "list")
             }
             else {
