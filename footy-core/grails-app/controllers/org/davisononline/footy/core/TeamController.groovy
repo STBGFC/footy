@@ -1,7 +1,7 @@
 package org.davisononline.footy.core
 
 import grails.plugins.springsecurity.Secured
-import org.davisononline.footy.core.util.VCardConverter
+import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
 
 /**
  * controller methods for CRUD on Team
@@ -35,13 +35,22 @@ class TeamController {
 
     }
 
+    @Secured(["permitAll"])
     def addresscards = {
         def teamInstance = Team.get(params?.id)
         if (teamInstance) {
-            response.contentType = "text/x-vcard"
-            response.setHeader("Content-disposition", "attachment;filename=${teamInstance.name.replace(" ", "_")}-contacts.vcf")
-            VCardConverter.convert(teamInstance, true, response.outputStream)
-            return null
+            //response.contentType = "text/x-vcard"
+            response.setHeader("Content-disposition", "attachment;filename=${teamInstance.toString().replace(" ", "_")}_contacts.vcf")
+            boolean includeParents = SpringSecurityUtils.ifAllGranted('ROLE_COACH')
+            //VCardConverter.convert(teamInstance, includeParents, response.outputStream)
+            //return null
+            def contacts = [teamInstance.manager, teamInstance.coaches, (includeParents ? teamInstance.players*.guardian : [])].flatten()
+            render (
+                template: '/team/vcard',
+                plugin: 'footy-core',
+                collection: contacts,
+                contentType: 'text/x-vcard'
+            )
         }
         else {
             response.sendError(404)

@@ -10,6 +10,9 @@
         <div id="homemain">
             <h2>Team Info</h2>
 
+            <g:link action="addresscards" id="${teamInstance.id}" title="${message(code: 'team.vcards.label', default: 'Download Contact Details')}">
+                <img id="vcards" src="${createLinkTo(dir:'images', file:'vcards.png', plugin:'footy-core')}" alt="${message(code: 'team.vcards.label', default: 'Download Contact Details')}"/>
+            </g:link>
             <p>
                 <strong>Manager:</strong> <a href="mailto:${teamInstance.manager.email}" title="Send Email to ${teamInstance.manager}">${teamInstance.manager}</a>
             </p>
