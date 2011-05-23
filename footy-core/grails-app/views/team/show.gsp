@@ -10,31 +10,53 @@
         <div id="homemain">
             <h2>Team Info</h2>
 
-            <sec:ifAnyGranted roles="ROLE_CLUB_ADMIN,ROLE_MANAGER">
             <p>
-                <strong>Manager:</strong>
-                <g:link controller="person" action="edit" id="${teamInstance.manager.id}">${teamInstance.manager}</g:link>
+                <strong>Manager:</strong> <a href="mailto:${teamInstance.manager.email}" title="Send Email to ${teamInstance.manager}">${teamInstance.manager}</a>
             </p>
             <p>
                 <strong>Coaches:</strong>
-                <g:each in="${teamInstance.coaches}" var="c"><g:link controller="person" action="edit" id="${c.id}">${c}</g:link>, </g:each>
+                <g:each in="${teamInstance.coaches}" var="c">
+                <a href="mailto:${c.email}" title="Send Email to ${c}">${c}</a>
+                </g:each>
             </p>
+            <sec:ifAnyGranted roles="ROLE_COACH">
             <p>
                 <strong>Players:</strong>
-                <g:each in="${players}" var="p"><g:link controller="player" action="edit" id="${p.id}">${p}</g:link>, </g:each>
+                <table class="list">
+                    <thead>
+                        <tr>
+                            <th>${message(code: 'person.name.label', default: 'Name')} (${message(code: 'player.dateOfBirth.label', default: 'DoB')})</th>
+                            <th>${message(code: 'player.medical.label', default: 'Medical')}</th>
+                            <th>${message(code: 'player.contactDetails.label', default: 'Contact')}</th>
+                            <th>${message(code: 'player.leagueRegistrationNumber.label', default: 'Registration')}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <g:each in="${players}" status="i" var="player">
+                        <tr class="${(i % 2) == 0 ? 'odd' : 'even'}">
+                            <td>
+                                <g:link controller="player" action="edit" id="${player.id}">${player.person}</g:link>
+                                <br/>(<g:formatDate date="${player.dateOfBirth}" format="dd/MM/yyyy"/>)
+                            </td>
+                            <td>${player.medical}</td>
+                            <td>
+                                <a href="mailto:${player.guardian?.email}" title="Send Email to ${player.guardian}">${player.guardian}</a>
+                                <br/>${player.guardian?.phone1}
+                            </td>
+                            <td>${fieldValue(bean: player, field: "leagueRegistrationNumber")}</td>
+                        </tr>
+                    </g:each>
+                    </tbody>
+                </table>
             </p>
+            </sec:ifAnyGranted>
+            <sec:ifAnyGranted roles="ROLE_CLUB_ADMIN">
             <div class="nav">
                 <span class="menuButton"><g:link class="edit" action="edit" id="${teamInstance.id}">edit this team</g:link></span>
             </div>
             </sec:ifAnyGranted>
 
-            <sec:ifNotGranted roles="ROLE_CLUB_ADMIN,ROLE_MANAGER">
-            <p>
-                <strong>Manager:</strong> ${teamInstance.manager}
-            </p>
-            <p>
-                <strong>Coaches:</strong> ${teamInstance.coaches.join(", ")}
-            </p>
+            <sec:ifNotGranted roles="ROLE_COACH">
             <p>
                 <strong>Players:</strong> ${players.join(", ")}
             </p>
