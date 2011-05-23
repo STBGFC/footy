@@ -1,6 +1,5 @@
 package org.davisononline.footy.core
 
-import org.codehaus.groovy.grails.commons.ConfigurationHolder
 import org.grails.paypal.Payment
 
 /**
@@ -18,7 +17,7 @@ class Person implements Comparable, Serializable {
         familyName boost: 2.0
     }
 
-    static int MINOR_UNTIL = 18
+    static int MINOR_UNTIL = 20 // temporarily force everyone to be a minor
 
     String givenName
     String familyName
