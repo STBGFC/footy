@@ -1,6 +1,7 @@
 package org.davisononline.footy.core
 
 import grails.plugins.springsecurity.Secured
+import org.davisononline.footy.core.util.VCardConverter
 
 /**
  * controller methods for CRUD on Team
@@ -32,6 +33,19 @@ class TeamController {
             return [teamInstance: teamInstance, players: Player.findAllByTeam(teamInstance, [sort:"person.familyName", order:"asc"])]
         }
 
+    }
+
+    def addresscards = {
+        def teamInstance = Team.get(params?.id)
+        if (teamInstance) {
+            response.contentType = "text/x-vcard"
+            response.setHeader("Content-disposition", "attachment;filename=${teamInstance.name.replace(" ", "_")}-contacts.vcf")
+            VCardConverter.convert(teamInstance, true, response.outputStream)
+            return null
+        }
+        else {
+            response.sendError(404)
+        }
     }
 
     def create = {
