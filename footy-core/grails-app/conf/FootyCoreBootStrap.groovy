@@ -19,6 +19,12 @@ class FootyCoreBootStrap {
             enabled: true
         ).save(failOnError: true)
 
+        def manager = SecUser.findByUsername('mgr') ?: new SecUser(
+            username: 'mgr',
+            password: springSecurityService.encodePassword('manager'),
+            enabled: true
+        ).save(failOnError: true)
+
         if (!adminUser.authorities.contains(adminRole)) {
             SecUserSecRole.create adminUser, adminRole
         }
@@ -29,6 +35,10 @@ class FootyCoreBootStrap {
 
         if (!adminUser.authorities.contains(coachRole)) {
             SecUserSecRole.create adminUser, coachRole
+        }
+
+        if (!manager.authorities.contains(coachRole)) {
+            SecUserSecRole.create manager, coachRole
         }
 
         // qualifications
