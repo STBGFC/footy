@@ -10,9 +10,20 @@
         <div id="homemain">
             <h2>Team Info</h2>
 
-            <g:link action="addresscards" id="${teamInstance.id}" title="${message(code: 'team.vcards.label', default: 'Download Contact Details')}">
-                <img id="vcards" src="${createLinkTo(dir:'images', file:'vcards.png', plugin:'footy-core')}" alt="${message(code: 'team.vcards.label', default: 'Download Contact Details')}"/>
-            </g:link>
+            <div id="iconbar">
+                <g:link action="addresscards" id="${teamInstance.id}" title="${message(code: 'team.vcards.label', default: 'Download Contact Details')}">
+                <img src="${createLinkTo(dir:'images', file:'vcards.png', plugin:'footy-core')}" alt="${message(code: 'team.vcards.label', default: 'Download Contact Details')}"/>
+                </g:link>
+                <g:link action="addresscards" id="${teamInstance.id}" title="${message(code: 'team.vcards.label', default: 'Download Contact Details')}">
+                <img src="${createLinkTo(dir:'images', file:'vcards.png', plugin:'footy-core')}" alt="${message(code: 'team.vcards.label', default: 'Download Contact Details')}"/>
+                </g:link>
+                <g:link action="addresscards" id="${teamInstance.id}" title="${message(code: 'team.vcards.label', default: 'Download Contact Details')}">
+                <img src="${createLinkTo(dir:'images', file:'vcards.png', plugin:'footy-core')}" alt="${message(code: 'team.vcards.label', default: 'Download Contact Details')}"/>
+                </g:link>
+                <g:link action="addresscards" id="${teamInstance.id}" title="${message(code: 'team.vcards.label', default: 'Download Contact Details')}">
+                <img src="${createLinkTo(dir:'images', file:'vcards.png', plugin:'footy-core')}" alt="${message(code: 'team.vcards.label', default: 'Download Contact Details')}"/>
+                </g:link>
+            </div>
             <p>
                 <strong>Manager:</strong> <a href="mailto:${teamInstance.manager.email}" title="Send Email to ${teamInstance.manager}">${teamInstance.manager}</a>
             </p>
@@ -52,10 +63,13 @@
                     </tbody>
                 </table>
             </p>
-            </sec:ifAnyGranted>
-            <sec:ifAnyGranted roles="ROLE_CLUB_ADMIN">
             <div class="nav">
+                <sec:ifAnyGranted roles="ROLE_CLUB_ADMIN">
                 <span class="menuButton"><g:link class="edit" action="edit" id="${teamInstance.id}">edit this team</g:link></span>
+                </sec:ifAnyGranted>
+                <g:if test="${teamInstance?.id && players.size() > 0}">
+                <span class="menuButton"><g:link class="list" action="leagueForm" id="${teamInstance?.id}"><g:message code="league.registration.form.label" default="Print registration form" /></g:link></span>
+                </g:if>
             </div>
             </sec:ifAnyGranted>
 

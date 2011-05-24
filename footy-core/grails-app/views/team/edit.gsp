@@ -14,9 +14,6 @@
             <div class="nav">
                 <span class="menuButton"><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></span>
                 <span class="menuButton"><g:link class="list" action="list"><g:message code="default.list.label" args="[entityName]" /></g:link></span>
-                <g:if test="${teamInstance?.id && players.size() > 0}">
-                <span class="menuButton"><g:link class="list" action="leagueForm" id="${teamInstance?.id}"><g:message code="league.registration.form.label" default="Print registration form" /></g:link></span>
-                </g:if>
             </div>
 
             <g:form method="post" >

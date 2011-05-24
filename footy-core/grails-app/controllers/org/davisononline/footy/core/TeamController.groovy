@@ -133,6 +133,7 @@ class TeamController {
      *
      * @return
      */
+    @Secured(["ROLE_COACH"])
     def leagueForm = {
         def teamInstance = Team.get(params.id)
         if (teamInstance) {
