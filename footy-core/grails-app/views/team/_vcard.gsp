@@ -9,3 +9,4 @@ FN:${it.fullName};;;
 <g:if test="${it.phone2}">TEL;TYPE=HOME,VOICE:${it.phone2}</g:if>
 EMAIL;TYPE=HOME:${it.email}
 END:VCARD
+<%-- needed to ensure whitespace --%>
