@@ -79,7 +79,7 @@
 
                         <tr class="prop">
                             <td  class="name">
-                                <label for="medical"><g:message code="org.davisononline.footy.core.playerMedical.label" default="Ailments/Regular Medication" /></label>
+                                <label for="medical"><g:message code="org.davisononline.footy.core.playerMedical.label" default="Ailments/Regular Medication (or specify 'None')" /></label>
                             </td>
                             <td  class="value ${hasErrors(bean: playerInstance, field: 'medical', 'errors')}">
                                 <g:textArea name="medical" value="${playerInstance?.medical}" rows="4" cols="30"/>
