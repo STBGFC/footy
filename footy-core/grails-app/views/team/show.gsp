@@ -8,6 +8,11 @@
     <body>
 
         <div id="homemain">
+            <p>
+                League: <strong>${teamInstance.league}</strong>
+                <g:if test="${teamInstance.division}">, division <strong>${teamInstance.division}</strong></g:if>
+            </p>
+            
             <h2>Team Info</h2>
 
             <div id="iconbar">
