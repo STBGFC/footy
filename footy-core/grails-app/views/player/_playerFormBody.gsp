@@ -28,12 +28,22 @@
                             </td>
                         </tr>
 
+                        <g:set var="now" value="${new Date()}"/>
                         <tr class="prop">
                             <td valign="top" class="name">
                                 <label for="dateOfBirth"><g:message code="org.davisononline.footy.registration.playerDob.label" default="Date of Birth" /></label>
                             </td>
                             <td valign="top" class="value date">
-                                <g:datePicker name="dateOfBirth" precision="day" years="${(new Date().year-19+1900)..(new Date().year-4+1900)}" value="${playerInstance?.dateOfBirth}"  />
+                                <g:datePicker name="dateOfBirth" precision="day" years="${(now.year-19+1900)..(now.year-4+1900)}" value="${playerInstance?.dateOfBirth}"  />
+                            </td>
+                        </tr>
+
+                        <tr class="prop">
+                            <td valign="top" class="name">
+                                <label for="dateJoinedClub"><g:message code="org.davisononline.footy.registration.playerDateJoined.label" default="Year First Joined Club" /></label>
+                            </td>
+                            <td valign="top" class="value date">
+                                <g:datePicker name="dateJoinedClub" precision="year" years="${(now.year-15+1900)..(now.year+1900)}" value="${now}"  />
                             </td>
                         </tr>
 
