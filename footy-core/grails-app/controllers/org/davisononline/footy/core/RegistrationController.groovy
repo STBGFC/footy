@@ -37,7 +37,7 @@ class RegistrationController {
 
         setupPlayer {
             action {
-                flow.player = new Player(person: new Person(eligibleParent: false))
+                flow.player = new Player(person: new Person(eligibleParent: false, phone1: 'x'))
                 [playerInstance: flow.player]
             }
             on ("success").to "enterPlayerDetails"
