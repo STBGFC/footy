@@ -129,6 +129,7 @@ class RegistrationController {
         enterGuardianDetails {
             def errors
             on ("continue") { Person person ->
+                if (!person.address) person.address = new Address()
                 flow.personCommand = person
                 if (!person.address?.validate() | !person.validate()) {
                     flow.address = person.address // see earlier to do item about grails bug
