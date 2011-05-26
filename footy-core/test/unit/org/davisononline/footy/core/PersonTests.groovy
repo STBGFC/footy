@@ -24,7 +24,19 @@ class PersonTests extends GrailsUnitTestCase {
         assertEquals "blank", p.errors["phone1"]
         
         p.phone1 = "123"
-        assertTrue p.validate()        
+        assertTrue p.validate()
+
+        // check only one phone allowed to be null
+        p.phone1 = null
+        p.phone2 = null
+        assertFalse p.validate()
+
+        p.phone1 = "123"
+        assertTrue p.validate()
+
+        p.phone1 = null
+        p.phone2 = "213"
+        assertTrue p.validate()
     }
     
     void testComparable() {
@@ -66,6 +78,7 @@ class PersonTests extends GrailsUnitTestCase {
         p.setFullName ""
         
         p.setFullName "foo"
+        p.phone1 = "029409"
         assertNull p.givenName
         assertEquals "foo", p.familyName
         assertTrue p.validate()
@@ -90,7 +103,7 @@ class PersonTests extends GrailsUnitTestCase {
     }
 
     void testConfig() {
-        assertEquals 16, Person.MINOR_UNTIL
+        assertEquals 20, Person.MINOR_UNTIL
     }
     
     public static getGood() {

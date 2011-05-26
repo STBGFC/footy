@@ -37,6 +37,13 @@ class Person implements Comparable, Serializable {
 
     static hasMany = [qualifications: Qualification, payments: Payment]
     static fetchMode = [qualifications: 'eager']
+
+    /*
+     * don't allow both phone numbers to be null
+     */
+    static atLeastOnePhoneValidator = { val, obj ->
+        !( (obj.phone1 == null) && (obj.phone2 == null) )
+    }
     
     static constraints = {
         familyName(blank: false, size: 2..50)
@@ -45,8 +52,8 @@ class Person implements Comparable, Serializable {
         email(nullable: true, email: true, blank: false, unique: true)
         address(nullable: true)
         occupation(nullable: true, blank: true)
-        phone1(nullable: true, blank: false)
-        phone2(nullable: true, blank: true)
+        phone1(validator: atLeastOnePhoneValidator, nullable: true, blank: false)
+        phone2(validator: atLeastOnePhoneValidator, nullable: true)
         user(nullable: true)
         notes(blank: true)
         qualifications(nullable: true)

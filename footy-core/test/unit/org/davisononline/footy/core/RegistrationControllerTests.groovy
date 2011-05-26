@@ -11,4 +11,8 @@ class RegistrationControllerTests extends ControllerUnitTestCase {
     protected void tearDown() {
         super.tearDown()
     }
+
+    void testFoo() {
+        assert true
+    }
 }
