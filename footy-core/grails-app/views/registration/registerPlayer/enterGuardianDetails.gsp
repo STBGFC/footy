@@ -26,7 +26,7 @@
                     </tbody>
                 </table>
                 
-                <div class="buttons">
+                <div class="buttons flowcontrol">
                     <span class="button"><g:submitButton name="continue" class="save" value="${message(code: 'default.button.continue.label', default: 'Continue')}" /></span>
                     <g:if test="${!guardian1}"><span class="button"><g:submitButton name="addanother" class="save" value="${message(code: 'org.davisononline.footy.registration.addotherguardian.button.label', default: 'Submit and add another')}" /></span></g:if>
                 </div>

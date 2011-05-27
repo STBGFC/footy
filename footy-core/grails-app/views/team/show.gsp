@@ -105,7 +105,7 @@
                 </ul>
             </div>
             <div class="newsbox">
-                <h2>Event Calendar?</h2>
+                <h2>Event Calendar</h2>
             </div>
         </div>
     
