@@ -76,12 +76,13 @@
 
             <div id="otherteams">
                 <ul>
+                    <li><strong>U${teamInstance.ageBand} :: </strong></li>
                     <g:each in="${Team.findAllByAgeBand(teamInstance.ageBand)}" var="t">
                     <g:if test="${t != teamInstance}">
-                    <li><g:link action="show" params="${[ageBand:t.ageBand, teamName:t.name]}">${t}</g:link></li>
+                    <li><g:link action="show" params="${[ageBand:t.ageBand, teamName:t.name]}">${t.name}</g:link></li>
                     </g:if>
                     <g:else>
-                    <li><strong>${t}</strong></li>
+                    <li><strong>${t.name}</strong></li>
                     </g:else>
                     </g:each>
                 </ul>
