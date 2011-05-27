@@ -49,6 +49,22 @@
                                     <tmpl:qualificationsList person="${personCommand}"/>
                                 </td>
                             </tr>
+                                
+                            <tr class="prop">
+                                <td class="name">
+                                    <g:message code="org.davisononline.footy.core.children.label" default="Parent or Guardian of" />
+                                </td>
+                                <td class="value">
+                                    <ul class="clear">
+                                    <g:each in="${Player.findAllByGuardian(personCommand)}" var="child">
+                                        <li>
+                                            <g:link controller="player" action="edit" id="${child.id}">${child}</g:link>
+                                        </li>
+                                    </g:each>
+                                    </ul>
+                                </td>
+                            </tr>
+
                             <g:if test="${personCommand.payments}">
                             <tr class="prop">
                                 <td class="name">
