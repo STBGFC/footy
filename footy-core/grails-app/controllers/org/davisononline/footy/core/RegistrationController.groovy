@@ -84,7 +84,7 @@ class RegistrationController {
                 if (pe?.currentRegistration) {
                     def pmnt = PaymentItem.findByItemNumber(pe.currentRegistration.id)?.payment
                     if (pmnt) {
-                        flow.payment
+                        flow.payment = pmnt
                         return invoice()
                     }
                     // registered, but can't find the payment
