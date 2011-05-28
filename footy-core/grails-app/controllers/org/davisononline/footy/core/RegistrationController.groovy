@@ -135,17 +135,18 @@ class RegistrationController {
                     flow.address = person.address // see earlier to do item about grails bug
                     return error()
                 }
-                flow.guardian1 = person
+                if (flow.guardian1) flow.guardian2 = person else flow.guardian1 = person
 
             }.to "prepTeam"
 
             on ("addanother") {Person person ->
+                if (!person.address) person.address = new Address()
                 flow.personCommand = person
                 if (!person.address?.validate() | !person.validate()) {
                     flow.address = person.address // see earlier to do item about grails bug
                     return error()
                 }
-                flow.guardian2 = person
+                flow.guardian1 = person
                 flow.personCommand.email = ''
                 flow.personCommand.givenName = ''
 
