@@ -15,43 +15,63 @@
                 <span class="menuButton"><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></span>
                 <span class="menuButton"><g:link class="list" action="list"><g:message code="org.davisononline.footy.core.invoicelist.label" default="Payment Reconciliation" /></g:link></span>
             </div>
-
-                <table class="list">
-                    <thead>
-                        <tr>
-                            <th>${message(code: 'org.grails.paypal.payment.transactionId.label', default: 'Invoice')}</th>
-                            <th>${message(code: 'org.grails.paypal.payment.status.label', default: 'Status')}</th>
-                            <th>${message(code: 'org.grails.paypal.payment.description.label', default: 'Items')}</th>
-                            <th>${message(code: 'org.grails.paypal.payment.transactionId.label', default: 'Amount')}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    <g:each in="${paymentList}" status="i" var="payment">
-                        <tr class="${(i % 2) == 0 ? 'odd' : 'even'}">
-                            <td>
-                                <g:link action="show" id="${payment.transactionId}">${payment?.transactionId}</g:link>
-                            </td>
-                            <td>
-                                <img title="${payment?.status}" alt="${payment?.status?.toLowerCase()}" src="${resource(dir:'images',file:'payment-' + payment?.status?.toLowerCase() + '.png', plugin:'footy-core')}"/>
-                                <g:link action="paymentMade" id="${payment.transactionId}" params="${params}" onclick="return confirm('${message(code: 'default.button.manualpayment.confirm.message', default: 'Are you sure you want to mark payment as received?')}');">mark payment received</g:link>
-                            </td>
-                            <td>
-                                <ul>
-                                <g:each in="${payment.paymentItems}" var="item">
-                                <li>${item.itemName}</li>
-                                </g:each>
-                                </ul>
-                            </td>
-                            <td>
-                                ${payment ? formatNumber(number:PaymentUtils.calculateTotal(payment), type:'currency', currencyCode:payment.currency) : 'n/a'}
-                            </td>
-                        </tr>
-                    </g:each>
-                    </tbody>
-                </table>
-            </div>
-            <div class="paginateButtons">
-                <g:paginate total="${paymentTotal}" />
-            </div>
+            <table class="list">
+                <thead>
+                    <tr>
+                        <th>${message(code: 'org.grails.paypal.payment.transactionId.label', default: 'Invoice')}</th>
+                        <th>${message(code: 'org.grails.paypal.payment.status.label', default: 'Status')}</th>
+                        <th>${message(code: 'org.grails.paypal.payment.description.label', default: 'Items')}</th>
+                        <th>${message(code: 'org.grails.paypal.payment.transactionId.label', default: 'Amount')}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <g:each in="${paymentList}" status="i" var="payment">
+                    <g:set var="totalAmount" value="${PaymentUtils.calculateTotal(payment)}"/>
+                    <tr class="${(i % 2) == 0 ? 'odd' : 'even'}">
+                        <td>
+                            <g:link action="show" id="${payment.transactionId}">${payment?.transactionId}</g:link>
+                        </td>
+                        <td>
+                            <img
+                                title="${payment?.status}"
+                                alt="${payment?.status?.toLowerCase()}"
+                                src="${resource(dir:'images',file:'payment-' + payment?.status?.toLowerCase() + '.png', plugin:'footy-core')}"/>
+                            <%--
+                            <g:link
+                                action="paymentMade"
+                                id="${payment.transactionId}"
+                                params="${params}"
+                                onclick="return confirm('${message(code: 'default.button.manualpayment.confirm.message', default: 'Are you sure you want to mark payment as received?')}');">
+                                <g:message code="org.grails.paypal.payment.markreceived" default="mark payment received"/>
+                            </g:link>
+                            --%>
+                            <modalbox:createLink
+                                    controller="invoice"
+                                    action="paymentDialog"
+                                    id="${payment.transactionId}"
+                                    params="${[totalAmount:totalAmount]}"
+                                    title="Invoice ${payment.transactionId}"
+                                    width="350">
+                                <g:message code="org.grails.paypal.payment.markreceived" default="mark payment received"/>
+                            </modalbox:createLink>
+                        </td>
+                        <td>
+                            <ul>
+                            <g:each in="${payment.paymentItems}" var="item">
+                            <li>${item.itemName}</li>
+                            </g:each>
+                            </ul>
+                        </td>
+                        <td>
+                            ${payment ? formatNumber(number:totalAmount, type:'currency', currencyCode:payment.currency) : 'n/a'}
+                        </td>
+                    </tr>
+                </g:each>
+                </tbody>
+            </table>
+        </div>
+        <div class="paginateButtons">
+            <g:paginate total="${paymentTotal}" />
+        </div>
     </body>
 </html>
