@@ -4,6 +4,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <title>${teamInstance}</title>
+        <link rel="stylesheet" href="${resource(dir:'css',file:'bubbletips.css',plugin:'footy-core')}" />
     </head>
     <body>
 
@@ -99,9 +100,21 @@
                     <li>Division: <strong>${teamInstance.division}</strong></li></g:if>
                 </ul>
                 <ul>
-                    <li>Manager: <a href="mailto:${teamInstance.manager.email}" title="Send Email to ${teamInstance.manager}">${teamInstance.manager}</a></li>
+                    <li>Manager:
+                        <footy:tooltip link="mailto:${teamInstance.manager.email}" value="${teamInstance.manager}">
+                            Click to send email to ${teamInstance.manager}.
+                            <img class="userpic" src="${createLinkTo(dir:'images',file:'nouser.jpg',plugin:'footy-core')}" alt="No Picture"/>
+                            <p>Contact ${teamInstance.manager.givenName} on: <strong>${teamInstance.manager.phone1}</strong></p>
+                        </footy:tooltip>
+                    </li>
                     <g:each in="${teamInstance.coaches}" var="c">
-                    <li>Coach: <a href="mailto:${c.email}" title="Send Email to ${c}">${c}</a></li>
+                    <li>Coach:
+                        <footy:tooltip link="mailto:${c.email}" value="${c}">
+                            Click to send email to ${c}.
+                            <img class="userpic" src="${createLinkTo(dir:'images',file:'nouser.jpg',plugin:'footy-core')}" alt="No Picture"/>
+                            <p>Contact ${c.givenName} on: <strong>${c.phone1}</strong></p>
+                        </footy:tooltip>
+                    </li>
                     </g:each>
                 </ul>
             </div>
