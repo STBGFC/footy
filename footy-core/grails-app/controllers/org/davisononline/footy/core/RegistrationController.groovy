@@ -160,7 +160,7 @@ class RegistrationController {
             action {
                 // use only valid teams
                 def age = flow.player.getAgeAtNextCutoff()
-                def upperAge = (age < 7) ? 6 : age + 1
+                def upperAge = (age < 7) ? 6 : age + 2
                 def vt = Team.findAllByClubAndAgeBandBetween(Club.getHomeClub(), age, upperAge)
                 [validTeams: vt]
             }
