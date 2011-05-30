@@ -200,17 +200,8 @@ class RegistrationController {
         duplicate() {}
 
         invoice {
-            redirect (controller: 'invoice', action: 'show', id: flow.payment.transactionId, params:[returnController: 'registration'])
+            redirect (controller: 'invoice', action: 'show', id: flow.payment.transactionId)
         }
-    }
-
-    def paypalSuccess = {
-        def payment = Payment.findByTransactionId(params.transactionId)
-        render view: '/paypal/success', model:[payment: payment]
-    }
-
-    def paypalCancel = {
-        render view: '/paypal/cancel'
     }
 
 }
