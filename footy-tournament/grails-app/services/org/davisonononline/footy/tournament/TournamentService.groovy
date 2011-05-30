@@ -40,16 +40,27 @@ class TournamentService {
      */
     Payment createPayment(Entry entry) {
 
+        if (!entry.contact.id)
+            entry.contact.save()
+
         def payment = new Payment (
             buyerId: entry.contact.id,
             currency: Currency.getInstance("GBP"),
             transactionIdPrefix: "TRN"
         )
         entry.teams.each { t->
+            if (!t.club.id) {
+                t.club.secretary.save()
+                t.club.save()
+            }
+            if (!t.manager.id)
+                t.manager.save()
+            
+            t.save()
             payment.addToPaymentItems(
                 new PaymentItem (
-                    itemName: "${t.club.name} ${t}",
-                    itemNumber: "${entry.tournament.name}",
+                    itemName: "${t.club.name} ${t} entry to ${entry.tournament.name}",
+                    itemNumber: "${entry.tournament.id}-${t.id}",
                     amount: entry.tournament.costPerTeam
                 )
             )

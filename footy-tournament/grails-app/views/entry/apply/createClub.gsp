@@ -53,15 +53,35 @@
                                     <g:render template="/shared/fieldError" model="['instance':clubCommand,'field':'clubSecretaryEmail']" plugin="footy-core"/>
                                 </td>
                             </tr>
+
+                            <tr class="prop">
+                                <td  class="name">
+                                    <label for="clubSecretaryPhone"><g:message code="club.clubSecretaryPhone.label" default="Club Secretary Phone" /></label>
+                                </td>
+                                <td  class="value ${hasErrors(bean: clubCommand, field: 'clubSecretaryPhone', 'errors')}">
+                                    <g:textField name="clubSecretaryPhone" value="${clubCommand?.clubSecretaryPhone}" />
+                                    <g:render template="/shared/fieldError" model="['instance':clubCommand,'field':'clubSecretaryPhone']" plugin="footy-core"/>
+                                </td>
+                            </tr>
                         
                             <tr class="prop">
                                 <td  class="name">
-                                    <label for="clubSecretaryAddress"><g:message code="club.clubSecretaryAddress.label" default="Club Secretary Address" /></label>
+                                    <label for="clubSecretaryAddress.house"><g:message code="club.clubSecretaryAddress.label" default="Club Secretary Address" /></label>
                                 </td>
-                                <td  class="value ${hasErrors(bean: clubCommand, field: 'clubSecretaryAddress', 'errors')}">
-                                    <g:textArea name="clubSecretaryAddress" value="${clubCommand?.clubSecretaryAddress}" rows="4" cols="30"/>
-                                    <g:render template="/shared/fieldError" model="['instance':clubCommand,'field':'clubSecretaryAddress']" plugin="footy-core"/>
-                                </td>
+                            <td  class="value">
+                                House number or name:<br/>
+                                <g:textField name="clubSecretaryAddress.house" value="${clubCommand?.clubSecretaryAddress?.house}" />
+                                <g:render template="/shared/fieldError" model="['instance':clubCommand?.clubSecretaryAddress,'field':'house']" plugin="footy-core"/>
+                                <br/>Street:<br/>
+                                <g:textField name="clubSecretaryAddress.address" value="${clubCommand?.clubSecretaryAddress?.address}" />
+                                <g:render template="/shared/fieldError" model="['instance':clubCommand?.clubSecretaryAddress,'field':'address']" plugin="footy-core"/>
+                                <br/>Town:<br/>
+                                <g:textField name="clubSecretaryAddress.town" value="${clubCommand?.clubSecretaryAddress?.town}" />
+                                <g:render template="/shared/fieldError" model="['instance':clubCommand?.clubSecretaryAddress,'field':'town']" plugin="footy-core"/>
+                                <br/>Post Code:<br/>
+                                <g:textField name="clubSecretaryAddress.postCode" value="${clubCommand?.clubSecretaryAddress?.postCode}" />
+                                <g:render template="/shared/fieldError" model="['instance':clubCommand?.clubSecretaryAddress,'field':'postCode']" plugin="footy-core"/>
+                            </td>
                             </tr>
                         
                             <tr class="prop">

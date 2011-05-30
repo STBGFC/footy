@@ -76,9 +76,9 @@ class EntryController {
             on("submit") {
                 // check first if person already known
                 def p = Person.findByEmail(params.email)
-                if (!p) {
+                if (!p || p.email?.size() < 5) {
                     p = new Person(params)
-                    if (!p.save()) {
+                    if (!p.validate()) {
                         flow.personInstance = p
                         return error()
                     }
@@ -115,11 +115,13 @@ class EntryController {
                 def secr = Person.findByEmail(clubCommand.clubSecretaryEmail)
                 if (!secr) {
                     log.debug "Person with email [${clubCommand.clubSecretaryEmail}] not known - creating"
-                    secr = new Person()
-                    // create domain
-                    def a = Address.parse(clubCommand.clubSecretaryAddress)
+                    secr = new Person(
+                            eligibleParent: false,
+                            address: clubCommand.clubSecretaryAddress,
+                            phone1: clubCommand.clubSecretaryPhone
+                    )
                     secr.fullName = clubCommand.clubSecretaryName
-                    secr.address = a
+                    // create domain and save early so we can persist club details too
                     secr.save(flush: true)
                 }
                 
@@ -136,6 +138,8 @@ class EntryController {
                 }
                 flow.clubInstance = c
                 flow.newClub = c
+
+                // save early to prevent duplicate creation by another user
                 c.save(flush: true)
             }.to "createTeam"  // no teams to select if club has just been created
         }
@@ -188,8 +192,6 @@ class EntryController {
                     return error()
                 }
 
-                // want to capture teams anyway, regardless of completion of the flow
-                team.save(flush: true)
                 flow.entryInstance.addToTeams(team)
                 
             }.to "confirmEntry"
@@ -205,13 +207,19 @@ class EntryController {
             on("submit") {
 
                 def payment = tournamentService.createPayment(flow.entryInstance)
+                try {
+                    tournamentService.sendConfirmEmail(flow.entryInstance)
+                } catch (Exception ex) {
+                    log.error(ex)
+                }
+                
                 [payment:payment]
 
             }.to("invoice")
         }
 
         invoice {
-            redirect (controller: 'invoice', action: 'show', id: flow.payment.transactionId, params:[returnController: 'entry'])
+            redirect (controller: 'invoice', action: 'show', id: flow.payment.transactionId)
         }
 
         notFound {
@@ -222,46 +230,6 @@ class EntryController {
             render view:'/error'
         }
         
-    }
-
-    /**
-     * successful paypal payment made
-     * @param params
-     */
-    def paypalSuccess = {
-        def payment = Payment.findByTransactionId(params.transactionId)
-        if(payment?.status == org.grails.paypal.Payment.COMPLETE) {
-            def entry = Entry.findByPayment(payment)
-            log.debug("Processed ${entry} for payment")
-
-            if (!entry.emailConfirmationSent) {
-                try {
-                    tournamentService.sendConfirmEmail(entry)
-                    entry.emailConfirmationSent = true
-                    entry.save()
-                } catch (Exception ex) {
-                    log.error(ex)
-                }
-            }
-
-            // WTF does the render give me a 404?!?
-            //render view: '/paypal/success', model:[payment: payment], plugin: 'footy-core'
-            redirect controller: 'invoice', action: 'paypalSuccess', params: params
-        }
-        else {
-            flash.message = "Unable to find Entry for this transaction"
-            render view: "/error"
-        }
-    }
-
-    /**
-     * cancelled transaction
-     *
-     * @param params
-     * @return
-     */
-    def paypalCancel = {
-        render view: '/paypal/cancel', plugin: 'footy-core'
     }
 
 }
@@ -275,7 +243,8 @@ class ClubCommand implements Serializable {
     String colours
     String clubSecretaryName
     String clubSecretaryEmail
-    String clubSecretaryAddress
+    String clubSecretaryPhone
+    Address clubSecretaryAddress = new Address()
     String countyAffiliatedTo
     String countyAffiliationNumber
     
@@ -284,13 +253,7 @@ class ClubCommand implements Serializable {
         colours(blank:false, size:2..30)
         clubSecretaryName(blank:false, size:5..50)
         clubSecretaryEmail(blank: false, email: true)
-        /*
-         * ensure what is submitted can be parsed as some
-         * sort of Address
-         */
-        clubSecretaryAddress(validator: {
-            Address.parse(it) != null
-        })
+        clubSecretaryPhone(blank: false, size: 11..20)
         countyAffiliatedTo(blank:false, size: 2..30)
         countyAffiliationNumber(blank:false, size: 2..30)
     }
