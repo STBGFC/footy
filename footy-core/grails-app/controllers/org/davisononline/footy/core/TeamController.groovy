@@ -26,7 +26,7 @@ class TeamController {
     @Secured(["permitAll"])
     def show = {
         def teamInstance = Team.findByAgeBandAndNameIlike(params.ageBand, params.teamName)
-        if (!teamInstance) {
+        if (!teamInstance || teamInstance.club != Club.homeClub) {
             response.sendError(404)
         }
         else {
