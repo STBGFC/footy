@@ -74,24 +74,11 @@
                 ${players.join(", ")}
             </p>
             </sec:ifNotGranted>
-
-            <div id="otherteams">
-                <ul>
-                    <li><strong>U${teamInstance.ageBand} :: </strong></li>
-                    <g:each in="${Team.findAllByAgeBand(teamInstance.ageBand)}" var="t">
-                    <g:if test="${t != teamInstance}">
-                    <li><g:link action="show" params="${[ageBand:t.ageBand, teamName:t.name]}">${t.name}</g:link></li>
-                    </g:if>
-                    <g:else>
-                    <li><strong>${t.name}</strong></li>
-                    </g:else>
-                    </g:each>
-                </ul>
-            </div>
         </div>
 
 
         <div id="newspanel">
+            <img id="teamphoto" src="${createLinkTo(dir:'images', file:'noteam.png')}" alt="Team Photo"/>
             <div class="newsbox">
                 <h2>${teamInstance}</h2>
                 <ul>
@@ -102,7 +89,7 @@
                 <ul>
                     <li>Manager:
                         <footy:tooltip link="mailto:${teamInstance.manager.email}" value="${teamInstance.manager}">
-                            Click to send email to ${teamInstance.manager}.
+                            Click to send email to ${teamInstance.manager.givenName}.
                             <img class="userpic" src="${createLinkTo(dir:'images',file:'nouser.jpg',plugin:'footy-core')}" alt="No Picture"/>
                             <p>Contact ${teamInstance.manager.givenName} on: <strong>${teamInstance.manager.phone1}</strong></p>
                         </footy:tooltip>
@@ -110,7 +97,7 @@
                     <g:each in="${teamInstance.coaches}" var="c">
                     <li>Coach:
                         <footy:tooltip link="mailto:${c.email}" value="${c}">
-                            Click to send email to ${c}.
+                            Click to send email to ${c.givenName}.
                             <img class="userpic" src="${createLinkTo(dir:'images',file:'nouser.jpg',plugin:'footy-core')}" alt="No Picture"/>
                             <p>Contact ${c.givenName} on: <strong>${c.phone1}</strong></p>
                         </footy:tooltip>
@@ -120,6 +107,23 @@
             </div>
             <div class="newsbox">
                 <h2>Event Calendar</h2>
+                <ul>
+                    <li>No calendar events yet</li>
+                </ul>
+
+            </div>
+
+            <div id="otherteams">
+                <ul>
+                    <g:each in="${Team.findAllByClubAndAgeBand(Club.homeClub, teamInstance.ageBand)}" var="t">
+                    <g:if test="${t != teamInstance}">
+                    <li><g:link action="show" params="${[ageBand:t.ageBand, teamName:t.name]}">U${t.ageBand}&nbsp;${t.name}</g:link></li>
+                    </g:if>
+                    <g:else>
+                    <li><strong>U${t.ageBand}&nbsp;${t.name}</strong></li>
+                    </g:else>
+                    </g:each>
+                </ul>
             </div>
         </div>
     
