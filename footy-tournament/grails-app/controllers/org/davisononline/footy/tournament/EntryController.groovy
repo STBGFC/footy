@@ -78,6 +78,8 @@ class EntryController {
                 def p = Person.findByEmail(params.email)
                 if (!p || p.email?.size() < 5) {
                     p = new Person(params)
+                    // difficult to force not-null on domain email field, so extra check here
+                    if (!p.email) p.email = ''
                     if (!p.validate()) {
                         flow.personInstance = p
                         return error()
