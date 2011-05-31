@@ -26,8 +26,13 @@
                         </tr>
                     </tbody>
                 </table>
+                <p>
+                   <g:message
+                           code="org.davisononline.footy.core.registrationtype.text2"
+                           default=""/>
+                </p>
 
-                <div class="buttons">
+                <div class="buttons flowcontrol">
                     <span class="button"><g:submitButton name="continue" class="save" value="${message(code: 'default.button.continue.label', default: 'Continue')}" /></span>
                 </div>
             </g:form>

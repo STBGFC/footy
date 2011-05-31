@@ -55,12 +55,12 @@
                     cancelController: controller,
                     cancelAction: 'paypalCancel'
                 ]">
-            <img alt="" title="You can pay via credit card without requiring a PayPal account - click the 'Checkout' button"
-                border="0"
-                src="${resource(dir:'images', file:'paypalcards.gif', plugin: 'footy-core')}"/>
+            <input type="image" class="paypal"
+                src="${resource(dir:'images', file:'paypalcards.gif', plugin: 'footy-core')}"
+                alt="Click to pay via PayPal or Credit Card"/>
             <input type="image" class="paypal"
                 src="${resource(dir:'images', file:'paypalcheckout.gif', plugin: 'footy-core')}"
-                alt="Click to pay via PayPal - the safer, easier way to pay"/>
+                alt="Click to pay via PayPal or Credit Card"/>
             </g:form>
         </div>
         <div class="alert"><g:message code="org.davisononline.footy.core.invoice.due.text" default="*** Invoice is now due for payment ***"/></div>

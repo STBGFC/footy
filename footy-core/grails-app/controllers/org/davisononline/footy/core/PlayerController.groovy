@@ -87,9 +87,14 @@ class PlayerController {
             redirect(action: "list")
         }
         else {
-            // use only valid teams
+            /*
+             * use only valid teams.  Difficult to calculate this accurately (which should normally
+             * be currentAge or currentAge plus 1) because team age bands might be rolled forward
+             * before the ageband cutoff for the league.  We have to allow current age to current
+             * age plus 2 for safety.
+             */
             def age = playerInstance.getAgeAtNextCutoff()
-            def upperAge = (age < 7) ? 6 : age + 1
+            def upperAge = (age < 7) ? 6 : age + 2
             def vt = Team.findAllByClubAndAgeBandBetween(Club.getHomeClub(), age, upperAge)
             return [playerInstance: playerInstance, validTeams: vt]
         }

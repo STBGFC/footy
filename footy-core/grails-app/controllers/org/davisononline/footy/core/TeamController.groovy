@@ -1,6 +1,7 @@
 package org.davisononline.footy.core
 
 import grails.plugins.springsecurity.Secured
+import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
 
 /**
  * controller methods for CRUD on Team
@@ -25,13 +26,32 @@ class TeamController {
     @Secured(["permitAll"])
     def show = {
         def teamInstance = Team.findByAgeBandAndNameIlike(params.ageBand, params.teamName)
-        if (!teamInstance) {
+        if (!teamInstance || teamInstance.club != Club.homeClub) {
             response.sendError(404)
         }
         else {
             return [teamInstance: teamInstance, players: Player.findAllByTeam(teamInstance, [sort:"person.familyName", order:"asc"])]
         }
 
+    }
+
+    @Secured(["permitAll"])
+    def addresscards = {
+        def teamInstance = Team.get(params?.id)
+        if (teamInstance) {
+            response.setHeader("Content-disposition", "attachment;filename=${teamInstance.toString().replace(" ", "_")}_contacts.vcf")
+            boolean includeParents = SpringSecurityUtils.ifAllGranted('ROLE_COACH')
+            def contacts = [teamInstance.manager, teamInstance.coaches, (includeParents ? teamInstance.players*.guardian : [])].flatten()
+            render (
+                template: '/team/vcard',
+                plugin: 'footy-core',
+                collection: contacts,
+                contentType: 'text/x-vcard'
+            )
+        }
+        else {
+            response.sendError(404)
+        }
     }
 
     def create = {
@@ -113,6 +133,7 @@ class TeamController {
      *
      * @return
      */
+    @Secured(["ROLE_COACH"])
     def leagueForm = {
         def teamInstance = Team.get(params.id)
         if (teamInstance) {

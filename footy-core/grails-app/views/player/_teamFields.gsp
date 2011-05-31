@@ -14,6 +14,9 @@
                                 <label for="team.id"><g:message code="org.davisononline.footy.core.team.label" default="Team" /></label>
                             </td>
                             <td  class="value">
-                                <g:select name="team.id" from="${validTeams}" noSelection="['null':'-- unassigned --']" optionKey="id" value="${playerInstance?.team?.id}"/>
+                                <g:select name="team.id" from="${validTeams}"
+                                          noSelection="['null':'-- unassigned --']"
+                                          optionKey="id" optionValue="${{it.toString() + ' - ' + it.manager.toString()}}"
+                                          value="${playerInstance?.team?.id}"/>
                             </td>
                         </tr>

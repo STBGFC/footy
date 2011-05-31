@@ -1,6 +1,5 @@
 package org.davisononline.footy.core
 
-import org.codehaus.groovy.grails.commons.ConfigurationHolder
 import org.grails.paypal.Payment
 
 /**
@@ -18,7 +17,7 @@ class Person implements Comparable, Serializable {
         familyName boost: 2.0
     }
 
-    static int MINOR_UNTIL = 18
+    static int MINOR_UNTIL = 20 // temporarily force everyone to be a minor
 
     String givenName
     String familyName
@@ -38,16 +37,23 @@ class Person implements Comparable, Serializable {
 
     static hasMany = [qualifications: Qualification, payments: Payment]
     static fetchMode = [qualifications: 'eager']
+
+    /*
+     * don't allow both phone numbers to be null
+     */
+    static atLeastOnePhoneValidator = { val, obj ->
+        !( (obj.phone1 == null) && (obj.phone2 == null) )
+    }
     
     static constraints = {
         familyName(blank: false, size: 2..50)
-        givenName(nullable: true, blank: false, size: 2..50)
+        givenName(blank: false, size: 2..50)
         knownAsName(nullable: true, blank: true)
         email(nullable: true, email: true, blank: false, unique: true)
         address(nullable: true)
         occupation(nullable: true, blank: true)
-        phone1(nullable: true, blank: false)
-        phone2(nullable: true, blank: true)
+        phone1(validator: atLeastOnePhoneValidator, nullable: true, blank: false)
+        phone2(validator: atLeastOnePhoneValidator, nullable: true)
         user(nullable: true)
         notes(blank: true)
         qualifications(nullable: true)

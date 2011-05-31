@@ -5,13 +5,19 @@ import org.codehaus.groovy.grails.commons.ConfigurationHolder
 import org.grails.paypal.PaymentItem
 import org.hibernate.jdbc.Work
 import java.sql.Connection
+import org.davisononline.footy.core.utils.TemplateUtils
 
 class RegistrationService {
 
     /* use the hibernate session factory directly to get around a bug (see later comments where used) */
     def sessionFactory
 
+    def mailService
+
     static transactional = true
+
+    def fromEmail = ConfigurationHolder.config?.org?.davisononline?.footy?.core?.registration?.email
+    def registrationEmailBody = ConfigurationHolder.config?.org?.davisononline?.footy?.core?.registration?.emailbody
 
     /**
      * save domain objects for registration flow and return generated payment to
@@ -28,8 +34,10 @@ class RegistrationService {
         }
 
         def p0 = registrations[0].player
+        def buyer = p0.guardian  ?: p0.person
+
         def payment = new Payment (
-            buyerId: p0.guardian?.id  ?: p0.person.id,
+            buyerId: buyer.id,
             transactionIdPrefix: "REG",
             currency: Currency.getInstance(ConfigurationHolder.config.org?.davisononline?.footy?.registration?.currency ?: "GBP")
         )
@@ -59,12 +67,27 @@ class RegistrationService {
                 new Work() {
                     void execute(Connection conn) {
                         def stmt = conn.createStatement()
-                        stmt.execute("INSERT INTO person_payment(person_payments_id, payment_id) VALUES (${p0.guardian.id}, ${payment.id})")
+                        stmt.execute("INSERT INTO person_payment(person_payments_id, payment_id) VALUES (${buyer.id}, ${payment.id})")
                         stmt.close()
                     }
                 }
             )
 
+
+        try {
+            mailService.sendMail {
+                // ensure mail address override is set in dev/test in Config.groovy
+                to      buyer.email
+                from    fromEmail
+                subject "Registration Confirmation"
+                body    TemplateUtils.eval(registrationEmailBody, [buyer: buyer, registrations:registrations, payment:payment])
+            }
+        }
+        catch (Exception ex) {
+            log.warn "Unable to send email after registration; $ex"
+        }
+
+        // return generated payment
         payment
 
     }

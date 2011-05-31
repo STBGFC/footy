@@ -21,7 +21,7 @@
                     </tbody>
                 </table>
         
-                <div class="buttons">
+                <div class="buttons flowcontrol">
                     <span class="button"><g:submitButton name="continue" class="save" value="${message(code: 'default.button.continue.label', default: 'Continue')}" /></span>
                 </div>
             </g:form>

@@ -37,7 +37,7 @@ class RegistrationController {
 
         setupPlayer {
             action {
-                flow.player = new Player(person: new Person(eligibleParent: false))
+                flow.player = new Player(person: new Person(eligibleParent: false, phone1: 'x'))
                 [playerInstance: flow.player]
             }
             on ("success").to "enterPlayerDetails"
@@ -84,7 +84,7 @@ class RegistrationController {
                 if (pe?.currentRegistration) {
                     def pmnt = PaymentItem.findByItemNumber(pe.currentRegistration.id)?.payment
                     if (pmnt) {
-                        flow.payment
+                        flow.payment = pmnt
                         return invoice()
                     }
                     // registered, but can't find the payment
@@ -129,22 +129,25 @@ class RegistrationController {
         enterGuardianDetails {
             def errors
             on ("continue") { Person person ->
+                if (!person.address) person.address = new Address()
+                if (!person.email) person.email = ''
+                flow.personCommand = person
+                if (!person.address?.validate() | !person.validate()) {
+                    flow.address = person.address // see earlier to do item about grails bug
+                    return error()
+                }
+                if (flow.guardian1) flow.guardian2 = person else flow.guardian1 = person
+
+            }.to "prepTeam"
+
+            on ("addanother") {Person person ->
+                if (!person.address) person.address = new Address()
                 flow.personCommand = person
                 if (!person.address?.validate() | !person.validate()) {
                     flow.address = person.address // see earlier to do item about grails bug
                     return error()
                 }
                 flow.guardian1 = person
-
-            }.to "prepTeam"
-
-            on ("addanother") {Person person ->
-                flow.personCommand = person
-                if (!person.address?.validate() | !person.validate()) {
-                    flow.address = person.address // see earlier to do item about grails bug
-                    return error()
-                }
-                flow.guardian2 = person
                 flow.personCommand.email = ''
                 flow.personCommand.givenName = ''
 
@@ -158,7 +161,7 @@ class RegistrationController {
             action {
                 // use only valid teams
                 def age = flow.player.getAgeAtNextCutoff()
-                def upperAge = (age < 7) ? 6 : age + 1
+                def upperAge = (age < 7) ? 6 : age + 2
                 def vt = Team.findAllByClubAndAgeBandBetween(Club.getHomeClub(), age, upperAge)
                 [validTeams: vt]
             }
@@ -198,17 +201,8 @@ class RegistrationController {
         duplicate() {}
 
         invoice {
-            redirect (controller: 'invoice', action: 'show', id: flow.payment.transactionId, params:[returnController: 'registration'])
+            redirect (controller: 'invoice', action: 'show', id: flow.payment.transactionId)
         }
-    }
-
-    def paypalSuccess = {
-        def payment = Payment.findByTransactionId(params.transactionId)
-        render view: '/paypal/success', model:[payment: payment]
-    }
-
-    def paypalCancel = {
-        render view: '/paypal/cancel'
     }
 
 }

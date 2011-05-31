@@ -4,65 +4,129 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <title>${teamInstance}</title>
+        <link rel="stylesheet" href="${resource(dir:'css',file:'bubbletips.css',plugin:'footy-core')}" />
     </head>
     <body>
 
         <div id="homemain">
-            <h2>Team Info</h2>
 
-            <sec:ifAnyGranted roles="ROLE_CLUB_ADMIN,ROLE_MANAGER">
-            <p>
-                <strong>Manager:</strong>
-                <g:link controller="person" action="edit" id="${teamInstance.manager.id}">${teamInstance.manager}</g:link>
-            </p>
-            <p>
-                <strong>Coaches:</strong>
-                <g:each in="${teamInstance.coaches}" var="c"><g:link controller="person" action="edit" id="${c.id}">${c}</g:link>, </g:each>
-            </p>
-            <p>
-                <strong>Players:</strong>
-                <g:each in="${players}" var="p"><g:link controller="player" action="edit" id="${p.id}">${p}</g:link>, </g:each>
-            </p>
-            <div class="nav">
-                <span class="menuButton"><g:link class="edit" action="edit" id="${teamInstance.id}">edit this team</g:link></span>
+            <div id="iconbar">
+                <sec:ifAnyGranted roles="ROLE_CLUB_ADMIN">
+                <g:link action="edit" id="${teamInstance.id}" title="${message(code: 'team.vedit.label', default: 'Edit this team')}">
+                <img src="${createLinkTo(dir:'images', file:'vedit.png', plugin:'footy-core')}" alt="${message(code: 'team.vedit.label', default: 'Edit this team')}"/>
+                </g:link>
+                </sec:ifAnyGranted>
+
+                <sec:ifAnyGranted roles="ROLE_COACH">
+                <g:if test="${teamInstance?.id && players.size() > 0}">
+                <g:link action="leagueForm" id="${teamInstance?.id}" title="${message(code: 'team.vprint.label', default: 'Print registration form')}">
+                <img src="${createLinkTo(dir:'images', file:'vprint.png', plugin:'footy-core')}" alt="${message(code: 'team.vprint.label', default: 'Print registration form')}"/>
+                </g:link>
+                </g:if>
+                </sec:ifAnyGranted>
+
+                <a
+                    title="${message(code: 'team.vmail.label', default: 'Email Manager/Coaches')}"
+                    href="mailto:${[teamInstance.manager, teamInstance.coaches]*.email.flatten().join(",")}"
+                >
+                    <img src="${createLinkTo(dir:'images', file:'vmail.png', plugin:'footy-core')}" alt="${message(code: 'team.vmail.label', default: 'Email Manager/Coaches')}"/>
+                </a>
+
+                <g:link action="addresscards" id="${teamInstance.id}" title="${message(code: 'team.vmail.label', default: 'Download contact details for your address book')}">
+                <img src="${createLinkTo(dir:'images', file:'vcards.png', plugin:'footy-core')}" alt="${message(code: 'team.vcards.label', default: 'Download Contact Details')}"/>
+                </g:link>
             </div>
+
+            <h2>Latest News &amp; Results</h2>
+            <p>
+                No news yet.
+            </p>
+            <h2>Players</h2>
+            <sec:ifAnyGranted roles="ROLE_COACH">
+            <table class="list">
+                <thead>
+                    <tr>
+                        <th>${message(code: 'person.name.label', default: 'Name')} (${message(code: 'player.dateOfBirth.label', default: 'DoB')})</th>
+                        <th>${message(code: 'player.medical.label', default: 'Medical')}</th>
+                        <th>${message(code: 'player.contactDetails.label', default: 'Contact')}</th>
+                        <th>${message(code: 'player.leagueRegistrationNumber.label', default: 'Registration')}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <g:each in="${players}" status="i" var="player">
+                    <tr class="${(i % 2) == 0 ? 'odd' : 'even'}">
+                        <td>
+                            <g:link controller="player" action="edit" id="${player.id}">${player.person}</g:link>
+                            <br/>(<g:formatDate date="${player.dateOfBirth}" format="dd/MM/yyyy"/>)
+                        </td>
+                        <td>${player.medical}</td>
+                        <td>
+                            <a href="mailto:${player.guardian?.email}" title="Send Email to ${player.guardian}">${player.guardian}</a>
+                            <br/>${player.guardian?.phone1}
+                        </td>
+                        <td>${fieldValue(bean: player, field: "leagueRegistrationNumber")}</td>
+                    </tr>
+                </g:each>
+                </tbody>
+            </table>
             </sec:ifAnyGranted>
 
-            <sec:ifNotGranted roles="ROLE_CLUB_ADMIN,ROLE_MANAGER">
+            <sec:ifNotGranted roles="ROLE_COACH">
             <p>
-                <strong>Manager:</strong> ${teamInstance.manager}
-            </p>
-            <p>
-                <strong>Coaches:</strong> ${teamInstance.coaches.join(", ")}
-            </p>
-            <p>
-                <strong>Players:</strong> ${players.join(", ")}
+                ${players.join(", ")}
             </p>
             </sec:ifNotGranted>
-            
         </div>
 
 
         <div id="newspanel">
+            <img id="teamphoto" src="${createLinkTo(dir:'images', file:'noteam.png')}" alt="Team Photo"/>
             <div class="newsbox">
-                <h2>${teamInstance} Upcoming Events</h2>
+                <h2>${teamInstance}</h2>
                 <ul>
-                    <li>none found</li>
+                    <li>League: <strong>${teamInstance.league}</strong></li>
+                    <g:if test="${teamInstance.division}">
+                    <li>Division: <strong>${teamInstance.division}</strong></li></g:if>
+                </ul>
+                <ul>
+                    <li>Manager:
+                        <footy:tooltip link="mailto:${teamInstance.manager.email}" value="${teamInstance.manager}">
+                            Click to send email to ${teamInstance.manager.givenName}.
+                            <img class="userpic" src="${createLinkTo(dir:'images',file:'nouser.jpg',plugin:'footy-core')}" alt="No Picture"/>
+                            <p>Contact ${teamInstance.manager.givenName} on: <strong>${teamInstance.manager.phone1}</strong></p>
+                        </footy:tooltip>
+                    </li>
+                    <g:each in="${teamInstance.coaches}" var="c">
+                    <li>Coach:
+                        <footy:tooltip link="mailto:${c.email}" value="${c}">
+                            Click to send email to ${c.givenName}.
+                            <img class="userpic" src="${createLinkTo(dir:'images',file:'nouser.jpg',plugin:'footy-core')}" alt="No Picture"/>
+                            <p>Contact ${c.givenName} on: <strong>${c.phone1}</strong></p>
+                        </footy:tooltip>
+                    </li>
+                    </g:each>
                 </ul>
             </div>
             <div class="newsbox">
-                <h2>All U${teamInstance.ageBand} Teams</h2>
+                <h2>Calendar</h2>
                 <ul>
-                    <g:each in="${Team.findAllByAgeBand(teamInstance.ageBand)}" var="t">
+                    <li>No calendar events yet</li>
+                </ul>
+
+            </div>
+            <div id="otherteams">
+                <ul>
+                    <g:each in="${Team.findAllByClubAndAgeBand(Club.homeClub, teamInstance.ageBand)}" var="t">
                     <g:if test="${t != teamInstance}">
-                    <li><g:link action="show" params="${[ageBand:t.ageBand, teamName:t.name]}">${t.name}</g:link></li>
+                    <li><g:link action="show" params="${[ageBand:t.ageBand, teamName:t.name]}">U${t.ageBand}&nbsp;${t.name}</g:link></li>
                     </g:if>
                     <g:else>
-                    <li><strong>${t.name}</strong></li>
+                    <li><strong>U${t.ageBand}&nbsp;${t.name}</strong></li>
                     </g:else>
                     </g:each>
                 </ul>
             </div>
+
         </div>
     
     </body>

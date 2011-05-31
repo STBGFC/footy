@@ -20,11 +20,21 @@
 
                         <tr class="prop">
                             <td  class="name">
-                                <label for=phone1><g:message code="org.davisononline.org.footy.core.phone1.label" default="Contact Tel." /></label>
+                                <label for="phone1"><g:message code="org.davisononline.org.footy.core.phone1.label" default="Mobile Tel." /></label>
                             </td>
                             <td  class="value ${hasErrors(bean: personCommand, field: 'phone1', 'errors')}">
                                 <g:textField name="phone1" value="${personCommand?.phone1}" />
                                 <g:render template="/shared/fieldError" model="['instance':personCommand,'field':'phone1']" plugin="footy-core"/>
+                            </td>
+                        </tr>
+
+                        <tr class="prop">
+                            <td  class="name">
+                                <label for="phone2"><g:message code="org.davisononline.org.footy.core.phone1.label" default="Other Tel." /></label>
+                            </td>
+                            <td  class="value ${hasErrors(bean: personCommand, field: 'phone2', 'errors')}">
+                                <g:textField name="phone2" value="${personCommand?.phone2}" />
+                                <g:render template="/shared/fieldError" model="['instance':personCommand,'field':'phone2']" plugin="footy-core"/>
                             </td>
                         </tr>
 

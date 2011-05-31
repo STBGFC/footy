@@ -1,5 +1,7 @@
 package org.davisononline.footy.core.utils
 
+import org.grails.paypal.PaymentItem
+
 /**
  */
 class PaymentUtils {
@@ -33,6 +35,30 @@ class PaymentUtils {
         if (!payment) return 0
         def act = calculateSubTotal(payment) * (payment.tax + 1)
         Math.round(act * 100) / 100
+    }
+
+    /**
+     * if a manual payment is made for an amount other than the actual
+     * total, the invoice items are fudged to make up this new total.
+     */
+    static adjustForManual(payment, amount) {
+        def diff = calculateTotal(payment) - amount
+        if (diff > 0) {
+            payment.paymentItems[0].discountAmount += diff
+        }
+        if (diff < 0) {
+            payment.addToPaymentItems(
+                new PaymentItem(
+                        amount: -diff,
+                        quantity: 1,
+                        itemName: 'overpayment on invoice',
+                        itemNumber: 0
+                )
+            )
+        }
+        if (diff != 0) {
+            payment.save()
+        }
     }
 
 }

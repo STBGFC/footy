@@ -1,0 +1,54 @@
+/*
+thanks to Trent Richardson for the code and idea..
+http://trentrichardson.com/examples/csstooltips/
+
+example of use:
+
+<a href="#" class="tt">
+    hover over me
+    <span class="tooltip">
+        <span class="top"></span>
+        <span class="middle">This is my Bubble Tooltip with CSS</span>
+        <span class="bottom"></span>
+    </span>
+</a>
+*/
+
+a.tt{
+    position:relative;
+    z-index:24;
+}
+a.tt span{ display: none; }
+
+/*background:; ie hack, something must be changed in a for ie to execute it*/
+a.tt:hover{ z-index:25; background:;}
+a.tt:hover span.tooltip{
+    display:block;
+    position:absolute;
+    top:0px; left:0;
+	padding: 15px 0 0 0;
+	width:200px;
+    text-align: center;
+	filter: alpha(opacity:95);
+	KHTMLOpacity: 0.95;
+	MozOpacity: 0.95;
+	opacity: 0.95;
+}
+a.tt:hover span.top{
+	display: block;
+	padding: 30px 8px 0;
+    background: url(../images/bubble.png) no-repeat top;
+}
+a.tt:hover span.middle { /* different middle bg for stretch */
+	display: block;
+	padding: 0 8px;
+    color: black;
+    font-weight: normal;
+    text-decoration: none;
+	background: url(../images/bubble_filler.png) repeat bottom;
+}
+a.tt:hover span.bottom{
+	display: block;
+	padding:3px 8px 10px;
+    background: url(../images/bubble.png) no-repeat bottom;
+}
