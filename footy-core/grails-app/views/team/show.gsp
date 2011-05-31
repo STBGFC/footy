@@ -37,8 +37,10 @@
                 </g:link>
             </div>
 
-            <h2>Latest News</h2>
-
+            <h2>Latest News &amp; Results</h2>
+            <p>
+                No news yet.
+            </p>
             <h2>Players</h2>
             <sec:ifAnyGranted roles="ROLE_COACH">
             <table class="list">
@@ -106,13 +108,12 @@
                 </ul>
             </div>
             <div class="newsbox">
-                <h2>Event Calendar</h2>
+                <h2>Calendar</h2>
                 <ul>
                     <li>No calendar events yet</li>
                 </ul>
 
             </div>
-
             <div id="otherteams">
                 <ul>
                     <g:each in="${Team.findAllByClubAndAgeBand(Club.homeClub, teamInstance.ageBand)}" var="t">
@@ -125,6 +126,7 @@
                     </g:each>
                 </ul>
             </div>
+
         </div>
     
     </body>
