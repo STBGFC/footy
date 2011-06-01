@@ -22,6 +22,7 @@ class Team implements Serializable {
     int ageBand = 8
     boolean girlsTeam = false
     boolean vetsTeam = false
+    byte[] photo
     
     static belongsTo = [club: Club]
     static hasMany = [coaches: Person, players: Player]
@@ -32,6 +33,7 @@ class Team implements Serializable {
         players(nullable: true)
 		coaches(nullable: true)
         ageBand(inList: [6,7,8,9,10,11,12,13,14,15,16,17,18,35])
+        photo(nullable: true)
     }
     
     def beforeUpdate() {
