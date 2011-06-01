@@ -80,7 +80,21 @@
 
 
         <div id="newspanel">
-            <img id="teamphoto" src="${createLinkTo(dir:'images', file:'noteam.png')}" alt="Team Photo"/>
+
+            <sec:ifAnyGranted roles="ROLE_COACH">
+            <modalbox:createLink
+                    controller="team"
+                    action="photoUploadDialog"
+                    id="${teamInstance.id}"
+                    title="Team Photo Upload"
+                    width="400">
+                <footy:teamPhoto team="${teamInstance}"/>
+            </modalbox:createLink>
+            </sec:ifAnyGranted>
+            <sec:ifNotGranted roles="ROLE_COACH">
+            <footy:teamPhoto team="${teamInstance}"/>
+            </sec:ifNotGranted>
+
             <div class="newsbox">
                 <h2>${teamInstance}</h2>
                 <ul>
@@ -107,16 +121,17 @@
                     </g:each>
                 </ul>
             </div>
+
             <div class="newsbox">
                 <h2>Calendar</h2>
                 <ul>
                     <li>No calendar events yet</li>
                 </ul>
-
             </div>
+            
             <div id="otherteams">
                 <ul>
-                    <g:each in="${Team.findAllByClubAndAgeBand(Club.homeClub, teamInstance.ageBand)}" var="t">
+                    <g:each in="${Team.findAllByClubAndAgeBand(Club.homeClub, teamInstance.ageBand, [sort:'division'])}" var="t">
                     <g:if test="${t != teamInstance}">
                     <li><g:link action="show" params="${[ageBand:t.ageBand, teamName:t.name]}">U${t.ageBand}&nbsp;${t.name}</g:link></li>
                     </g:if>
