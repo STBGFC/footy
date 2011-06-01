@@ -36,15 +36,6 @@
                                 title="${payment?.status}"
                                 alt="${payment?.status?.toLowerCase()}"
                                 src="${resource(dir:'images',file:'payment-' + payment?.status?.toLowerCase() + '.png', plugin:'footy-core')}"/>
-                            <%--
-                            <g:link
-                                action="paymentMade"
-                                id="${payment.transactionId}"
-                                params="${params}"
-                                onclick="return confirm('${message(code: 'default.button.manualpayment.confirm.message', default: 'Are you sure you want to mark payment as received?')}');">
-                                <g:message code="org.grails.paypal.payment.markreceived" default="mark payment received"/>
-                            </g:link>
-                            --%>
                             <modalbox:createLink
                                     controller="invoice"
                                     action="paymentDialog"
