@@ -50,4 +50,34 @@ class FootyTagLib {
         out << "    src='${havePhoto ? createLink(controller:'team', action:'photo', id:attrs.team.id) : createLinkTo(dir:'images', file:'noteam.png')}'"
         out << "    alt='TeamPhoto'/>"
     }
+
+    /**
+     * renders a person photo, if one has been added to the database, or
+     * the stock "awaiting photo" image if not.
+     *
+     * <footy:personPhoto person="${personInstance}"/>
+     *     .. might render..
+     * <img class="userpic" src="/images/nouser.png" alt="No Picture"/>
+     *     .. or ..
+     * <img class="userpic" src="/person/photo/1234" alt="Joe Bloggs"/>
+     *
+     * @attr person REQUIRED the person instance to render the photo for
+     */
+    def personPhoto = { attrs, body ->
+
+        //checking required fields
+        if (!attrs.person) {
+            def errorMsg = "'person' attribute not found in team photo tag."
+            log.error (errorMsg)
+            throw new GrailsTagException(errorMsg)
+        }
+
+        def havePhoto = attrs.person.photo?.size() > 0
+
+        out << "<img class='userpic'"
+        out << "    src='${havePhoto ? createLink(controller:'person', action:'photo', id:attrs.person.id) : createLinkTo(dir:'images', file:'nouser.jpg', plugin:'footy-core')}'"
+        out << "    alt='${havePhoto ? attrs.person.toString() : 'Awaiting Photo'}'/>"
+
+        //<img class="userpic" src="${createLinkTo(dir:'images',file:'nouser.jpg',plugin:'footy-core')}" alt="No Picture"/>
+    }
 }

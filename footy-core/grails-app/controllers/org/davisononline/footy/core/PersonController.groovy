@@ -1,6 +1,7 @@
 package org.davisononline.footy.core
 
 import grails.plugins.springsecurity.Secured
+import org.davisononline.footy.core.utils.ImageUtils
 
 /**
  * admin controller for Person operations
@@ -166,5 +167,50 @@ class PersonController {
         }
         // text/plain prevents sitemesh decoreation
         render template: '/person/qualificationsList', plugin: 'footy-core', model: [person: p], contentType: 'text/plain'
+    }
+
+    /**
+     * dialog for manager/coach photo to be uploaded
+     */
+    @Secured(["ROLE_COACH"])
+    def photoUploadDialog = {
+        render (template: 'photoUploadDialog', model: params, contentType: 'text/plain', plugin: 'footy-core')
+    }
+
+    /**
+     * post action for team photo to be uploaded
+     */
+    @Secured(["ROLE_COACH"])
+    def photoUpload = {
+        def photo = request.getFile('photo')
+        def p = Person.get(params.id)
+        if (params.delete) {
+            p.photo = null
+            p.save(flush:true)
+        }
+        else if(!photo.empty) {
+            def bytes = ImageUtils.convertImageToByteArray(ImageUtils.resize(photo.fileItem.tempFile, 66, 88), "PNG")
+            p.photo = bytes
+            p.save(flush:true)
+        }
+        def t = Team.get(params.teamId)
+        redirect (controller: 'team', action: 'show', params:[ageBand: t.ageBand, teamName: t.name])
+    }
+
+    /**
+     * render the actual team photo as an image source
+     *
+     * @return the bytes for the image
+     */
+    @Secured(["permitAll"])
+    def photo = {
+        def p = Person.get(params.id)
+        writeImageBytesToResponse(p.photo, response)
+    }
+
+    private writeImageBytesToResponse(bytes, response) {
+        response.contentType = "image/png"
+        response.contentLength = bytes.length
+        response.outputStream.write(bytes)
     }
 }

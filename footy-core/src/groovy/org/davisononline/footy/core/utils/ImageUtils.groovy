@@ -47,4 +47,8 @@ class ImageUtils {
     static BufferedImage resize(File file, int width, int height) {
         resize(ImageIO.read(file), width, height)
     }
+
+    static BufferedImage read(File file) {
+        ImageIO.read(file)
+    }
 }
