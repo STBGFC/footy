@@ -31,6 +31,7 @@ class Person implements Comparable, Serializable {
     String notes = ''
     SortedSet qualifications
     Set payments
+    byte[] photo
 
     // security credential
     SecUser user
@@ -57,6 +58,7 @@ class Person implements Comparable, Serializable {
         user(nullable: true)
         notes(blank: true)
         qualifications(nullable: true)
+        photo(nullable: true)
     }
 
     static mapping = {

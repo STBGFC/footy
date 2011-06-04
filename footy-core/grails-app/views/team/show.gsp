@@ -106,17 +106,19 @@
                     <li>Manager:
                         <footy:tooltip link="mailto:${teamInstance.manager.email}" value="${teamInstance.manager}">
                             Click to send email to ${teamInstance.manager.givenName}.
-                            <img class="userpic" src="${createLinkTo(dir:'images',file:'nouser.jpg',plugin:'footy-core')}" alt="No Picture"/>
+                            <footy:personPhoto person="${teamInstance.manager}"/>
                             <p>Contact ${teamInstance.manager.givenName} on: <strong>${teamInstance.manager.phone1}</strong></p>
                         </footy:tooltip>
+                        <tmpl:coachPhotoLink person="${teamInstance.manager}"/>
                     </li>
                     <g:each in="${teamInstance.coaches}" var="c">
                     <li>Coach:
                         <footy:tooltip link="mailto:${c.email}" value="${c}">
                             Click to send email to ${c.givenName}.
-                            <img class="userpic" src="${createLinkTo(dir:'images',file:'nouser.jpg',plugin:'footy-core')}" alt="No Picture"/>
+                            <footy:personPhoto person="${c}"/>
                             <p>Contact ${c.givenName} on: <strong>${c.phone1}</strong></p>
                         </footy:tooltip>
+                        <tmpl:coachPhotoLink person="${c}"/>
                     </li>
                     </g:each>
                 </ul>
