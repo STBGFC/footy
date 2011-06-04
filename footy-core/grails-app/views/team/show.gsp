@@ -80,7 +80,21 @@
 
 
         <div id="newspanel">
-            <img id="teamphoto" src="${createLinkTo(dir:'images', file:'noteam.png')}" alt="Team Photo"/>
+
+            <sec:ifAnyGranted roles="ROLE_COACH">
+            <modalbox:createLink
+                    controller="team"
+                    action="photoUploadDialog"
+                    id="${teamInstance.id}"
+                    title="Team Photo Upload"
+                    width="400">
+                <footy:teamPhoto team="${teamInstance}"/>
+            </modalbox:createLink>
+            </sec:ifAnyGranted>
+            <sec:ifNotGranted roles="ROLE_COACH">
+            <footy:teamPhoto team="${teamInstance}"/>
+            </sec:ifNotGranted>
+
             <div class="newsbox">
                 <h2>${teamInstance}</h2>
                 <ul>
@@ -92,31 +106,34 @@
                     <li>Manager:
                         <footy:tooltip link="mailto:${teamInstance.manager.email}" value="${teamInstance.manager}">
                             Click to send email to ${teamInstance.manager.givenName}.
-                            <img class="userpic" src="${createLinkTo(dir:'images',file:'nouser.jpg',plugin:'footy-core')}" alt="No Picture"/>
+                            <footy:personPhoto person="${teamInstance.manager}"/>
                             <p>Contact ${teamInstance.manager.givenName} on: <strong>${teamInstance.manager.phone1}</strong></p>
                         </footy:tooltip>
+                        <tmpl:coachPhotoLink person="${teamInstance.manager}"/>
                     </li>
                     <g:each in="${teamInstance.coaches}" var="c">
                     <li>Coach:
                         <footy:tooltip link="mailto:${c.email}" value="${c}">
                             Click to send email to ${c.givenName}.
-                            <img class="userpic" src="${createLinkTo(dir:'images',file:'nouser.jpg',plugin:'footy-core')}" alt="No Picture"/>
+                            <footy:personPhoto person="${c}"/>
                             <p>Contact ${c.givenName} on: <strong>${c.phone1}</strong></p>
                         </footy:tooltip>
+                        <tmpl:coachPhotoLink person="${c}"/>
                     </li>
                     </g:each>
                 </ul>
             </div>
+
             <div class="newsbox">
                 <h2>Calendar</h2>
                 <ul>
                     <li>No calendar events yet</li>
                 </ul>
-
             </div>
+            
             <div id="otherteams">
                 <ul>
-                    <g:each in="${Team.findAllByClubAndAgeBand(Club.homeClub, teamInstance.ageBand)}" var="t">
+                    <g:each in="${Team.findAllByClubAndAgeBand(Club.homeClub, teamInstance.ageBand, [sort:'division'])}" var="t">
                     <g:if test="${t != teamInstance}">
                     <li><g:link action="show" params="${[ageBand:t.ageBand, teamName:t.name]}">U${t.ageBand}&nbsp;${t.name}</g:link></li>
                     </g:if>

@@ -2,6 +2,7 @@ package org.davisononline.footy.core
 
 import grails.plugins.springsecurity.Secured
 import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
+import org.davisononline.footy.core.utils.ImageUtils
 
 /**
  * controller methods for CRUD on Team
@@ -11,7 +12,7 @@ class TeamController {
 
     def registrationService
 
-    static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
+    static allowedMethods = [save: "POST", update: "POST", delete: "POST", photoUpload: "POST"]
 
     def index = {
         redirect(action: "list", params: params)
@@ -25,7 +26,7 @@ class TeamController {
 
     @Secured(["permitAll"])
     def show = {
-        def teamInstance = Team.findByAgeBandAndNameIlike(params.ageBand, params.teamName)
+        def teamInstance = Team.findWhere(club: Club.homeClub, ageBand:params.ageBand.toInteger(), name:params.teamName)
         if (!teamInstance || teamInstance.club != Club.homeClub) {
             response.sendError(404)
         }
@@ -152,6 +153,48 @@ class TeamController {
             }
         }
     }
+
+    /**
+     * dialog for team photo to be uploaded
+     */
+    @Secured(["ROLE_COACH"])
+    def photoUploadDialog = {
+        render (template: 'photoUploadDialog', model: params, contentType: 'text/plain', plugin: 'footy-core')
+    }
+
+    /**
+     * post action for team photo to be uploaded
+     */
+    @Secured(["ROLE_COACH"])
+    def photoUpload = {
+        def photo = request.getFile('photo')
+        def t = Team.get(params.id)
+
+        if (params.delete) {
+            t.photo = null
+            t.save(flush:true)
+        }
+        else if(!photo.empty) {
+            def bytes = ImageUtils.convertImageToByteArray(ImageUtils.resize(photo.fileItem.tempFile, 240, 180), "PNG")
+            t.photo = bytes
+            t.save(flush:true)
+        }
+        redirect (action: 'show', params:[ageBand: t.ageBand, teamName: t.name])
+    }
+
+    /**
+     * render the actual team photo as an image source
+     *
+     * @return the bytes for the image
+     */
+    @Secured(["permitAll"])
+    def photo = {
+        def t = Team.get(params.id)
+        response.contentType = "image/png"
+    	response.contentLength = t?.photo?.length
+    	response.outputStream.write(t?.photo)
+    }
+
 
     private getManagers() {
         Person.executeQuery(
