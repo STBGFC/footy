@@ -21,7 +21,7 @@ class TeamController {
     def list = {
         params.max = Math.min(params.max ? params.int('max') : 25, 100)
         params.sort = params.sort ?: 'ageBand'
-        [teamInstanceList: Team.list(params), teamInstanceTotal: Team.count()]
+        [teamInstanceList: Team.findAllByClub(Club.homeClub, params), teamInstanceTotal: Team.countByClub(Club.homeClub)]
     }
 
     @Secured(["permitAll"])
