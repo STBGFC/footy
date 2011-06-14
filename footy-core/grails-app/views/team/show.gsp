@@ -41,7 +41,7 @@
             <p>
                 No news yet.
             </p>
-            <h2>Players</h2>
+            <h2>${teamInstance.players.size()} Players</h2>
             <sec:ifAnyGranted roles="ROLE_COACH">
             <table class="list">
                 <thead>
