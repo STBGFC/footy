@@ -43,7 +43,7 @@
                                 <label for="dateJoinedClub"><g:message code="org.davisononline.footy.registration.playerDateJoined.label" default="Year First Joined Club" /></label>
                             </td>
                             <td valign="top" class="value date">
-                                <g:datePicker name="dateJoinedClub" precision="year" years="${(now.year-15+1900)..(now.year+1900)}" value="${now}"  />
+                                <g:datePicker name="dateJoinedClub" precision="year" years="${(now.year-15+1900)..(now.year+1900)}" value="${playerInstance?.dateJoinedClub}"  />
                             </td>
                         </tr>
 
