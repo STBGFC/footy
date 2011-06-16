@@ -2,24 +2,11 @@
 <html>
   <head>
       <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	  <title>STBGFC Registrations and Payments</title>
+	  <title>Example FC Registrations and Payments</title>
   </head>
 
   <body>
       <div id="homemain">
-          <p>
-              <g:link controller="registration" title="register now">
-                  <img src="${createLinkTo(dir:'images', file:'registernow.png')}" alt="register now"/>
-              </g:link>
-          </p>
-          <p>
-              Registration is now open for the 2011-2012 season.
-          </p>
-          <p>
-              <em>(NB: this is an online registration and payment form and <strong>NOT</strong> an enquiry
-              form.  If you are enquiring about joining the club, please use
-              <a href="http://www.stbgfc.co.uk/about/contact.php">this form</a> instead).</em>
-          </p>
           <g:if test="${Tournament.countByOpenForEntry(true) > 0}">
           <p>
               <g:each in="${Tournament.findAllByOpenForEntry(true)}" var="tourney">
