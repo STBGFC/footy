@@ -11,6 +11,7 @@ body {
     font: 12px helvetica, sans-serif;
     height: 100%;
 }
+div.body { margin-left: 20px }
 #wrapper {
     min-height: 100%;
     height: auto !important;
@@ -34,7 +35,7 @@ body {
     color: #eee;
     background-color: #002;
     line-height: 0.8;
-    height: 70px;
+    height: 45px;
 }
 #banner small {
     font-size: 13px;
@@ -51,7 +52,7 @@ body {
     color: #bbb;
     text-align: right;
     padding-right: 12px;
-    margin-top: -15px;
+    margin-top: -22px;
 }
 #loginBanner p {
     margin: 0px;
@@ -91,22 +92,8 @@ body {
     padding-top: 5px
 }
 
-#footer #charterstandard {
-    float:right;
-    margin-right:10px;
-    position:relative;
-    /* opacity for proper web browsers.. */
-    opacity: 0.5;
-    /* ..and for stupid crappy browsers (can you guess which?) */
-    -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
-    filter: alpha(opacity=50);
-    top: 7px;
-}
-
-                                            
-
 a:link, a:visited, a:hover {
-    color: #a32;
+    color: #23a;
     font-weight: bold;
     text-decoration: none;
 }
@@ -115,7 +102,7 @@ a:hover {
 }
 
 h1 {
-    color: #a32;
+    color: #23a;
     font-weight: normal;
     font-size: 22px;
     margin: .8em 0 .3em 0;
@@ -619,21 +606,18 @@ div#newspanel {
 }
 div.newsbox {
     font-size: 8pt;
-    font-size: 8pt;
     padding: 2px;
     margin-bottom: 13px;
     line-height:1.9;
-    border: 1px dotted #000;
 }
 .newsbox h2 {
     margin: -3px;
-    color: white;
+    color: black;
     font-style: normal;
     font-weight: normal;
     font-family: "arial-narrow", helvetica, sans-serif;
     font-size: 12px;
     text-align: center;
-    text-shadow: -1px -1px 1px #222, 1px 1px 1px #aaa;
 }
 .newsbox p {
     margin: 0px;

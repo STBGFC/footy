@@ -45,7 +45,7 @@ grails.spring.bean.packages = []
 
 // local
 grails.mail.host='mail'
-org.davisononline.footy.core.homeclubname='ExampleFC'
+org.davisononline.footy.core.homeclubname='Example FC'
 org.davisononline.footy.core.registration.email="registration-confirm@examplefc.com"
 org.davisononline.footy.core.registration.emailbody='''(Automatic email, please do not reply to this address)
 
