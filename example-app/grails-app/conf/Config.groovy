@@ -1,14 +1,8 @@
 // locations to search for config files that get merged into the main config
 // config files can either be Java properties files or ConfigSlurper scripts
 
-// grails.config.locations = [ "classpath:${appName}-config.properties",
-//                             "classpath:${appName}-config.groovy",
-//                             "file:${userHome}/.grails/${appName}-config.properties",
-//                             "file:${userHome}/.grails/${appName}-config.groovy"]
-
-// if(System.properties["${appName}.config.location"]) {
-//    grails.config.locations << "file:" + System.properties["${appName}.config.location"]
-// }
+grails.config.locations = [ "classpath:${appName}-config.properties",
+                            "classpath:common-config.properties" ]
 
 grails.project.groupId = appName // change this to alter the default package name and Maven publishing destination
 grails.mime.file.extensions = true // enables the parsing of file extensions from URLs into the request format
@@ -31,7 +25,7 @@ grails.mime.types = [ html: ['text/html','application/xhtml+xml'],
 //grails.urlmapping.cache.maxsize = 1000
 
 // The default codec used to encode data with ${}
-grails.views.default.codec = "none" // none, html, base64
+grails.views.default.codec = "html" // none, html, base64
 grails.views.gsp.encoding = "UTF-8"
 grails.converters.encoding = "UTF-8"
 // enable Sitemesh preprocessing of GSP pages
@@ -48,21 +42,66 @@ grails.logging.jul.usebridge = true
 // packages to include in Spring bean scanning
 grails.spring.bean.packages = []
 
-// request parameters to mask when logging exceptions
-grails.exceptionresolver.params.exclude = ['password']
+
+// local
+grails.mail.host='mail'
+org.davisononline.footy.core.homeclubname='ExampleFC'
+org.davisononline.footy.core.registration.email="registration-confirm@examplefc.com"
+org.davisononline.footy.core.registration.emailbody='''(Automatic email, please do not reply to this address)
+
+Dear ${buyer.givenName},
+
+Thank you for registering at ExampleFC.  This email confirms that the
+following players are registered in the database:
+
+${registrations*.player.join('\n')}
+
+Your invoice number is ${payment.transactionId} and you can access this
+at http://www.examplefc.com/invoice/show/${payment.transactionId}
+
+Kind regards,
+ExampleFC Registrations.
+'''
+
+org.davisononline.footy.tournament.registration.email="tournament-confirm@examplefc.com"
+org.davisononline.footy.tournament.registration.emailbody='''(Automatic email, please do not reply to this address)
+
+Hi ${entry.contact.knownAsName ?: entry.contact.givenName},
+
+Thank you for your entry to the ExampleFC tournament.  This email confirms that
+the the following teams are entered into the ${entry.tournament.name}
+competition:
+
+${entry.teams.join(' \\n')}
+
+Your invoice number is ${entry.payment.transactionId} and you can access this
+at http://www.examplefc.com/invoice/show/${entry.payment.transactionId}
+
+We'll see you there!
+ExampleFC Tournament Committee.
+'''
+
 
 // set per-environment serverURL stem for creating absolute links
 environments {
     production {
-        grails.serverURL = "http://www.changeme.com"
+        // following s/be overridden in external prod config
+        grails.serverURL = "http://www.examplefc.com"
+        grails.paypal.server = "https://www.paypal.com/cgi-bin/webscr"
+        grails.paypal.email = "realemail@examplefc.com"
     }
     development {
         grails.serverURL = "http://localhost:8080/${appName}"
+        grails.paypal.server = "https://www.sandbox.paypal.com/cgi-bin/webscr"
+        grails.paypal.email = "seller_1295042208_biz@googlemail.com"
+        grails.mail.overrideAddress="example@examplefc.com"
     }
     test {
         grails.serverURL = "http://localhost:8080/${appName}"
+        grails.paypal.server = "https://www.sandbox.paypal.com/cgi-bin/webscr"
+        grails.paypal.email = "seller_1295042208_biz@googlemail.com"
+        grails.mail.overrideAddress="example@examplefc.com"
     }
-
 }
 
 // log4j configuration
@@ -87,4 +126,10 @@ log4j = {
            'net.sf.ehcache.hibernate'
 
     warn   'org.mortbay.log'
+
+    debug  'org.davisononline'
+           //'org.springframework.jdbc',
+           //'org.springframework.orm',
+           //'org.hibernate',
+           //'org.codehaus.groovy.grails.orm.hibernate'
 }
