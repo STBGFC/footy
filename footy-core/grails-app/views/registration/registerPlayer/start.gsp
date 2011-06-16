@@ -7,7 +7,7 @@
     </head>
     <body>
         <div class="dialog">
-            <g:form action="registerPlayer">
+            <g:form name="registration" action="registerPlayer">
                 <p>
                    <g:message
                            code="org.davisononline.footy.core.registrationtype.text"

@@ -8,7 +8,7 @@
     </head>
     <body>
         <div class="dialog">
-            <g:form action="registerPlayer">
+            <g:form name="registration" action="registerPlayer">
                 <p>
                     <g:message code="org.davisononline.footy.registration.views.registration.registerPlayer.para1"
                         default="The player is a minor: please enter details of the parent or guardian in the fields below." />

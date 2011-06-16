@@ -8,7 +8,7 @@
     </head>
     <body>
         <div class="dialog">
-            <g:form action="registerPlayer"> 
+            <g:form name="registration" action="registerPlayer"> 
                 <p>
                     If <strong>${playerInstance.person.givenName}</strong> is already assigned to a team and has a
                     league registration number, you can enter those here. If

@@ -8,7 +8,7 @@
     </head>
     <body>
         <div class="dialog">
-            <g:form action="registerPlayer">
+            <g:form name="registration" action="registerPlayer">
                 <p><g:message code="org.davisononline.footy.registration.views.registration.registerPlayer.enterPlayerDetails.para1"
                         default="Enter details of the new player in the fields below." /></p>
                 <table>
