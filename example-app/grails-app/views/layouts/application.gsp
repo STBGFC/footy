@@ -26,6 +26,7 @@
                     <%--
                     <input type='checkbox' class='chk' name='${rememberMeParameter}' id='remember_me' <g:if test='${hasCookie}'>checked='checked'</g:if> /> remember me
                     --%>
+                    <g:if test="${System.properties['grails.run.mode']=='functional-test'}"><input type="submit" id="loginSubmit"/></g:if>
                     <a href="#" onclick="document.getElementById('login').submit()">login</a>
                 </p>
             </form>
