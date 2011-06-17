@@ -45,6 +45,7 @@ class PersonController {
 
     def save = {
         def p = new Person(params)
+        p.address = p.address ?:  new Address()
         if (!p.address?.validate() | !p.validate()) {
             render(view: "edit", model: [personCommand: p])
         }
