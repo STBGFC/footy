@@ -14,8 +14,8 @@ class BootStrap {
         def club
         if (!Club.homeClub) {
             clubSec = new Person(
-                givenName: 'Nathan',
-                familyName: 'Sanders',
+                givenName: 'John',
+                familyName: 'Secretary',
                 phone1: '07000000000',
                 email: 'john.secretary@examplefc.com',
                 eligibleParent: true
