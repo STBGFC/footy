@@ -2,6 +2,7 @@ package org.davisononline.footy.core
 
 import org.davisononline.footy.FunctionalHelper
 
+
 /**
  * test various person CRUD functions 
  */
@@ -50,5 +51,18 @@ class PersonTests extends FunctionalHelper {
 
         assertContentContains "Person Jack Bloggs created"
     }   
+
+    /**
+     * delete the above created person
+     */
+    void testDeletePerson() {
+        def p = Person.findByGivenNameAndFamilyName("Jack", "Bloggs")
+        login("sa", "admin")
+        get ("/person/edit/${p.id}")
+        click "_action_delete"
+
+        assertStatus 200
+        assertContentContains "Person ${p.id} deleted"
+    }
 }
 

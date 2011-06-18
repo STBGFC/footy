@@ -35,11 +35,14 @@ class RegistrationTests extends FunctionalHelper {
         }
         assertStatus 200
         assertContentContains "Property [givenName] of class [class org.davisononline.footy.core.Person] cannot be blank"
+        assertContentContains "Property [familyName] of class [class org.davisononline.footy.core.Person] cannot be blank"
+        assertContentContains "Property [medical] of class [class org.davisononline.footy.core.Player] cannot be blank"
 
         form('registration') {
             selects["dateOfBirth_day"].select "10"
             selects["dateOfBirth_month"].select "10"
             selects["dateOfBirth_year"].select "2007"
+            selects["dateJoinedClub_year"].select "2009"
             medical "None"
             person {
                 givenName "Joe"
@@ -167,7 +170,15 @@ class RegistrationTests extends FunctionalHelper {
      * edit
      */
     void testYearFirstJoined() {
-
+        def plist = Player.list()
+        assert plist.size() == 1
+        def p = plist[0]
+        login "sa", "admin"
+        get ("/player/edit/${p.id}")
+        assertStatus 200
+        form ("playerEditForm") {
+            assert dateJoinedClub_year[0] == "2009"
+        }
     }
 
     /**
