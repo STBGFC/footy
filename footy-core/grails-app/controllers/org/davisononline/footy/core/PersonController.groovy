@@ -45,6 +45,7 @@ class PersonController {
 
     def save = {
         def p = new Person(params)
+        p.address = p.address ?:  new Address()
         if (!p.address?.validate() | !p.validate()) {
             render(view: "edit", model: [personCommand: p])
         }
@@ -86,7 +87,7 @@ class PersonController {
                 }
             }
             personInstance.properties = params
-            if (personInstance.address.validate() && !personInstance.hasErrors() && personInstance.save(flush: true)) {
+            if (personInstance.address?.validate() && !personInstance.hasErrors() && personInstance.save(flush: true)) {
                 flash.message = "${message(code: 'default.updated.message', args: [message(code: 'person.label', default: ''), personInstance])}"
                 redirect(action: "list")
             }
