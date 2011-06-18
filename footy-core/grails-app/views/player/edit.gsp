@@ -16,7 +16,7 @@
                 <span class="menuButton"><g:link class="list" action="list"><g:message code="default.list.label" args="[entityName]" /></g:link></span>
             </div>
             
-            <g:form method="post" >
+            <g:form name="playerEditForm" method="post" >
                 <g:hiddenField name="id" value="${playerInstance?.id}" />
                 <g:hiddenField name="version" value="${playerInstance?.version}" />
                 <div class="dialog">
