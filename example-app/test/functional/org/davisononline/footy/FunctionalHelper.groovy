@@ -26,5 +26,18 @@ class FunctionalHelper extends FunctionalTestCase {
         assertContentContains "[logout]"
     }
 
+    /**
+     * test player/person list as admin
+     */
+    void doPlayerList() { 
+        get ('/player/list')
+        assertStatus 200
+    }
+
+    void doPersonList() {
+        get ('/person/list')
+        assertStatus 200
+    }
+
 }
 
