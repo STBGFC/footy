@@ -41,7 +41,7 @@
             <p>
                 No news yet.
             </p>
-            <h2>Players</h2>
+            <h2>${teamInstance.players.size()} Players</h2>
             <sec:ifAnyGranted roles="ROLE_COACH">
             <table class="list">
                 <thead>
@@ -62,7 +62,7 @@
                         <td>${player.medical}</td>
                         <td>
                             <a href="mailto:${player.guardian?.email}" title="Send Email to ${player.guardian}">${player.guardian}</a>
-                            <br/>${player.guardian?.phone1}
+                            <br/>${player.guardian?.bestPhone().encodeAsHTML()}
                         </td>
                         <td>${fieldValue(bean: player, field: "leagueRegistrationNumber")}</td>
                     </tr>
@@ -107,7 +107,7 @@
                         <footy:tooltip link="mailto:${teamInstance.manager.email}" value="${teamInstance.manager}">
                             Click to send email to ${teamInstance.manager.givenName}.
                             <footy:personPhoto person="${teamInstance.manager}"/>
-                            <p>Contact ${teamInstance.manager.givenName} on: <strong>${teamInstance.manager.phone1}</strong></p>
+                            <p>Contact ${teamInstance.manager.givenName} on: <strong>${teamInstance.manager.bestPhone().encodeAsHTML()}</strong></p>
                         </footy:tooltip>
                         <tmpl:coachPhotoLink person="${teamInstance.manager}"/>
                     </li>
@@ -116,7 +116,7 @@
                         <footy:tooltip link="mailto:${c.email}" value="${c}">
                             Click to send email to ${c.givenName}.
                             <footy:personPhoto person="${c}"/>
-                            <p>Contact ${c.givenName} on: <strong>${c.phone1}</strong></p>
+                            <p>Contact ${c.givenName} on: <strong>${c.bestPhone().encodeAsHTML()}</strong></p>
                         </footy:tooltip>
                         <tmpl:coachPhotoLink person="${c}"/>
                     </li>

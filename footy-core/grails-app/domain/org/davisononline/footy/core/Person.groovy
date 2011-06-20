@@ -99,6 +99,14 @@ class Person implements Comparable, Serializable {
     }
 
     /**
+     * return the best phone  number for display
+     */
+    def bestPhone() {
+        if (phone1?.size() > 5) phone1
+        else phone2
+    }
+
+    /**
      * @see java.lang.Object#toString()
      */
     public String toString() {
