@@ -1,6 +1,7 @@
 package org.davisononline.footy.core
 
 import org.davisononline.footy.FunctionalHelper
+import org.junit.*
 
 /**
  * test registration webflows and related functions
@@ -16,19 +17,31 @@ class RegistrationTests extends FunctionalHelper {
         assertContentContains "Welcome"
     }
 
-    /**
-     * registration with all validation checks
-     */
-    void testRegistration() {
+    void doRegPage1(tier) {
         get ('/registration')
         assertStatus 200
 
         form ('registration') {
-            selects['regTierId'].select "1"
+            selects['regTierId'].select tier
             click "_eventId_continue"
         }
         assertStatus 200
         assertContentContains "Enter details of the new player"
+    }
+
+    void doRegPage4() {
+        form('registration') {
+            click "_eventId_continue"
+        }
+        assertContentContains "Invoice is now due for payment"
+    }
+
+    /**
+     * registration with all validation checks
+     */
+    void testRegistration() {
+        
+        doRegPage1("1")
 
         form('registration') {
             click "_eventId_submit"
@@ -88,10 +101,18 @@ class RegistrationTests extends FunctionalHelper {
         }
         assertContentContains "Assign Team"
 
-        form('registration') {
-            click "_eventId_continue"
-        }
-        assertContentContains "Invoice is now due for payment"
+        doRegPage4()
+
+        login "sa", "admin" 
+        doPlayerList()
+        assertContentContains "Joe Bloggs"
+        assertContentContains "Dad Bloggs"
+
+        doPersonList()
+        assertContentContains "John Secretary"
+        assertContentContains "john.secretary@examplefc.com"
+        assertContentContains "Dad Bloggs"
+        assertContentContains "foo@bar.com"
     }
 
     /**
@@ -99,12 +120,34 @@ class RegistrationTests extends FunctionalHelper {
      * try to register a new parent with same email address
      */
     void testEmailDuplication() {
-        get ('/registration')
 
-        form ('registration') {
-            selects['regTierId'].select "1"
+        doRegPage1("1")
+
+        form('registration') {
+            medical "None"
+            person {
+                givenName "Alf"
+                familyName "Bloggs1"
+            }
+            click "_eventId_submit"
+        }
+
+        form('registration') {
+            givenName "Dad"
+            familyName "Bloggs1"
+            phone1 "072232323323"
+            email "foo@bloggs1.com"
+            address {
+                house "1"
+                address "Some St."
+                town "Anytown"
+                postCode "GU1 1DB"
+            }
             click "_eventId_continue"
         }
+
+        doRegPage4()
+        doRegPage1("1")
 
         form('registration') {
             medical "None"
@@ -119,7 +162,7 @@ class RegistrationTests extends FunctionalHelper {
             givenName "Dad"
             familyName "Bloggs2"
             phone1 "072232323323"
-            email "foo@bar.com"
+            email "foo@bloggs1.com"
             address {
                 house "1"
                 address "Some St."
@@ -128,10 +171,10 @@ class RegistrationTests extends FunctionalHelper {
             }
             click "_eventId_continue"
         }
-        assertContentContains "Property [email] of class [class org.davisononline.footy.core.Person] with value [foo@bar.com] must be unique"
+        assertContentContains "Property [email] of class [class org.davisononline.footy.core.Person] with value [foo@bloggs1.com] must be unique"
 
         form('registration') {
-            email "foo@bar2.com"
+            email "foo@bloggs2.com"
             click "_eventId_continue"
         }
         assertContentContains "Assign Team"
@@ -143,12 +186,8 @@ class RegistrationTests extends FunctionalHelper {
      * page  instead.
      */
     void testDuplicateRegistration() {
-        get ('/registration')
 
-        form ('registration') {
-            selects['regTierId'].select "1"
-            click "_eventId_continue"
-        }
+        doRegPage1("1")
 
         form('registration') {
             selects["dateOfBirth_day"].select "10"
@@ -171,7 +210,6 @@ class RegistrationTests extends FunctionalHelper {
      */
     void testYearFirstJoined() {
         def plist = Player.list()
-        assert plist.size() == 1
         def p = plist[0]
         login "sa", "admin"
         get ("/player/edit/${p.id}")
@@ -179,27 +217,6 @@ class RegistrationTests extends FunctionalHelper {
         form ("playerEditForm") {
             assert dateJoinedClub_year[0] == "2009"
         }
-    }
-
-    /**
-     * test player/person list as admin
-     */
-    void testPlayerList() { 
-        login("sa", "admin")
-        get ('/player/list')
-        assertStatus 200
-        assertContentContains "Joe Bloggs"
-        assertContentContains "Dad Bloggs"
-    }
-
-    void testPersonList() {
-        login("sa", "admin")
-        get ('/person/list')
-        assertStatus 200
-        assertContentContains "John Secretary"
-        assertContentContains "john.secretary@examplefc.com"
-        assertContentContains "Dad Bloggs"
-        assertContentContains "foo@bar.com"
     }
 
 }

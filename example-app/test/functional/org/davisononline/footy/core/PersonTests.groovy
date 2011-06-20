@@ -50,20 +50,19 @@ class PersonTests extends FunctionalHelper {
         }
 
         assertContentContains "Person Jack Bloggs created"
-    }   
 
-    /**
-     * check person views
-     */
-    void testPersonList() {
-        login "sa", "admin"
-        get "/person/list"
-        assertStatus 200
+        doPersonList()
         assertContentContains "Jack Bloggs"
         assertContentContains "foo@baz.com"
         assertContentContains "0782323232323"
         assertContentContains "144 Some St., Anytown. GU1 1DB"
-    }
+
+        click "Jack Bloggs"
+        click "_action_delete"
+
+        assertStatus 200
+        assertContentContains "Jack Bloggs deleted"
+    }   
 
     /**
      * edit person, add qualifications
@@ -91,17 +90,5 @@ attainedOn_year=2007
         }
     }*/
 
-    /**
-     * delete the above created person
-     */
-    void testDeletePerson() {
-        testPersonList()
-        click "Jack Bloggs"
-        click "_action_delete"
-
-        assertStatus 200
-        assertContentContains "Jack Bloggs deleted"
-    }
-    
 }
 

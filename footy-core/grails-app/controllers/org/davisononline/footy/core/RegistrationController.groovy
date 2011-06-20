@@ -148,8 +148,7 @@ class RegistrationController {
                     return error()
                 }
                 flow.guardian1 = person
-                flow.personCommand.email = ''
-                flow.personCommand.givenName = ''
+                flow.personCommand = new Person(familyName: person.familyName, address: person.address)
 
             }.to "enterGuardianDetails"
         }
