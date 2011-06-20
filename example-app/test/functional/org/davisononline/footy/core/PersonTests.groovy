@@ -12,8 +12,8 @@ class PersonTests extends FunctionalHelper {
      * create person form
      */
     void testCreatePerson() {
-        login("sa", "admin")
-        get ('/person/create')
+        login "sa", "admin"
+        get '/person/create'
         click "_action_save"
 
         assertContentContains "Property [givenName] of class"
@@ -53,16 +53,55 @@ class PersonTests extends FunctionalHelper {
     }   
 
     /**
+     * check person views
+     */
+    void testPersonList() {
+        login "sa", "admin"
+        get "/person/list"
+        assertStatus 200
+        assertContentContains "Jack Bloggs"
+        assertContentContains "foo@baz.com"
+        assertContentContains "0782323232323"
+        assertContentContains "144 Some St., Anytown. GU1 1DB"
+    }
+
+    /**
+     * edit person, add qualifications
+     *
+    void testQualifications() {
+        testPersonList()
+        click "Jack Bloggs"
+
+        def id = byId("id").value
+        get "/person/assignQualification/${id}"
+        assertStatus 200
+
+        post ("/person/addQualification") {
+            headers['Content-Type'] = 'application/x-www-form-urlencoded'
+            body {
+                """
+personId=${id}
+type.id=1
+attainedOn=date.struct
+attainedOn_day=10
+attainedOn_month=10
+attainedOn_year=2007
+"""
+            }
+        }
+    }*/
+
+    /**
      * delete the above created person
      */
     void testDeletePerson() {
-        def p = Person.findByGivenNameAndFamilyName("Jack", "Bloggs")
-        login("sa", "admin")
-        get ("/person/edit/${p.id}")
+        testPersonList()
+        click "Jack Bloggs"
         click "_action_delete"
 
         assertStatus 200
-        assertContentContains "Person ${p.id} deleted"
+        assertContentContains "Jack Bloggs deleted"
     }
+    
 }
 
