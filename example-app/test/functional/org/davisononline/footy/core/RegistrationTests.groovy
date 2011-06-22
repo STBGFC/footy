@@ -108,6 +108,12 @@ class RegistrationTests extends FunctionalHelper {
         assertContentContains "Joe Bloggs"
         assertContentContains "Dad Bloggs"
 
+        click "Joe Bloggs"
+        assertStatus 200
+        form ("playerEditForm") {
+            assert dateJoinedClub_year[0] == "2009"
+        }
+
         doPersonList()
         assertContentContains "John Secretary"
         assertContentContains "john.secretary@examplefc.com"
@@ -190,33 +196,49 @@ class RegistrationTests extends FunctionalHelper {
         doRegPage1("1")
 
         form('registration') {
-            selects["dateOfBirth_day"].select "10"
-            selects["dateOfBirth_month"].select "10"
-            selects["dateOfBirth_year"].select "2007"
+            selects["dateOfBirth_day"].select "11"
+            selects["dateOfBirth_month"].select "11"
+            selects["dateOfBirth_year"].select "2004"
             medical "None"
             person {
-                givenName "Joe"
-                familyName "Bloggs"
+                givenName "Alf"
+                familyName "Alpha"
+            }
+            click "_eventId_submit"
+        }
+        assertStatus 200
+        assertContentContains "Enter Parent/Guardian Details"
+
+        form('registration') {
+            givenName "Dad"
+            familyName "Alpha"
+            phone1 "072232323323"
+            email "dad@alpha.com"
+            address {
+                house "1"
+                address "Some St."
+                town "Anytown"
+                postCode "GU1 1DB"
+            }
+            click "_eventId_continue"
+        }
+
+        doRegPage4()
+        doRegPage1("1")
+
+        form('registration') {
+            selects["dateOfBirth_day"].select "11"
+            selects["dateOfBirth_month"].select "11"
+            selects["dateOfBirth_year"].select "2004"
+            medical "None"
+            person {
+                givenName "Alf"
+                familyName "Alpha"
             }
             click "_eventId_submit"
         }
         assertStatus 200
         assertContentContains "Invoice is now due for payment"
-    }
-
-    /**
-     * check bug that reverted YFJ back to current year upon
-     * edit
-     */
-    void testYearFirstJoined() {
-        def plist = Player.list()
-        def p = plist[0]
-        login "sa", "admin"
-        get ("/player/edit/${p.id}")
-        assertStatus 200
-        form ("playerEditForm") {
-            assert dateJoinedClub_year[0] == "2009"
-        }
     }
 
 }
