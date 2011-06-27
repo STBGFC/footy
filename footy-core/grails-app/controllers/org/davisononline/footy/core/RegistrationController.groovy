@@ -27,10 +27,7 @@ class RegistrationController {
         start {
             on ("continue") {
                 def tier = RegistrationTier.get(params.regTierId)
-                def renewOn = new Date()
-                def mth = renewOn[Calendar.MONTH] + tier.monthsValidFor
-                renewOn.set(month: mth)
-                flow.registration = new Registration(tier: tier, date: renewOn)
+                flow.registration = Registration.createFrom(tier)
 
             }.to "setupPlayer"
         }
