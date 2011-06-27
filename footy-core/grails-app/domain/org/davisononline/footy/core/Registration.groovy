@@ -16,6 +16,20 @@ class Registration implements Serializable, Comparable {
     static constraints = {
     }
 
+    /**
+     * creates a new Registration based on the tier supplied and the current
+     * system date.
+     *
+     * @param tier
+     * @return
+     */
+    static createFrom(tier) {
+        def renewOn = new Date()
+        def mth = renewOn[Calendar.MONTH] + tier.monthsValidFor
+        renewOn.set(month: mth)
+        new Registration(tier: tier, date: renewOn)
+    }
+
     int compareTo(other) {
         try {
             date.compareTo(other.date)
