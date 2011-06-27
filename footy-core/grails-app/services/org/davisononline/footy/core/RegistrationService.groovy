@@ -80,7 +80,10 @@ class RegistrationService {
                 to      buyer.email
                 from    fromEmail
                 subject "Registration Confirmation"
-                body    TemplateUtils.eval(registrationEmailBody, [buyer: buyer, registrations:registrations, payment:payment])
+                body    TemplateUtils.eval(
+                            registrationEmailBody,
+                            [buyer: buyer, registrations:registrations, payment:payment, homeClub: Club.homeClub]
+                        )
             }
         }
         catch (Exception ex) {
