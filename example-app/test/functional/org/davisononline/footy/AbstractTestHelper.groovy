@@ -1,12 +1,13 @@
 package org.davisononline.footy
 
-import grails.plugin.geb.GebTests
+import geb.junit4.GebReportingTest
 
-class AbstractTestHelper extends GebTests {
+class AbstractTestHelper extends GebReportingTest {
     
+    /*
     String getBaseUrl() {
         "http://localhost:8080/example-app"
     }
-
+    */
 }
 
