@@ -1,245 +1,180 @@
 package org.davisononline.footy.core
 
-import org.davisononline.footy.FunctionalHelper
-import org.junit.*
+import geb.Browser
+import geb.Page
+import org.davisononline.footy.*
 
-/**
- * test registration webflows and related functions
- */
-class RegistrationTests extends FunctionalHelper {
+class TierPage extends Page {
+    static at = { title == "Registration Type" }
+    static content = {
+        flow { module FlowModule }
+    }
+}
 
-    /**
-     * index page
-     */
-    void testIndex() {
-        get ('/')
-        assertStatus 200
-        assertContentContains "Welcome"
+class PlayerPage extends Page {
+    static at = { title == "Junior Registration" }
+    static content = {
+        playerForm { $("form#registration") }
+        givenName { playerForm.find("input", name:"person.givenName") }
+        familyName { playerForm.find("input", name:"person.familyName") }
+        flow { module FlowModule }
+    }
+}
+
+class PersonPage extends Page {
+    static at = { title == "Enter Parent/Guardian Details" }
+    static content = {
+        personForm { $("form#registration") }
+        house { personForm.find("input", name:"address.house") }
+        address { personForm.find("input", name:"address.address") }
+        postCode { personForm.find("input", name:"address.postCode") }
+        anotherParent { $("input", value:"Add another parent...") }
+        flow { module FlowModule }
+    }
+}
+
+class TeamPage extends Page {
+    static at = { title == "Assign Team" }
+    static content = {
+        flow { module FlowModule }
+    }
+}
+
+class InvoicePage extends Page {
+    static at = { title == "Payment" }
+    static content = {
+        lineItems { $("tr.invoiceBody") }
+        lineItem { i -> lineItems[i] }
+        itemName { n -> lineItem(n).find("td", 1).text() }
+        itemAmount { n -> lineItem(n).find("td.amount").text() }
+    }
+}
+
+class RegistrationTests extends AbstractTestHelper {
+
+    def doPlayer(gn, fn) {
+        go "registration"
+        waitFor { at(TierPage) }
+        flow.contButton.click()
+        waitFor { at(PlayerPage) }
+        playerForm.medical = "A bit deaf"
+        givenName.value(gn)
+        familyName.value(fn)
     }
 
-    void doRegPage1(tier) {
-        get ('/registration')
-        assertStatus 200
-
-        form ('registration') {
-            selects['regTierId'].select tier
-            click "_eventId_continue"
-        }
-        assertStatus 200
-        assertContentContains "Enter details of the new player"
+    def doParent(email) {
+        personForm.givenName = "Dad"
+        personForm.phone1 = "07000000000"
+        house.value("144")
+        address.value("Some St.")
+        postCode.value("GU1 1DB")
+        personForm.email = email
     }
 
-    void doRegPage4() {
-        form('registration') {
-            click "_eventId_continue"
-        }
-        assertContentContains "Invoice is now due for payment"
+    def doFullReg(gn, fn, email) {
+        doPlayer(gn, fn)
+        flow.contButton.click()
+        waitFor { at(PersonPage) }
+        doParent(email)
+        flow.contButton.click()
+        waitFor { at(TeamPage) }
+        flow.contButton.click()
+        waitFor { at(InvoicePage) }
     }
 
-    /**
-     * registration with all validation checks
-     */
-    void testRegistration() {
-        
-        doRegPage1("1")
-
-        form('registration') {
-            click "_eventId_submit"
-        }
-        assertStatus 200
-        assertContentContains "Property [givenName] of class [class org.davisononline.footy.core.Person] cannot be blank"
-        assertContentContains "Property [familyName] of class [class org.davisononline.footy.core.Person] cannot be blank"
-        assertContentContains "Property [medical] of class [class org.davisononline.footy.core.Player] cannot be blank"
-
-        form('registration') {
-            selects["dateOfBirth_day"].select "10"
-            selects["dateOfBirth_month"].select "10"
-            selects["dateOfBirth_year"].select "2007"
-            selects["dateJoinedClub_year"].select "2009"
-            medical "None"
-            person {
-                givenName "Joe"
-                familyName "Bloggs"
-            }
-            click "_eventId_submit"
-        }
-        assertStatus 200
-        assertContentContains "Enter Parent/Guardian Details"
-
-        form('registration') {
-            click "_eventId_continue"
-        }
-        assertContentContains "Property [phone1] of class [class org.davisononline.footy.core.Person] with value [null] does not pass custom validation"
-        assertContentContains "Property [phone2] of class [class org.davisononline.footy.core.Person] with value [null] does not pass custom validation"
-        assertContentContains "Property [email] of class"
-        assertContentContains "Property [house] of class"
-        assertContentContains "Property [address] of class"
-        assertContentContains "Property [postCode] of class"
-
-        form('registration') {
-            givenName "Dad"
-            familyName "Bloggs"
-            phone1 "072232323323"
-            email "foo"
-            address {
-                house "1"
-                address "Some St."
-                town "Anytown"
-                postCode "x"
-            }
-            click "_eventId_continue"
-        }
-        assertContentContains "[foo] is not a valid e-mail address"
-        assertContentContains "[X] does not match the required pattern"
-
-        form('registration') {
-            email "foo@bar.com"
-            address {
-                postCode "GU1 1DB"
-            }
-            click "_eventId_continue"
-        }
-        assertContentContains "Assign Team"
-
-        doRegPage4()
-
-        login "sa", "admin" 
-        doPlayerList()
-        assertContentContains "Joe Bloggs"
-        assertContentContains "Dad Bloggs"
-
-        click "Joe Bloggs"
-        assertStatus 200
-        form ("playerEditForm") {
-            assert dateJoinedClub_year[0] == "2009"
-        }
-
-        doPersonList()
-        assertContentContains "John Secretary"
-        assertContentContains "john.secretary@examplefc.com"
-        assertContentContains "Dad Bloggs"
-        assertContentContains "foo@bar.com"
+    void testAdminLists() {
+        doFullReg("Jody", "Bloggs", "abc123@bloggs.com")
+        go "" //home
+        waitFor { at(HomePage) }
+        auth.login("sa", "admin")
+        go "player/list"
+        $("a", value:"Jody Bloggs").click()
     }
-
-    /**
-     * based on the previous registration (order is important!)
-     * try to register a new parent with same email address
-     */
-    void testEmailDuplication() {
-
-        doRegPage1("1")
-
-        form('registration') {
-            medical "None"
-            person {
-                givenName "Alf"
-                familyName "Bloggs1"
-            }
-            click "_eventId_submit"
-        }
-
-        form('registration') {
-            givenName "Dad"
-            familyName "Bloggs1"
-            phone1 "072232323323"
-            email "foo@bloggs1.com"
-            address {
-                house "1"
-                address "Some St."
-                town "Anytown"
-                postCode "GU1 1DB"
-            }
-            click "_eventId_continue"
-        }
-
-        doRegPage4()
-        doRegPage1("1")
-
-        form('registration') {
-            medical "None"
-            person {
-                givenName "Alf"
-                familyName "Bloggs2"
-            }
-            click "_eventId_submit"
-        }
-
-        form('registration') {
-            givenName "Dad"
-            familyName "Bloggs2"
-            phone1 "072232323323"
-            email "foo@bloggs1.com"
-            address {
-                house "1"
-                address "Some St."
-                town "Anytown"
-                postCode "GU1 1DB"
-            }
-            click "_eventId_continue"
-        }
-        assertContentContains "Property [email] of class [class org.davisononline.footy.core.Person] with value [foo@bloggs1.com] must be unique"
-
-        form('registration') {
-            email "foo@bloggs2.com"
-            click "_eventId_continue"
-        }
-        assertContentContains "Assign Team"
-    }
-
-    /**
-     * based on initial registration, attempts to register child 
-     * with same details again.. should get the first invoice 
-     * page  instead.
-     */
+    
     void testDuplicateRegistration() {
-
-        doRegPage1("1")
-
-        form('registration') {
-            selects["dateOfBirth_day"].select "11"
-            selects["dateOfBirth_month"].select "11"
-            selects["dateOfBirth_year"].select "2004"
-            medical "None"
-            person {
-                givenName "Alf"
-                familyName "Alpha"
-            }
-            click "_eventId_submit"
-        }
-        assertStatus 200
-        assertContentContains "Enter Parent/Guardian Details"
-
-        form('registration') {
-            givenName "Dad"
-            familyName "Alpha"
-            phone1 "072232323323"
-            email "dad@alpha.com"
-            address {
-                house "1"
-                address "Some St."
-                town "Anytown"
-                postCode "GU1 1DB"
-            }
-            click "_eventId_continue"
-        }
-
-        doRegPage4()
-        doRegPage1("1")
-
-        form('registration') {
-            selects["dateOfBirth_day"].select "11"
-            selects["dateOfBirth_month"].select "11"
-            selects["dateOfBirth_year"].select "2004"
-            medical "None"
-            person {
-                givenName "Alf"
-                familyName "Alpha"
-            }
-            click "_eventId_submit"
-        }
-        assertStatus 200
-        assertContentContains "Invoice is now due for payment"
+        doFullReg("Fred", "Bloggs", "asd3@asd.com")
+        // dupe..
+        doPlayer("Fred", "Bloggs")
+        flow.contButton.click()
+        waitFor { at(InvoicePage) }
     }
 
+    void testDuplicateEmail() {
+        doFullReg("Julie", "Bloggs", "asd4@asd.com")
+        // dupe email..
+        doPlayer("Jackie", "Bloggs")
+        flow.contButton.click()
+        waitFor { at(PersonPage) }
+        doParent("asd4@asd.com")
+        flow.contButton.click()
+        waitFor { at(PersonPage) }
+        assert flow.errors.size() == 1
+        assert flow.error(0).text() == "Property [email] of class [class org.davisononline.footy.core.Person] with value [asd4@asd.com] must be unique"
+
+    }
+
+    void testSecondParent() {
+        doPlayer("Joanne", "Bloggs")
+        flow.contButton.click()
+        waitFor { at(PersonPage) }
+        doParent("asd@asd.com")
+        anotherParent.click()
+        waitFor { at(PersonPage) }
+        doParent("asd2@asd.com")
+        flow.contButton.click()
+        waitFor { at(TeamPage) }
+    }
+
+    void testRegistrationValidation() {
+        go "registration"
+
+        // redirects to first page of flow.
+        waitFor { at(TierPage) }
+        assert at(TierPage)
+        flow.contButton.click()
+
+        // check validations on player page
+        waitFor { at(PlayerPage) }
+        flow.contButton.click()
+        assert flow.errors.size() == 3
+        assert flow.error(0).text() == "Property [givenName] of class [class org.davisononline.footy.core.Person] cannot be blank"
+        assert flow.error(1).text() == "Property [familyName] of class [class org.davisononline.footy.core.Person] cannot be blank"
+        assert flow.error(2).text() == "Property [medical] of class [class org.davisononline.footy.core.Player] cannot be blank"
+
+        // fill in player details
+        doPlayer("Joe", "Bloggs")
+        flow.contButton.click()
+        waitFor { at(PersonPage) }
+
+        // check validation
+        flow.contButton.click()
+        assert flow.errors.size() == 7
+        assert flow.error(0).text() == "Property [givenName] of class [class org.davisononline.footy.core.Person] cannot be blank"
+        assert flow.error(1).text() == "Property [phone1] of class [class org.davisononline.footy.core.Person] with value [null] does not pass custom validation"
+        assert flow.error(2).text() == "Property [phone2] of class [class org.davisononline.footy.core.Person] with value [null] does not pass custom validation"
+        assert flow.error(3).text() == "Property [email] of class [class org.davisononline.footy.core.Person] cannot be blank"
+        assert flow.error(4).text() == "Property [house] of class [class org.davisononline.footy.core.Address] cannot be null"
+        assert flow.error(5).text() == "Property [address] of class [class org.davisononline.footy.core.Address] cannot be null"
+        assert flow.error(6).text() == "Property [postCode] of class [class org.davisononline.footy.core.Address] cannot be null"
+
+        // set some duffs
+        doParent("asd9@asd")
+        postCode.value("XXX")
+        flow.contButton.click()
+        assert flow.errors.size() == 2
+        assert flow.error(0).text() == "Property [email] of class [class org.davisononline.footy.core.Person] with value [asd9@asd] is not a valid e-mail address"
+        assert flow.error(1).text().startsWith("Property [postCode] of class [class org.davisononline.footy.core.Address] with value [XXX] does not match the required pattern")
+
+        postCode.value("GU1 1DB")
+        personForm.email = "asd9@asd.com"
+        flow.contButton.click()
+        waitFor { at(TeamPage) }
+
+        flow.contButton.click()
+        waitFor { at(InvoicePage) }
+        assert itemName(0) == "Joe Bloggs Junior"
+        assert itemAmount(0).contains("1 x £60.00")
+    }
+    
 }
 
