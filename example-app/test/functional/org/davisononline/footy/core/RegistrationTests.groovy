@@ -2,16 +2,7 @@ package org.davisononline.footy.core
 
 import geb.Browser
 import geb.Page
-import geb.Module
 import org.davisononline.footy.*
-
-class FlowModule extends Module {
-    static content =  {
-        errors { $("div.errors") }
-        error { i -> errors[i] }        
-        contButton { $("input", value:"Continue") }
-    }
-}
 
 class TierPage extends Page {
     static at = { title == "Registration Type" }
@@ -37,6 +28,7 @@ class PersonPage extends Page {
         house { personForm.find("input", name:"address.house") }
         address { personForm.find("input", name:"address.address") }
         postCode { personForm.find("input", name:"address.postCode") }
+        anotherParent { $("input", value:"Add another parent...") }
         flow { module FlowModule }
     }
 }
@@ -60,7 +52,80 @@ class InvoicePage extends Page {
 
 class RegistrationTests extends AbstractTestHelper {
 
-    void testRegistration() {
+    def doPlayer(gn, fn) {
+        go "registration"
+        waitFor { at(TierPage) }
+        flow.contButton.click()
+        waitFor { at(PlayerPage) }
+        playerForm.medical = "A bit deaf"
+        givenName.value(gn)
+        familyName.value(fn)
+    }
+
+    def doParent(email) {
+        personForm.givenName = "Dad"
+        personForm.phone1 = "07000000000"
+        house.value("144")
+        address.value("Some St.")
+        postCode.value("GU1 1DB")
+        personForm.email = email
+    }
+
+    def doFullReg(gn, fn, email) {
+        doPlayer(gn, fn)
+        flow.contButton.click()
+        waitFor { at(PersonPage) }
+        doParent(email)
+        flow.contButton.click()
+        waitFor { at(TeamPage) }
+        flow.contButton.click()
+        waitFor { at(InvoicePage) }
+    }
+
+    void testAdminLists() {
+        doFullReg("Jody", "Bloggs", "abc123@bloggs.com")
+        go "" //home
+        waitFor { at(HomePage) }
+        auth.login("sa", "admin")
+        go "player/list"
+        $("a", value:"Jody Bloggs").click()
+    }
+    
+    void testDuplicateRegistration() {
+        doFullReg("Fred", "Bloggs", "asd3@asd.com")
+        // dupe..
+        doPlayer("Fred", "Bloggs")
+        flow.contButton.click()
+        waitFor { at(InvoicePage) }
+    }
+
+    void testDuplicateEmail() {
+        doFullReg("Julie", "Bloggs", "asd4@asd.com")
+        // dupe email..
+        doPlayer("Jackie", "Bloggs")
+        flow.contButton.click()
+        waitFor { at(PersonPage) }
+        doParent("asd4@asd.com")
+        flow.contButton.click()
+        waitFor { at(PersonPage) }
+        assert flow.errors.size() == 1
+        assert flow.error(0).text() == "Property [email] of class [class org.davisononline.footy.core.Person] with value [asd4@asd.com] must be unique"
+
+    }
+
+    void testSecondParent() {
+        doPlayer("Joanne", "Bloggs")
+        flow.contButton.click()
+        waitFor { at(PersonPage) }
+        doParent("asd@asd.com")
+        anotherParent.click()
+        waitFor { at(PersonPage) }
+        doParent("asd2@asd.com")
+        flow.contButton.click()
+        waitFor { at(TeamPage) }
+    }
+
+    void testRegistrationValidation() {
         go "registration"
 
         // redirects to first page of flow.
@@ -77,9 +142,7 @@ class RegistrationTests extends AbstractTestHelper {
         assert flow.error(2).text() == "Property [medical] of class [class org.davisononline.footy.core.Player] cannot be blank"
 
         // fill in player details
-        playerForm.medical = "A bit deaf"
-        givenName.value("Joe")
-        familyName.value("Bloggs")
+        doPlayer("Joe", "Bloggs")
         flow.contButton.click()
         waitFor { at(PersonPage) }
 
@@ -95,19 +158,15 @@ class RegistrationTests extends AbstractTestHelper {
         assert flow.error(6).text() == "Property [postCode] of class [class org.davisononline.footy.core.Address] cannot be null"
 
         // set some duffs
-        personForm.givenName = "Dad"
-        personForm.phone1 = "07000000000"
-        personForm.email = "asd@asd"
-        house.value("144")
-        address.value("Some St.")
+        doParent("asd9@asd")
         postCode.value("XXX")
         flow.contButton.click()
         assert flow.errors.size() == 2
-        assert flow.error(0).text() == "Property [email] of class [class org.davisononline.footy.core.Person] with value [asd@asd] is not a valid e-mail address"
+        assert flow.error(0).text() == "Property [email] of class [class org.davisononline.footy.core.Person] with value [asd9@asd] is not a valid e-mail address"
         assert flow.error(1).text().startsWith("Property [postCode] of class [class org.davisononline.footy.core.Address] with value [XXX] does not match the required pattern")
 
         postCode.value("GU1 1DB")
-        personForm.email = "asd@asd.com"
+        personForm.email = "asd9@asd.com"
         flow.contButton.click()
         waitFor { at(TeamPage) }
 
@@ -116,5 +175,6 @@ class RegistrationTests extends AbstractTestHelper {
         assert itemName(0) == "Joe Bloggs Junior"
         assert itemAmount(0).contains("1 x £60.00")
     }
+    
 }
 

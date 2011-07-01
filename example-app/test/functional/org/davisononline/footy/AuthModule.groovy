@@ -2,16 +2,19 @@ package org.davisononline.footy
 
 import geb.Module
 
+/**
+ * login/logout funtionality for lots of tests
+ */
 class AuthModule extends Module {
 
     static content  = {
         // logged in elements
         username(required: false) { $("#username").text() }
-        logoutButton(required: false) { $("a[name='[logout]']") }
+        logoutButton(required: false) { $("a", text:"[logout]") }
 
         // not logged in elements
         form(required: false) { $("form#login") }
-        loginButton(required: false) { $("a[name=login]") }
+        loginButton(required: false) { $("a", text:"login") }
     }
 
     boolean isLoggedIn() {
