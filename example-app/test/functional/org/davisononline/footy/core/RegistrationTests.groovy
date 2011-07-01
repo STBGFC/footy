@@ -89,6 +89,12 @@ class RegistrationTests extends AbstractTestHelper {
         auth.login("sa", "admin")
         go "player/list"
         $("a", value:"Jody Bloggs").click()
+
+        // invoice
+        go ""
+        waitFor { at(HomePage) }
+        invoices.click()
+        
     }
     
     void testDuplicateRegistration() {
@@ -110,7 +116,6 @@ class RegistrationTests extends AbstractTestHelper {
         waitFor { at(PersonPage) }
         assert flow.errors.size() == 1
         assert flow.error(0).text() == "Property [email] of class [class org.davisononline.footy.core.Person] with value [asd4@asd.com] must be unique"
-
     }
 
     void testSecondParent() {

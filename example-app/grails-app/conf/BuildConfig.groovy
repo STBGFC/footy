@@ -36,4 +36,7 @@ grails.project.dependency.resolution = {
         test("org.seleniumhq.selenium:selenium-firefox-driver:2.0rc3")
         test("org.seleniumhq.selenium:selenium-ie-driver:2.0rc3")
     }
+    plugins {
+        test ":geb:0.6.0"
+    }
 }

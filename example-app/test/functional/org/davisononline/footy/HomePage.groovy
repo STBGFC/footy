@@ -10,6 +10,11 @@ class HomePage extends Page {
     static at = { title == "Example FC Registrations and Payments" }
     static content = {
         auth { module AuthModule }
+
+        // admin links
+        invoices(to: ListPage) { 
+            $("a", text: "Payment Reconciliations") 
+        }
     }
 }
 
