@@ -125,17 +125,6 @@ class RegistrationController {
          */
         enterGuardianDetails {
             def errors
-            on ("continue") { Person person ->
-                if (!person.address) person.address = new Address()
-                if (!person.email) person.email = ''
-                flow.personCommand = person
-                if (!person.address?.validate() | !person.validate()) {
-                    flow.address = person.address // see earlier to do item about grails bug
-                    return error()
-                }
-                if (flow.guardian1) flow.guardian2 = person else flow.guardian1 = person
-
-            }.to "prepTeam"
 
             on ("addanother") {Person person ->
                 if (!person.address) person.address = new Address()
@@ -148,6 +137,31 @@ class RegistrationController {
                 flow.personCommand = new Person(familyName: person.familyName, address: person.address)
 
             }.to "enterGuardianDetails"
+
+            on ("continue") { Person person ->
+                if (!person.address) person.address = new Address()
+                if (!person.email) person.email = ''
+
+                flow.personCommand = person
+                def invalid = (!person.address?.validate() | !person.validate())
+
+                /*
+                 * if the same email is used as the first parent, the unique
+                 * validation won't trigger at this point - needs an explicit
+                 * check
+                 */
+                if (person.email == flow.guardian1?.email) {
+                    person.errors.rejectValue('email', 'org.davisononline.footy.core.parentemailduplication.message', 'Cannot use the same email for both parents')
+                }
+
+                if (invalid || person.hasErrors()) {
+                    flow.address = person.address // see earlier to do item about grails bug
+                    return error()
+                }
+
+                if (flow.guardian1) flow.guardian2 = person else flow.guardian1 = person
+
+            }.to "prepTeam"
         }
 
         /*

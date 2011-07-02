@@ -125,7 +125,15 @@ class RegistrationTests extends AbstractTestHelper {
         doParent("asd@asd.com")
         anotherParent.click()
         waitFor { at(PersonPage) }
-        doParent("asd2@asd.com")
+        doParent("asd@asd.com")
+        
+        // should fail - dupe email even tho first not in DB yet
+        flow.contButton.click()
+        waitFor { at(PersonPage) }
+        assert flow.errors.size() == 1
+        assert flow.error(0).text() == "Cannot use the same email for both parents"
+
+        personForm.email = "asd2@asd.com"
         flow.contButton.click()
         waitFor { at(TeamPage) }
     }
