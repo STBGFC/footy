@@ -110,7 +110,8 @@ class RegistrationController {
             }
 
             on("yes") {
-                flow.personCommand = new Person (
+                // cope with back button better..
+                flow.personCommand = flow.guardian1 ?: new Person (
                     familyName: flow.player.person.familyName
                 )
             }.to "enterGuardianDetails"
@@ -127,7 +128,8 @@ class RegistrationController {
             def errors
 
             on ("addanother") {Person person ->
-                if (!person.address) person.address = new Address()
+                person.address = person.address ?: new Address()
+
                 flow.personCommand = person
                 if (!person.address?.validate() | !person.validate()) {
                     flow.address = person.address // see earlier to do item about grails bug
@@ -136,11 +138,32 @@ class RegistrationController {
                 flow.guardian1 = person
                 flow.personCommand = new Person(familyName: person.familyName, address: person.address)
 
-            }.to "enterGuardianDetails"
+            }.to "enterSecondGuardianDetails"
 
             on ("continue") { Person person ->
-                if (!person.address) person.address = new Address()
-                if (!person.email) person.email = ''
+                person.address = person.address ?: new Address()
+                person.email = person.email ?: ''
+
+                flow.personCommand = person
+                if (!person.address?.validate() | !person.validate()) {
+                    flow.address = person.address // see earlier to do item about grails bug
+                    return error()
+                }
+
+                flow.guardian1 = person
+
+            }.to "prepTeam"
+        }
+
+        /*
+         * add another parent/guardian details and assign to player
+         */
+        enterSecondGuardianDetails {
+            render(view:"enterGuardianDetails")
+            
+            on ("continue") { Person person ->
+                person.address = person.address ?: new Address()
+                person.email = person.email ?: ''
 
                 flow.personCommand = person
                 def invalid = (!person.address?.validate() | !person.validate())
@@ -159,7 +182,7 @@ class RegistrationController {
                     return error()
                 }
 
-                if (flow.guardian1) flow.guardian2 = person else flow.guardian1 = person
+                flow.guardian2 = person
 
             }.to "prepTeam"
         }
