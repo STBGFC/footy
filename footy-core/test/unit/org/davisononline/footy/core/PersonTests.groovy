@@ -81,7 +81,7 @@ class PersonTests extends GrailsUnitTestCase {
         p.phone1 = "029409"
         assertNull p.givenName
         assertEquals "foo", p.familyName
-        assertTrue p.validate()
+        assertFalse p.validate()
         
         p.setFullName "foo bar"
         assertEquals "foo", p.givenName
