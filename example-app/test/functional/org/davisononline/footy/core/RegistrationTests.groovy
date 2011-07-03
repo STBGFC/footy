@@ -7,12 +7,13 @@ import org.davisononline.footy.*
 class TierPage extends Page {
     static at = { title == "Registration Type" }
     static content = {
+        regForm { $("form#registration") }
         flow { module FlowModule }
     }
 }
 
 class PlayerPage extends Page {
-    static at = { title == "Junior Registration" }
+    static at = { title.endsWith("Registration") }
     static content = {
         playerForm { $("form#registration") }
         givenName { playerForm.find("input", name:"person.givenName") }
@@ -52,9 +53,10 @@ class InvoicePage extends Page {
 
 class RegistrationTests extends AbstractTestHelper {
 
-    def doPlayer(gn, fn) {
+    def doPlayer(gn, fn, reg="Junior") {
         go "registration"
         waitFor { at(TierPage) }
+        regForm.regTierId = reg
         flow.contButton.click()
         waitFor { at(PlayerPage) }
         playerForm.medical = "A bit deaf"
@@ -71,8 +73,8 @@ class RegistrationTests extends AbstractTestHelper {
         personForm.email = email
     }
 
-    def doFullReg(gn, fn, email) {
-        doPlayer(gn, fn)
+    def doFullReg(gn, fn, email, reg="Junior") {
+        doPlayer(gn, fn, reg)
         flow.contButton.click()
         waitFor { at(PersonPage) }
         doParent(email)
@@ -187,6 +189,12 @@ class RegistrationTests extends AbstractTestHelper {
         waitFor { at(InvoicePage) }
         assert itemName(0) == "Joe Bloggs Junior"
         assert itemAmount(0).contains("1 x £60.00")
+    }
+
+    void testSeniorRegistration() {
+        doFullReg("Alf", "Alpha", "zak@alpha.com", "Senior")
+        assert itemName(0) == "Alf Alpha Senior"
+        assert itemAmount(0).contains("1 x £80.00")
     }
     
 }
