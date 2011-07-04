@@ -4,6 +4,7 @@ import org.davisononline.footy.tournament.*
 class BootStrap {
 
     def searchableService
+    def springSecurityService
 
     def init = { servletContext ->
         if (League.count() == 0) {
@@ -38,6 +39,25 @@ class BootStrap {
                     amount: 80.00,
                     siblingDiscount: 15.00
             ).save()
+        }
+
+        // set up a couple of manager logins that can be used in tests
+        def manager1 = SecUser.findByUsername('manager1@examplefc.com') ?: new SecUser(
+            username: 'manager1@examplefc.com',
+            password: springSecurityService.encodePassword('manager'),
+            enabled: true
+        ).save(failOnError: true)
+        def manager2 = SecUser.findByUsername('manager2@examplefc.com') ?: new SecUser(
+            username: 'manager2@examplefc.com',
+            password: springSecurityService.encodePassword('manager'),
+            enabled: true
+        ).save(failOnError: true)
+        def coachRole = SecRole.findByAuthority('ROLE_COACH') ?: new SecRole(authority: 'ROLE_COACH').save(failOnError: true)
+        if (!manager1.authorities.contains(coachRole)) {
+            SecUserSecRole.create manager1, coachRole
+        }
+        if (!manager2.authorities.contains(coachRole)) {
+            SecUserSecRole.create manager2, coachRole
         }
 
         // workaround for crappy reindix bug in searchableService that prevents player table

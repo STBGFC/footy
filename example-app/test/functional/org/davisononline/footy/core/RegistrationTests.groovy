@@ -22,13 +22,9 @@ class PlayerPage extends Page {
     }
 }
 
-class PersonPage extends Page {
+class PersonPage extends CreatePersonPage {
     static at = { title == "Enter Parent/Guardian Details" }
     static content = {
-        personForm { $("form#registration") }
-        house { personForm.find("input", name:"address.house") }
-        address { personForm.find("input", name:"address.address") }
-        postCode { personForm.find("input", name:"address.postCode") }
         anotherParent { $("input", value:"Add another parent...") }
         flow { module FlowModule }
     }
