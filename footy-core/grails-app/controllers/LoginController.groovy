@@ -13,6 +13,7 @@ import org.springframework.security.web.WebAttributes
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
 import org.davisononline.footy.core.SecUser
+import org.davisononline.footy.core.Person
 
 
 class LoginController {
@@ -186,5 +187,24 @@ class LoginController {
         redirect controller: 'login', action: 'auth'
     }
 
+    def resetPassword = {
+        if (request.method == "GET")
+            render (template: 'resetPassword', contentType: 'text/plain', plugin: 'footy-core')
+        else {
+            def user = SecUser.findByUsername(params.username)
+            def person = Person.findByUser(user)
+            if (!person) {
+                flash.message = "No such user found"
+                redirect action: 'auth'
+            }
+            else {
+
+                // send mail with token saved on SecUser object
+
+                flash.message = "An email has been sent to the registered address for this account."
+                redirect uri: '/'
+            }
+        }
+    }
 
 }
