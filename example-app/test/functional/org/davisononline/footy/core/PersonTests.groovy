@@ -63,20 +63,12 @@ class PersonTests extends AbstractTestHelper {
         auth.login("sa", "admin")
         addPerson("Jack", "Manager", "manager2@examplefc.com")
         doQuals("Jack Manager", ["FA Level 1"])
-        auth.logout()
-        waitFor { at(HomePage) }
-
-        // check can login to own team, but not another's
-    }
-
-    void testCreateTeam() {
-        go ""
-        waitFor { at(HomePage) }
-        auth.login("sa", "admin")
+        addTeam("Boys", 8, "Jack Manager")
+        assert crud.flash.text() == "Team U8 Boys created"
         addPerson("John", "Manager", "manager1@examplefc.com")
         doQuals("John Manager", ["FA Level 1"])
-        addTeam("Boys", 8, "John Manager")
-        assert crud.flash.text() == "Team U8 Boys created"
+        addTeam("Reds", 8, "John Manager")
+        assert crud.flash.text() == "Team U8 Reds created"
         auth.logout()
     }
 
