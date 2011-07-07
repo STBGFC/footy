@@ -1,6 +1,6 @@
 package org.davisononline.footy.core
 
-import org.davisononline.footy.core.*
+
 import org.grails.paypal.Payment
 import org.grails.paypal.PaymentItem
 import org.codehaus.groovy.grails.commons.ConfigurationHolder
