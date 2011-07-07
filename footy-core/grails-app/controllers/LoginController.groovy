@@ -12,7 +12,13 @@ import org.springframework.security.core.context.SecurityContextHolder as SCH
 import org.springframework.security.web.WebAttributes
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
+import org.davisononline.footy.core.SecUser
+
+
 class LoginController {
+    
+    private static final String PASSWORD_REGEX = '^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\\s).*$'
+
 
 	/**
 	 * Dependency injection for the authenticationTrustResolver.
@@ -23,6 +29,8 @@ class LoginController {
 	 * Dependency injection for the springSecurityService.
 	 */
 	def springSecurityService
+
+    def passwordEncoder
 
 	/**
 	 * Default action; redirects to 'defaultTargetUrl' if logged in, /login/auth otherwise.
@@ -97,6 +105,8 @@ class LoginController {
 			}
 			else if (exception instanceof CredentialsExpiredException) {
 				msg = SpringSecurityUtils.securityConfig.errors.login.passwordExpired
+                if (!springSecurityService.isAjax(request))
+                    redirect (action:'changePassword')
 			}
 			else if (exception instanceof DisabledException) {
 				msg = SpringSecurityUtils.securityConfig.errors.login.disabled
@@ -131,4 +141,50 @@ class LoginController {
 	def ajaxDenied = {
 		render([error: 'access denied'] as JSON)
 	}
+
+    def changePassword = {
+        [username: session['SPRING_SECURITY_LAST_USERNAME'] ?: springSecurityService.authentication.name]
+    }
+
+    def updatePassword = {
+        String username = session['SPRING_SECURITY_LAST_USERNAME'] ?: springSecurityService.authentication.name
+        if (!username) {
+            flash.message = 'Sorry, an error has occurred'
+            redirect controller: 'login', action:'auth'
+            return
+        }
+        String password = params.password
+        String newPassword = params.password_new
+        String newPassword2 = params.password_new_2
+        if (!password || !newPassword || !newPassword2 || newPassword != newPassword2) {
+            flash.message = 'Please enter your current password and a valid new password'
+            render view: 'changePassword', model: [username: username]
+            return
+        }
+        SecUser user = SecUser.findByUsername(username)
+        if (!passwordEncoder.isPasswordValid(user.password, password, null /*salt*/)) {
+            flash.message = 'Current password is incorrect'
+            render view: 'changePassword', model: [username: username]
+            return
+        }
+        if (passwordEncoder.isPasswordValid(user.password, newPassword, null /*salt*/)) {
+            flash.message = 'Please choose a different password from your current one'
+            render view: 'changePassword', model: [username: username]
+            return
+        }
+        if (newPassword.length() < 8 || !newPassword.matches(PASSWORD_REGEX)) {
+            flash.message = 'Password does not meet minimum requirements'
+            render view: 'changePassword', model: [username: username]
+            return            
+        }
+        
+        user.password = springSecurityService.encodePassword(newPassword)
+        user.passwordExpired = false
+        user.save() 
+
+        flash.message = 'Password changed successfully'
+        redirect controller: 'login', action: 'auth'
+    }
+
+
 }
