@@ -58,6 +58,7 @@ class Player implements Comparable, Serializable {
         person cascade: 'all'
         guardian cascade: 'save-update'
         secondGuardian cascade: 'save-update'
+        currentRegistration: 'all-delete-orphan'
     }
 
     /**
