@@ -9,6 +9,9 @@ class SecUser implements Serializable {
 	boolean accountLocked
 	boolean passwordExpired
 
+    String resetToken
+    Date resetTokenDate
+
 	static constraints = {
 		username blank: false, unique: true
 		password blank: false

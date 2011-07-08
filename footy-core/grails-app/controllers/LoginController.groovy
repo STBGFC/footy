@@ -14,6 +14,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import org.davisononline.footy.core.SecUser
 import org.davisononline.footy.core.Person
+import org.davisononline.footy.core.utils.TemplateUtils
+import org.codehaus.groovy.grails.commons.ConfigurationHolder
+import org.davisononline.footy.core.Club
 
 
 class LoginController {
@@ -32,6 +35,9 @@ class LoginController {
 	def springSecurityService
 
     def passwordEncoder
+
+    def mailService
+
 
 	/**
 	 * Default action; redirects to 'defaultTargetUrl' if logged in, /login/auth otherwise.
@@ -192,16 +198,36 @@ class LoginController {
             render (template: 'resetPassword', contentType: 'text/plain', plugin: 'footy-core')
         else {
             def user = SecUser.findByUsername(params.username)
-            def person = Person.findByUser(user)
+            def person = user ? Person.findByUser(user) : null
             if (!person) {
                 flash.message = "No such user found"
                 redirect action: 'auth'
             }
             else {
-
                 // send mail with token saved on SecUser object
+                user.resetToken = UUID.randomUUID().toString()
+                user.resetTokenDate = new Date()
+                user.save(flush:true)
 
-                flash.message = "An email has been sent to the registered address for this account."
+                try {
+                    mailService.sendMail {
+                        // ensure mail address override is set in dev/test in Config.groovy
+                        to      user.username
+                        subject "Password Reset"
+                        body    TemplateUtils.eval(
+                                    ConfigurationHolder.config?.org?.davisononline?.footy?.core?.resetPassword?.emailbody,
+                                    [link: user.resetToken, person: person, club: Club.homeClub]
+                                )
+                    }
+
+                    flash.message = "An email has been sent to the registered address for this account."
+
+                }
+                catch (Exception ex) {
+                    flash.message = "Error occurred attempting to send your email.  Contact site admin."
+                    log.warn "Unable to send email for password reset attempt ($user.username); $ex"
+                }
+
                 redirect uri: '/'
             }
         }
