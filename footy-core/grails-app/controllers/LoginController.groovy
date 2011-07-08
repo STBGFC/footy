@@ -125,7 +125,7 @@ class LoginController {
 		}
 		else {
 			flash.message = msg
-			redirect uri:'/', params: params
+			redirect controller: 'login', action:'auth', params: params
 		}
 	}
 
@@ -144,11 +144,11 @@ class LoginController {
 	}
 
     def changePassword = {
-        [username: session['SPRING_SECURITY_LAST_USERNAME'] ?: springSecurityService.authentication.name]
+        [username: session[UsernamePasswordAuthenticationFilter.SPRING_SECURITY_LAST_USERNAME_KEY] ?: springSecurityService.authentication.name]
     }
 
     def updatePassword = {
-        String username = session['SPRING_SECURITY_LAST_USERNAME'] ?: springSecurityService.authentication.name
+        String username = session[UsernamePasswordAuthenticationFilter.SPRING_SECURITY_LAST_USERNAME_KEY] ?: springSecurityService.authentication.name
         if (!username) {
             flash.message = 'Sorry, an error has occurred'
             redirect controller: 'login', action:'auth'
