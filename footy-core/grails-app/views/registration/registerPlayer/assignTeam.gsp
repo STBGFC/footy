@@ -12,7 +12,7 @@
                 <p>
                     If <strong>${playerInstance.person.givenName}</strong> is already assigned to a team and has a
                     league registration number, you can enter those here. If
-                    you don't know them, just hit "${message(code: 'default.button.continue.label', default: 'Continue')}"
+                    you don't know the registration number, just leave it blank.
                 </p>
 
                 <table>
