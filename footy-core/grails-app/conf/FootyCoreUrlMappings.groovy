@@ -11,6 +11,9 @@ class FootyCoreUrlMappings {
         "/u$ageBand/$teamName" (controller:'team', action: 'show')
         "/U$ageBand/$teamName" (controller:'team', action: 'show')
 
+        // reset token link in email
+        "/login/reset/$token" (controller:'login', action: 'reset')
+
 		"/"(view:"/index")
 		"500"(view:'/error')
 	}

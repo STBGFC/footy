@@ -149,10 +149,16 @@ class LoginController {
 		render([error: 'access denied'] as JSON)
 	}
 
+    /**
+     * render the change pwd form
+     */
     def changePassword = {
         [username: session[UsernamePasswordAuthenticationFilter.SPRING_SECURITY_LAST_USERNAME_KEY] ?: springSecurityService.authentication.name]
     }
 
+    /**
+     * called from the change pwd form: chnages the user's pwd if all checks pass
+     */
     def updatePassword = {
         String username = session[UsernamePasswordAuthenticationFilter.SPRING_SECURITY_LAST_USERNAME_KEY] ?: springSecurityService.authentication.name
         if (!username) {
@@ -189,10 +195,13 @@ class LoginController {
         user.passwordExpired = false
         user.save() 
 
-        flash.message = 'Password changed successfully'
+        flash.message = 'Password changed successfully, you can now login'
         redirect controller: 'login', action: 'auth'
     }
 
+    /**
+     * called from the reset dialog.. look up user and send email with reset link
+     */
     def resetPassword = {
         if (request.method == "GET")
             render (template: 'resetPassword', contentType: 'text/plain', plugin: 'footy-core')
@@ -231,6 +240,60 @@ class LoginController {
                 redirect uri: '/'
             }
         }
+    }
+
+    /**
+     * user clicks the reset link in the email containing the token and gets to here.
+     * If the token isn't found, user must get a 404
+     */
+    def reset = {
+        SecUser user = SecUser.findByResetToken(params.token)
+        if (!user) {
+            response.sendError 404
+            return
+        }
+
+        def person = Person.findByUser(user)
+        if (!person) {
+            response.sendError 404
+            return
+        }
+        
+        if (new Date() > (user.resetTokenDate + 1)) {
+            render text: 'This token expired.  Please request a new reset'
+            return
+        }
+
+        // ok to continue
+        def pwd = UUID.randomUUID().toString()[0..7]
+        user.password = springSecurityService.encodePassword(pwd)
+        user.passwordExpired = true
+        user.resetTokenDate = null
+        user.resetToken = null
+        user.save(flush:true)
+
+        try {
+            mailService.sendMail {
+                // ensure mail address override is set in dev/test in Config.groovy
+                to      user.username
+                subject "Password Reset Complete"
+                body    TemplateUtils.eval(
+                            ConfigurationHolder.config?.org?.davisononline?.footy?.core?.resetComplete?.emailbody,
+                            [pwd:pwd, person: person, club: Club.homeClub]
+                        )
+            }
+
+            flash.message = "An email has been sent to the registered address for this account."
+
+        }
+        catch (Exception ex) {
+            render text: 'Error occurred attempting to send your email.  Contact site admin.'
+            log.warn "Unable to send email for password reset attempt ($user.username); $ex"
+
+        }
+
+        redirect uri: '/'
+
     }
 
 }
