@@ -30,7 +30,7 @@
                                     <label for="secondGuardian.id"><g:message code="org.davisononline.org.footy.core.playerSecondGuardian.label" default="Second Parent/Guardian" /></label>
                                 </td>
                                 <td  class="value">
-                                    <g:select name="secondGuardian.id" from="${Person.findAllEligibleParent(true,[sort:'familyName'])}" noSelection="[null:'-- Not listed or not applicable --']" optionKey="id" value="${playerInstance?.secondGuardian?.id}"/>
+                                    <g:select name="secondGuardian.id" from="${parents}" noSelection="[null:'-- Not listed or not applicable --']" optionKey="id" value="${playerInstance?.secondGuardian?.id}"/>
                                 </td>
 
                                 <g:render template="/player/teamFields" />

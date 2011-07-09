@@ -61,7 +61,7 @@ class EBYFL {
             }
 
             // player
-            content.showTextAligned(PdfContentByte.ALIGN_LEFT, player.toString(), xaxis[0], p1y - (pi * ysize), 0)
+            content.showTextAligned(PdfContentByte.ALIGN_LEFT, "${player.person.givenName} ${player.person.familyName}", xaxis[0], p1y - (pi * ysize), 0)
             content.showTextAligned(PdfContentByte.ALIGN_LEFT, player.dateOfBirth.format("dd/MM/yyyy"), xaxis[1], p1y - (pi * ysize), 0)
             content.showTextAligned(PdfContentByte.ALIGN_LEFT, player.leagueRegistrationNumber, xaxis[2], p1y - (pi * ysize), 0)
             if (player.guardian.address.house.size() > 8) content.setFontAndSize(bf, 6)

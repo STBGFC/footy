@@ -52,7 +52,7 @@
                                 <label for="guardian.id"><g:message code="org.davisononline.footy.core.playerGuardian.label" default="Parent/Guardian" /></label>
                             </td>
                             <td  class="value">
-                                <g:select name="guardian.id" from="${Person.findAllByEligibleParent(true, [sort:'familyName'])}" noSelection="[null:'-- Not listed or not applicable --']" optionKey="id" value="${playerInstance?.guardian?.id}"/>
+                                <g:select name="guardian.id" from="${parents}" noSelection="[null:'-- Not listed or not applicable --']" optionKey="id" value="${playerInstance?.guardian?.id}"/>
                                 <g:render template="/shared/fieldError" model="['instance':playerInstance,'field':'guardian']" plugin="footy-core"/>
                             </td>
                         </tr>

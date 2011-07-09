@@ -96,7 +96,8 @@ class PlayerController {
             def age = playerInstance.getAgeAtNextCutoff()
             def upperAge = (age < 7) ? 6 : age + 2
             def vt = Team.findAllByClubAndAgeBandBetween(Club.getHomeClub(), age, upperAge)
-            return [playerInstance: playerInstance, validTeams: vt]
+            def parents = Person.findAllByEligibleParent(true, [sort:'familyName'])
+            return [playerInstance: playerInstance, validTeams: vt, parents: parents]
         }
     }
 

@@ -49,7 +49,7 @@
                         <th>${message(code: 'person.name.label', default: 'Name')} (${message(code: 'player.dateOfBirth.label', default: 'DoB')})</th>
                         <th>${message(code: 'player.medical.label', default: 'Medical')}</th>
                         <th>${message(code: 'player.contactDetails.label', default: 'Contact')}</th>
-                        <th>${message(code: 'player.leagueRegistrationNumber.label', default: 'Registration')}</th>
+                        <th>${message(code: 'player.leagueRegistrationNumber.label', default: 'Registration #')}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -61,8 +61,9 @@
                         </td>
                         <td>${player.medical}</td>
                         <td>
-                            <a href="mailto:${player.guardian?.email}" title="Send Email to ${player.guardian}">${player.guardian}</a>
+                            <g:link controller="person" action="edit" id="${player.guardian.id}">${player.guardian}</g:link>
                             <br/>${player.guardian?.bestPhone().encodeAsHTML()}
+                            <br/><a class="email" href="mailto:${player.guardian?.email}" title="Send Email to ${player.guardian}">${player.guardian.email}</a>
                         </td>
                         <td>${fieldValue(bean: player, field: "leagueRegistrationNumber")}</td>
                     </tr>
