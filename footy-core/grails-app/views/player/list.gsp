@@ -37,7 +37,7 @@
                             <td>
                                 <g:link controller="person" action="edit" id="${player.guardian?.id}">${player.guardian}</g:link>
                                 <br/>${player.guardian?.bestPhone().encodeAsHTML()}
-                                <br/><a href="mailto:${player.guardian?.email}">${player.guardian?.email}</a>
+                                <br/><a class="email" href="mailto:${player.guardian?.email}">${player.guardian?.email}</a>
                             </td>
                             <td>
                                 ${player.currentRegistration ?: "Not Registered"}
