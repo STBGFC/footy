@@ -50,9 +50,9 @@
                 </tr>
                 </tbody>
             </table>
-        </div>
-        <div class="buttons">
-            <span class="button"><input class="save" type="submit" value="${message(code: 'default.button.resetpassword.label', default: 'Reset Password')}" /></span>
+            <div class="buttons">
+                <span class="button"><input class="save" type="submit" value="${message(code: 'default.button.resetpassword.label', default: 'Reset Password')}" /></span>
+            </div>
         </div>
         </g:form>
 	</body>
