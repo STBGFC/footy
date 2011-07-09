@@ -4,7 +4,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <g:set var="entityName" value="${message(code: 'club.label', default: 'Club')}" />
         <title><g:message code="default.paymentdetails.label" default="Assign Team" /></title>
-        <script type="text/javascript">var focusField='leagueRegistrationNumber'</script>
+        <script type="text/javascript">var focusField='team.id'</script>
     </head>
     <body>
         <div class="dialog">
