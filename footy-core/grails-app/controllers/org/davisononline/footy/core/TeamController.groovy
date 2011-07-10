@@ -3,6 +3,7 @@ package org.davisononline.footy.core
 import grails.plugins.springsecurity.Secured
 import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
 import org.davisononline.footy.core.utils.ImageUtils
+import org.springframework.security.access.prepost.PreAuthorize
 
 /**
  * controller methods for CRUD on Team
@@ -140,7 +141,7 @@ class TeamController {
         if (teamInstance) {
             try {
                 response.contentType = 'application/octet-stream'
-                response.setHeader 'Content-disposition', 'attachment; filename="registrationform.pdf"'
+                response.setHeader 'Content-disposition', "attachment; filename='${teamInstance}-${teamInstance.league}-registration.pdf'"
                 def out = response.outputStream
                 registrationService.generateRegistrationForm(teamInstance, out)
                 out.flush()
