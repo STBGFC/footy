@@ -34,9 +34,7 @@
                                 <g:link action="show" id="${payment.transactionId}">${payment?.transactionId}</g:link>
                             </td>
                             <td>
-                                <g:set var="cash" value="${!payment.paypalTransactionId}"/>
-                                <img title="Payment ${cash ? 'by Cash/Cheque': payment.status}" alt="${payment?.status?.toLowerCase()} (click to see invoice)"
-                                     src="${resource(dir:'images',file:'payment-' + payment?.status?.toLowerCase() + (cash ? 'b' : '') + '.png', plugin:'footy-core')}"/>
+                                <footy:paymentStatus payment="${payment}"/>
                             </td>
                             <td>
                                 <ul>

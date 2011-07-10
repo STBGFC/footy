@@ -1,5 +1,5 @@
 
-<%@ page import="org.davisononline.footy.core.*" %>
+<%@ page import="org.grails.paypal.PaymentItem; org.grails.paypal.Payment; org.davisononline.footy.core.*" %>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -17,13 +17,13 @@
                 </g:link>
                 </sec:ifAnyGranted>
 
-                <sec:ifAnyGranted roles="ROLE_COACH">
+                <footy:isManager team="${teamInstance}">
                 <g:if test="${teamInstance?.id && players.size() > 0}">
                 <g:link action="leagueForm" id="${teamInstance?.id}" title="${message(code: 'team.vprint.label', default: 'Print registration form')}">
                 <img src="${createLinkTo(dir:'images', file:'vprint.png', plugin:'footy-core')}" alt="${message(code: 'team.vprint.label', default: 'Print registration form')}"/>
                 </g:link>
                 </g:if>
-                </sec:ifAnyGranted>
+                </footy:isManager>
 
                 <a
                     title="${message(code: 'team.vmail.label', default: 'Email Manager/Coaches')}"
@@ -49,7 +49,8 @@
                         <th>${message(code: 'person.name.label', default: 'Name')} (${message(code: 'player.dateOfBirth.label', default: 'DoB')})</th>
                         <th>${message(code: 'player.medical.label', default: 'Medical')}</th>
                         <th>${message(code: 'player.contactDetails.label', default: 'Contact')}</th>
-                        <th>${message(code: 'player.leagueRegistrationNumber.label', default: 'Registration #')}</th>
+                        <th>${message(code: 'player.leagueRegistrationNumber.label', default: 'League#')}</th>
+                        <th>${message(code: 'player.currentRegistrationStatus.label', default: 'Payment')}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -66,6 +67,9 @@
                             <br/><a class="email" href="mailto:${player.guardian?.email}" title="Send Email to ${player.guardian}">${player.guardian.email}</a>
                         </td>
                         <td>${fieldValue(bean: player, field: "leagueRegistrationNumber")}</td>
+                        <td>
+                            <footy:paymentStatus payment="${PaymentItem.findByItemNumber(player.currentRegistration.id).payment}"/>
+                        </td>
                     </tr>
                 </g:each>
                 </tbody>

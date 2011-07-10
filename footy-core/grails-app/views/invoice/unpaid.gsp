@@ -32,10 +32,7 @@
                             <g:link action="show" id="${payment.transactionId}">${payment?.transactionId}</g:link>
                         </td>
                         <td>
-                            <img
-                                title="${payment?.status}"
-                                alt="${payment?.status?.toLowerCase()}"
-                                src="${resource(dir:'images',file:'payment-' + payment?.status?.toLowerCase() + '.png', plugin:'footy-core')}"/>
+                            <footy:paymentStatus payment="${payment}"/>
                             <modalbox:createLink
                                     controller="invoice"
                                     action="paymentDialog"

@@ -85,7 +85,7 @@
             <g:if test="${personCommand.payments}">
             <div class="newsbox">
                 <h2>
-                    <g:message code="org.davisononline.footy.core.payments.label" default="Payments Made" />
+                    <g:message code="org.davisononline.footy.core.payments.label" default="Invoices and Payments" />
                 </h2>
                 <div id="payments">
                     <tmpl:paymentsList payments="${personCommand.payments}"/>

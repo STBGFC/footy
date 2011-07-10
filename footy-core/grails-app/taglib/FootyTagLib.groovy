@@ -1,12 +1,13 @@
 import org.codehaus.groovy.grails.web.taglib.exceptions.GrailsTagException
 import org.davisononline.footy.core.Person
 import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
+import org.grails.paypal.Payment
 
 class FootyTagLib {
 
     static namespace="footy"
 
-    def springSecurityService
+    def footySecurityService
 
 
     /**
@@ -105,13 +106,29 @@ class FootyTagLib {
             out << body()  
     }
 
+    /**
+     * output a payment status icon for a supplied Payment object
+     *
+     * @attr payment REQUIRED the payment object to show the status for
+     */
+    def paymentStatus = { attrs, body ->
+        if (!attrs.payment)
+            doTagError "Payment not found in attributes"
+
+        def payment = attrs.payment
+
+        def cash = (payment.status == Payment.COMPLETE && !payment.paypalTransactionId)
+        out << """<img align="middle" title="Payment ${cash ? 'made by Cash/Cheque/Credit Card': payment.status}"
+        alt="${payment?.status?.toLowerCase()}"
+        src="${resource(dir:'images',file:'payment-' + payment?.status?.toLowerCase() + (cash ? 'b' : '') + '.png', plugin:'footy-core')}"/>"""
+    }
+
     private boolean checkManager(attrs) {
         if (!attrs.team) {
             doTagError "'team' attribute not found in tag"
         }
 
-        def person = Person.findByUser(springSecurityService.currentUser)
-        (person == attrs.team?.manager || SpringSecurityUtils.ifAllGranted('ROLE_CLUB_ADMIN'))
+        footySecurityService.isAuthorisedForManager(attrs.team)
     }
 
     private void doTagError(String message) {
