@@ -42,7 +42,7 @@
                 No news yet.
             </p>
             <h2>${teamInstance.players.size()} Players</h2>
-            <sec:ifAnyGranted roles="ROLE_COACH">
+            <footy:isManager team="${teamInstance}">
             <table class="list">
                 <thead>
                     <tr>
@@ -70,19 +70,19 @@
                 </g:each>
                 </tbody>
             </table>
-            </sec:ifAnyGranted>
+            </footy:isManager>
 
-            <sec:ifNotGranted roles="ROLE_COACH">
+            <footy:isNotManager team="${teamInstance}">
             <p>
                 ${players.join(", ")}
             </p>
-            </sec:ifNotGranted>
+            </footy:isNotManager>
         </div>
 
 
         <div id="newspanel">
 
-            <sec:ifAnyGranted roles="ROLE_COACH">
+            <footy:isManager team="${teamInstance}">
             <modalbox:createLink
                     controller="team"
                     action="photoUploadDialog"
@@ -91,10 +91,10 @@
                     width="400">
                 <footy:teamPhoto team="${teamInstance}"/>
             </modalbox:createLink>
-            </sec:ifAnyGranted>
-            <sec:ifNotGranted roles="ROLE_COACH">
+            </footy:isManager>
+            <footy:isNotManager team="${teamInstance}">
             <footy:teamPhoto team="${teamInstance}"/>
-            </sec:ifNotGranted>
+            </footy:isNotManager>
 
             <div class="newsbox">
                 <h2>${teamInstance}</h2>

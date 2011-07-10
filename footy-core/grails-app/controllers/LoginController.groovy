@@ -195,8 +195,8 @@ class LoginController {
         user.passwordExpired = false
         user.save() 
 
-        flash.message = 'Password changed successfully, you can now login'
-        redirect controller: 'login', action: 'auth'
+        flash.message = 'Password changed successfully' + (springSecurityService.loggedIn ? '' : ', you can now login')
+        redirect uri: '/'
     }
 
     /**
@@ -209,7 +209,7 @@ class LoginController {
             def user = SecUser.findByUsername(params.username)
             def person = user ? Person.findByUser(user) : null
             if (!person) {
-                flash.message = "No such user found"
+                flash.message = 'No such user found'
                 redirect action: 'auth'
             }
             else {
@@ -222,18 +222,18 @@ class LoginController {
                     mailService.sendMail {
                         // ensure mail address override is set in dev/test in Config.groovy
                         to      user.username
-                        subject "Password Reset"
+                        subject 'Password Reset'
                         body    TemplateUtils.eval(
                                     ConfigurationHolder.config?.org?.davisononline?.footy?.core?.resetPassword?.emailbody,
                                     [link: user.resetToken, person: person, club: Club.homeClub]
                                 )
                     }
 
-                    flash.message = "An email has been sent to the registered address for this account."
+                    flash.message = 'An email has been sent to the registered address for this account.'
 
                 }
                 catch (Exception ex) {
-                    flash.message = "Error occurred attempting to send your email.  Contact site admin."
+                    flash.message = 'Error occurred attempting to send your email.  Contact site admin.'
                     log.warn "Unable to send email for password reset attempt ($user.username); $ex"
                 }
 
@@ -276,24 +276,21 @@ class LoginController {
             mailService.sendMail {
                 // ensure mail address override is set in dev/test in Config.groovy
                 to      user.username
-                subject "Password Reset Complete"
+                subject 'Password Reset Complete'
                 body    TemplateUtils.eval(
                             ConfigurationHolder.config?.org?.davisononline?.footy?.core?.resetComplete?.emailbody,
                             [pwd:pwd, person: person, club: Club.homeClub]
                         )
             }
 
-            flash.message = "An email has been sent to the registered address for this account."
+            render text: 'Password reset successful.  A temporary password has been sent to you by email.'
 
         }
         catch (Exception ex) {
             render text: 'Error occurred attempting to send your email.  Contact site admin.'
             log.warn "Unable to send email for password reset attempt ($user.username); $ex"
-
         }
-
-        redirect uri: '/'
-
+        
     }
 
 }
