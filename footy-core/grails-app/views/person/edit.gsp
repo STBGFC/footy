@@ -38,7 +38,9 @@
                 <div class="buttons">
                     <g:if test="${personCommand?.id}">
                     <span class="button"><g:actionSubmit id="_action_save" class="save" action="update" value="${message(code: 'default.button.update.label', default: 'Update')}" /></span>
+                    <sec:ifAnyGranted roles="ROLE_OFFICER">
                     <span class="button"><g:actionSubmit id="_action_delete" class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" /></span>
+                    </sec:ifAnyGranted>
                     </g:if>
                     <g:else>
                     <span class="button"><g:actionSubmit id="_action_save" class="save" action="save" value="${message(code: 'default.button.save.label', default: 'Save')}" /></span>
@@ -57,6 +59,7 @@
                 <div id="qualifications" class="value">
                     <tmpl:qualificationsList person="${personCommand}"/>
                 </div>
+                <sec:ifAnyGranted roles="ROLE_OFFICER">
                 <modalbox:createLink
                         controller="person"
                         action="assignQualification"
@@ -66,6 +69,7 @@
                     <img src="${createLinkTo(dir:'images/skin', file:'database_add.png')}" alt=""/>
                     <g:message code="org.davisononline.footy.core.addqualifications.link" default="Add New"/>
                 </modalbox:createLink>
+                </sec:ifAnyGranted>
             </div>
 
             <div class="newsbox">
