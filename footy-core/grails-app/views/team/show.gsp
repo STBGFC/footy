@@ -68,7 +68,7 @@
                         </td>
                         <td>${fieldValue(bean: player, field: "leagueRegistrationNumber")}</td>
                         <td>
-                            <footy:paymentStatus payment="${PaymentItem.findByItemNumber(player.currentRegistration.id).payment}"/>
+                            <footy:paymentStatus payment="${PaymentItem.findByItemNumber(player?.currentRegistration?.id)?.payment}"/>
                         </td>
                     </tr>
                 </g:each>

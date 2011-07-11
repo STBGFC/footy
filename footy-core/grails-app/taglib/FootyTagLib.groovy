@@ -112,17 +112,16 @@ class FootyTagLib {
      * @attr payment REQUIRED the payment object to show the status for
      */
     def paymentStatus = { attrs, body ->
-        if (!attrs.payment)
-            doTagError "Payment not found in attributes"
-
         def payment = attrs.payment
 
-        def cash = (payment.status == Payment.COMPLETE && !payment.paypalTransactionId)
-        out << """<a href="${createLink(controller:'invoice', action:'show', id:payment.transactionId)}">
-        <img align="middle" title="Payment ${cash ? 'made by Cash/Cheque/Credit Card': payment.status}"
-        alt="${payment?.status?.toLowerCase()}"
-        src="${resource(dir:'images',file:'payment-' + payment?.status?.toLowerCase() + (cash ? 'b' : '') + '.png', plugin:'footy-core')}"/>
-        </a>"""
+        if (payment) {
+            def cash = (payment.status == Payment.COMPLETE && !payment.paypalTransactionId)
+            out << """<a href="${createLink(controller:'invoice', action:'show', id:payment.transactionId)}">
+            <img align="middle" title="Payment ${cash ? 'made by Cash/Cheque/Credit Card': payment.status}"
+            alt="${payment?.status?.toLowerCase()}"
+            src="${resource(dir:'images',file:'payment-' + payment?.status?.toLowerCase() + (cash ? 'b' : '') + '.png', plugin:'footy-core')}"/>
+            </a>"""
+        }
     }
 
     private boolean checkManager(attrs) {
