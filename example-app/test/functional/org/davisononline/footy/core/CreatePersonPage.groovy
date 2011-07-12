@@ -15,7 +15,7 @@ class CreatePersonPage extends Page {
         house { personForm.find("input", name:"address.house") }
         address { personForm.find("input", name:"address.address") }
         postCode { personForm.find("input", name:"address.postCode") }
-        addQual { $("a", text: "Add New Qualifications") }
+        addQual { $("a", text: "Add New") }
         qualForm { $("form#addQualification") }
         qual { $("form#addQualification").find("select", name: "type.id") }
         qualSubmit { $("input", value: "Add") }
