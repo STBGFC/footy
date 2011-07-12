@@ -35,7 +35,7 @@ class RegistrationController {
         setupPlayer {
             action {
                 flow.player = new Player(person: new Person(eligibleParent: false, phone1: 'x'))
-                [playerInstance: flow.player]
+                [playerInstance: flow.player,parents: Person.findAllByEligibleParent(true, [sort:'familyName'])]
             }
             on ("success").to "enterPlayerDetails"
         }
