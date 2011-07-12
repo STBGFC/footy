@@ -143,7 +143,7 @@ class TeamController {
         if (teamInstance) {
             try {
                 response.contentType = 'application/octet-stream'
-                response.setHeader 'Content-disposition', "attachment; filename='U${teamInstance.ageBand}-${teamInstance.name}_${teamInstance.league}-registration.pdf'"
+                response.setHeader 'Content-disposition', "attachment; filename=U${teamInstance.ageBand}-${teamInstance.name}_${teamInstance.league}-registration.pdf"
                 def out = response.outputStream
                 registrationService.generateRegistrationForm(teamInstance, out)
                 out.flush()
