@@ -1,5 +1,5 @@
 
-<%@ page import="org.davisononline.footy.core.*" %>
+<%@ page import="org.grails.paypal.PaymentItem; org.grails.paypal.Payment; org.davisononline.footy.core.*" %>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -17,13 +17,13 @@
                 </g:link>
                 </sec:ifAnyGranted>
 
-                <sec:ifAnyGranted roles="ROLE_COACH">
+                <footy:isManager team="${teamInstance}">
                 <g:if test="${teamInstance?.id && players.size() > 0}">
                 <g:link action="leagueForm" id="${teamInstance?.id}" title="${message(code: 'team.vprint.label', default: 'Print registration form')}">
                 <img src="${createLinkTo(dir:'images', file:'vprint.png', plugin:'footy-core')}" alt="${message(code: 'team.vprint.label', default: 'Print registration form')}"/>
                 </g:link>
                 </g:if>
-                </sec:ifAnyGranted>
+                </footy:isManager>
 
                 <a
                     title="${message(code: 'team.vmail.label', default: 'Email Manager/Coaches')}"
@@ -42,14 +42,15 @@
                 No news yet.
             </p>
             <h2>${teamInstance.players.size()} Players</h2>
-            <sec:ifAnyGranted roles="ROLE_COACH">
+            <footy:isManager team="${teamInstance}">
             <table class="list">
                 <thead>
                     <tr>
                         <th>${message(code: 'person.name.label', default: 'Name')} (${message(code: 'player.dateOfBirth.label', default: 'DoB')})</th>
                         <th>${message(code: 'player.medical.label', default: 'Medical')}</th>
                         <th>${message(code: 'player.contactDetails.label', default: 'Contact')}</th>
-                        <th>${message(code: 'player.leagueRegistrationNumber.label', default: 'Registration')}</th>
+                        <th>${message(code: 'player.leagueRegistrationNumber.label', default: 'League#')}</th>
+                        <th>${message(code: 'player.currentRegistrationStatus.label', default: 'Payment')}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -61,27 +62,31 @@
                         </td>
                         <td>${player.medical}</td>
                         <td>
-                            <a href="mailto:${player.guardian?.email}" title="Send Email to ${player.guardian}">${player.guardian}</a>
+                            <g:link controller="person" action="edit" id="${player.guardian.id}">${player.guardian}</g:link>
                             <br/>${player.guardian?.bestPhone().encodeAsHTML()}
+                            <br/><a class="email" href="mailto:${player.guardian?.email}" title="Send Email to ${player.guardian}">${player.guardian.email}</a>
                         </td>
                         <td>${fieldValue(bean: player, field: "leagueRegistrationNumber")}</td>
+                        <td>
+                            <footy:paymentStatus payment="${PaymentItem.findByItemNumber(player?.currentRegistration?.id)?.payment}"/>
+                        </td>
                     </tr>
                 </g:each>
                 </tbody>
             </table>
-            </sec:ifAnyGranted>
+            </footy:isManager>
 
-            <sec:ifNotGranted roles="ROLE_COACH">
+            <footy:isNotManager team="${teamInstance}">
             <p>
                 ${players.join(", ")}
             </p>
-            </sec:ifNotGranted>
+            </footy:isNotManager>
         </div>
 
 
         <div id="newspanel">
 
-            <sec:ifAnyGranted roles="ROLE_COACH">
+            <footy:isManager team="${teamInstance}">
             <modalbox:createLink
                     controller="team"
                     action="photoUploadDialog"
@@ -90,10 +95,10 @@
                     width="400">
                 <footy:teamPhoto team="${teamInstance}"/>
             </modalbox:createLink>
-            </sec:ifAnyGranted>
-            <sec:ifNotGranted roles="ROLE_COACH">
+            </footy:isManager>
+            <footy:isNotManager team="${teamInstance}">
             <footy:teamPhoto team="${teamInstance}"/>
-            </sec:ifNotGranted>
+            </footy:isNotManager>
 
             <div class="newsbox">
                 <h2>${teamInstance}</h2>

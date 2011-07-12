@@ -32,10 +32,7 @@
                             <g:link action="show" id="${payment.transactionId}">${payment?.transactionId}</g:link>
                         </td>
                         <td>
-                            <img
-                                title="${payment?.status}"
-                                alt="${payment?.status?.toLowerCase()}"
-                                src="${resource(dir:'images',file:'payment-' + payment?.status?.toLowerCase() + '.png', plugin:'footy-core')}"/>
+                            <footy:paymentStatus payment="${payment}"/>
                             <modalbox:createLink
                                     controller="invoice"
                                     action="paymentDialog"
@@ -43,8 +40,11 @@
                                     params="${[totalAmount:totalAmount]}"
                                     title="Invoice ${payment.transactionId}"
                                     width="350">
-                                <g:message code="org.grails.paypal.payment.markreceived" default="mark payment received"/>
+                                <g:message code="org.grails.paypal.payment.markreceived" default="mark received"/>
                             </modalbox:createLink>
+                            <sec:ifAllGranted roles="ROLE_OFFICER">
+                                :: <g:link action="delete" id="${payment.transactionId}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" >delete</g:link>
+                            </sec:ifAllGranted>
                         </td>
                         <td>
                             <ul>

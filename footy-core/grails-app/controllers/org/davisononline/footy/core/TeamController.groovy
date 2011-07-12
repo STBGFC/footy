@@ -1,8 +1,8 @@
 package org.davisononline.footy.core
 
 import grails.plugins.springsecurity.Secured
-import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
 import org.davisononline.footy.core.utils.ImageUtils
+
 
 /**
  * controller methods for CRUD on Team
@@ -11,6 +11,9 @@ import org.davisononline.footy.core.utils.ImageUtils
 class TeamController {
 
     def registrationService
+
+    def footySecurityService
+
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST", photoUpload: "POST"]
 
@@ -41,7 +44,7 @@ class TeamController {
         def teamInstance = Team.get(params?.id)
         if (teamInstance) {
             response.setHeader("Content-disposition", "attachment;filename=${teamInstance.toString().replace(" ", "_")}_contacts.vcf")
-            boolean includeParents = SpringSecurityUtils.ifAllGranted('ROLE_COACH')
+            boolean includeParents = footySecurityService.isAuthorisedForManager(teamInstance)
             def contacts = [teamInstance.manager, teamInstance.coaches, (includeParents ? teamInstance.players*.guardian : [])].flatten()
             render (
                 template: '/team/vcard',
@@ -140,7 +143,7 @@ class TeamController {
         if (teamInstance) {
             try {
                 response.contentType = 'application/octet-stream'
-                response.setHeader 'Content-disposition', 'attachment; filename="registrationform.pdf"'
+                response.setHeader 'Content-disposition', "attachment; filename='U${teamInstance.ageBand}-${teamInstance.name}_${teamInstance.league}-registration.pdf'"
                 def out = response.outputStream
                 registrationService.generateRegistrationForm(teamInstance, out)
                 out.flush()

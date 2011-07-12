@@ -9,7 +9,7 @@ import org.davisononline.footy.core.utils.PaymentUtils
  */
 class InvoiceController {
 
-    @Secured(['ROLE_CLUB_ADMIN'])
+    @Secured(['ROLE_OFFICER'])
     def list = {
         params.max = Math.min(params.max ? params.int('max') : 25, 100)
         params.order = params.order ?: "desc"
@@ -17,13 +17,24 @@ class InvoiceController {
         [paymentList: Payment.findAllByStatus(Payment.COMPLETE, params), paymentTotal: Payment.countByStatus(Payment.COMPLETE)]
     }
 
-    @Secured(['ROLE_CLUB_ADMIN'])
+    @Secured(['ROLE_OFFICER'])
     def unpaid = {
         params.max = Math.min(params.max ? params.int('max') : 25, 100)
         params.order = params.order ?: "desc"
         params.sort = params.sort ?: "id"
         [paymentList: Payment.findAllByStatusInList([Payment.CANCELLED, Payment.PENDING, Payment.FAILED], params),
                 paymentTotal: Payment.countByStatusInList([Payment.CANCELLED, Payment.PENDING, Payment.FAILED])]
+    }
+
+    @Secured(['ROLE_OFFICER'])
+    def delete = {
+        def payment = Payment.findByTransactionId(params?.id)
+        if (!payment) {
+            redirect view: '/404'
+        }
+        payment.delete()
+        flash.message = "Invoice and payment data deleted"
+        redirect action: 'list'
     }
 
     def show = {

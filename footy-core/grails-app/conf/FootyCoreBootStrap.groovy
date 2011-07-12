@@ -11,22 +11,22 @@ class FootyCoreBootStrap {
         // security roles and admin user
         def adminRole = SecRole.findByAuthority('ROLE_SYSADMIN') ?: new SecRole(authority: 'ROLE_SYSADMIN').save(failOnError: true)
         def clubAdminRole = SecRole.findByAuthority('ROLE_CLUB_ADMIN') ?: new SecRole(authority: 'ROLE_CLUB_ADMIN').save(failOnError: true)
+        def officerRole = SecRole.findByAuthority('ROLE_OFFICER') ?: new SecRole(authority: 'ROLE_OFFICER').save(failOnError: true)
         def coachRole = SecRole.findByAuthority('ROLE_COACH') ?: new SecRole(authority: 'ROLE_COACH').save(failOnError: true)
 
         def adminUser = SecUser.findByUsername('sa') ?: new SecUser(
             username: 'sa',
             password: springSecurityService.encodePassword('admin'),
-            enabled: true
-        ).save(failOnError: true)
-
-        def manager = SecUser.findByUsername('mgr') ?: new SecUser(
-            username: 'mgr',
-            password: springSecurityService.encodePassword('manager'),
-            enabled: true
+            enabled: true,
+            passwordExpired: true
         ).save(failOnError: true)
 
         if (!adminUser.authorities.contains(adminRole)) {
             SecUserSecRole.create adminUser, adminRole
+        }
+
+        if (!adminUser.authorities.contains(officerRole)) {
+            SecUserSecRole.create adminUser, officerRole
         }
 
         if (!adminUser.authorities.contains(clubAdminRole)) {
@@ -35,10 +35,6 @@ class FootyCoreBootStrap {
 
         if (!adminUser.authorities.contains(coachRole)) {
             SecUserSecRole.create adminUser, coachRole
-        }
-
-        if (!manager.authorities.contains(coachRole)) {
-            SecUserSecRole.create manager, coachRole
         }
 
         // qualifications

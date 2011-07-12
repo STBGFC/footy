@@ -1,8 +1,14 @@
 import org.codehaus.groovy.grails.web.taglib.exceptions.GrailsTagException
+import org.davisononline.footy.core.Person
+import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
+import org.grails.paypal.Payment
 
 class FootyTagLib {
 
     static namespace="footy"
+
+    def footySecurityService
+
 
     /**
      * renders a tooltip within the body of a link..
@@ -39,9 +45,7 @@ class FootyTagLib {
 
         //checking required fields
         if (!attrs.team) {
-            def errorMsg = "'team' attribute not found in team photo tag."
-            log.error (errorMsg)
-            throw new GrailsTagException(errorMsg)
+            doTagError "'team' attribute not found in team photo tag."
         }
 
         def havePhoto = attrs.team.photo?.size() > 0
@@ -67,9 +71,7 @@ class FootyTagLib {
 
         //checking required fields
         if (!attrs.person) {
-            def errorMsg = "'person' attribute not found in team photo tag."
-            log.error (errorMsg)
-            throw new GrailsTagException(errorMsg)
+            doTagError "'person' attribute not found in team photo tag."
         }
 
         def havePhoto = attrs.person.photo?.size() > 0
@@ -79,5 +81,59 @@ class FootyTagLib {
         out << "    alt='${havePhoto ? attrs.person.toString() : 'Awaiting Photo'}'/>"
 
         //<img class="userpic" src="${createLinkTo(dir:'images',file:'nouser.jpg',plugin:'footy-core')}" alt="No Picture"/>
+    }
+
+    /**
+     * renders the body content if the current security principal is
+     * also the manager of the team passed in the attrs
+     *
+     * @attr team REQUIRED the team to verify manager for
+     */
+    def isManager = { attrs, body ->
+        if (checkManager(attrs))
+            out << body()
+    }
+
+    /**
+     * renders the body content if the current security principal is
+     * not the manager of the team passed in the attrs.  Opposite of
+     * the above.
+     *
+     * @attr team REQUIRED the team to verify manager for
+     */
+    def isNotManager = { attrs, body ->
+        if (!checkManager(attrs))
+            out << body()  
+    }
+
+    /**
+     * output a payment status icon for a supplied Payment object
+     *
+     * @attr payment REQUIRED the payment object to show the status for
+     */
+    def paymentStatus = { attrs, body ->
+        def payment = attrs.payment
+
+        if (payment) {
+            def cash = (payment.status == Payment.COMPLETE && !payment.paypalTransactionId)
+            out << """<a href="${createLink(controller:'invoice', action:'show', id:payment.transactionId)}">
+            <img align="middle" title="Payment ${cash ? 'made by Cash/Cheque/Credit Card': payment.status}"
+            alt="${payment?.status?.toLowerCase()}"
+            src="${resource(dir:'images',file:'payment-' + payment?.status?.toLowerCase() + (cash ? 'b' : '') + '.png', plugin:'footy-core')}"/>
+            </a>"""
+        }
+    }
+
+    private boolean checkManager(attrs) {
+        if (!attrs.team) {
+            doTagError "'team' attribute not found in tag"
+        }
+
+        footySecurityService.isAuthorisedForManager(attrs.team)
+    }
+
+    private void doTagError(String message) {
+        log.error (message)
+        throw new GrailsTagException(message)
     }
 }

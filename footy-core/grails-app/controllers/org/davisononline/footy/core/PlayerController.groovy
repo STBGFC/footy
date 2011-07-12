@@ -3,6 +3,7 @@ package org.davisononline.footy.core
 import grails.plugins.springsecurity.Secured
 import org.grails.paypal.Payment
 import org.codehaus.groovy.grails.commons.ConfigurationHolder
+import org.grails.paypal.PaymentItem
 
 @Secured(['ROLE_CLUB_ADMIN'])
 class PlayerController {
@@ -23,7 +24,7 @@ class PlayerController {
      */
     def list = {
         if(params?.format && params.format != "html"){
-            List fields = ["name", "dateOfBirth", "team", "guardian", "guardian.phone1", "guardian.email", "secondGuardian", "secondGuardian.phone1", "secondGuardian.email", "dateJoinedClub", "currentRegistration", "doctor", "doctorTelephone", "medical"]
+            List fields = ["name", "dateOfBirth", "team", "guardian", "guardian.phone1", "guardian.email", "secondGuardian", "secondGuardian.phone1", "secondGuardian.email", "dateJoinedClub", "currentRegistration", "paymentStatus", "doctor", "doctorTelephone", "medical"]
             Map labels = [
                     "name": "Name",
                     "dateOfBirth": "Date of Birth",
@@ -36,6 +37,7 @@ class PlayerController {
                     "secondGuardian.email": "email",
                     "dateJoinedClub": "Date Joined",
                     "currentRegistration": "Last Registered",
+                    "paymentStatus": "Payment Status",
                     "doctor": "Doctor",
                     "doctorTelephone": "Doctor's Tel.",
                     "medical": "Medical Notes"
@@ -48,11 +50,15 @@ class PlayerController {
             def formattedDate = { player, value ->
                 value?.format('dd/MM/yyyy')
             }
+            def payment = { player, value ->
+                PaymentItem.findByItemNumber(player?.currentRegistration?.id)?.payment?.status
+            }
 
             Map formatters = [
                     name: name,
                     dateOfBirth: formattedDate,
-                    dateJoinedClub: formattedDate
+                    dateJoinedClub: formattedDate,
+                    paymentStatus: payment
             ]
             Map parameters = [title: "Current Players (${new Date().format('dd/MM/yyyy')})"]
 
@@ -80,6 +86,7 @@ class PlayerController {
         }
     }
 
+    @Secured(["ROLE_COACH"]) // <-- TEMP
     def edit = {
         def playerInstance = Player.get(params.id)
         if (!playerInstance) {
@@ -96,10 +103,12 @@ class PlayerController {
             def age = playerInstance.getAgeAtNextCutoff()
             def upperAge = (age < 7) ? 6 : age + 2
             def vt = Team.findAllByClubAndAgeBandBetween(Club.getHomeClub(), age, upperAge)
-            return [playerInstance: playerInstance, validTeams: vt]
+            def parents = Person.findAllByEligibleParent(true, [sort:'familyName'])
+            return [playerInstance: playerInstance, validTeams: vt, parents: parents]
         }
     }
 
+    @Secured(["ROLE_COACH"]) // <-- TEMP
     def update = {
         def playerInstance = Player.get(params.id)
         if (playerInstance) {
@@ -117,7 +126,7 @@ class PlayerController {
 
             if (!playerInstance.hasErrors() && !playerInstance?.person?.hasErrors() && playerInstance.save()) {
                 flash.message = "${message(code: 'default.updated.message', args: [message(code: 'player.label', default: ''), playerInstance])}"
-                redirect(action: "list")
+                redirect uri: '/'
             }
             else {
                 render(view: "edit", model: [playerInstance: playerInstance])
@@ -125,7 +134,7 @@ class PlayerController {
         }
         else {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'player.label', default: 'Player'), params.id])}"
-            redirect(action: "list")
+            redirect uri:'/'
         }
     }
 

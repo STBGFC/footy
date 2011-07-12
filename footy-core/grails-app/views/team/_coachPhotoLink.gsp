@@ -1,4 +1,4 @@
-                        <sec:ifAnyGranted roles="ROLE_COACH">
+                        <footy:isManager team="${teamInstance}">
                         <modalbox:createLink
                                 controller="person"
                                 action="photoUploadDialog"
@@ -8,4 +8,4 @@
                                 width="400">
                             <img src="${createLinkTo(dir:'images', file:'camicon.png', plugin: 'footy-core')}" alt="Add or change ${person.givenName}'s photo"/>
                         </modalbox:createLink>
-                        </sec:ifAnyGranted>
+                        </footy:isManager>

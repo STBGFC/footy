@@ -1,94 +1,76 @@
 package org.davisononline.footy.core
 
-import org.davisononline.footy.FunctionalHelper
+import geb.Page
+import org.davisononline.footy.*
 
 
-/**
- * test various person CRUD functions 
- */
-class PersonTests extends FunctionalHelper {
+class EditPersonPage extends Page {
+    static at = { title.startsWith("Edit details for: ") }
+}
 
-    /**
-     * create person form
-     */
+class PersonTests extends AbstractTestHelper {
+
+    def addPerson(gn, fn, email) {
+        go ""
+        waitFor { at(HomePage) }
+        personList.click()
+        newPersonButton.click()
+        personForm.givenName = gn
+        personForm.familyName = fn
+        personForm.phone1 = "07000000000"
+        house.value("144")
+        address.value("Some St.")
+        postCode.value("GU1 1DB")
+        personForm.email = email
+        crud.saveButton.click()
+    }
+
+    def doQuals(mgr, quals) {
+        go ""
+        waitFor { at(HomePage) }
+        personList.click()
+        $("a", text: mgr).click()
+        waitFor { at(CreatePersonPage) }
+        addQual.click()
+        waitFor { qualForm.present }
+        quals.each { q ->
+            qual.value(q)
+            qualSubmit.click()
+            //waitFor { qualList(0).find("span").text().contains(qual) }
+        }
+    }
+
+    def addTeam(name, age, mgr) {
+        go ""
+        waitFor { at(HomePage) }
+        teamList.click()
+        newTeamButton.click()
+        teamForm.ageBand = age
+        teamForm.name = name
+        manager.value(mgr)
+        crud.saveButton.click()
+    }
+
     void testCreatePerson() {
-        login "sa", "admin"
-        get '/person/create'
-        click "_action_save"
+    }
 
-        assertContentContains "Property [givenName] of class"
-        assertContentContains "Property [familyName] of class"
-        assertContentContains "Property [phone1] of class"
-        assertContentContains "Property [phone2] of class"
-        assertContentContains "Property [house] of class [class org.davisononline.footy.core.Address]"
-        assertContentContains "Property [address] of class [class org.davisononline.footy.core.Address]"
-        assertContentContains "Property [postCode] of class [class org.davisononline.footy.core.Address]"
-
-        form ('personEditForm') {
-            givenName "Jack"
-            familyName "Bloggs"
-            phone1 "0782323232323"
-            email "f"
-            address {
-                house "144"
-                address "Some St."
-                town "Anytown"
-                postCode "XX"
-            }
-            click "_action_save"
-        }
-
-        assertContentContains "Property [email] of class [class org.davisononline.footy.core.Person] with value [f] is not a valid e-mail address"
-        assertContentContains "Property [postCode] of class [class org.davisononline.footy.core.Address] with value [XX] does not match the required pattern"
-
-        form ('personEditForm') {
-            email "foo@baz.com"
-            address {
-                postCode "GU1 1db"
-            }
-            click "_action_save"
-        }
-
-        assertContentContains "Person Jack Bloggs created"
-
-        doPersonList()
-        assertContentContains "Jack Bloggs"
-        assertContentContains "foo@baz.com"
-        assertContentContains "0782323232323"
-        assertContentContains "144 Some St., Anytown. GU1 1DB"
-
-        click "Jack Bloggs"
-        click "_action_delete"
-
-        assertStatus 200
-        assertContentContains "Jack Bloggs deleted"
-    }   
-
-    /**
-     * edit person, add qualifications
-     *
     void testQualifications() {
-        testPersonList()
-        click "Jack Bloggs"
+    }
 
-        def id = byId("id").value
-        get "/person/assignQualification/${id}"
-        assertStatus 200
-
-        post ("/person/addQualification") {
-            headers['Content-Type'] = 'application/x-www-form-urlencoded'
-            body {
-                """
-personId=${id}
-type.id=1
-attainedOn=date.struct
-attainedOn_day=10
-attainedOn_month=10
-attainedOn_year=2007
-"""
-            }
-        }
-    }*/
+    void testLoginForManager() {
+        go ""
+        waitFor { at(HomePage) }
+        auth.login("sa", "admin")
+        addPerson("Jack", "Manager", "manager2@examplefc.com")
+        doQuals("Jack Manager", ["FA Level 1"])
+        addTeam("Boys", 8, "Jack Manager")
+        assert crud.flash.text() == "Team U8 Boys created"
+        addPerson("John", "Manager", "manager1@examplefc.com")
+        doQuals("John Manager", ["FA Level 1"])
+        addTeam("Reds", 8, "John Manager")
+        assert crud.flash.text() == "Team U8 Reds created"
+        auth.logout()
+    }
 
 }
 

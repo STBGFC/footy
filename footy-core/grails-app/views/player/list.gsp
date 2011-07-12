@@ -1,5 +1,5 @@
 
-<%@ page import="org.grails.paypal.Payment; org.davisononline.footy.core.Person" %>
+<%@ page import="org.grails.paypal.PaymentItem; org.grails.paypal.Payment; org.davisononline.footy.core.Person" %>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -37,9 +37,10 @@
                             <td>
                                 <g:link controller="person" action="edit" id="${player.guardian?.id}">${player.guardian}</g:link>
                                 <br/>${player.guardian?.bestPhone().encodeAsHTML()}
-                                <br/><a href="mailto:${player.guardian?.email}">${player.guardian?.email}</a>
+                                <br/><a class="email" href="mailto:${player.guardian?.email}">${player.guardian?.email}</a>
                             </td>
                             <td>
+                                <footy:paymentStatus payment="${PaymentItem.findByItemNumber(player?.currentRegistration?.id)?.payment}"/>
                                 ${player.currentRegistration ?: "Not Registered"}
                             </td>
                             <td>${fieldValue(bean: player, field: "leagueRegistrationNumber")}</td>

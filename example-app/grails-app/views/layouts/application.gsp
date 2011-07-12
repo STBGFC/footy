@@ -2,10 +2,6 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
     <head>
-        <script type="text/javascript">
-            // prevent script at foot complaining if page does not supply a value for focusField
-            var focusField = null;
-        </script>
         <title><g:layoutTitle default="Example FC" /></title>
         <link rel="stylesheet" href="${resource(dir:'css',file:'main.css')}" />
         <link rel="shortcut icon" href="${resource(dir:'images',file:'favicon.ico')}" type="image/x-icon" />
@@ -15,7 +11,7 @@
     </head>
     <body>
         <div id="banner">
-            <g:message code="site.banner.text" default="Welcome to Example FC!"/>
+            <g:message code="site.banner.text" default="Example FC"/>
         </div>
         <div id="loginBanner">
             <sec:ifNotLoggedIn>
@@ -23,16 +19,12 @@
                 <p>
                     username: <g:textField name="j_username"/>
                     password: <g:passwordField name="j_password"/>
-                    <%--
-                    <input type='checkbox' class='chk' name='${rememberMeParameter}' id='remember_me' <g:if test='${hasCookie}'>checked='checked'</g:if> /> remember me
-                    --%>
-                    <g:if test="${System.properties['grails.run.mode']=='functional-test'}"><input type="submit" id="loginSubmit"/></g:if>
                     <a href="#" onclick="document.getElementById('login').submit()">login</a>
                 </p>
             </form>
             </sec:ifNotLoggedIn>
             <sec:ifLoggedIn>
-            <div>Logged in: <strong><sec:username /></strong> <g:link controller="logout">[logout]</g:link></div>
+            <div>Logged in: <span id="username"><strong><sec:username /></strong></span> <g:link controller="logout">[logout]</g:link></div>
             </sec:ifLoggedIn>
         </div>
 
@@ -52,15 +44,8 @@
             <g:layoutBody />
         </div>
         <div id="footer">
-            <img id="charterstandard" src="${resource(dir:'images',file:'charter_standard.jpg')}" alt="Chartered Standard Club"/>
             <g:message code="site.footer.text" default="(c) Example FC"/>
         </div>
-        <script type='text/javascript'>
-            <!--
-            (function(){
-                if (focusField != null) document.getElementById(focusField).focus();
-            })();
-            // -->
-        </script>
     </body>
 </html>
+

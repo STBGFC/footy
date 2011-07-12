@@ -63,7 +63,8 @@ class Person implements Comparable, Serializable {
 
     static mapping = {
         notes type: 'text'
-        address cascade: "all,delete-orphan"
+        address cascade: 'all'
+        qualifications: 'delete-orphan'
     }
     
     /**

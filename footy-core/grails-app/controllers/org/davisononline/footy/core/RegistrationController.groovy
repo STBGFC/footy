@@ -1,6 +1,6 @@
 package org.davisononline.footy.core
 
-import org.davisononline.footy.core.*
+
 import org.grails.paypal.Payment
 import org.grails.paypal.PaymentItem
 import org.codehaus.groovy.grails.commons.ConfigurationHolder
@@ -110,7 +110,8 @@ class RegistrationController {
             }
 
             on("yes") {
-                flow.personCommand = new Person (
+                // cope with back button better..
+                flow.personCommand = flow.guardian1 ?: new Person (
                     familyName: flow.player.person.familyName
                 )
             }.to "enterGuardianDetails"
@@ -125,20 +126,10 @@ class RegistrationController {
          */
         enterGuardianDetails {
             def errors
-            on ("continue") { Person person ->
-                if (!person.address) person.address = new Address()
-                if (!person.email) person.email = ''
-                flow.personCommand = person
-                if (!person.address?.validate() | !person.validate()) {
-                    flow.address = person.address // see earlier to do item about grails bug
-                    return error()
-                }
-                if (flow.guardian1) flow.guardian2 = person else flow.guardian1 = person
-
-            }.to "prepTeam"
 
             on ("addanother") {Person person ->
-                if (!person.address) person.address = new Address()
+                person.address = person.address ?: new Address()
+
                 flow.personCommand = person
                 if (!person.address?.validate() | !person.validate()) {
                     flow.address = person.address // see earlier to do item about grails bug
@@ -147,7 +138,53 @@ class RegistrationController {
                 flow.guardian1 = person
                 flow.personCommand = new Person(familyName: person.familyName, address: person.address)
 
-            }.to "enterGuardianDetails"
+            }.to "enterSecondGuardianDetails"
+
+            on ("continue") { Person person ->
+                person.address = person.address ?: new Address()
+                person.email = person.email ?: ''
+
+                flow.personCommand = person
+                if (!person.address?.validate() | !person.validate()) {
+                    flow.address = person.address // see earlier to do item about grails bug
+                    return error()
+                }
+
+                flow.guardian1 = person
+
+            }.to "prepTeam"
+        }
+
+        /*
+         * add another parent/guardian details and assign to player
+         */
+        enterSecondGuardianDetails {
+            render(view:"enterGuardianDetails")
+            
+            on ("continue") { Person person ->
+                person.address = person.address ?: new Address()
+                person.email = person.email ?: ''
+
+                flow.personCommand = person
+                def invalid = (!person.address?.validate() | !person.validate())
+
+                /*
+                 * if the same email is used as the first parent, the unique
+                 * validation won't trigger at this point - needs an explicit
+                 * check
+                 */
+                if (person.email == flow.guardian1?.email) {
+                    person.errors.rejectValue('email', 'org.davisononline.footy.core.parentemailduplication.message', 'Cannot use the same email for both parents')
+                }
+
+                if (invalid || person.hasErrors()) {
+                    flow.address = person.address // see earlier to do item about grails bug
+                    return error()
+                }
+
+                flow.guardian2 = person
+
+            }.to "prepTeam"
         }
 
         /*
