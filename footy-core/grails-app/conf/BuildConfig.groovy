@@ -23,6 +23,18 @@ grails.project.dependency.resolution = {
         //mavenRepo "http://download.java.net/maven/2/"
         //mavenRepo "http://repository.jboss.com/maven2/"
     }
+    plugins {
+        compile ':paypal:0.6.3'
+        compile ':searchable:0.5.5.1'
+        compile ':export:0.8'
+        compile ':mail:1.0-SNAPSHOT'
+        compile ':spring-security-core:1.1.2'
+        compile ':modalbox:0.4'
+        compile ':cache-headers:1.1.5'
+        runtime ':hibernate:1.3.7'
+        runtime ':webflow:1.3.7'
+        runtime ':tomcat:1.3.7'
+    }
     dependencies {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes eg.
         //compile 'org.grails.plugins:mail:1.0-SNAPSHOT'

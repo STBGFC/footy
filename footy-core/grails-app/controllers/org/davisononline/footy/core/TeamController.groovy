@@ -29,6 +29,7 @@ class TeamController {
 
     @Secured(["permitAll"])
     def show = {
+        cache "content"
         def teamInstance = Team.findWhere(club: Club.homeClub, ageBand:params.ageBand.toInteger(), name:params.teamName)
         if (!teamInstance || teamInstance.club != Club.homeClub) {
             response.sendError(404)
@@ -41,6 +42,7 @@ class TeamController {
 
     @Secured(["permitAll"])
     def addresscards = {
+        cache "content"
         def teamInstance = Team.get(params?.id)
         if (teamInstance) {
             response.setHeader("Content-disposition", "attachment;filename=${teamInstance.toString().replace(" ", "_")}_contacts.vcf")
@@ -76,6 +78,7 @@ class TeamController {
     }
 
     def edit = {
+        cache false
         def teamInstance = Team.get(params.id)
         if (!teamInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'team.label', default: 'Team'), params.id])}"
@@ -139,6 +142,7 @@ class TeamController {
      */
     @Secured(["ROLE_COACH"])
     def leagueForm = {
+        cache false
         def teamInstance = Team.get(params.id)
         if (teamInstance) {
             try {
@@ -192,6 +196,7 @@ class TeamController {
      */
     @Secured(["permitAll"])
     def photo = {
+        cache "pics"
         def t = Team.get(params.id)
         response.contentType = "image/png"
     	response.contentLength = t?.photo?.length
