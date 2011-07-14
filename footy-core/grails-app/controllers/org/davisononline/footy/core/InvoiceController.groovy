@@ -7,9 +7,9 @@ import org.davisononline.footy.core.utils.PaymentUtils
 /**
  * used for enabling an incomplete payment to be made again
  */
+@Secured(['ROLE_OFFICER'])
 class InvoiceController {
 
-    @Secured(['ROLE_OFFICER'])
     def list = {
         params.max = Math.min(params.max ? params.int('max') : 25, 100)
         params.order = params.order ?: "desc"
@@ -17,7 +17,6 @@ class InvoiceController {
         [paymentList: Payment.findAllByStatus(Payment.COMPLETE, params), paymentTotal: Payment.countByStatus(Payment.COMPLETE)]
     }
 
-    @Secured(['ROLE_OFFICER'])
     def unpaid = {
         params.max = Math.min(params.max ? params.int('max') : 25, 100)
         params.order = params.order ?: "desc"
@@ -26,7 +25,6 @@ class InvoiceController {
                 paymentTotal: Payment.countByStatusInList([Payment.CANCELLED, Payment.PENDING, Payment.FAILED])]
     }
 
-    @Secured(['ROLE_OFFICER'])
     def delete = {
         def payment = Payment.findByTransactionId(params?.id)
         if (!payment) {
@@ -37,6 +35,7 @@ class InvoiceController {
         redirect action: 'list'
     }
 
+    @Secured(["permitAll"])
     def show = {
         def payment = Payment.findByTransactionId(params?.id)
         if (!payment) {
@@ -45,10 +44,12 @@ class InvoiceController {
         [payment: payment, controller: params?.returnController ?: 'invoice']
     }
 
+    @Secured(["permitAll"])
     def paypalSuccess = {
         render view: '/paypal/success', model:[payment: Payment.findByTransactionId(params.transactionId)]
     }
 
+    @Secured(["permitAll"])
     def paypalCancel = {
         render view: '/paypal/cancel'
     }
@@ -56,7 +57,6 @@ class InvoiceController {
     /**
      * render template to confirm manual payment amount
      */
-    @Secured(['ROLE_CLUB_ADMIN'])
     def paymentDialog = {
         render (template: 'paymentDialog', model: params, contentType: 'text/plain', plugin: 'footy-core')
     }
@@ -65,7 +65,6 @@ class InvoiceController {
      * manually marks a registration payment as having been made (i.e. outside
      * of the PayPal/credit card route)
      */
-    @Secured(['ROLE_CLUB_ADMIN'])
     def paymentMade = {
         def payment = Payment.findByTransactionId(params.id)
         if (payment) {

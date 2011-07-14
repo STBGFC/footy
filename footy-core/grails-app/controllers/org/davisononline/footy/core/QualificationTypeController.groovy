@@ -1,5 +1,9 @@
 package org.davisononline.footy.core
 
+import grails.plugins.springsecurity.Secured
+
+
+@Secured(["ROLE_OFFICER"])
 class QualificationTypeController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]

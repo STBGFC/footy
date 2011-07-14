@@ -6,7 +6,7 @@ import org.codehaus.groovy.grails.commons.ConfigurationHolder
 /**
  * controller methods for CRUD on RegistrationTier
  */
-@Secured(["ROLE_CLUB_ADMIN"])
+@Secured(["ROLE_OFFICER"])
 class RegistrationTierController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
