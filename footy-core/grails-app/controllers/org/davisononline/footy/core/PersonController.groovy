@@ -52,7 +52,7 @@ class PersonController {
         else {
             p.save(flush: true)
             flash.message = "${message(code: 'default.created.message', args: [message(code: 'person.label', default: 'Person'), p])}"
-            redirect(action: "list")
+            redirect(session.breadcrumb ? [uri: session.breadcrumb] : [action: "list"])
         }
     }
 
@@ -92,7 +92,7 @@ class PersonController {
             personInstance.properties = params
             if (personInstance.address?.validate() && !personInstance.hasErrors() && personInstance.save(flush: true)) {
                 flash.message = "${message(code: 'default.updated.message', args: [message(code: 'person.label', default: ''), personInstance])}"
-                redirect uri: '/'
+                redirect(session.breadcrumb ? [uri: session.breadcrumb] : [action: "list"])
             }
             else {
                 render(view: "edit", model: [personCommand: personInstance])
@@ -100,7 +100,7 @@ class PersonController {
         }
         else {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'person.label', default: 'Person'), params.id])}"
-            redirect uri:'/'
+            redirect(session.breadcrumb ? [uri: session.breadcrumb] : [action: "list"])
         }
     }
 
@@ -118,7 +118,7 @@ class PersonController {
         else {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'person.label', default: 'Person'), params.id])}"
         }
-        redirect(action: "list")
+        redirect(session.breadcrumb ? [uri: session.breadcrumb] : [action: "list"])
     }
 
     def assignQualification = {

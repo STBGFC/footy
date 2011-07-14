@@ -88,7 +88,6 @@ class PlayerController {
 
     @Secured(["ROLE_COACH"]) // <-- TEMP
     def edit = {
-        cahce false
         def playerInstance = Player.get(params.id)
         if (!playerInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'player.label', default: 'Player'), params.id])}"
@@ -127,7 +126,7 @@ class PlayerController {
 
             if (!playerInstance.hasErrors() && !playerInstance?.person?.hasErrors() && playerInstance.save()) {
                 flash.message = "${message(code: 'default.updated.message', args: [message(code: 'player.label', default: ''), playerInstance])}"
-                redirect uri: '/'
+                redirect(session.breadcrumb ? [uri: session.breadcrumb] : [action: "list"])
             }
             else {
                 render(view: "edit", model: [playerInstance: playerInstance])
@@ -135,7 +134,7 @@ class PlayerController {
         }
         else {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'player.label', default: 'Player'), params.id])}"
-            redirect uri:'/'
+            redirect(session.breadcrumb ? [uri: session.breadcrumb] : [action: "list"])
         }
     }
 
@@ -153,6 +152,6 @@ class PlayerController {
         else {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'player.label', default: 'Player'), params.id])}"
         }
-        redirect(action: "list")
+        redirect(session.breadcrumb ? [uri: session.breadcrumb] : [action: "list"])
     }
 }

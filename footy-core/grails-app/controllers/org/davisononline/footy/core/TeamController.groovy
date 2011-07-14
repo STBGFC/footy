@@ -29,7 +29,6 @@ class TeamController {
 
     @Secured(["permitAll"])
     def show = {
-        cache "content"
         def teamInstance = Team.findWhere(club: Club.homeClub, ageBand:params.ageBand.toInteger(), name:params.teamName)
         if (!teamInstance || teamInstance.club != Club.homeClub) {
             response.sendError(404)
@@ -42,7 +41,6 @@ class TeamController {
 
     @Secured(["permitAll"])
     def addresscards = {
-        cache "content"
         def teamInstance = Team.get(params?.id)
         if (teamInstance) {
             response.setHeader("Content-disposition", "attachment;filename=${teamInstance.toString().replace(" ", "_")}_contacts.vcf")
@@ -70,7 +68,7 @@ class TeamController {
         def teamInstance = new Team(params)
         if (teamInstance.save(flush: true)) {
             flash.message = "${message(code: 'default.created.message', args: [message(code: 'team.label', default: 'Team'), teamInstance])}"
-            redirect action: "list"
+            redirect(session.breadcrumb ? [uri: session.breadcrumb] : [action: "list"])
         }
         else {
             render(view: "edit", model: [teamInstance: teamInstance, managers: getManagers()])
@@ -82,7 +80,7 @@ class TeamController {
         def teamInstance = Team.get(params.id)
         if (!teamInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'team.label', default: 'Team'), params.id])}"
-            redirect(action: "list")
+            redirect(session.breadcrumb ? [uri: session.breadcrumb] : [action: "list"])
         }
         else {
             return [teamInstance: teamInstance, managers: getManagers(), players: Player.findAllByTeam(teamInstance, [sort:"person.familyName", order:"asc"])]
@@ -104,7 +102,7 @@ class TeamController {
             teamInstance.properties = params
             if (!teamInstance.hasErrors() && teamInstance.save(flush: true)) {
                 flash.message = "${message(code: 'default.updated.message', args: [message(code: 'team.label', default: 'Team'), teamInstance])}"
-                redirect(action: "list")
+                redirect(session.breadcrumb ? [uri: session.breadcrumb] : [action: "list"])
             }
             else {
                 render(view: "edit", model: [teamInstance: teamInstance, managers: getManagers()])
@@ -112,7 +110,7 @@ class TeamController {
         }
         else {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'team.label', default: 'Team'), params.id])}"
-            redirect(action: "list")
+            redirect(session.breadcrumb ? [uri: session.breadcrumb] : [action: "list"])
         }
     }
 
@@ -131,7 +129,7 @@ class TeamController {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'team.label', default: 'Team'), params.id])}"
         }
 
-        redirect(action: "list")
+        redirect(session.breadcrumb ? [uri: session.breadcrumb] : [action: "list"])
     }
 
     /**
