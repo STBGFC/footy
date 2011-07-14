@@ -5,7 +5,7 @@ import grails.plugins.springsecurity.Secured
 /**
  * controller methods for CRUD on League
  */
-@Secured(["ROLE_CLUB_ADMIN"])
+@Secured(["ROLE_OFFICER"])
 class LeagueController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
