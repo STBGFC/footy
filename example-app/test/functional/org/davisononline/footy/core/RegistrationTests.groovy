@@ -22,11 +22,14 @@ class PlayerPage extends Page {
     }
 }
 
-class PersonPage extends CreatePersonPage {
+class PersonPage extends Page {
     static at = { title == "Enter Parent/Guardian Details" }
     static content = {
         anotherParent { $("input", value:"Add another parent...") }
+        person { module PersonFormModule, formName: 'registration' }
         flow { module FlowModule }
+        crud { module CrudModule }
+        auth { module AuthModule }
     }
 }
 
@@ -61,12 +64,12 @@ class RegistrationTests extends AbstractTestHelper {
     }
 
     def doParent(email) {
-        personForm.givenName = "Dad"
-        personForm.phone1 = "07000000000"
-        house.value("144")
-        address.value("Some St.")
-        postCode.value("GU1 1DB")
-        personForm.email = email
+        person.personForm.givenName = "Dad"
+        person.personForm.phone1 = "07000000000"
+        person.house.value("144")
+        person.address.value("Some St.")
+        person.postCode.value("GU1 1DB")
+        person.personForm.email = email
     }
 
     def doFullReg(gn, fn, email, reg="Junior") {
@@ -131,7 +134,7 @@ class RegistrationTests extends AbstractTestHelper {
         assert flow.errors.size() == 1
         assert flow.error(0).text() == "Cannot use the same email for both parents"
 
-        personForm.email = "asd2@asd.com"
+        person.personForm.email = "asd2@asd.com"
         flow.contButton.click()
         waitFor { at(TeamPage) }
     }
@@ -170,14 +173,14 @@ class RegistrationTests extends AbstractTestHelper {
 
         // set some duffs
         doParent("asd9@asd")
-        postCode.value("XXX")
+        person.postCode.value("XXX")
         flow.contButton.click()
         assert flow.errors.size() == 2
         assert flow.error(0).text() == "Property [email] of class [class org.davisononline.footy.core.Person] with value [asd9@asd] is not a valid e-mail address"
         assert flow.error(1).text().startsWith("Property [postCode] of class [class org.davisononline.footy.core.Address] with value [XXX] does not match the required pattern")
 
-        postCode.value("GU1 1DB")
-        personForm.email = "asd9@asd.com"
+        person.postCode.value("GU1 1DB")
+        person.personForm.email = "asd9@asd.com"
         flow.contButton.click()
         waitFor { at(TeamPage) }
 

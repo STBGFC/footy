@@ -39,7 +39,11 @@ class BootStrap {
                     amount: 80.00,
                     siblingDiscount: 15.00
             ).save()
-        }
+        }        
+        
+        def sa = SecUser.findByUsername('sa')
+        sa.passwordExpired = false
+        sa.save(failOnError: true)
 
         // set up a couple of manager logins that can be used in tests
         def manager1 = SecUser.findByUsername('manager1@examplefc.com') ?: new SecUser(
@@ -52,7 +56,9 @@ class BootStrap {
             password: springSecurityService.encodePassword('manager'),
             enabled: true
         ).save(failOnError: true)
+
         def coachRole = SecRole.findByAuthority('ROLE_COACH') ?: new SecRole(authority: 'ROLE_COACH').save(failOnError: true)
+
         if (!manager1.authorities.contains(coachRole)) {
             SecUserSecRole.create manager1, coachRole
         }

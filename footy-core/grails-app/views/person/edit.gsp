@@ -78,7 +78,7 @@
                             default="Parent or Guardian of" />
                 </h2>
                 <ul>
-                <g:each in="${Player.findAllByGuardian(personCommand)}" var="child">
+                <g:each in="${[Player.findAllByGuardian(personCommand),Player.findAllBySecondGuardian(personCommand)].flatten()}" var="child">
                     <li>
                         <g:link controller="player" action="edit" id="${child.id}">${child}</g:link>
                     </li>
