@@ -22,7 +22,7 @@
                 </table>
         
                 <div class="buttons flowcontrol">
-                    <span class="button"><g:submitButton name="continue" class="save" value="${message(code: 'default.button.continue.label', default: 'Continue')}" /></span>
+                    <span class="button"><g:submitButton name="continue" class="save" value="${message(code: 'default.button.final.continue.label', default: 'Finish and Pay...')}" /></span>
                 </div>
             </g:form>
         </div>
