@@ -76,7 +76,6 @@ class TeamController {
     }
 
     def edit = {
-        cache false
         def teamInstance = Team.get(params.id)
         if (!teamInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'team.label', default: 'Team'), params.id])}"
@@ -140,7 +139,6 @@ class TeamController {
      */
     @Secured(["ROLE_COACH"])
     def leagueForm = {
-        cache false
         def teamInstance = Team.get(params.id)
         if (teamInstance) {
             try {

@@ -62,7 +62,6 @@ class PersonController {
      */
     @Secured(["ROLE_COACH"]) // <-- TEMP
     def edit = {
-        cache false
         def personInstance = Person.get(params.id)
         if (!personInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'person.label', default: 'Person'), params.id])}"
