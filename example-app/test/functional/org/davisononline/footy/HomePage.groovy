@@ -28,7 +28,7 @@ class HomePage extends Page {
             $("a", text: "Qualifications Expiring Soon") 
         }
         */
-        invoices(to: ListPage) { 
+        invoices(to: InvoiceListPage) { 
             $("a", text: "Payment Reconciliations") 
         }
     }

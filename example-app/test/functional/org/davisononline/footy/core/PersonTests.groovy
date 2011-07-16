@@ -15,13 +15,13 @@ class PersonTests extends AbstractTestHelper {
         waitFor { at(HomePage) }
         personList.click()
         newPersonButton.click()
-        personForm.givenName = gn
-        personForm.familyName = fn
-        personForm.phone1 = "07000000000"
-        house.value("144")
-        address.value("Some St.")
-        postCode.value("GU1 1DB")
-        personForm.email = email
+        person.personForm.givenName = gn
+        person.personForm.familyName = fn
+        person.personForm.phone1 = "07000000000"
+        person.house.value("144")
+        person.address.value("Some St.")
+        person.postCode.value("GU1 1DB")
+        person.personForm.email = email
         crud.saveButton.click()
     }
 
