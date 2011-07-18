@@ -18,7 +18,7 @@ class CreatePersonPage extends Page {
         qualList { $("td#qualifications").find("ul").find("li") }
 
         person { module PersonFormModule, formName:'personEditForm' }
-        crud { module CrudModule }
+        crud { module CrudModule, label: "Save" }
         auth { module AuthModule }
     }
 }

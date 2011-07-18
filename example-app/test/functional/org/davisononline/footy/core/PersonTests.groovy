@@ -13,6 +13,7 @@ class PersonTests extends AbstractTestHelper {
     def addPerson(gn, fn, email) {
         go ""
         waitFor { at(HomePage) }
+        auth.login("sa", "admin")
         personList.click()
         newPersonButton.click()
         person.personForm.givenName = gn
@@ -22,12 +23,13 @@ class PersonTests extends AbstractTestHelper {
         person.address.value("Some St.")
         person.postCode.value("GU1 1DB")
         person.personForm.email = email
-        crud.saveButton.click()
+        crud.contButton.click()
     }
 
     def doQuals(mgr, quals) {
         go ""
         waitFor { at(HomePage) }
+        auth.login("sa", "admin")
         personList.click()
         $("a", text: mgr).click()
         waitFor { at(CreatePersonPage) }
@@ -43,34 +45,41 @@ class PersonTests extends AbstractTestHelper {
     def addTeam(name, age, mgr) {
         go ""
         waitFor { at(HomePage) }
+        auth.login("sa", "admin")
         teamList.click()
         newTeamButton.click()
         teamForm.ageBand = age
         teamForm.name = name
         manager.value(mgr)
-        crud.saveButton.click()
+        crud.contButton.click()
     }
 
     void testCreatePerson() {
-    }
-
-    void testQualifications() {
+        addPerson("Rob", "Roberts", "rob@examplefc.com")
+        go ""
+        waitFor { at(HomePage) }
+        personList.click()
+        $("a", text: "Rob Roberts").click()
+        auth.logout()
     }
 
     void testLoginForManager() {
-        go ""
-        waitFor { at(HomePage) }
-        auth.login("sa", "admin")
         addPerson("Jack", "Manager", "manager2@examplefc.com")
         doQuals("Jack Manager", ["FA Level 1"])
         addTeam("Boys", 8, "Jack Manager")
         assert crud.flash.text() == "Team U8 Boys created"
         addPerson("John", "Manager", "manager1@examplefc.com")
-        doQuals("John Manager", ["FA Level 1"])
+        doQuals("John Manager", ["FA Level 1", "Emergency Aid", "CRB"])
         addTeam("Reds", 8, "John Manager")
         assert crud.flash.text() == "Team U8 Reds created"
         auth.logout()
     }
 
+    void testDuplicateEmailWhenCreating() {
+        addPerson("Ralph", "TheGreat", "john.parent@examplefc.com")
+        assert crud.errors.size() == 1
+        assert crud.error(0).text() == "Property [email] of class [class org.davisononline.footy.core.Person] with value [john.parent@examplefc.com] must be unique"
+        auth.logout()
+    }
 }
 

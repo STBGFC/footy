@@ -8,7 +8,7 @@ class TierPage extends Page {
     static at = { title == "Registration Type" }
     static content = {
         regForm { $("form#registration") }
-        flow { module FlowModule }
+        flow { module CrudModule }
     }
 }
 
@@ -18,7 +18,7 @@ class PlayerPage extends Page {
         playerForm { $("form#registration") }
         givenName { playerForm.find("input", name:"person.givenName") }
         familyName { playerForm.find("input", name:"person.familyName") }
-        flow { module FlowModule }
+        flow { module CrudModule }
     }
 }
 
@@ -27,8 +27,7 @@ class PersonPage extends Page {
     static content = {
         anotherParent { $("input", value:"Add another parent...") }
         person { module PersonFormModule, formName: 'registration' }
-        flow { module FlowModule }
-        crud { module CrudModule }
+        flow { module CrudModule }
         auth { module AuthModule }
     }
 }
@@ -36,7 +35,7 @@ class PersonPage extends Page {
 class TeamPage extends Page {
     static at = { title == "Assign Team" }
     static content = {
-        flow { module FlowModule }
+        flow { module CrudModule, label:"Finish and Pay..." }
     }
 }
 

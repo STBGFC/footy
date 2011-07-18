@@ -18,26 +18,8 @@
 
       <div id="newspanel">
           <div class="newsbox">
-              <h2>${Club.homeClub.name} Team List</h2>
-              <ul>
-                  <g:set var="allTeams" value="${Team.findAllByClub(Club.homeClub, [sort:'ageBand', order:'asc'])}"/>
-                  <li>Pre-League ::
-                  <g:each in="${allTeams.grep{it.ageBand<8}}" var="team">
-                      <g:link controller="team" action="show" params="${[ageBand:team.ageBand, teamName:team.name]}">${team}</g:link>
-                  </g:each>
-                  </li>
-
-                  <g:each in="${(8..18)}" var="age">
-                  <li>U${age} ::
-                  <g:each in="${allTeams.grep{it.ageBand==age}.sort{a,b-> a.division.compareTo(b.division)}}" var="team">
-                      <g:link
-                              title="Manager: ${team.manager}"
-                              controller="team" action="show"
-                              params="${[ageBand:team.ageBand, teamName:team.name]}">${team.name}</g:link>
-                  </g:each>
-                  </li>
-                  </g:each>
-              </ul>
+              <p>Welcome to our club!</p>
+              <g:link controller="registration">Register Player</g:link>
           </div>
 
           <sec:ifAnyGranted roles="ROLE_SYSADMIN,ROLE_CLUB_ADMIN">

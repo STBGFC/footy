@@ -8,11 +8,14 @@ import geb.Module
 class CrudModule extends Module {
     
     def titleText
+    def label = "Continue"
 
     static at = { title == titleText }
 
     static content =  {
-        saveButton { $("input", value: "Save") }
+        errors { $("div.errors") }
+        error { i -> errors[i] }        
+        contButton { $("input", value:label) }
         flash(required: false) { $("div.message") }
     }
 }

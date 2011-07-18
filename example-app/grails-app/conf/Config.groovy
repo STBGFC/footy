@@ -127,7 +127,7 @@ log4j = {
 
     warn   'org.mortbay.log'
 
-    debug  'org.davisononline'
+    debug  'grails.app'
            //'org.springframework.jdbc',
            //'org.springframework.orm',
            //'org.hibernate',

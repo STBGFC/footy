@@ -28,6 +28,22 @@ class BootStrap {
             ).save()
 
         }
+
+        def p1 = new Person(
+            givenName: 'John',
+            familyName: 'Parent',
+            phone1: '07000000001',
+            email: 'john.parent@examplefc.com',
+            eligibleParent: true
+        ).save(flush: true)
+        def p2 = new Person(
+            givenName: 'Jules',
+            familyName: 'Parent',
+            phone1: '07000000002',
+            email: 'jules.parent@examplefc.com',
+            eligibleParent: true
+        ).save(flush: true)
+
         if (RegistrationTier.count() == 0) {
             new RegistrationTier(
                     name: "Junior",
@@ -45,25 +61,52 @@ class BootStrap {
         sa.passwordExpired = false
         sa.save(failOnError: true)
 
-        // set up a couple of manager logins that can be used in tests
-        def manager1 = SecUser.findByUsername('manager1@examplefc.com') ?: new SecUser(
-            username: 'manager1@examplefc.com',
-            password: springSecurityService.encodePassword('manager'),
+        // set up a couple of logins that can be used in tests
+        def manager1 = SecUser.findByUsername('manager1') ?: new SecUser(
+            username: 'manager1',
+            password: springSecurityService.encodePassword('manager1'),
             enabled: true
         ).save(failOnError: true)
-        def manager2 = SecUser.findByUsername('manager2@examplefc.com') ?: new SecUser(
-            username: 'manager2@examplefc.com',
-            password: springSecurityService.encodePassword('manager'),
+        def manager2 = SecUser.findByUsername('manager2') ?: new SecUser(
+            username: 'manager2',
+            password: springSecurityService.encodePassword('manager2'),
+            enabled: true
+        ).save(failOnError: true)
+        def clubAdmin = SecUser.findByUsername('clubAdmin') ?: new SecUser(
+            username: 'clubAdmin',
+            password: springSecurityService.encodePassword('clubAdmin'),
+            enabled: true
+        ).save(failOnError: true)
+        def officer = SecUser.findByUsername('officer') ?: new SecUser(
+            username: 'officer',
+            password: springSecurityService.encodePassword('officer'),
             enabled: true
         ).save(failOnError: true)
 
         def coachRole = SecRole.findByAuthority('ROLE_COACH') ?: new SecRole(authority: 'ROLE_COACH').save(failOnError: true)
+        def clubAdminRole = SecRole.findByAuthority('ROLE_CLUBADMIN') ?: new SecRole(authority: 'ROLE_CLUBADMIN').save(failOnError: true)
+        def officerRole = SecRole.findByAuthority('ROLE_OFFICER') ?: new SecRole(authority: 'ROLE_OFFICER').save(failOnError: true)
 
         if (!manager1.authorities.contains(coachRole)) {
             SecUserSecRole.create manager1, coachRole
         }
         if (!manager2.authorities.contains(coachRole)) {
             SecUserSecRole.create manager2, coachRole
+        }
+        if (!clubAdmin.authorities.contains(clubAdminRole)) {
+            SecUserSecRole.create clubAdmin, clubAdminRole
+        }
+        if (!clubAdmin.authorities.contains(coachRole)) {
+            SecUserSecRole.create clubAdmin, coachRole
+        }
+        if (!officer.authorities.contains(clubAdminRole)) {
+            SecUserSecRole.create officer, clubAdminRole
+        }
+        if (!officer.authorities.contains(officerRole)) {
+            SecUserSecRole.create officer, officerRole
+        }
+        if (!officer.authorities.contains(coachRole)) {
+            SecUserSecRole.create officer, coachRole
         }
 
         // workaround for crappy reindix bug in searchableService that prevents player table
