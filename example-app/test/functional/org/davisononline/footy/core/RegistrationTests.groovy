@@ -35,7 +35,8 @@ class PersonPage extends Page {
 class TeamPage extends Page {
     static at = { title == "Assign Team" }
     static content = {
-        flow { module CrudModule, label:"Finish and Pay..." }
+        teamForm { $("form#registration") }
+        flow { module CrudModule, label: "Finish and Pay..." }
     }
 }
 
@@ -182,11 +183,33 @@ class RegistrationTests extends AbstractTestHelper {
         person.personForm.email = "asd9@asd.com"
         flow.contButton.click()
         waitFor { at(TeamPage) }
+        teamForm.leagueRegistrationNumber = '123456'
 
         flow.contButton.click()
         waitFor { at(InvoicePage) }
         assert itemName(0) == "Joe Bloggs Junior"
         assert itemAmount(0).contains("1 x £60.00")
+
+        // dupe reg number
+        go "registration"
+        waitFor { at(TierPage) }
+        assert at(TierPage)
+        flow.contButton.click()
+        waitFor { at(PlayerPage) }
+        doPlayer("Jock", "Bloggs")
+        parent.value("Dad Bloggs")
+        flow.contButton.click()
+        waitFor { at(TeamPage) }
+        teamForm.leagueRegistrationNumber = '123456'
+        flow.contButton.click()
+        waitFor { at(TeamPage) }
+        assert flow.errors.size() == 1
+        assert flow.error(0).text() == "Property [leagueRegistrationNumber] of class [class org.davisononline.footy.core.Player] with value [123456] must be unique"
+
+        teamForm.leagueRegistrationNumber = '123458'
+        flow.contButton.click()
+        waitFor { at(InvoicePage) }
+
     }
 
     void testSeniorRegistration() {

@@ -208,6 +208,8 @@ class RegistrationController {
                 Player player = flow.player
                 player.properties = params
 
+                if (!player.validate()) return error()
+
                 if (flow.guardian1) {
                     player.guardian = flow.guardian1
                 }
