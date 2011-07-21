@@ -34,7 +34,8 @@
                                 <label for="dateOfBirth"><g:message code="org.davisononline.footy.registration.playerDob.label" default="Date of Birth" /></label>
                             </td>
                             <td valign="top" class="value date">
-                                <g:datePicker name="dateOfBirth" precision="day" years="${(now.year-19+1900)..(now.year-4+1900)}" value="${playerInstance?.dateOfBirth}"  />
+                                <g:datePicker name="dateOfBirth" precision="day" noSelection="[null:'-select-']" years="${(now.year-19+1900)..(now.year-4+1900)}" value="${playerInstance?.dateOfBirth}"  />
+                                <g:render template="/shared/fieldError" model="['instance':playerInstance,'field':'dateOfBirth']" plugin="footy-core"/>
                             </td>
                         </tr>
 
