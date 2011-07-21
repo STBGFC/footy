@@ -275,7 +275,7 @@ class LoginController {
         try {
             mailService.sendMail {
                 // ensure mail address override is set in dev/test in Config.groovy
-                to      user.username
+                to      person.email
                 subject 'Password Reset Complete'
                 body    TemplateUtils.eval(
                             ConfigurationHolder.config?.org?.davisononline?.footy?.core?.resetComplete?.emailbody,
