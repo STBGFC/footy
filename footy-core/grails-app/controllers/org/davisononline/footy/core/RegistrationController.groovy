@@ -75,16 +75,14 @@ class RegistrationController {
             action {
                 def p = flow.player
                 def pe = Player.find(
-                        "from Player p where p.dateOfBirth = :dob and p.person.familyName = :familyName and p.person.givenName = :givenName",
-                        [dob: p.dateOfBirth, familyName: p.person.familyName, givenName: p.person.givenName]
+                        "from Player p where p.dateOfBirth = :dob and p.person.familyName = :familyName and p.person.givenName like :givenName",
+                        [dob: p.dateOfBirth, familyName: p.person.familyName, givenName: "${p.person.givenName.split()[0]}%"]
                 )
                 if (pe?.currentRegistration) {
                     def pmnt = PaymentItem.findByItemNumber(pe.currentRegistration.id)?.payment
                     if (pmnt) {
                         flow.payment = pmnt
-                        return invoice()
                     }
-                    // registered, but can't find the payment
                     return duplicate()
                 }
                 else
