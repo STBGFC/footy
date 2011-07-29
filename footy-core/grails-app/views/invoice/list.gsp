@@ -5,6 +5,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <g:set var="entityName" value="${message(code: 'org.grails.paypal.Payment.label', default: 'Payment Reconciliation')}" />
         <title><g:message code="default.list.label" args="[entityName]" /></title>
+        <export:resource/>
     </head>
     <body>
         <div class="list">
@@ -47,7 +48,7 @@
                                 <code>${payment?.paypalTransactionId}</code>
                             </td>
                             <td>
-                                <g:if test="${!cash}">
+                                <g:if test="${payment.paypalTransactionId}">
                                 ${payment?.buyerInformation?.receiverName ?: 'n/a'}<br/>
                                 ${payment?.buyerInformation?.street ?: ''}, ${payment?.buyerInformation?.zip ?: ''}
                                 </g:if>
@@ -63,5 +64,6 @@
             <div class="paginateButtons">
                 <g:paginate total="${paymentTotal}" />
             </div>
+            <export:formats formats="['excel', 'pdf']" />
     </body>
 </html>
