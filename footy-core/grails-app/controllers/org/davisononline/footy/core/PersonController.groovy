@@ -28,11 +28,10 @@ class PersonController {
         params.max = Math.min(params.max ? params.int('max') : 25, 100)
         if (!params.sort) params.sort = 'familyName'
         /*
-         * another f'ing grails bug.. I want to do Person.findAllByEligibleParent(true, params)
+         * I want to do Person.findAllByEligibleParent(true, params)
          * but the pagination fails because it does the select from the db, then filters the list, so I
          * get pages with 'gaps' where the non-eligibleParent records would be.  The hql version works
          * but now I lose sortableColumns as that would have to be specified in the order by clause
-         * TODO: raise yet another JIRA so they can ignore this one too
          */
         def l = Person.findAll("from Person p where eligibleParent = ? order by p.familyName", [true], params)
         [personInstanceList: l, personInstanceTotal: Person.countByEligibleParent(true)]

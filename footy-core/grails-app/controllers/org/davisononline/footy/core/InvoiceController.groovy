@@ -3,6 +3,7 @@ package org.davisononline.footy.core
 import org.grails.paypal.Payment
 import grails.plugins.springsecurity.Secured
 import org.davisononline.footy.core.utils.PaymentUtils
+import org.codehaus.groovy.grails.commons.ConfigurationHolder
 
 /**
  * used for enabling an incomplete payment to be made again
@@ -10,11 +11,59 @@ import org.davisononline.footy.core.utils.PaymentUtils
 @Secured(['ROLE_OFFICER'])
 class InvoiceController {
 
+    def exportService
+
     def list = {
-        params.max = Math.min(params.max ? params.int('max') : 25, 100)
-        params.order = params.order ?: "desc"
-        params.sort = params.sort ?: "id"
-        [paymentList: Payment.findAllByStatus(Payment.COMPLETE, params), paymentTotal: Payment.countByStatus(Payment.COMPLETE)]
+        if(params?.format && params.format != "html"){
+            // includes unpaid
+            List fields = [
+                    "transactionId", "status", "paypalTransactionId", "paymentMethod", "total"
+            ]
+            Map labels = [
+                    "transactionId": "Number",
+                    "status": "Payment Status",
+                    "paypalTransactionId": "PayPal Transaction ID",
+                    "paymentMethod": "Payment Method",
+                    "total": "Amount"
+            ]
+
+            // Formatter closure
+            def calculated = { payment, value ->
+                PaymentUtils.calculateTotal(payment)
+            }
+            def method = { payment, value ->
+                if (payment.paypalTransactionId) "PayPal"
+                else if (payment.status == Payment.COMPLETE) "Cash/Chq/CC"
+                else ""
+            }
+            Map formatters = [
+                    total: calculated,
+                    paymentMethod: method
+            ]
+            Map parameters = [title: "All Invoices"]
+
+            response.contentType = ConfigurationHolder.config.grails.mime.types[params.format]
+            response.setHeader(
+                "Content-disposition",
+                "attachment; filename=${URLEncoder.encode('invoice-list','UTF-8')}.${params.extension}"
+            )
+            exportService.export(
+                params.format,
+                response.outputStream,
+                Payment.list([sort:'transactionId', order: 'desc']),
+                fields,
+                labels,
+                formatters,
+                parameters
+            )
+        }
+        else {
+            // standard, paid invoices
+            params.max = Math.min(params.max ? params.int('max') : 25, 100)
+            params.order = params.order ?: "desc"
+            params.sort = params.sort ?: "id"
+            [paymentList: Payment.findAllByStatus(Payment.COMPLETE, params), paymentTotal: Payment.countByStatus(Payment.COMPLETE)]
+        }
     }
 
     def unpaid = {
