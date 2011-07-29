@@ -30,6 +30,15 @@ class InvoiceController {
         if (!payment) {
             redirect view: '/404'
         }
+        //TODO: should be atomic, move to service
+        def person = Person.withCriteria {
+            payments {
+                eq "transactionId", payment.transactionId
+            }
+        }
+        if (person) {
+            person[0].removeFromPayments(payment)
+        }
         payment.delete()
         flash.message = "Invoice and payment data deleted"
         redirect action: 'list'
