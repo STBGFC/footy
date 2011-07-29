@@ -24,7 +24,12 @@ class PlayerController {
      */
     def list = {
         if(params?.format && params.format != "html"){
-            List fields = ["name", "dateOfBirth", "team", "guardian", "guardian.phone1", "guardian.email", "secondGuardian", "secondGuardian.phone1", "secondGuardian.email", "dateJoinedClub", "currentRegistration", "paymentStatus", "doctor", "doctorTelephone", "medical"]
+            List fields = [
+                    "name", "dateOfBirth", "team", "guardian", "guardian.phone1",
+                    "guardian.email", "secondGuardian", "secondGuardian.phone1",
+                    "secondGuardian.email", "dateJoinedClub", "currentRegistration",
+                    "paymentStatus", "ethnicOrigin", "doctor", "doctorTelephone", "medical"
+            ]
             Map labels = [
                     "name": "Name",
                     "dateOfBirth": "Date of Birth",
@@ -38,6 +43,7 @@ class PlayerController {
                     "dateJoinedClub": "Date Joined",
                     "currentRegistration": "Last Registered",
                     "paymentStatus": "Payment Status",
+                    "ethnicOrigin": "Ethnic Origin",
                     "doctor": "Doctor",
                     "doctorTelephone": "Doctor's Tel.",
                     "medical": "Medical Notes"
