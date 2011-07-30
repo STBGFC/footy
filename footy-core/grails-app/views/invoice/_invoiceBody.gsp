@@ -1,5 +1,10 @@
 <%@ page import="org.davisononline.footy.core.Club; org.grails.paypal.Payment; org.davisononline.footy.core.utils.PaymentUtils" %>
-        <p><g:message code="org.davisononline.footy.core.invoicenumber.label" default="Invoice Number: "/><strong>${payment.transactionId}</strong></p>
+        <p>
+            <g:message code="org.davisononline.footy.core.invoicenumber.label" default="Invoice Number: "/><strong>${payment.transactionId}</strong>
+            <g:if test="${payment.invoiceDate}">
+            <br/><g:message code="org.davisononline.footy.core.invoicenumber.datelabel" default="Invoice Date: "/><strong><g:formatDate date="${payment.invoiceDate}" format="dd MMM yyyy"/></strong>
+            </g:if>
+        </p>
         <table id="invoice">
             <tbody>
             <tr class="invoiceHeader">
@@ -88,5 +93,6 @@
         <g:else>
         <p>
             <g:message code="org.davisononline.footy.core.invoicepaid" default="This invoice has already been paid.  Thank you."/>
+            <g:if test="${payment.paymentDate}"> (<g:formatDate date="${payment.paymentDate}" format="dd/MM/yyyy"/>)</g:if>
         </p>
         </g:else>

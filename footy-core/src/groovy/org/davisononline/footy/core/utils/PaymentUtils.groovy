@@ -41,22 +41,21 @@ class PaymentUtils {
      * if a manual payment is made for an amount other than the actual
      * total, the invoice items are fudged to make up this new total.
      */
-    static adjustForManual(payment, amount) {
-        def diff = calculateTotal(payment) - amount
-        if (diff > 0) {
-            payment.paymentItems[0].discountAmount += diff
-        }
-        if (diff < 0) {
+    static adjustForManual(payment, amount, notes) {
+
+        def diff = amount - calculateTotal(payment)
+
+        def defaultNotes = (diff < 0 ? 'manual discount' : 'manual overpayment')
+
+        if (diff != 0) {
             payment.addToPaymentItems(
                 new PaymentItem(
-                        amount: -diff,
+                        amount: diff,
                         quantity: 1,
-                        itemName: 'overpayment on invoice',
+                        itemName: notes ?: defaultNotes,
                         itemNumber: 0
                 )
             )
-        }
-        if (diff != 0) {
             payment.save()
         }
     }
