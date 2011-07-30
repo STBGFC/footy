@@ -127,7 +127,7 @@ class InvoiceController {
         def payment = Payment.findByTransactionId(params.id)
         if (payment) {
             payment.status = Payment.COMPLETE
-            PaymentUtils.adjustForManual(payment, params.amount.asType(BigDecimal))
+            PaymentUtils.adjustForManual(payment, params.amount.asType(BigDecimal), params.notes)
             payment.save()
             flash.message = "Payment made for invoice ${params.id}"
         }

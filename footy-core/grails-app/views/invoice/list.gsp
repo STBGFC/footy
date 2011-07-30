@@ -20,12 +20,12 @@
                 <table class="list">
                     <thead>
                         <tr>
-                            <th>${message(code: 'org.grails.paypal.payment.transactionId.label', default: 'Club Transaction')}</th>
-                            <th>${message(code: 'org.grails.paypal.payment.status.label', default: 'Status')}</th>
+                            <g:sortableColumn property="transactionId" title="${message(code: 'org.grails.paypal.payment.transactionId.label', default: 'Club Transaction')}" />
+                            <g:sortableColumn property="status" title="${message(code: 'org.grails.paypal.payment.status.label', default: 'Status')}" />
                             <th>${message(code: 'org.grails.paypal.payment.description.label', default: 'Description')}</th>
-                            <th>${message(code: 'org.grails.paypal.payment.paypalTransactionId.label', default: 'PayPal Transaction')}</th>
+                            <g:sortableColumn property="paypalTransactionId" title="${message(code: 'org.grails.paypal.payment.paypalTransactionId.label', default: 'PayPal Transaction')}" />
                             <th>${message(code: 'org.grails.paypal.buyerinformation.receivernamelabel', default: 'PayPal Account Holder')}</th>
-                            <th>${message(code: 'org.grails.paypal.payment.transactionId.label', default: 'Amount')}</th>
+                            <th>${message(code: 'org.grails.paypal.payment.amount.label', default: 'Amount')}</th>
                         </tr>
                     </thead>
                     <tbody>
