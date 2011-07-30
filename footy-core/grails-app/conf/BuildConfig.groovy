@@ -24,7 +24,7 @@ grails.project.dependency.resolution = {
         //mavenRepo "http://repository.jboss.com/maven2/"
     }
     plugins {
-        compile ':paypal:0.6.3'
+        compile ':paypal:0.6.5'
         compile ':searchable:0.5.5.1'
         compile ':export:0.8'
         compile ':mail:1.0-SNAPSHOT'
