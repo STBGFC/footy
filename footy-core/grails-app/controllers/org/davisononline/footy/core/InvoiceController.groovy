@@ -4,6 +4,7 @@ import org.grails.paypal.Payment
 import grails.plugins.springsecurity.Secured
 import org.davisononline.footy.core.utils.PaymentUtils
 import org.codehaus.groovy.grails.commons.ConfigurationHolder
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
 /**
  * used for enabling an incomplete payment to be made again
@@ -12,6 +13,8 @@ import org.codehaus.groovy.grails.commons.ConfigurationHolder
 class InvoiceController {
 
     def exportService
+
+    def springSecurityService
 
     def list = {
         if(params?.format && params.format != "html"){
@@ -124,16 +127,19 @@ class InvoiceController {
      * of the PayPal/credit card route)
      */
     def paymentMade = {
+        def username =
+            session[UsernamePasswordAuthenticationFilter.SPRING_SECURITY_LAST_USERNAME_KEY] ?:
+            springSecurityService.authentication.name
         def payment = Payment.findByTransactionId(params.id)
         if (payment) {
             payment.status = Payment.COMPLETE
-            PaymentUtils.adjustForManual(payment, params.amount.asType(BigDecimal), params.notes)
+            PaymentUtils.adjustForManual(payment, params.amount.asType(BigDecimal), "${params.notes} (added by user: ${username})")
             payment.save()
             flash.message = "Payment made for invoice ${params.id}"
         }
         else
             flash.message = "No such invoice found with number ${params.id}"
 
-        redirect(action: "unpaid", params:params)
+        redirect(action: "show", id:payment.transactionId, params:params)
     }
 }

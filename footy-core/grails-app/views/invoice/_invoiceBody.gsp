@@ -43,7 +43,8 @@
                 </td>
                 <td class="amount">
                     <g:if test="${payment.tax > 0}"><g:formatNumber number="${PaymentUtils.calculateTax(payment)}" type="currency" currencyCode="${payment.currency}" /><br/></g:if>
-                    <g:formatNumber number="${PaymentUtils.calculateTotal(payment)}" type="currency" currencyCode="${payment.currency}" />
+                    <g:set value="${PaymentUtils.calculateTotal(payment)}" var="totalAmount"/>
+                    <g:formatNumber number="${totalAmount}" type="currency" currencyCode="${payment.currency}" />
                 </td>
             </tr>
             </tbody>
@@ -69,6 +70,24 @@
             </g:form>
         </div>
         <div class="alert"><g:message code="org.davisononline.footy.core.invoice.due.text" default="*** Invoice is now due for payment ***"/></div>
+
+        <sec:ifAnyGranted roles="ROLE_OFFICER">
+        <h2>Mark Paid (Club Officer Only)</h2>
+        <p>
+            <g:message
+                    code="org.davisononline.footy.core.invoice.paymanually.text"
+                    default="Click on the blue money bag icon to mark this invoice as already paid."/>
+        </p>
+        <modalbox:createLink
+                controller="invoice"
+                action="paymentDialog"
+                id="${payment.transactionId}"
+                params="${[totalAmount:totalAmount]}"
+                title="Mark this invoice as paid manually"
+                width="350">
+            <img src="${resource(dir:'images',file:'payment-complete-large-b.png', plugin: 'footy-core')}" alt="Mark Received"/>
+        </modalbox:createLink>
+        </sec:ifAnyGranted>
         <h2>Pay Online</h2>
         <p>
             <g:message
