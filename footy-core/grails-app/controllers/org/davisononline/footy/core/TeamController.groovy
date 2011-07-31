@@ -225,6 +225,7 @@ class TeamController {
     /**
      * AJAX helper for getting teams in an ageband
      */
+    @Secured(["ROLE_COACH"])
     def teamsForAgeBand = {
         if (params.ageBand == '0') {
             render (text: 'Email will go to ALL TEAMS in the database.  Select an age group above to narrow your distribution', contentType: 'text/plain')
