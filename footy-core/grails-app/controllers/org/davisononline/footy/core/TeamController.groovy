@@ -2,7 +2,7 @@ package org.davisononline.footy.core
 
 import grails.plugins.springsecurity.Secured
 import org.davisononline.footy.core.utils.ImageUtils
-
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
 /**
  * controller methods for CRUD on Team
@@ -14,8 +14,13 @@ class TeamController {
 
     def footySecurityService
 
+    def mailService
+
+    def springSecurityService
+
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST", photoUpload: "POST"]
+
 
     def index = {
         redirect(action: "list", params: params)
@@ -199,10 +204,87 @@ class TeamController {
     	response.outputStream.write(t?.photo)
     }
 
+    /**
+     * send email to various members
+     */
+    @Secured(["ROLE_COACH"])
+    def messageDialog = {
+        def teams = Team.findAllByClub(Club.homeClub, [sort:'ageBand', order:'asc'])
+        def ages = teams*.ageBand.unique()
+        render (template: 'messageDialog', model: [ages:ages], contentType: 'text/plain', plugin: 'footy-core')
+    }
+
+    /**
+     * AJAX helper for getting teams in an ageband
+     */
+    def teamsForAgeBand = {
+        if (params.ageBand == '0') {
+            render (text: 'Email will go to ALL TEAMS in the database.  Select an age group above to narrow your distribution', contentType: 'text/plain')
+            return
+        }
+        else {
+            def teams = Team.findAllByClubAndAgeBand(Club.homeClub, params.ageBand, [sort:'division', order:'asc'])
+            render (template: 'teamCheckBoxes', model: [teams:teams], contentType: 'text/plain', plugin: 'footy-core')
+        }
+    }
+
+    /**
+     * sends an email message to the people requested
+     */
+    @Secured(["ROLE_COACH"])
+    def sendMessage = { EmailCommand cmd ->
+        def teams
+        if (params.ageBand == '0')
+            teams = Team.findAllByClub(Club.homeClub)
+        else {
+            // params.teams might be single value or a list
+            teams = Team.findAllByIdInList(cmd.chkTeam.toList())
+        }
+
+        def recipients = []
+        teams.each { team ->
+            recipients << team.manager.email
+            if (cmd.to > 0) // coaches
+                recipients << team.coaches.collect {it.email}
+            if (cmd.to > 1) // everyone
+                team.players.each { p ->
+                    recipients << p.guardian?.email
+                    if (p.secondGuardian) recipients << p.secondGuardian.email
+                }
+        }
+        recipients = recipients.flatten().unique()
+
+        // do it!
+        def user = springSecurityService.currentUser
+        def person = Person.findByUser(user)
+        mailService.sendMail {
+            to      person.email
+            bcc     recipients
+            from    person.email
+            subject cmd.subject
+            body    cmd.body
+        }
+
+        flash.message = "Email sent to ${recipients.size()} people"
+        redirect(session.breadcrumb ? [uri: session.breadcrumb] : [uri:'/'])
+
+    }
 
     private getManagers() {
         Person.executeQuery(
                 "select distinct q.person from Qualification q where q.type.category=:category order by q.person.familyName asc",
                 [category: QualificationType.COACHING])
     }
+}
+
+
+/**
+ * for send email conversions
+ */
+class EmailCommand {
+    int ageBand
+    long[] chkTeam
+    int to
+    String subject
+    String body
 }
