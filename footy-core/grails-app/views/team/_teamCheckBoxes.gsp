@@ -1,5 +1,5 @@
 <g:each in="${teams}" var="team" status="i">
-    <g:checkBox name="chkTeam" checked="${i==0}" value="${team.id}"/>&nbsp;${team.name}
+    <g:checkBox name="chkTeam" checked="${defaultId == team.id}" value="${team.id}"/>&nbsp;${team.name}
 </g:each>
 <g:if test="${teams.size()>1}"><br/>
     <input

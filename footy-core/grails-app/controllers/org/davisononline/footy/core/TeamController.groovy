@@ -209,8 +209,16 @@ class TeamController {
      */
     @Secured(["ROLE_COACH"])
     def messageDialog = {
+        def defaultTeamList
+        if (params.id) {
+            def t = Team.get(params.id)
+            params.ageBand = t.ageBand
+            params.defaultTeamId = t.id
+        }
+
         def teams = Team.findAllByClub(Club.homeClub, [sort:'ageBand', order:'asc'])
         def ages = teams*.ageBand.unique()
+
         render (template: 'messageDialog', model: [ages:ages], contentType: 'text/plain', plugin: 'footy-core')
     }
 
@@ -224,7 +232,10 @@ class TeamController {
         }
         else {
             def teams = Team.findAllByClubAndAgeBand(Club.homeClub, params.ageBand, [sort:'division', order:'asc'])
-            render (template: 'teamCheckBoxes', model: [teams:teams], contentType: 'text/plain', plugin: 'footy-core')
+            // really nasty kludge.. because the & between params in the remote function call gets URL encoded
+            // it prefixes the parameter name with "amp;"
+            def defaultId = params["amp;defaultTeamId"] ?: teams[0].id
+            render (template: 'teamCheckBoxes', model: [teams:teams,defaultId:defaultId.toLong()], contentType: 'text/plain', plugin: 'footy-core')
         }
     }
 

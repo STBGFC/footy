@@ -23,14 +23,25 @@
                 <img src="${createLinkTo(dir:'images', file:'vprint.png', plugin:'footy-core')}" alt="${message(code: 'team.vprint.label', default: 'Print registration form')}"/>
                 </g:link>
                 </g:if>
+
+                <modalbox:createLink
+                      controller="team"
+                      action="messageDialog"
+                      title="Send Email Message"
+                      id="${teamInstance.id}"
+                      width="420">
+                    <img src="${createLinkTo(dir:'images', file:'vmail.png', plugin:'footy-core')}" alt="${message(code: 'team.vmail.label', default: 'Send Email')}"/>
+                </modalbox:createLink>
                 </footy:isManager>
 
+                <footy:isNotManager team="${teamInstance}">
                 <a
                     title="${message(code: 'team.vmail.label', default: 'Email Manager/Coaches')}"
                     href="mailto:${[teamInstance.manager, teamInstance.coaches]*.email.flatten().join(",")}"
                 >
                     <img src="${createLinkTo(dir:'images', file:'vmail.png', plugin:'footy-core')}" alt="${message(code: 'team.vmail.label', default: 'Email Manager/Coaches')}"/>
                 </a>
+                </footy:isNotManager>
 
                 <g:link action="addresscards" id="${teamInstance.id}" title="${message(code: 'team.vmail.label', default: 'Download contact details for your address book')}">
                 <img src="${createLinkTo(dir:'images', file:'vcards.png', plugin:'footy-core')}" alt="${message(code: 'team.vcards.label', default: 'Download Contact Details')}"/>

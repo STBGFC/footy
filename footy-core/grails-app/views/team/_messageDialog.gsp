@@ -13,6 +13,7 @@
                 from="${ages}"
                 optionValue="${{'U' + it}}"
                 noSelection="${['0':'ALL TEAMS']}"
+                value="${params.ageBand}"
                 style="width: 100px"
                 onchange="${remoteFunction(
                     controller:'team',
@@ -20,9 +21,19 @@
                     params:'\'ageBand=\' + escape(this.value)',
                     onComplete:'l=$(\'msgDlgTeamList\');l.innerHTML=e.responseText;Effect.Pulsate(l,{pulses:2, duration:0.7})')}"
             />
-        <div id="msgDlgTeamList"style="height:45px">
-            Email will go to ALL TEAMS in the database.  Select an age group above to narrow your distribution
-        </div>
+        <div id="msgDlgTeamList"style="height:45px"></div>
+
+        <%-- if clicked from a team page, set the form up to default to that team --%>
+        <g:if test="${params.ageBand > 0}">
+            <script type="text/javascript">
+                ${remoteFunction(
+                    controller:'team',
+                    action:'teamsForAgeBand',
+                    params:'\'ageBand=\' + escape($(\'ageBand\').value) + \'&defaultTeamId=' + params.defaultTeamId + '\'',
+                    onComplete:'$(\'msgDlgTeamList\').innerHTML=e.responseText'
+                )}
+            </script>
+        </g:if>
     </p>
     <p>
         <strong><g:message
