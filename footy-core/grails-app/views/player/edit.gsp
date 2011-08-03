@@ -23,7 +23,7 @@
                     <table>
                         <tbody>
 
-                            <g:render template="/player/playerFormBody"/>
+                            <g:render template="/player/playerFormBody" plugin="footy-core"/>
 
                             <tr class="prop">
                                 <td  class="name">
@@ -33,7 +33,7 @@
                                     <g:select name="secondGuardian.id" from="${parents}" noSelection="[null:'-- Not listed or not applicable --']" optionKey="id" value="${playerInstance?.secondGuardian?.id}"/>
                                 </td>
 
-                                <g:render template="/player/teamFields" />
+                                <g:render template="/player/teamFields" plugin="footy-core" />
                             </tr>
                         </tbody>
                     </table>

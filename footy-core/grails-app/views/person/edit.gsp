@@ -31,7 +31,7 @@
                 <div class="dialog">
                     <table>
                         <tbody>
-                            <g:render template="personFormBody" />
+                            <g:render template="personFormBody" plugin="footy-core" />
                         </tbody>
                     </table>
                 </div>
@@ -57,7 +57,7 @@
                             default="Qualifications Attained" />
                 </h2>
                 <div id="qualifications" class="value">
-                    <tmpl:qualificationsList person="${personCommand}"/>
+                    <g:render template="qualificationsList" model="[person:personCommand]" plugin="footy-core"/>
                 </div>
                 <sec:ifAnyGranted roles="ROLE_OFFICER">
                 <modalbox:createLink
@@ -92,7 +92,7 @@
                     <g:message code="org.davisononline.footy.core.payments.label" default="Invoices and Payments" />
                 </h2>
                 <div id="payments">
-                    <tmpl:paymentsList payments="${personCommand.payments}"/>
+                    <g:render template="paymentsList" model="[payments:personCommand.payments]" plugin="footy-core"/>
                 </div>
             </div>
             </g:if>

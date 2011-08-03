@@ -7,7 +7,7 @@
     </head>
     <body>
         <div class="list">
-            <g:render template="invoiceBody" model="[controller: controller]" />
+            <g:render template="invoiceBody" model="[controller: controller]" plugin="footy-core"/>
         </div>
     </body>
 </html>

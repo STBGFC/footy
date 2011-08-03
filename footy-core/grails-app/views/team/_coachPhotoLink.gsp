@@ -9,3 +9,4 @@
                             <img src="${createLinkTo(dir:'images', file:'camicon.png', plugin: 'footy-core')}" alt="Add or change ${person.givenName}'s photo"/>
                         </modalbox:createLink>
                         </footy:isManager>
+

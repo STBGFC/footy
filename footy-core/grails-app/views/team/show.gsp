@@ -125,7 +125,7 @@
                             <footy:personPhoto person="${teamInstance.manager}"/>
                             <p>Contact ${teamInstance.manager.givenName} on: <strong>${teamInstance.manager.bestPhone().encodeAsHTML()}</strong></p>
                         </footy:tooltip>
-                        <tmpl:coachPhotoLink person="${teamInstance.manager}"/>
+                        <g:render template="coachPhotoLink" model="[person:teamInstance.manager]" plugin="footy-core"/>
                     </li>
                     <g:each in="${teamInstance.coaches}" var="c">
                     <li>Coach:
@@ -134,7 +134,7 @@
                             <footy:personPhoto person="${c}"/>
                             <p>Contact ${c.givenName} on: <strong>${c.bestPhone().encodeAsHTML()}</strong></p>
                         </footy:tooltip>
-                        <tmpl:coachPhotoLink person="${c}"/>
+                        <g:render template="coachPhotoLink" model="[person:c]" plugin="footy-core"/>
                     </li>
                     </g:each>
                 </ul>
