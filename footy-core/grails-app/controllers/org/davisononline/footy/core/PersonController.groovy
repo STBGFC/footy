@@ -141,6 +141,7 @@ class PersonController {
 
                 // add new, save
                 p.addToQualifications(qual)
+                p.save(flush:true)
             }
         }
         catch (Exception ex) {
