@@ -130,7 +130,8 @@ class PlayerController {
 
             playerInstance.properties = params
 
-            if (!playerInstance.hasErrors() && !playerInstance?.person?.hasErrors() && playerInstance.save()) {
+            // TODO move to tx service
+            if (!playerInstance.hasErrors() && !playerInstance?.person?.hasErrors() && playerInstance.person.save() && playerInstance.save()) {
                 flash.message = "${message(code: 'default.updated.message', args: [message(code: 'player.label', default: ''), playerInstance])}"
                 redirect(session.breadcrumb ? [uri: session.breadcrumb] : [action: "list"])
             }
