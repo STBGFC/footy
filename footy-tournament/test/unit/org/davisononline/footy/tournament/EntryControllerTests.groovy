@@ -62,38 +62,6 @@ class EntryControllerTests extends ControllerUnitTestCase {
         assertTrue cc.validate()
     }
 
-    void testTeamCommandConstraints() {
-        mockForConstraintsTests(TeamCommand)
-        def tc = new TeamCommand(
-            club: new Club(secretary: new Person(), name: "STBGFC"),
-            ageBand: 8,
-            name: "Reds",
-            division: "C",
-            leagueId: 1
-        )
-        assertTrue tc.validate()
-        
-        tc.ageBand = 6
-        assertFalse tc.validate()
-        tc.ageBand = 8
-        assertTrue tc.validate()
-        tc.ageBand = 19
-        assertFalse tc.validate()
-        tc.ageBand = 8
-        assertTrue tc.validate()
-        
-        tc.name = ''
-        assertFalse tc.validate()
-        tc.name = 'Reds'
-        assertTrue tc.validate()
-        
-        tc.division = ''
-        assertFalse tc.validate()
-        tc.division = 'C'
-        assertTrue tc.validate()
-        
-    }
-    
     void testRegCommandConstraints() {
         mockForConstraintsTests(RegisterCommand)
         def rc = new RegisterCommand(teamIds:[1,2,3])
