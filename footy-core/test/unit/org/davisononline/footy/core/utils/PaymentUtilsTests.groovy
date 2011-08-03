@@ -91,13 +91,12 @@ class PaymentUtilsTests extends GrailsUnitTestCase {
                 )
         )
 
-        PaymentUtils.adjustForManual(p, 10)
+        PaymentUtils.adjustForManual(p, 10, "underpaid")
         assertEquals 10, PaymentUtils.calculateTotal(p)
 
-        PaymentUtils.adjustForManual(p, 5)
+        PaymentUtils.adjustForManual(p, 5, "underpaid")
         assertEquals 5, PaymentUtils.calculateTotal(p)
         assertEquals 10, p.paymentItems[0].amount
-        assertEquals 5, p.paymentItems[0].discountAmount
 
         p.addToPaymentItems (
                 new PaymentItem(
@@ -108,13 +107,12 @@ class PaymentUtilsTests extends GrailsUnitTestCase {
                 )
         )
         assertEquals 15, PaymentUtils.calculateTotal(p)
-        assertEquals 2, p.paymentItems.size()
+        assertEquals 3, p.paymentItems.size()
 
-        PaymentUtils.adjustForManual(p, 10)
+        PaymentUtils.adjustForManual(p, 10, "underpaid")
         assertEquals 10, PaymentUtils.calculateTotal(p)
         assertEquals 10, p.paymentItems[0].amount
-        assertEquals 10, p.paymentItems[0].discountAmount
-        assertEquals 10, p.paymentItems[1].amount
+        assertEquals (-5, p.paymentItems[1].amount)
     }
 
     void testManualAdjustmentOverPaid() {
@@ -132,7 +130,7 @@ class PaymentUtilsTests extends GrailsUnitTestCase {
         assertEquals 10, PaymentUtils.calculateTotal(p)
         assertEquals 1, p.paymentItems.size()
         
-        PaymentUtils.adjustForManual(p, 20)
+        PaymentUtils.adjustForManual(p, 20, "overpaid")
         assertEquals 20, PaymentUtils.calculateTotal(p)
         assertEquals 2, p.paymentItems.size()
         assertEquals 10, p.paymentItems[1].amount
