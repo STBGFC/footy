@@ -8,13 +8,22 @@ class FootyCoreUrlMappings {
         "/person/delQualification/$personId/$qualificationId" (controller:'person', action:'delQualification')
 
         // nicer URL for viewing teams
-        "/u$ageBand/$teamName" (controller:'team', action: 'show')
-        "/U$ageBand/$teamName" (controller:'team', action: 'show')
+        "/u$ageBand/$teamName" {
+            controller = 'team'
+            action = 'show'
+            constraints {
+                ageBand(matches: /\d{1,2}/)
+            }
+        }
+        "/U$ageBand/$teamName" {
+            controller = 'team'
+            action = 'show'
+            constraints {
+                ageBand(matches: /\d{1,2}/)
+            }
+        }
 
         // reset token link in email
         "/login/reset/$token" (controller:'login', action: 'reset')
-
-		"/"(view:"/index")
-		"500"(view:'/error')
 	}
 }
