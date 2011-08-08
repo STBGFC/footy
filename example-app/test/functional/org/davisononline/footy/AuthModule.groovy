@@ -22,16 +22,20 @@ class AuthModule extends Module {
     }
 
     void login(String name, String password) { 
-        if (loggedIn)
-            println "Already logged in!" 
+        if (loggedIn) {
+            println "Already logged in, logging out!"
+            logout()
+        }
         form.j_username = name
         form.j_password = password
         loginButton.click()
     }
 
     void logout() {
-        if (!loggedIn)
+        if (!loggedIn) {
             println "Not logged in!" 
+            return
+        }
         logoutButton.click()
     }
 }

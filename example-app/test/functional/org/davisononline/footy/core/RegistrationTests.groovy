@@ -203,7 +203,7 @@ class RegistrationTests extends AbstractTestHelper {
         flow.contButton.click()
         waitFor { at(PlayerPage) }
         doPlayer("Jock", "Bloggs")
-        parent.value("Dad Bloggs")
+        $("guardian.id").value("Dad Bloggs")
         flow.contButton.click()
         waitFor { at(TeamPage) }
         teamForm.leagueRegistrationNumber = '123456'
