@@ -16,6 +16,7 @@ class ListModule extends Module {
 class ListPage extends Page {
     static content = {
         list { module ListModule }
+        auth { module AuthModule }
         homeButton { $("a", text: "Home") }
     }
 }

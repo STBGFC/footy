@@ -23,7 +23,7 @@ class AuthModule extends Module {
 
     void login(String name, String password) { 
         if (loggedIn)
-            throw new IllegalStateException("Already logged in!")
+            println "Already logged in!" 
         form.j_username = name
         form.j_password = password
         loginButton.click()
@@ -31,7 +31,7 @@ class AuthModule extends Module {
 
     void logout() {
         if (!loggedIn)
-            throw new IllegalStateException("Not logged in!")
+            println "Not logged in!" 
         logoutButton.click()
     }
 }
