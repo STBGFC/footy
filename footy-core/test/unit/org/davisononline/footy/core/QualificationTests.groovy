@@ -17,6 +17,7 @@ class QualificationTests extends GrailsUnitTestCase {
 
     protected void setUp() {
         super.setUp()
+        mockLogging(Qualification.class)
     }
 
     protected void tearDown() {
@@ -59,5 +60,13 @@ class QualificationTests extends GrailsUnitTestCase {
                 attainedOn: d1
         )
         assertNull q.expiresOn
+    }
+
+    void testCompareToNull() {
+        def q = new Qualification(
+                type: lev1,
+                attainedOn: new Date()
+        )
+        assertEquals 1, q.compareTo(null)
     }
 }
