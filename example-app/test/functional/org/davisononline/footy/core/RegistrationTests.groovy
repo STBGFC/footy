@@ -40,6 +40,10 @@ class TeamPage extends Page {
     }
 }
 
+class DupePage extends Page {
+    static at = { title == "Already Registered" }
+}
+
 class InvoicePage extends Page {
     static at = { title == "Payment" }
     static content = {
@@ -58,6 +62,7 @@ class RegistrationTests extends AbstractTestHelper {
         regForm.regTierId = reg
         flow.contButton.click()
         waitFor { at(PlayerPage) }
+        playerForm.dateOfBirth_year = '2003'
         playerForm.medical = "A bit deaf"
         givenName.value(gn)
         familyName.value(fn)
@@ -103,7 +108,7 @@ class RegistrationTests extends AbstractTestHelper {
         // dupe..
         doPlayer("Fred", "Bloggs")
         flow.contButton.click()
-        waitFor { at(InvoicePage) }
+        waitFor { at(DupePage) }
     }
 
     void testDuplicateEmail() {
@@ -150,10 +155,11 @@ class RegistrationTests extends AbstractTestHelper {
         // check validations on player page
         waitFor { at(PlayerPage) }
         flow.contButton.click()
-        assert flow.errors.size() == 3
+        assert flow.errors.size() == 4
         assert flow.error(0).text() == "Property [givenName] of class [class org.davisononline.footy.core.Person] cannot be blank"
         assert flow.error(1).text() == "Property [familyName] of class [class org.davisononline.footy.core.Person] cannot be blank"
-        assert flow.error(2).text() == "Property [medical] of class [class org.davisononline.footy.core.Player] cannot be blank"
+        assert flow.error(2).text() == "Property [dateOfBirth] of class [class org.davisononline.footy.core.Player] cannot be null"
+        assert flow.error(3).text() == "Property [medical] of class [class org.davisononline.footy.core.Player] cannot be blank"
 
         // fill in player details
         doPlayer("Joe", "Bloggs")
@@ -197,7 +203,7 @@ class RegistrationTests extends AbstractTestHelper {
         flow.contButton.click()
         waitFor { at(PlayerPage) }
         doPlayer("Jock", "Bloggs")
-        parent.value("Dad Bloggs")
+        $("guardian.id").value("Dad Bloggs")
         flow.contButton.click()
         waitFor { at(TeamPage) }
         teamForm.leagueRegistrationNumber = '123456'
