@@ -25,13 +25,18 @@ grails.plugins.springsecurity.controllerAnnotations.staticRules = [
 ]
 
 // weceem settings
-weceem.security.policy.path='/home/darren/projects/stbgfc/weceem.policy'
+//weceem.security.policy.path='/path/to/weceem.policy'
 weceem.content.prefix = 'content'
 weceem.tools.prefix = 'wcm-tools'
 weceem.admin.prefix = 'wcm-admin'
 weceem.upload.dir = 'file:///tmp/weceem'
 weceem.logout.url = [controller:'logout']
 weceem.admin.layout='wcmadmin'
+weceem.default.space.template='classpath:/org/davisononline/footy/cms/footy-defaultspace.zip'
+weceem.space.templates = [
+    'public' : 'classpath:/org/davisononline/footy/cms/footy-defaultspace.zip',
+    'internal' : 'classpath:/org/davisononline/footy/cms/footy-defaultspace.zip'
+]
 weceem.springsecurity.details.mapper = { ->
     [ // Stuff required by weceem spring sec
         username: username,
