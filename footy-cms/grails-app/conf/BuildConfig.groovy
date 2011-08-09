@@ -24,10 +24,9 @@ grails.project.dependency.resolution = {
         //mavenRepo "http://repository.jboss.com/maven2/"
     }
     plugins {
-        compile ':spring-security-core:1.2'
-        compile ':weceem:1.0'
-        compile ':weceem-spring-security:1.0'
-        compile 'org.davisononline.footy:footy-core:1.1'
+        runtime ':spring-security-core:1.2'
+        runtime ':weceem:1.0'
+        runtime ':weceem-spring-security:1.0'
     }
     dependencies {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes eg.
