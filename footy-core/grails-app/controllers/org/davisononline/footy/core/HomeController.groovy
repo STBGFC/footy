@@ -22,8 +22,9 @@ class HomeController {
             def person = user ? Person.findByUser(user) : null
             def teams = []
             if (person) {
-                teams = Team.findAllByManager(person)
-                //teams << Team.findByCoachesInList([person])
+                Team.list().each { t ->
+                    if (t.manager == person || t.coaches.contains(person)) teams << t
+                }
             }
             render view: '/admin', model: [person:person, teams:teams]
         }
