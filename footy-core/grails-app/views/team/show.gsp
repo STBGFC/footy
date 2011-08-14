@@ -96,7 +96,8 @@
 
 
         <div id="newspanel">
-
+            <%-- have to do this 2/3 times to get the right output for the requirements.
+             1. is manager.. --%>
             <footy:isManager team="${teamInstance}">
             <modalbox:createLink
                     controller="team"
@@ -107,8 +108,24 @@
                 <footy:teamPhoto team="${teamInstance}"/>
             </modalbox:createLink>
             </footy:isManager>
+            <%-- 2. EDITOR but not manager can also do this.. --%>
+            <sec:ifAnyGranted roles="ROLE_EDITOR">
             <footy:isNotManager team="${teamInstance}">
+            <modalbox:createLink
+                    controller="team"
+                    action="photoUploadDialog"
+                    id="${teamInstance.id}"
+                    title="Team Photo Upload"
+                    width="400">
+                <footy:teamPhoto team="${teamInstance}"/>
+            </modalbox:createLink>
+            </footy:isNotManager>
+            </sec:ifAnyGranted>
+            <%-- 3. neither EDITOR nor manager --%>
+            <footy:isNotManager team="${teamInstance}">
+            <sec:ifNotGranted roles="ROLE_EDITOR">
             <footy:teamPhoto team="${teamInstance}"/>
+            </sec:ifNotGranted>
             </footy:isNotManager>
 
             <div class="newsbox">
