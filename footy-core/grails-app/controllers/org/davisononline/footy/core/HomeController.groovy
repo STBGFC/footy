@@ -8,7 +8,6 @@ class HomeController {
 
     static final String FOOTY_CMS = "footy-cms"
 
-
     def pluginManager
 
     def springSecurityService
@@ -17,6 +16,7 @@ class HomeController {
      * default action
      */
     def index = {
+
         if (springSecurityService.loggedIn) {
             def user = SecUser.findByUsername(springSecurityService.authentication.name)
             def person = user ? Person.findByUser(user) : null
@@ -26,9 +26,12 @@ class HomeController {
                 //teams << Team.findByCoachesInList([person])
             }
             render view: '/admin', model: [person:person, teams:teams]
-            return
         }
-        
+        else
+            forward action: 'contentIndex'
+    }
+
+    def contentIndex = {
         if (pluginManager.hasGrailsPlugin(FOOTY_CMS))
             redirect uri: '/content/index'
 
