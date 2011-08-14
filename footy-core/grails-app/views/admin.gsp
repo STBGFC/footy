@@ -9,36 +9,32 @@
       <div id="homemain">
           <h2>My Details</h2>
           <g:if test="${person}">
-          <div style="float:left"><footy:personPhoto person="${person}"/></div>
+          <div style="float:left">
+                <modalbox:createLink
+                        controller="person"
+                        action="photoUploadDialog"
+                        id="${person.id}"
+                        title="Add or change your photo"
+                        width="400">
+                    <footy:personPhoto person="${person}"/>
+                </modalbox:createLink>
+              </div>
           <div>
           <table>
               <tbody>
               <tr><td class="label">username</td><td class="value"><sec:username /></td></tr>
               <g:if test="${person}">
               <tr><td class="label">full name</td><td class="value">${person}</td></tr>
+              <tr><td class="label">email</td><td class="value">${person.email}</td></tr>
+              <tr><td class="label">mobile</td><td class="value">${person.phone1}</td></tr>
+              <tr><td class="label">other phone</td><td class="value">${person.phone2}</td></tr>
               <tr><td class="label">address</td><td class="value">${person.address}</td></tr>
+              <tr><td>qualifications</td><td><g:render template="/person/qualificationsList" model="[person:person]" plugin="footy-core"/></td></tr>
               <tr><td class="label"></td><td class="value"><g:link controller="person" action="edit" id="${person.id}">edit details</g:link> </td></tr>
               </g:if>
               </tbody>
           </table>
           </div>
-
-          <h2>My Teams</h2>
-          <g:if test="${teams.size()>0}">
-          <ul>
-          <g:each in="${teams}" var="team">
-              <li>
-              <g:link
-                  title="go to team page"
-                  controller="team" action="show"
-                  params="${[ageBand:team.ageBand, teamName:team.name]}">${team}</g:link>
-              </li>
-          </g:each>
-          </ul>
-          </g:if>
-          <g:else>
-          <g:message code="org.davisononline.footy.core.admin.noteams.text" default="No associated teams found"/>
-          </g:else>
           </g:if>
           <g:else>
               logged in: <strong><sec:username /></strong> (no additional details found)
@@ -47,8 +43,24 @@
 
       </div>
       <div id="newspanel">
+          <g:if test="${teams.size()>0}">
           <div class="newsbox">
-              <h2>Club Administration</h2>
+              <h2><g:message code="org.davisononline.footy.core.myteams.label" default="My Teams" /></h2>
+              <ul>
+              <g:each in="${teams}" var="team">
+                  <li>
+                  <g:link
+                      title="go to team page"
+                      controller="team" action="show"
+                      params="${[ageBand:team.ageBand, teamName:team.name]}">${team}</g:link>
+                  </li>
+              </g:each>
+              </ul>
+          </div>
+          </g:if>
+          
+          <div class="newsbox">
+              <h2><g:message code="org.davisononline.footy.core.administration.label" default="Administration" /></h2>
               <ul>
                   <li>
                       <modalbox:createLink
@@ -84,30 +96,26 @@
                       <g:link controller="qualificationType" action="list">Qualification types</g:link>
                   </li>
                   </sec:ifAnyGranted>
-              </ul>
-          </div>
-
-          <sec:ifAnyGranted roles="ROLE_TOURNAMENT_ADMIN">
-          <div class="newsbox">
-              <h2>Tournament Administration</h2>
-              <ul>
+                  <sec:ifAnyGranted roles="ROLE_EDITOR">
                   <li>
-                      <g:link controller="tournament" action="list">All Tournaments</g:link>
+                      <g:link url="wcm-admin">
+                          <g:message
+                                  code="org.davisononline.footy.core.contentadministration.label"
+                                  default="Content Administration" />
+                      </g:link>
                   </li>
-              </ul>
-          </div>
-          </sec:ifAnyGranted>
-
-          <sec:ifAnyGranted roles="ROLE_EDITOR">
-          <div class="newsbox">
-              <h2>Content Administration</h2>
-              <ul>
+                  </sec:ifAnyGranted>
+                  <sec:ifAnyGranted roles="ROLE_TOURNAMENT_ADMIN">
                   <li>
-                      <g:link url="wcm-admin">All Content</g:link>
+                      <g:link controller="tournament" action="list">
+                          <g:message
+                                  code="org.davisononline.footy.core.tournamentadmin.label"
+                                  default="Tournament Administration" />
+                      </g:link>
                   </li>
+                  </sec:ifAnyGranted>
               </ul>
           </div>
-          </sec:ifAnyGranted>
       </div>
   </body>
 </html>
