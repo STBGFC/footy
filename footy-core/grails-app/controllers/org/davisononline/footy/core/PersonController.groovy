@@ -132,6 +132,8 @@ class PersonController {
                 
                 def qual = new Qualification(params)
                 p = Person.get(params.personId)
+                p.refresh()
+                
                 // remove expiring qualifications of the same type
                 def old = p.qualifications.find {it.type == qual.type}
                 old?.each {
@@ -175,7 +177,7 @@ class PersonController {
     /**
      * dialog for manager/coach photo to be uploaded
      */
-    @Secured(["ROLE_COACH"])
+    @Secured(["ROLE_COACH","ROLE_EDITOR"])
     def photoUploadDialog = {
         render (template: 'photoUploadDialog', model: params, contentType: 'text/plain', plugin: 'footy-core')
     }
@@ -183,7 +185,7 @@ class PersonController {
     /**
      * post action for team photo to be uploaded
      */
-    @Secured(["ROLE_COACH"])
+    @Secured(["ROLE_COACH","ROLE_EDITOR"])
     def photoUpload = {
         def photo = request.getFile('photo')
         def p = Person.get(params.id)

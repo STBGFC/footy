@@ -165,7 +165,7 @@ class TeamController {
     /**
      * dialog for team photo to be uploaded
      */
-    @Secured(["ROLE_COACH"])
+    @Secured(["ROLE_COACH", "ROLE_EDITOR"])
     def photoUploadDialog = {
         render (template: 'photoUploadDialog', model: params, contentType: 'text/plain', plugin: 'footy-core')
     }
@@ -173,7 +173,7 @@ class TeamController {
     /**
      * post action for team photo to be uploaded
      */
-    @Secured(["ROLE_COACH"])
+    @Secured(["ROLE_COACH", "ROLE_EDITOR"])
     def photoUpload = {
         def photo = request.getFile('photo')
         def t = Team.get(params.id)
