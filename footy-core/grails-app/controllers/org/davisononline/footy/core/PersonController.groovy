@@ -198,8 +198,11 @@ class PersonController {
             p.photo = bytes
             p.save(flush:true)
         }
-        def t = Team.get(params.teamId)
-        redirect (controller: 'team', action: 'show', params:[ageBand: t.ageBand, teamName: t.name])
+        if (params.teamId) {
+            def t = Team.get(params.teamId)
+            redirect (controller: 'team', action: 'show', params:[ageBand: t.ageBand, teamName: t.name])
+        }
+        redirect controller: 'home'
     }
 
     /**
