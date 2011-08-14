@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <title>Search Results</title>
+    <title>Admin Search Results</title>
     <script type="text/javascript">
         var focusField = 'q2'
     </script>
