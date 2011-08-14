@@ -32,10 +32,9 @@ weceem.admin.prefix = 'wcm-admin'
 weceem.upload.dir = 'file:///tmp/weceem'
 weceem.logout.url = [controller:'logout']
 weceem.admin.layout='wcmadmin'
-weceem.default.space.template='classpath:/org/davisononline/footy/cms/footy-defaultspace.zip'
+weceem.default.space.template='classpath:/org/weceem/resources/footy-space-template.zip'
 weceem.space.templates = [
-    'public' : 'classpath:/org/davisononline/footy/cms/footy-defaultspace.zip',
-    'internal' : 'classpath:/org/davisononline/footy/cms/footy-defaultspace.zip'
+    'footy' : 'classpath:/org/weceem/resources/footy-space-template.zip'
 ]
 weceem.springsecurity.details.mapper = { ->
     [ // Stuff required by weceem spring sec
