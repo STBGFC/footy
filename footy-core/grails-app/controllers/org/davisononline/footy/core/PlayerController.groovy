@@ -128,6 +128,10 @@ class PlayerController {
                 }
             }
 
+            // desperation mesures.. why does person not load sometimes??
+            if (!playerInstance.person)
+                playerInstance.refresh()
+
             playerInstance.properties = params
 
             // TODO move to tx service
