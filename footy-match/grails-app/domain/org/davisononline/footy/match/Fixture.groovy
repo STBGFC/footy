@@ -13,7 +13,7 @@ class Fixture {
     public static final String LEAGUE_GAME = 'League'
     public static final String CUP_GAME = 'Cup'
     public static final String FRIENDLY_GAME = 'Friendly'
-    public static final String[] gameTypes = [LEAGUE_GAME, CUP_GAME, FRIENDLY_GAME]
+    static def GAME_TYPES = [LEAGUE_GAME, CUP_GAME, FRIENDLY_GAME]
 
     Team homeTeam
     Team awayTeam
@@ -31,6 +31,11 @@ class Fixture {
         dateTime nullable: true
         result nullable: true
         referee nullable: true
-        type inList: gameTypes
+        type inList: GAME_TYPES
+    }
+
+    public String toString() {
+        def mid = (result ? result : "vs.")
+        "${homeTeam.club} ${homeTeam} ${mid} ${awayTeam.club} ${awayTeam}"
     }
 }
