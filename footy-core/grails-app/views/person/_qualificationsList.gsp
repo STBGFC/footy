@@ -5,7 +5,7 @@
                                     <g:set var="qualClass" value="${(qual.expiresOn && qual.expiresOn < now) ? 'qualExpired' : 'qualInDate'}"/>
                                         <li>
                                             <span class="${qualClass}">${qual}</span>
-                                            <sec:ifAnyGranted roles="ROLE_OFFICER">
+                                            <sec:ifAnyGranted roles="ROLE_CLUB_ADMIN">
                                             <g:remoteLink
                                                     action="delQualification"
                                                     params="[personId:person.id,qualificationId:qual.id]"

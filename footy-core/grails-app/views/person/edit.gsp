@@ -59,7 +59,7 @@
                 <div id="qualifications" class="value">
                     <g:render template="qualificationsList" model="[person:personCommand]" plugin="footy-core"/>
                 </div>
-                <sec:ifAnyGranted roles="ROLE_OFFICER">
+                <sec:ifAnyGranted roles="ROLE_CLUB_ADMIN">
                 <modalbox:createLink
                         controller="person"
                         action="assignQualification"
@@ -86,6 +86,7 @@
                 </ul>
             </div>
 
+            <sec:ifAnyGranted roles="ROLE_OFFICER">
             <g:if test="${personCommand.payments}">
             <div class="newsbox">
                 <h2>
@@ -96,6 +97,7 @@
                 </div>
             </div>
             </g:if>
+            </sec:ifAnyGranted>
             </g:if>
         </div>
     </body>
