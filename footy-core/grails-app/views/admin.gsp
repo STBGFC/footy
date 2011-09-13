@@ -66,6 +66,9 @@
               <h2><g:message code="org.davisononline.footy.core.administration.label" default="Administration" /></h2>
               <ul>
                   <li>
+                      <g:link controller="login" action="changePassword">Change Password</g:link>
+                  </li>
+                  <li>
                       <modalbox:createLink
                           controller="team"
                           action="messageDialog"
