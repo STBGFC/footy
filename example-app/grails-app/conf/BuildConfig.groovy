@@ -20,8 +20,8 @@ grails.project.dependency.resolution = {
 
         // uncomment the below to enable remote dependency resolution
         // from public Maven repositories
-        //mavenLocal()
-        //mavenCentral()
+        mavenLocal()
+        mavenCentral()
         //mavenRepo "http://snapshots.repository.codehaus.org"
         //mavenRepo "http://repository.codehaus.org"
         //mavenRepo "http://download.java.net/maven/2/"
@@ -33,7 +33,7 @@ grails.project.dependency.resolution = {
         // runtime 'mysql:mysql-connector-java:5.1.13'
         test("org.springframework:spring-test:3.0.5.RELEASE")
         test "org.codehaus.geb:geb-junit4:0.6.0"
-        test("org.seleniumhq.selenium:selenium-firefox-driver:2.0rc3")
+        test("org.seleniumhq.selenium:selenium-firefox-driver:2.5.0")
         test("org.seleniumhq.selenium:selenium-ie-driver:2.0rc3")
     }
     plugins {
