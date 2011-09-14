@@ -129,10 +129,14 @@ class PlayerController {
             }
 
             // desperation mesures.. why does person not load sometimes??
-            if (!playerInstance.person)
+            if (!playerInstance.person) {
+                log.error "Player [${playerInstance}] has been loaded with no associated Person object"
                 playerInstance.refresh()
+                if (!playerInstance.person) log.error "    ... still not available after a refresh()"
+            }
 
             playerInstance.properties = params
+            if (!playerInstance.person) log.error "    ... and STILL not available after param binding with id [${params['person.id']}]"
 
             // TODO move to tx service
             if (!playerInstance.hasErrors() && !playerInstance?.person?.hasErrors() && playerInstance.person.save() && playerInstance.save()) {

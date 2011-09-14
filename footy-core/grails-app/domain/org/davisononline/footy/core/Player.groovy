@@ -55,10 +55,10 @@ class Player implements Comparable, Serializable {
     static mapping = {
         medical type: 'text'
         notes type: 'text'
-        person cascade: 'all', fetch: 'join'
+        person cascade: 'all', fetch: 'join', lazy: false
         guardian cascade: 'save-update'
         secondGuardian cascade: 'save-update'
-        currentRegistration: 'all-delete-orphan'
+        currentRegistration cascade: 'all-delete-orphan'
     }
 
     /**

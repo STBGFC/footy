@@ -4,6 +4,7 @@
                                 <label for="person.givenName"><g:message code="org.davisononline.footy.core.contactGivenName.label" default="Given Name(s)" /></label>
                             </td>
                             <td  class="value ${hasErrors(bean: playerInstance.person, field: 'givenName', 'errors')}">
+                                <g:hiddenField name="person.id" value="${playerInstance?.person?.id}"/>
                                 <g:textField name="person.givenName" value="${playerInstance?.person?.givenName}" />
                                 <g:render template="/shared/fieldError" model="['instance':playerInstance.person,'field':'givenName']" plugin="footy-core"/>
                             </td>
