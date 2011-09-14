@@ -13,6 +13,7 @@ class FootyCoreBootStrap {
         def clubAdminRole = SecRole.findByAuthority('ROLE_CLUB_ADMIN') ?: new SecRole(authority: 'ROLE_CLUB_ADMIN').save(failOnError: true)
         def officerRole = SecRole.findByAuthority('ROLE_OFFICER') ?: new SecRole(authority: 'ROLE_OFFICER').save(failOnError: true)
         def coachRole = SecRole.findByAuthority('ROLE_COACH') ?: new SecRole(authority: 'ROLE_COACH').save(failOnError: true)
+        def editorRole = SecRole.findByAuthority('ROLE_EDITOR') ?: new SecRole(authority: 'ROLE_EDITOR').save(failOnError: true)
 
         def adminUser = SecUser.findByUsername('sa') ?: new SecUser(
             username: 'sa',
