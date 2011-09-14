@@ -6,15 +6,15 @@ class FootyCmsGrailsPlugin {
     // the other plugins this plugin depends on
     def dependsOn = [
         'footy-core':'1.1>*',
-        weceem:'1.0>*',
-        'weceem-spring-security':'1.0>*'
+        weceem:'1.0>*'
     ]
     // resources that are excluded from plugin packaging
     def pluginExcludes = [
             "grails-app/views/error.gsp"
     ]
 
-    // TODO Fill in these fields
+    def loadAfter = ['springSecurityCore'] // So that we get access to the service
+
     def author = "Darren Davison"
     def authorEmail = "darren@davisononline.org"
     def title = "CMS plugin for the Footy suite."  
@@ -26,29 +26,72 @@ Acts as a thin wrapper around the weceem plugin at present
     def documentation = "http://grails.org/plugin/footy-cms"
 
     def doWithWebDescriptor = { xml ->
-        // TODO Implement additions to web.xml (optional), this event occurs before 
+        // Implement additions to web.xml (optional), this event occurs before
     }
 
     def doWithSpring = {
-        // TODO Implement runtime spring config (optional)
+        // Implement runtime spring config (optional)
     }
 
     def doWithDynamicMethods = { ctx ->
-        // TODO Implement registering dynamic methods to classes (optional)
+        // Implement registering dynamic methods to classes (optional)
     }
 
     def doWithApplicationContext = { applicationContext ->
-        // TODO Implement post initialization spring config (optional)
+        /*
+         * bridge s2-core to weceem.. this code does the same job as the
+         * weceem-spring-security plugin which is not required and should not
+         * be present.
+         */
+        def authenticateService = applicationContext.springSecurityService
+        applicationContext.wcmSecurityService.securityDelegate = [
+            getUserName : { ->
+                def princ = authenticateService.principal
+                if (log.debugEnabled) {
+                    log.debug "Weceem security getUserName callback - user principal is: ${princ} (an instance of ${princ?.class})"
+                }
+                if (princ instanceof String) {
+                    return null
+                } else {
+                    return princ?.username
+                }
+            },
+            getUserEmail : { ->
+                def princ = authenticateService.principal
+                if (log.debugEnabled) {
+                    log.debug "Weceem security getUserEmail callback - user principal is: ${princ} (an instance of ${princ?.class})"
+                }
+                return (princ instanceof String) ? null : princ?.email
+            },
+            getUserRoles : { ->
+                def princ = authenticateService.principal
+                if (log.debugEnabled) {
+                    log.debug "Weceem security getUserRoles callback - user principal is: ${princ} (an instance of ${princ?.class})"
+                }
+                if (princ instanceof String) {
+                    return ['ROLE_GUEST']
+                }
+                def auths = []
+                def authorities = princ?.authorities
+                if (authorities) {
+                    auths.addAll(authorities?.authority)
+                }
+                return auths ?: ['ROLE_GUEST']
+            },
+            getUserPrincipal : { ->
+                authenticateService.principal
+            }
+        ]
     }
 
     def onChange = { event ->
-        // TODO Implement code that is executed when any artefact that this plugin is
+        // Implement code that is executed when any artefact that this plugin is
         // watching is modified and reloaded. The event contains: event.source,
         // event.application, event.manager, event.ctx, and event.plugin.
     }
 
     def onConfigChange = { event ->
-        // TODO Implement code that is executed when the project configuration changes.
+        // Implement code that is executed when the project configuration changes.
         // The event is the same as for 'onChange'.
     }
 }
