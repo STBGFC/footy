@@ -39,7 +39,11 @@ class TeamController {
             response.sendError(404)
         }
         else {
-            return [teamInstance: teamInstance, players: Player.findAllByTeam(teamInstance, [sort:"person.familyName", order:"asc"])]
+            return [
+                    teamInstance: teamInstance,
+                    players: Player.findAllByTeam(teamInstance, [sort:"person.familyName", order:"asc"]),
+                    latestNews: NewsItem.findAllByTeam(teamInstance, [max: params?.maxNews ?: 5, sort:'createdDate', order:'desc'])
+            ]
         }
 
     }
@@ -134,6 +138,32 @@ class TeamController {
         }
 
         redirect(session.breadcrumb ? [uri: session.breadcrumb] : [action: "list"])
+    }
+
+    /**
+     * create the dialog for news items
+     */
+    @Secured(["ROLE_COACH"])
+    def newsDialog = {
+        render (template: 'newsDialog', model: params, contentType: 'text/plain', plugin: 'footy-core')
+    }
+
+    /**
+     * adds a news item for display on the team page and optional email to
+     * team parents/members
+     */
+    @Secured(["ROLE_COACH"])
+    def addNews = {
+        def ni = new NewsItem(params)
+        def t = ni.team
+        if (ni.save(flush:true)) {
+            flash.message = "${message(code: 'org.davisononline.footy.core.newssaved.message', default: 'News saved to page.')}"
+            redirect (action: 'show', params:[ageBand: t.ageBand, teamName: t.name])
+        }
+        else {
+            response.setStatus 500
+            flash.message = "Failed to save news item"
+        }
     }
 
     /**

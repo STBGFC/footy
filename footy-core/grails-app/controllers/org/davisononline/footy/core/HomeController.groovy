@@ -1,5 +1,6 @@
 package org.davisononline.footy.core
 
+
 /**
  * figures out the best home page to display.  UrlMappings should set this
  * controller against the '/' uri
@@ -37,5 +38,13 @@ class HomeController {
             redirect uri: '/content/index'
 
         render view: '/index'
+    }
+
+    /**
+     * fetches home page news items as a JSON list
+     */
+    def news = {
+        def items = NewsItem.findAllByClubWide(true, [max: params?.max ?: 8, sort:'createdDate', order:'desc'])
+        items
     }
 }

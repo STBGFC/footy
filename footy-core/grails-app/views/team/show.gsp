@@ -32,6 +32,14 @@
                       width="420">
                     <img src="${createLinkTo(dir:'images', file:'vmail.png', plugin:'footy-core')}" alt="${message(code: 'team.vmail.label', default: 'Send Email')}"/>
                 </modalbox:createLink>
+                <modalbox:createLink
+                      controller="team"
+                      action="newsDialog"
+                      title="Create News Item"
+                      id="${teamInstance.id}"
+                      width="420">
+                    <img src="${createLinkTo(dir:'images', file:'vnews.png', plugin:'footy-core')}" alt="${message(code: 'team.vnews.label', default: 'Add Team News')}"/>
+                </modalbox:createLink>
                 </footy:isManager>
 
                 <footy:isNotManager team="${teamInstance}">
@@ -48,12 +56,37 @@
                 </g:link>
             </div>
 
-            <h2>Latest News &amp; Results</h2>
+            <g:if test="${latestNews.size() == 0}">
+            <h2><g:message code="org.davisononline.footy.core.team.news.title" default="Latest News &amp; Results"/></h2>
             <p>
-                No news yet.
+                <g:message code="org.davisononline.footy.core.team.nonews.test" default="No news yet."/>
             </p>
-            <h2>${teamInstance.players.size()} Players</h2>
+            </g:if>
+            <g:else>
+                <g:each in="${latestNews}" var="news">
+                    <g:set var="abst" value="${news.abstractText()}"/>
+                    <h2><g:formatDate date="${news.createdDate}" format="dd MMM"/>: ${news.subject.encodeAsHTML()}</h2>
+                    <p id="abstractNewsBody${news.id}" class="newsBody">
+                        ${abst}
+                        <g:if test="${abst.endsWith(' ...')}">
+                        <br/><a href="#" onclick="$('abstractNewsBody${news.id}').hide();Effect.BlindDown('fullNewsBody${news.id}', { duration: 0.5 })"><g:message code="org.davisononline.footy.core.team.readmore.label" default="Read More..."/></a>
+                        </g:if>
+                    </p>
+                    <g:if test="${abst.endsWith(' ...')}">
+                    <p class="completeArticle" style="display:none" id="fullNewsBody${news.id}">${news.body.encodeAsHTML()}</p>
+                    </g:if>
+                </g:each>
+                <g:if test="${!params.maxNews}">
+                <p style="text-align:right">
+                    <g:link controller="team" action="show" params="${[ageBand:teamInstance.ageBand, teamName:teamInstance.name, maxNews: 100]}">
+                    <g:message code="org.davisononline.footy.match.readall.link" default="Read All"/>
+                    </g:link>
+                </p>
+                </g:if>
+            </g:else>
+
             <footy:isManager team="${teamInstance}">
+            <h2>Squad (${teamInstance.players.size()} Players)</h2>
             <table class="list">
                 <thead>
                     <tr>
@@ -86,12 +119,6 @@
                 </tbody>
             </table>
             </footy:isManager>
-
-            <footy:isNotManager team="${teamInstance}">
-            <p>
-                ${players.join(", ")}
-            </p>
-            </footy:isNotManager>
         </div>
 
 
@@ -154,6 +181,11 @@
                         <g:render template="coachPhotoLink" model="[person:c]" plugin="footy-core"/>
                     </li>
                     </g:each>
+                    <footy:isNotManager team="${teamInstance}">
+                    <li>Players:<br/>
+                        ${players.join(", ")}
+                    </li>
+                    </footy:isNotManager>
                 </ul>
             </div>
 
