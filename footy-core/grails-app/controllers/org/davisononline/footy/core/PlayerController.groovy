@@ -100,18 +100,22 @@ class PlayerController {
             redirect(action: "list")
         }
         else {
-            /*
-             * use only valid teams.  Difficult to calculate this accurately (which should normally
-             * be currentAge or currentAge plus 1) because team age bands might be rolled forward
-             * before the ageband cutoff for the league.  We have to allow current age to current
-             * age plus 2 for safety.
-             */
-            def age = playerInstance.getAgeAtNextCutoff()
-            def upperAge = (age < 7) ? 6 : age + 2
-            def vt = Team.findAllByClubAndAgeBandBetween(Club.getHomeClub(), age, upperAge, [sort:'ageBand'])
-            def parents = Person.findAllByEligibleParent(true, [sort:'familyName'])
-            return [playerInstance: playerInstance, validTeams: vt, parents: parents]
+            return modelForPlayerEdit(playerInstance)
         }
+    }
+
+    private modelForPlayerEdit(playerInstance) {
+        /*
+         * use only valid teams.  Difficult to calculate this accurately (which should normally
+         * be currentAge or currentAge plus 1) because team age bands might be rolled forward
+         * before the ageband cutoff for the league.  We have to allow current age to current
+         * age plus 2 for safety.
+         */
+        def age = playerInstance.getAgeAtNextCutoff()
+        def upperAge = (age < 7) ? 6 : age + 2
+        def vt = Team.findAllByClubAndAgeBandBetween(Club.getHomeClub(), age, upperAge, [sort:'ageBand'])
+        def parents = Person.findAllByEligibleParent(true, [sort:'familyName'])
+        return [playerInstance: playerInstance, validTeams: vt, parents: parents]
     }
 
     @Secured(["ROLE_COACH"]) // <-- TEMP
@@ -123,28 +127,29 @@ class PlayerController {
                 if (playerInstance.version > version) {
 
                     playerInstance.errors.rejectValue("version", "default.optimistic.locking.failure", [message(code: 'player.label', default: 'Player')] as Object[], "Another user has updated this Player while you were editing")
-                    render(view: "edit", model: [playerInstance: playerInstance])
+                    render(view: "edit", model: modelForPlayerEdit(playerInstance))
                     return
                 }
             }
 
-            // desperation mesures.. why does person not load sometimes??
-            if (!playerInstance.person) {
-                log.error "Player [${playerInstance}] has been loaded with no associated Person object"
-                playerInstance.refresh()
-                if (!playerInstance.person) log.error "    ... still not available after a refresh()"
-            }
-
-            playerInstance.properties = params
-            if (!playerInstance.person) log.error "    ... and STILL not available after param binding with id [${params['person.id']}]"
-
             // TODO move to tx service
+            // This often throws an NPE in prod (only) which seems to be due to:
+            // http://jira.grails.org/browse/GRAILS-7471
+            try {
+                log.debug playerInstance
             if (!playerInstance.hasErrors() && !playerInstance?.person?.hasErrors() && playerInstance.person.save() && playerInstance.save()) {
                 flash.message = "${message(code: 'default.updated.message', args: [message(code: 'player.label', default: ''), playerInstance])}"
                 redirect(session.breadcrumb ? [uri: session.breadcrumb] : [action: "list"])
             }
             else {
-                render(view: "edit", model: [playerInstance: playerInstance])
+                render(view: "edit", model: modelForPlayerEdit(playerInstance))
+            }
+            }
+            catch (NullPointerException npe) {
+                log.error "NPE saving player data"
+                log.error "Player is [${playerInstance}]"
+                log.error "Errors are [${playerInstance?.errors}]"
+                render(view: "edit", model: modelForPlayerEdit(playerInstance))
             }
         }
         else {
