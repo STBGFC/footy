@@ -136,6 +136,7 @@ class PlayerController {
             // This often throws an NPE in prod (only) which seems to be due to:
             // http://jira.grails.org/browse/GRAILS-7471
             try {
+                playerInstance.properties = params
                 log.debug playerInstance
             if (!playerInstance.hasErrors() && !playerInstance?.person?.hasErrors() && playerInstance.person.save() && playerInstance.save()) {
                 flash.message = "${message(code: 'default.updated.message', args: [message(code: 'player.label', default: ''), playerInstance])}"
