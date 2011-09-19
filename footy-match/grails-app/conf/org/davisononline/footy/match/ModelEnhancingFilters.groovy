@@ -1,4 +1,4 @@
-package footy.match
+package org.davisononline.footy.match
 
 /*
  * filters footy-core controller calls to enhance the model for footy-match
