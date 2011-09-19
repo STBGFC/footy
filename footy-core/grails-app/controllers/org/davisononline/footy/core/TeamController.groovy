@@ -178,8 +178,6 @@ class TeamController {
             return
         }
 
-        def _url =
-
         // render news as RSS
         render(feedType:"rss") {
             title = "${t} News"
