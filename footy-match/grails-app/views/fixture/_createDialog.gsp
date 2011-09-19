@@ -12,7 +12,7 @@
         <tr>
             <td>Venue</td>
             <td>
-                <g:radioGroup name="venue" values="${['home','away']}" labels="${['home','away']}" value="home">
+                <g:radioGroup name="homeGame" values="${['true','false']}" labels="${['home','away']}" value="true">
                     ${it.radio} ${it.label}
                 </g:radioGroup>
             </td>
@@ -20,8 +20,18 @@
         <tr>
             <td>Opposition</td>
             <td>
-                <g:select name="awayTeam.id" optionKey="id" from="${oppositionTeams}" optionValue="${{it.club.name + ' ' + it}}"/>
-                <g:link controller="team" action="create"><g:message code="org.davisononline.footy.match.newteam" default="Add Team"/></g:link>
+                <g:select 
+                        name="opposition" 
+                        from="${oppositionTeams}" 
+                        optionValue="${{it.club.name + ' ' + it.toString()}}"
+                        optionKey="id"
+                        noSelection="${['-1':'-- Not Listed --']}"
+                />
+                <br/>
+                If your opposition is not listed in the drop-down above, simply write their team name in the box below instead (ensure you 
+                leave the drop-down set to "-- Not Listed --"
+                <br/>
+                <g:textField name="opposition2"/>
             </td>
         </tr>
         <tr>
@@ -32,6 +42,13 @@
             </td>
         </tr>
     </table>
-    <g:hiddenField name="homeTeam.id" value="${teamInstance.id}" />
-    <g:submitToRemote value="Create" title="Create" update="fixtureList" url="[controller:'fixture',action:'save']"/>
+    <g:hiddenField name="team.id" value="${teamInstance.id}" />
+    <g:submitToRemote 
+        value="Create" 
+        title="Create" 
+        update="fixtureList"
+        onSuccess="alert('Fixture saved')"
+        onFailure="alert('Failed to save!  Check values')"
+        url="[controller:'fixture',action:'save']"
+        />
 </g:form>
