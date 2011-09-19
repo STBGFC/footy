@@ -117,16 +117,4 @@ class FixtureController {
             redirect(action: "list")
         }
     }
-
-    @Secured(["permitAll"])
-    def matchReport = {
-        def fixtureInstance = Fixture.get(params.id)
-        def report
-        if (!fixtureInstance?.matchReport)
-            report = "No such fixture found, or no match report available"
-        else
-            report = fixtureInstance.matchReport
-
-        render template: 'matchReport', model:[report: report, fixture: fixtureInstance], plugin: 'footy-match', contentType: 'text/plain'
-    }
 }
