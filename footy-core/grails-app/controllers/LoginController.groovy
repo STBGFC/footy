@@ -17,6 +17,8 @@ import org.davisononline.footy.core.Person
 import org.davisononline.footy.core.utils.TemplateUtils
 import org.codehaus.groovy.grails.commons.ConfigurationHolder
 import org.davisononline.footy.core.Club
+import org.davisononline.footy.core.Team
+import grails.plugins.springsecurity.Secured
 
 
 class LoginController {
@@ -291,6 +293,19 @@ class LoginController {
             log.warn "Unable to send email for password reset attempt ($user.username); $ex"
         }
         
+    }
+
+    @Secured(["IS_AUTHENTICATED_FULLY"])
+    def profile = {
+        def user = SecUser.findByUsername(springSecurityService.authentication.name)
+        def person = user ? Person.findByUser(user) : null
+        def teams = []
+        if (person) {
+            Team.list().each { t ->
+                if (t.manager == person || t.coaches.contains(person)) teams << t
+            }
+        }
+        [person:person, teams:teams]
     }
 
 }

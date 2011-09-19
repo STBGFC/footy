@@ -2,13 +2,11 @@
 <html>
   <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	    <title>${person ?: 'Staff'} Home Page</title>
+	    <title>${person ?: 'Staff'}'s Profile Page</title>
   </head>
 
   <body>
       <div id="homemain">
-
-          <p>Use <g:link controller="home" action="contentIndex">this link</g:link> to go to the main home page instead</p>
           
           <h2>My Details</h2>
           <g:if test="${person}">
