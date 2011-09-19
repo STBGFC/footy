@@ -196,11 +196,8 @@
                 </ul>
             </div>
 
-            <div class="newsbox">
-                <h2>Calendar</h2>
-                <ul>
-                    <li>No calendar events yet</li>
-                </ul>
+            <div id="fixtureList">
+            <g:render template="/fixture/fixtureList" plugin="footy-match" model="${fixtures}"/>
             </div>
             
             <div id="otherteams">
