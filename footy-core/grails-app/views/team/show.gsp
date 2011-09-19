@@ -33,16 +33,7 @@
                       width="420">
                     <img src="${createLinkTo(dir:'images', file:'vmail.png', plugin:'footy-core')}" alt="${message(code: 'team.vmail.label', default: 'Send Email')}"/>
                 </modalbox:createLink>
-                <modalbox:createLink
-                      controller="team"
-                      action="newsDialog"
-                      title="Create News Item"
-                      id="${teamInstance.id}"
-                      width="420">
-                    <img src="${createLinkTo(dir:'images', file:'vnews.png', plugin:'footy-core')}" alt="${message(code: 'team.vnews.label', default: 'Add Team News')}"/>
-                </modalbox:createLink>
                 </footy:isManager>
-
                 <footy:isNotManager team="${teamInstance}">
                 <a
                     title="${message(code: 'team.vmail.label', default: 'Email Manager/Coaches')}"
@@ -58,6 +49,16 @@
                 </g:link>
 
                 <!-- RSS -->
+                <footy:isManager team="${teamInstance}">
+                <modalbox:createLink
+                      controller="team"
+                      action="newsDialog"
+                      title="Create News Item"
+                      id="${teamInstance.id}"
+                      width="420">
+                    <img src="${createLinkTo(dir:'images', file:'vnews.png', plugin:'footy-core')}" alt="${message(code: 'team.vnews.label', default: 'Add Team News')}"/>
+                </modalbox:createLink>
+                </footy:isManager>
                 <g:link action="feed" id="${teamInstance.id}" title="${message(code: 'team.feed.label', default: 'Subscribe to news feed for ' + teamInstance.toString())}">
                 <img src="${createLinkTo(dir:'images', file:'rss.png', plugin:'footy-core')}" alt="${message(code: 'team.feed.label', default: 'Subscribe')}"/>
                 </g:link>
