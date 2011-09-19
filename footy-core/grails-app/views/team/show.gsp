@@ -3,6 +3,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <feed:meta kind="rss" version="2.0" controller="team" action="feed" id="${teamInstance.id}"/>
         <title>${teamInstance}</title>
         <link rel="stylesheet" href="${resource(dir:'css',file:'bubbletips.css',plugin:'footy-core')}" />
     </head>
@@ -51,8 +52,14 @@
                 </a>
                 </footy:isNotManager>
 
+                <!-- address -->
                 <g:link action="addresscards" id="${teamInstance.id}" title="${message(code: 'team.vmail.label', default: 'Download contact details for your address book')}">
                 <img src="${createLinkTo(dir:'images', file:'vcards.png', plugin:'footy-core')}" alt="${message(code: 'team.vcards.label', default: 'Download Contact Details')}"/>
+                </g:link>
+
+                <!-- RSS -->
+                <g:link action="feed" id="${teamInstance.id}" title="${message(code: 'team.feed.label', default: 'Subscribe to news feed for ' + teamInstance.toString())}">
+                <img src="${createLinkTo(dir:'images', file:'rss.png', plugin:'footy-core')}" alt="${message(code: 'team.feed.label', default: 'Subscribe')}"/>
                 </g:link>
             </div>
 
@@ -69,11 +76,11 @@
                     <p id="abstractNewsBody${news.id}" class="newsBody">
                         ${abst}
                         <g:if test="${abst.endsWith(' ...')}">
-                        <br/><a href="#" onclick="$('abstractNewsBody${news.id}').hide();Effect.BlindDown('fullNewsBody${news.id}', { duration: 0.5 })"><g:message code="org.davisononline.footy.core.team.readmore.label" default="Read More..."/></a>
+                        <br/><a href="#" onclick="$('abstractNewsBody${news.id}').hide();Effect.BlindDown('fullNewsBody${news.id}', { duration: 0.5 });return false"><g:message code="org.davisononline.footy.core.team.readmore.label" default="Read More..."/></a>
                         </g:if>
                     </p>
                     <g:if test="${abst.endsWith(' ...')}">
-                    <p class="completeArticle" style="display:none" id="fullNewsBody${news.id}">${news.body.encodeAsHTML()}</p>
+                    <p class="completeArticle" style="display:none" id="fullNewsBody${news.id}">${news.body.encodeAsHTML().replace('\n\n', '<br/><br/>')}</p>
                     </g:if>
                 </g:each>
                 <g:if test="${!params.maxNews}">

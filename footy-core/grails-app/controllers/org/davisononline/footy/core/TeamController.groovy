@@ -167,6 +167,38 @@ class TeamController {
     }
 
     /**
+     * RSS news feed
+     */
+    @Secured(["permitAll"])
+    def feed = {
+        cache "content"
+        def t = Team.get(params?.id)
+        if (!t) {
+            response.sendError 404, 'Unknown feed'
+            return
+        }
+
+        def _url =
+
+        // render news as RSS
+        render(feedType:"rss") {
+            title = "${t} News"
+            link = "${grailsApplication.config.grails.serverURL}/team/feed/${t.id}"
+            description = "Updates for the ${t} team"
+
+            def news = NewsItem.findAllByTeam(t, [max: 25, sort:'createdDate', order:'desc'])
+            news.each() { article ->
+                entry(article.subject) {
+                    author = t.manager
+                    publishedDate = article.createdDate
+                    link = "${grailsApplication.config.grails.serverURL}/u${t.ageBand}/${t.name}"
+                    content(article.body)
+                }
+            }
+        }
+    }
+
+    /**
      * create the league registration form PDF from the current team
      * and players, sending direct to the ServletOutputStream
      *

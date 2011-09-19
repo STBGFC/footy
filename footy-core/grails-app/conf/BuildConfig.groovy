@@ -31,6 +31,7 @@ grails.project.dependency.resolution = {
         compile ':spring-security-core:1.2.1'
         compile ':modalbox:0.4'
         compile ':cache-headers:1.1.5'
+        compile ':feeds:1.5'
         runtime ':hibernate:1.3.7'
         runtime ':webflow:1.3.7'
         runtime ':tomcat:1.3.7'
