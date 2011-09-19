@@ -157,25 +157,8 @@
                 </ul>
             </div>
 
-            <div class="newsbox">
-                <h2>Calendar</h2>
-                <ul id="fixtureList">
-                    <g:render template="/fixture/fixtureList" plugin="footy-match" model="${fixtures}"/>
-                </ul>
-                <footy:isManager team="${teamInstance}">
-                <ul>
-                    <li>
-                        <modalbox:createLink
-                                controller="fixture"
-                                action="createDialog"
-                                id="${teamInstance.id}"
-                                title="${teamInstance} Fixture"
-                                width="450">
-                            <g:message code="org.davisononline.footy.match.label.create" default="Create Fixture"/>
-                        </modalbox:createLink>
-                    </li>
-                </ul>
-                </footy:isManager>
+            <div id="fixtureList">
+            <g:render template="/fixture/fixtureList" plugin="footy-match" model="${fixtures}"/>
             </div>
             
             <div id="otherteams">
