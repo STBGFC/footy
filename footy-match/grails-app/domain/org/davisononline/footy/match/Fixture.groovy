@@ -44,6 +44,7 @@ class Fixture {
     String matchReport
 
     static constraints = {
+        opposition blank: false, size: 10..70
         matchReport nullable: true
         dateTime nullable: true
         referee nullable: true

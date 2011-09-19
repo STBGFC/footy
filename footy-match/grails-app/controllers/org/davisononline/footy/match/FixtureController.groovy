@@ -49,7 +49,6 @@ class FixtureController {
             def msg = "Unable to save fixture [${Fixture}]; " + fixtureInstance.errors
             log.error msg
             response.status = 500
-            return
         }
         render template: 'fixtureList', model: [fixtures: footyMatchService.getFixtures(fixtureInstance.team), myteam: fixtureInstance.team], plugin: 'footy-match', contentType: 'text/plain'
     }

@@ -102,7 +102,7 @@
                   </sec:ifAnyGranted>
                   <sec:ifAnyGranted roles="ROLE_EDITOR">
                   <li>
-                      <g:link url="wcm-admin">
+                      <g:link url="../wcm-admin">
                           <g:message
                                   code="org.davisononline.footy.core.contentadministration.label"
                                   default="Content Administration" />
