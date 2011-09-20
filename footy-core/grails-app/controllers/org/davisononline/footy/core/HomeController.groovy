@@ -25,10 +25,28 @@ class HomeController {
     }
 
     /**
-     * fetches home page news items as a JSON list
+     * fetches home page news items as an RSS feed.  s/be mapped to a '/feed'
+     * url
      */
-    def news = {
-        def items = NewsItem.findAllByClubWide(true, [max: params?.max ?: 8, sort:'createdDate', order:'desc'])
-        items
+    def feed = {
+        cache "content"
+
+        // render news as RSS
+        render(feedType:"rss") {
+            title = "${Club.homeClub.name} News Feed"
+            link = "${grailsApplication.config.grails.serverURL}/feed"
+            description = "Club and team news updates"
+
+            def news = NewsItem.findAllByClubWide(true, [max: 50, sort:'createdDate', order:'desc'])
+            news.each() { article ->
+                def t = article.team
+                entry("${article.subject} (${t})") {
+                    author = t.manager
+                    publishedDate = article.createdDate
+                    link = "${grailsApplication.config.grails.serverURL}/u${t.ageBand}/${t.name}"
+                    content(article.body)
+                }
+            }
+        }
     }
 }

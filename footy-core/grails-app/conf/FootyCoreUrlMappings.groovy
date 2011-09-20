@@ -25,5 +25,8 @@ class FootyCoreUrlMappings {
 
         // reset token link in email
         "/login/reset/$token" (controller:'login', action: 'reset')
+
+        // site wide news feed
+        "/feed" (controller: 'home', action: 'feed')
 	}
 }
