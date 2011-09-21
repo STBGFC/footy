@@ -55,6 +55,15 @@
                             </td>
                             <td>
                                 ${payment ? formatNumber(number:PaymentUtils.calculateTotal(payment), type:'currency', currencyCode:payment.currency) : 'n/a'}
+                                <modalbox:createLink
+                                        controller="invoice"
+                                        action="paymentDialog"
+                                        id="${payment.transactionId}"
+                                        params="${[totalAmount:0, refund:true]}"
+                                        title="Refund all or part of this invoice"
+                                        width="350">
+                                    refund
+                                </modalbox:createLink>
                             </td>
                         </tr>
                     </g:each>

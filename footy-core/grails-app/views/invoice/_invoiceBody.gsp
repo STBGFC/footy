@@ -109,9 +109,28 @@
             ${Club.homeClub.treasurer?.address}
         </p>
         </g:if>
+
+        <%-- already paid --%>
         <g:else>
+        <sec:ifAnyGranted roles="ROLE_OFFICER">
         <p>
             <g:message code="org.davisononline.footy.core.invoicepaid" default="This invoice has already been paid.  Thank you."/>
             <g:if test="${payment.paymentDate}"> (<g:formatDate date="${payment.paymentDate}" format="dd/MM/yyyy"/>)</g:if>
         </p>
+        <h2>Refund (Club Officer Only)</h2>
+        <p>
+            <g:message
+                    code="org.davisononline.footy.core.invoice.refund.text"
+                    default="Click on the red money bag icon to refund all or part of this invoice.  Note that this only MARKS the invoice as refunded, the actual refund of money still has to be performed separately."/>
+        </p>
+        <modalbox:createLink
+                controller="invoice"
+                action="paymentDialog"
+                id="${payment.transactionId}"
+                params="${[totalAmount:0, refund:true]}"
+                title="Refund all or part of this invoice"
+                width="350">
+            <img src="${resource(dir:'images',file:'payment-complete-large-r.png', plugin: 'footy-core')}" alt="Refund"/>
+        </modalbox:createLink>
+        </sec:ifAnyGranted>
         </g:else>
