@@ -6,11 +6,14 @@
         <feed:meta kind="rss" version="2.0" controller="team" action="feed" id="${teamInstance.id}"/>
         <title>${teamInstance}</title>
         <link rel="stylesheet" href="${resource(dir:'css',file:'bubbletips.css',plugin:'footy-core')}" />
+        <g:set var="fb" value="${grailsApplication.config.org?.davisononline?.footy?.usefacebook}"/>
+        <g:if test="${fb}">
+        <script src="http://connect.facebook.net/en_US/all.js#xfbml=1"></script>
+        </g:if>
     </head>
     <body>
 
         <div id="homemain">
-
             <div id="iconbar">
                 <sec:ifAnyGranted roles="ROLE_CLUB_ADMIN">
                 <g:link action="edit" id="${teamInstance.id}" title="${message(code: 'team.vedit.label', default: 'Edit this team')}">
@@ -63,6 +66,11 @@
                 <img src="${createLinkTo(dir:'images', file:'rss.png', plugin:'footy-core')}" alt="${message(code: 'team.feed.label', default: 'Subscribe')}"/>
                 </g:link>
             </div>
+
+            <%-- obligatory facebook stuff --%>
+            <g:if test="${fb}">
+            <div class="fb-like" data-href="www.stbgfc.co.uk"></div>
+            </g:if>
 
             <g:if test="${latestNews.size() == 0}">
             <h2><g:message code="org.davisononline.footy.core.team.news.title" default="Latest News &amp; Results"/></h2>
@@ -128,7 +136,6 @@
             </table>
             </footy:isManager>
         </div>
-
 
         <div id="newspanel">
             <%-- have to do this 2/3 times to get the right output for the requirements.
