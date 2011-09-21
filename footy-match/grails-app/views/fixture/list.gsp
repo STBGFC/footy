@@ -22,6 +22,18 @@
                     <tr>
                         <td class="fixtureList">
                             <div>
+                                <footy:isManager team="${myteam}">
+                                    <modalbox:createLink
+                                        controller="fixture"
+                                        action="editDialog"
+                                        id="${fixture.id}"
+                                        title="Edit result or add match report"
+                                        width="450">
+                                        <img
+                                            src="${createLinkTo(dir:'images/skin', file:'database_edit.png', plugin: 'footy-core')}"
+                                            alt="edit"/>
+                                    </modalbox:createLink>
+                                </footy:isManager>
                                 <g:formatDate date="${fixture.dateTime}" format="dd MMMM yyyy"/>
                                 :: ${fixture.type}
                                 <g:if test="${fixture.type == Fixture.LEAGUE_GAME}">
