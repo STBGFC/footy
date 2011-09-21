@@ -25,49 +25,51 @@
         <tr>
             <td>Full-time score</td>
             <td class="title right">
-                <g:textField name="homeGoalsFullTime" class="goalInput"/>
+                <g:textField name="homeGoalsFullTime" class="goalInput" value="${fixtureInstance.homeGoalsFullTime}"/>
             </td>
             <td cass="title">-</td>
             <td class="title">
-                <g:textField name="awayGoalsFullTime" class="goalInput"/>
+                <g:textField name="awayGoalsFullTime" class="goalInput" value="${fixtureInstance.awayGoalsFullTime}"/>
             </td>
         </tr>
         <tr>
             <td>Half-time score</td>
             <td class="right">
-                <g:textField name="homeGoalsHalfTime" class="goalInput"/>
+                <g:textField name="homeGoalsHalfTime" class="goalInput" value="${fixtureInstance.homeGoalsHalfTime}"/>
             </td>
             <td>-</td>
             <td>
-                <g:textField name="awayGoalsHalfTime" class="goalInput"/>
+                <g:textField name="awayGoalsHalfTime" class="goalInput" value="${fixtureInstance.awayGoalsHalfTime}"/>
             </td>
         </tr>
         <g:if test="${fixtureInstance.type == Fixture.CUP_GAME}">
         <tr>
             <td>Score after extra time (if played)</td>
             <td class="right">
-                <g:textField name="homeGoalsExtraTime" class="goalInput"/>
+                <g:textField name="homeGoalsExtraTime" class="goalInput" value="${fixtureInstance.extraTime ? fixtureInstance.homeGoalsExtraTime : ''}"/>
             </td>
             <td>-</td>
             <td>
-                <g:textField name="awayGoalsExtraTime" class="goalInput"/>
+                <g:textField name="awayGoalsExtraTime" class="goalInput" value="${fixtureInstance.extraTime ? fixtureInstance.awayGoalsExtraTime : ''}"/>
             </td>
         </tr>
         <tr>
             <td>Score after penalties (if needed)</td>
             <td class="right">
-                <g:textField name="homeGoalsPenalties" class="goalInput"/>
+                <g:textField name="homeGoalsPenalties" class="goalInput" value="${fixtureInstance.penalties ? fixtureInstance.homeGoalsPenalties : ''}"/>
             </td>
             <td>-</td>
             <td>
-                <g:textField name="awayGoalsPenalties" class="goalInput"/>
+                <g:textField name="awayGoalsPenalties" class="goalInput" value="${fixtureInstance.penalties ? fixtureInstance.awayGoalsPenalties : ''}"/>
             </td>
         </tr>
         </g:if>
         <tr>
             <td>Match Report (can be added later if you wish)</td>
             <td colspan="3">
-                <g:textArea cols="80" rows="40" name="matchReport"></g:textArea>
+                <g:textArea cols="80" rows="40" name="matchReport">
+                    ${fixtureInstance.matchReport}
+                </g:textArea>
             </td>
         </tr>
     </table>

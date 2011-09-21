@@ -133,9 +133,9 @@ class InvoiceController {
         def payment = Payment.findByTransactionId(params.id)
         if (payment) {
             payment.status = Payment.COMPLETE
-            PaymentUtils.adjustForManual(payment, params.amount.asType(BigDecimal), "${params.notes} (added by user: ${username})")
+            PaymentUtils.adjustForManual(payment, params.amount.asType(BigDecimal), "${params.notes} (${params.refund ? 'add' : 'refund'}ed by user: ${username})")
             payment.save()
-            flash.message = "Payment made for invoice ${params.id}"
+            flash.message = "${params.refund ? 'Refund' : 'Payment'} made for invoice ${params.id}"
         }
         else
             flash.message = "No such invoice found with number ${params.id}"
