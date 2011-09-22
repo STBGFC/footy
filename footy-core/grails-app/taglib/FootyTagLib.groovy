@@ -2,6 +2,7 @@ import org.codehaus.groovy.grails.web.taglib.exceptions.GrailsTagException
 import org.davisononline.footy.core.Person
 import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
 import org.grails.paypal.Payment
+import org.davisononline.footy.core.NewsItem
 
 class FootyTagLib {
 
@@ -121,6 +122,22 @@ class FootyTagLib {
             alt="${payment?.status?.toLowerCase()}"
             src="${resource(dir:'images',file:'payment-' + payment?.status?.toLowerCase() + (cash ? 'b' : '') + '.png', plugin:'footy-core')}"/>
             </a>"""
+        }
+    }
+
+    /**
+     * render a list of team news that has been marked site-wide.
+     *
+     * @param attrs
+     */
+    def teamNews ={ attrs ->
+        def items = NewsItem.findAllByClubWide(true, [max: 10, sort: 'createdDate', order: 'desc'])
+        items.each { item ->
+            def t = item.team
+            out << """<h3>${t}, ${formatDate(date: item.createdDate, format: 'dd MMM')}</h3>
+            <p>${item.abstractText().encodeAsHTML()}
+            <a href="${createLink(controller:'team', action:'show', params:[ageBand:t.ageBand, teamName: t.name])}">
+            <br/>${t} homepage..</a></p>"""
         }
     }
 
