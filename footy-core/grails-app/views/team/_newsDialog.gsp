@@ -14,8 +14,8 @@
         <g:textArea name="body" rows="20" cols="60" style="width:390px;height:190px">your news here...</g:textArea>
     </p>
     <p>
-        <g:checkBox name="siteWide" /> add to site home page<br/>
-        (only tick the box above if your news is REALLY of interest to the whole club!)
+        <g:checkBox name="clubWide" /> add to site home page<br/>
+        (only tick the box above if your news is of interest to the whole club!)
         <g:hiddenField name="team.id" value="${id}"/>
     </p>
     <input type="submit" value="Create" />
