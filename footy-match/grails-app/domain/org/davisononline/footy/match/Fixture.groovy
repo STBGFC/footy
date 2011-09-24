@@ -15,6 +15,7 @@ class Fixture {
     public static final String FRIENDLY_GAME = 'Friendly'
     static def GAME_TYPES = [LEAGUE_GAME, CUP_GAME, FRIENDLY_GAME]
 
+    String guid = UUID.randomUUID().toString()
     Team team
     String opposition
     boolean homeGame = true

@@ -2,12 +2,17 @@ package org.davisononline.footy.match
 
 import org.davisononline.footy.core.Team
 import grails.plugins.springsecurity.Secured
+import net.fortuna.ical4j.model.ContentBuilder
+import net.fortuna.ical4j.model.property.DtStamp
 
 
 @Secured(["ROLE_COACH"])
 class FixtureController {
 
+    private static final String ICAL_DTFORMAT = "yyyyMMdd'T'HHmmSS"
+
     def footyMatchService
+    
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
@@ -64,10 +69,16 @@ class FixtureController {
             response.status = 404
         }
 
-        fx.played = true
+        fx.played = (params.homeGoalsFullTime != null && params.homeGoalsFullTime != "")
         fx.extraTime = (params.homeGoalsExtraTime != null && params.homeGoalsExtraTime != "")
         fx.penalties = (params.homeGoalsPenalties != null && params.homeGoalsPenalties != "")
 
+        if (!fx.played) {
+            params.homeGoalsFullTime = 0
+            params.awayGoalsFullTime = 0
+            params.homeGoalsHalfTime = 0
+            params.awayGoalsHalfTime = 0
+        }
         if (!fx.extraTime) {
             params.homeGoalsExtraTime = 0
             params.awayGoalsExtraTime = 0
@@ -115,5 +126,61 @@ class FixtureController {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'fixture.label', default: 'Fixture'), params.id])}"
             redirect(action: "list")
         }
+    }
+
+    /**
+     * output a standard calendar file of all the fixtures for this team.
+     */
+    @Secured(["permitAll"])
+    def calendar = {
+
+        def t = Team.get(params?.id)
+        if (!t) {
+            response.status = 404
+            return
+        }
+
+        def fixtures = Fixture.findAllByTeam(t, [sort: 'dateTime', order: 'asc'])
+
+        def link = g.createLink(
+            absolute:true,
+            controller:'fixture',
+            action:'list',
+            id:t.id
+        ).toString()
+
+        def builder = new ContentBuilder()
+        def calendar = builder.calendar() {
+            prodid('-//Footy//iCal4j 1.0//EN')
+            calscale('GREGORIAN')
+            version('2.0')
+            method('PUBLISH')
+
+            fixtures.each { f->
+
+                def cal = Calendar.instance
+                cal.time = f.dateTime
+                cal.add(Calendar.MINUTE,90)
+
+                vevent() {
+                    uid(f.guid)
+                    summary(f.toString())
+                    dtstamp(new DtStamp())
+                    dtstart(f.dateTime.format(ICAL_DTFORMAT))
+                    dtend(cal.time.format(ICAL_DTFORMAT))
+                    action('DISPLAY')
+                    if (f.homeGame) location(t.club?.address?.postCode)
+                    description(f.matchReport ?: link)
+                }
+
+            }
+        }
+
+        response.setHeader(
+            "Content-disposition",
+            "attachment; filename=${URLEncoder.encode(t.toString().replace(' ',''),'UTF-8')}-fixtures.ics"
+        )
+        render text:calendar, contentType: 'text/calendar'
+        
     }
 }

@@ -21,14 +21,14 @@ grails.project.dependency.resolution = {
         // from public Maven repositories
         //mavenLocal()
         //mavenCentral()
-        //mavenRepo "http://snapshots.repository.codehaus.org"
-        //mavenRepo "http://repository.codehaus.org"
-        //mavenRepo "http://download.java.net/maven/2/"
-        //mavenRepo "http://repository.jboss.com/maven2/"
+
+        // iCal4j.  Not using the grails ic-alendar plugin as it causes stack overflows in the render() methods
+        mavenRepo "http://m2.modularity.net.au/releases"
+    }
+    plugins {
+        //compile ':ic-alendar:0.3.2' // <-- 0.3.2 is borked
     }
     dependencies {
-        // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes eg.
-
-        // runtime 'mysql:mysql-connector-java:5.1.13'
+        runtime 'net.fortuna.ical4j:ical4j:1.0.1'
     }
 }
