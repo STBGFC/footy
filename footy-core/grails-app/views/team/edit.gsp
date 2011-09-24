@@ -12,8 +12,7 @@
                 Create or edit details of the team below
             </p>
             <div class="nav">
-                <span class="menuButton"><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></span>
-                <span class="menuButton"><g:link class="list" action="list"><g:message code="default.list.label" args="[entityName]" /></g:link></span>
+                <g:render template="/shared/editNavButtons" model="${[entityName:entityName]}"/>
             </div>
 
             <g:form name="team" method="post" >
