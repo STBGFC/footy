@@ -138,13 +138,13 @@ class PlayerController {
             try {
                 playerInstance.properties = params
                 log.debug playerInstance
-            if (!playerInstance.hasErrors() && !playerInstance?.person?.hasErrors() && playerInstance.person.save() && playerInstance.save()) {
-                flash.message = "${message(code: 'default.updated.message', args: [message(code: 'player.label', default: ''), playerInstance])}"
-                redirect(session.breadcrumb ? [uri: session.breadcrumb] : [action: "list"])
-            }
-            else {
-                render(view: "edit", model: modelForPlayerEdit(playerInstance))
-            }
+                if (!playerInstance.hasErrors() && !playerInstance?.person?.hasErrors() && playerInstance.person.save() && playerInstance.save()) {
+                    flash.message = "${message(code: 'default.updated.message', args: [message(code: 'player.label', default: ''), playerInstance])}"
+                    redirect(session.breadcrumb ? [uri: session.breadcrumb] : [action: "list"])
+                }
+                else {
+                    render(view: "edit", model: modelForPlayerEdit(playerInstance))
+                }
             }
             catch (NullPointerException npe) {
                 log.error "NPE saving player data"
