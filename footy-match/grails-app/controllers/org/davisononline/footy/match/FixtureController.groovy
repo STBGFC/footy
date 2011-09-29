@@ -12,7 +12,9 @@ class FixtureController {
     private static final String ICAL_DTFORMAT = "yyyyMMdd'T'HHmmSS"
 
     def footyMatchService
-    
+
+    def grailsApplication
+
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
@@ -58,8 +60,24 @@ class FixtureController {
         render template: 'fixtureList', model: [fixtures: footyMatchService.getFixtures(fixtureInstance.team), myteam: fixtureInstance.team], plugin: 'footy-match', contentType: 'text/plain'
     }
 
+    def editDialog = {
+        def fixtureInstance = Fixture.get(params.id)
+        if (!fixtureInstance) {
+            flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'fixture.label', default: 'Fixture'), params.id])}"
+            redirect(action: "list")
+        }
+        else {
+            def minAge = grailsApplication.config.org.davisononline.footy.match.minimumagetopublishresults as Integer
+            if (fixtureInstance.team.ageBand < minAge) {
+                render text: "<h2>Cannot Publish</h2><p>Age groups below U${minAge} are not allowed to publish results</p>", contentType: 'text/plain'
+            }
+            else
+                render template: 'editDialog', model:[fixtureInstance: fixtureInstance], contentType: 'text/plain', plugin: 'footy-match'
+        }
+    }
+
     /**
-     * update the result and 9optionally) the match report
+     * update the result and (optionally) the match report
      */
     def saveResult = {
         def fx = Fixture.get(params.id)
@@ -67,6 +85,14 @@ class FixtureController {
         if (!fx) {
             log.error "No fixture found to update"
             response.status = 404
+            return
+        }
+
+        def minAge = grailsApplication.config.org.davisononline.footy.match.minimumagetopublishresults as Integer
+        if (fx.team.ageBand < minAge) {
+            response.status = 400
+            render text: "Age groups below U${minAge} are not allowed to publish results"
+            return
         }
 
         fx.played = (params.homeGoalsFullTime != null && params.homeGoalsFullTime != "")
@@ -96,17 +122,6 @@ class FixtureController {
             return
         }
         render template: 'fixtureList', model: [fixtures: footyMatchService.getFixtures(fx.team), myteam: fx.team], plugin: 'footy-match', contentType: 'text/plain'
-    }
-
-    def editDialog = {
-        def fixtureInstance = Fixture.get(params.id)
-        if (!fixtureInstance) {
-            flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'fixture.label', default: 'Fixture'), params.id])}"
-            redirect(action: "list")
-        }
-        else {
-            render template: 'editDialog', model:[fixtureInstance: fixtureInstance], contentType: 'text/plain', plugin: 'footy-match'
-        }
     }
 
     def delete = {
