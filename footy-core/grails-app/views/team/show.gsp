@@ -13,60 +13,60 @@
     </head>
     <body>
 
+        <div id="iconbar">
+            <sec:ifAnyGranted roles="ROLE_CLUB_ADMIN">
+            <g:link action="edit" id="${teamInstance.id}" title="${message(code: 'team.vedit.label', default: 'Edit this team')}">
+            <img src="${createLinkTo(dir:'images', file:'vedit.png', plugin:'footy-core')}" alt="${message(code: 'team.vedit.label', default: 'Edit this team')}"/>
+            </g:link>
+            </sec:ifAnyGranted>
+
+            <footy:isManager team="${teamInstance}">
+            <g:if test="${teamInstance?.id && players.size() > 0}">
+            <g:link action="leagueForm" id="${teamInstance?.id}" title="${message(code: 'team.vprint.label', default: 'Print registration form')}">
+            <img src="${createLinkTo(dir:'images', file:'vprint.png', plugin:'footy-core')}" alt="${message(code: 'team.vprint.label', default: 'Print registration form')}"/>
+            </g:link>
+            </g:if>
+
+            <modalbox:createLink
+                  controller="team"
+                  action="messageDialog"
+                  title="Send Email Message"
+                  id="${teamInstance.id}"
+                  width="420">
+                <img src="${createLinkTo(dir:'images', file:'vmail.png', plugin:'footy-core')}" alt="${message(code: 'team.vmail.label', default: 'Send Email')}"/>
+            </modalbox:createLink>
+            </footy:isManager>
+            <footy:isNotManager team="${teamInstance}">
+            <a
+                title="${message(code: 'team.vmail.label', default: 'Email Manager/Coaches')}"
+                href="mailto:${[teamInstance.manager, teamInstance.coaches]*.email.flatten().join(",")}"
+            >
+                <img src="${createLinkTo(dir:'images', file:'vmail.png', plugin:'footy-core')}" alt="${message(code: 'team.vmail.label', default: 'Email Manager/Coaches')}"/>
+            </a>
+            </footy:isNotManager>
+
+            <!-- address -->
+            <g:link action="addresscards" id="${teamInstance.id}" title="${message(code: 'team.vmail.label', default: 'Download contact details for your address book')}">
+            <img src="${createLinkTo(dir:'images', file:'vcards.png', plugin:'footy-core')}" alt="${message(code: 'team.vcards.label', default: 'Download Contact Details')}"/>
+            </g:link>
+
+            <!-- RSS -->
+            <footy:isManager team="${teamInstance}">
+            <modalbox:createLink
+                  controller="team"
+                  action="newsDialog"
+                  title="Create News Item"
+                  id="${teamInstance.id}"
+                  width="420">
+                <img src="${createLinkTo(dir:'images', file:'vnews.png', plugin:'footy-core')}" alt="${message(code: 'team.vnews.label', default: 'Add Team News')}"/>
+            </modalbox:createLink>
+            </footy:isManager>
+            <g:link action="feed" id="${teamInstance.id}" title="${message(code: 'team.feed.label', default: 'Subscribe to news feed for ' + teamInstance.toString())}">
+            <img src="${createLinkTo(dir:'images', file:'rss.png', plugin:'footy-core')}" alt="${message(code: 'team.feed.label', default: 'Subscribe')}"/>
+            </g:link>
+        </div>
+    
         <div id="homemain">
-            <div id="iconbar">
-                <sec:ifAnyGranted roles="ROLE_CLUB_ADMIN">
-                <g:link action="edit" id="${teamInstance.id}" title="${message(code: 'team.vedit.label', default: 'Edit this team')}">
-                <img src="${createLinkTo(dir:'images', file:'vedit.png', plugin:'footy-core')}" alt="${message(code: 'team.vedit.label', default: 'Edit this team')}"/>
-                </g:link>
-                </sec:ifAnyGranted>
-
-                <footy:isManager team="${teamInstance}">
-                <g:if test="${teamInstance?.id && players.size() > 0}">
-                <g:link action="leagueForm" id="${teamInstance?.id}" title="${message(code: 'team.vprint.label', default: 'Print registration form')}">
-                <img src="${createLinkTo(dir:'images', file:'vprint.png', plugin:'footy-core')}" alt="${message(code: 'team.vprint.label', default: 'Print registration form')}"/>
-                </g:link>
-                </g:if>
-
-                <modalbox:createLink
-                      controller="team"
-                      action="messageDialog"
-                      title="Send Email Message"
-                      id="${teamInstance.id}"
-                      width="420">
-                    <img src="${createLinkTo(dir:'images', file:'vmail.png', plugin:'footy-core')}" alt="${message(code: 'team.vmail.label', default: 'Send Email')}"/>
-                </modalbox:createLink>
-                </footy:isManager>
-                <footy:isNotManager team="${teamInstance}">
-                <a
-                    title="${message(code: 'team.vmail.label', default: 'Email Manager/Coaches')}"
-                    href="mailto:${[teamInstance.manager, teamInstance.coaches]*.email.flatten().join(",")}"
-                >
-                    <img src="${createLinkTo(dir:'images', file:'vmail.png', plugin:'footy-core')}" alt="${message(code: 'team.vmail.label', default: 'Email Manager/Coaches')}"/>
-                </a>
-                </footy:isNotManager>
-
-                <!-- address -->
-                <g:link action="addresscards" id="${teamInstance.id}" title="${message(code: 'team.vmail.label', default: 'Download contact details for your address book')}">
-                <img src="${createLinkTo(dir:'images', file:'vcards.png', plugin:'footy-core')}" alt="${message(code: 'team.vcards.label', default: 'Download Contact Details')}"/>
-                </g:link>
-
-                <!-- RSS -->
-                <footy:isManager team="${teamInstance}">
-                <modalbox:createLink
-                      controller="team"
-                      action="newsDialog"
-                      title="Create News Item"
-                      id="${teamInstance.id}"
-                      width="420">
-                    <img src="${createLinkTo(dir:'images', file:'vnews.png', plugin:'footy-core')}" alt="${message(code: 'team.vnews.label', default: 'Add Team News')}"/>
-                </modalbox:createLink>
-                </footy:isManager>
-                <g:link action="feed" id="${teamInstance.id}" title="${message(code: 'team.feed.label', default: 'Subscribe to news feed for ' + teamInstance.toString())}">
-                <img src="${createLinkTo(dir:'images', file:'rss.png', plugin:'footy-core')}" alt="${message(code: 'team.feed.label', default: 'Subscribe')}"/>
-                </g:link>
-            </div>
-
             <%-- obligatory facebook stuff --%>
             <g:if test="${fb}">
             <div class="fb-like" data-href="www.stbgfc.co.uk"></div>
@@ -81,11 +81,16 @@
             <g:else>
                 <g:each in="${latestNews}" var="news">
                     <g:set var="abst" value="${news.abstractText()}"/>
-                    <h2><g:formatDate date="${news.createdDate}" format="dd MMM"/>: ${news.subject.encodeAsHTML()}</h2>
+                    <h2>${news.subject.encodeAsHTML()}</h2>
+                    <p class="byline"><g:formatDate date="${news.createdDate}" format="dd MMM 'at' HH:mm"/></p>
                     <p id="abstractNewsBody${news.id}" class="newsBody">
                         ${abst}
                         <g:if test="${abst.endsWith(' ...')}">
-                        <br/><a href="#" onclick="$('abstractNewsBody${news.id}').hide();Effect.BlindDown('fullNewsBody${news.id}', { duration: 0.5 });return false"><g:message code="org.davisononline.footy.core.team.readmore.label" default="Read More..."/></a>
+                        <a href="#"
+                           title="Read the full article"
+                           onclick="$('abstractNewsBody${news.id}').hide();Effect.BlindDown('fullNewsBody${news.id}', { duration: 0.5 });return false">
+                            <g:message code="org.davisononline.footy.core.team.readmore.label" default="&gt;&gt;"/>
+                        </a>
                         </g:if>
                     </p>
                     <g:if test="${abst.endsWith(' ...')}">
