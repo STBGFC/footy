@@ -50,7 +50,7 @@ class RegistrationService {
                     itemNumber: "${registration.id}",
                     amount: registration.tier.amount
             )
-            if (p.sibling && registration.tier.siblingDiscount != 0) {
+            if (p.sibling && p.sibling.dateOfBirth < p.dateOfBirth && registration.tier.siblingDiscount != 0) {
                 regItem.discountAmount = registration.tier.siblingDiscount
             }
             payment.addToPaymentItems(regItem)
