@@ -67,6 +67,11 @@ class Person implements Comparable, Serializable {
         qualifications cascade: 'all-delete-orphan', lazy: false
         payments cascade: 'all-delete-orphan', lazy: false
     }
+
+    def beforeValidate() {
+        // hack to get around the constraint for a grownup :)
+        if (!eligibleParent && !phone1) phone1 = 'x'
+    }
     
     /**
      * comparable to sort on family name, then given name
