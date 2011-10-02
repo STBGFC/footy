@@ -42,7 +42,7 @@
                             </div>
 
                             <span class="fixtureListResult">${fixture}</span>
-                            <g:if test="${fixture.matchReport}">
+                            <g:if test="${fixture.matchReport?.length() > 0}">
                                 <a
                                     id="reportTrigger${fixture.id}"
                                     href="#"

@@ -67,9 +67,7 @@
         <tr>
             <td>Match Report (can be added later if you wish)</td>
             <td colspan="3">
-                <g:textArea cols="80" rows="40" name="matchReport">
-                    ${fixtureInstance.matchReport}
-                </g:textArea>
+                <g:textArea cols="80" rows="40" name="matchReport">${fixtureInstance.matchReport}</g:textArea>
             </td>
         </tr>
     </table>
