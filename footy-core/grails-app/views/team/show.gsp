@@ -69,7 +69,7 @@
         <div id="homemain">
             <%-- obligatory facebook stuff --%>
             <g:if test="${fb}">
-            <div class="fb-like" data-href="www.stbgfc.co.uk"></div>
+            <div class="fb-like" data-href="${grailsApplication.config.grails.serverURL}/u${teamInstance.ageBand}/${teamInstance.name}" style="height:24px;width:450px"></div>
             </g:if>
 
             <g:if test="${latestNews.size() == 0}">
