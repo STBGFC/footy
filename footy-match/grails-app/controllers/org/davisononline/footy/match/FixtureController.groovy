@@ -9,7 +9,7 @@ import net.fortuna.ical4j.model.property.DtStamp
 @Secured(["ROLE_COACH"])
 class FixtureController {
 
-    private static final String ICAL_DTFORMAT = "yyyyMMdd'T'HHmmSS"
+    private static final String ICAL_DTFORMAT = "yyyyMMdd'T'HHmmSS'Z'"
 
     def footyMatchService
 
@@ -148,6 +148,8 @@ class FixtureController {
      */
     @Secured(["permitAll"])
     def calendar = {
+
+        cache "content"
 
         def t = Team.get(params?.id)
         if (!t) {
