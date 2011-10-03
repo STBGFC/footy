@@ -14,9 +14,11 @@
             <div class="nav">
                 <g:render template="/shared/editNavButtons" model="${[entityName:entityName]}"/>
                 <span class="menuButton">
+                <g:if test="${playerInstance.team}">
                     <g:link class="list" controller="team" action="show" params="${[ageBand:playerInstance.team.ageBand, teamName: playerInstance.team.name]}">
                         ${playerInstance.team}
                     </g:link>
+                </g:if>
                 </span>
             </div>
             
