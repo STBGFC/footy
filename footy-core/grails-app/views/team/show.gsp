@@ -84,7 +84,7 @@
                     <h2>${news.subject.encodeAsHTML()}</h2>
                     <p class="byline"><g:formatDate date="${news.createdDate}" format="dd MMM 'at' HH:mm"/></p>
                     <p id="abstractNewsBody${news.id}" class="newsBody">
-                        ${abst}
+                        ${abst.encodeAsHTML()}
                         <g:if test="${abst.endsWith(' ...')}">
                         <a href="#"
                            title="Read the full article"
