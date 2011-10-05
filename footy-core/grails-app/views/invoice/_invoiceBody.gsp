@@ -112,11 +112,12 @@
 
         <%-- already paid --%>
         <g:else>
-        <sec:ifAnyGranted roles="ROLE_OFFICER">
         <p>
             <g:message code="org.davisononline.footy.core.invoicepaid" default="This invoice has already been paid.  Thank you."/>
             <g:if test="${payment.paymentDate}"> (<g:formatDate date="${payment.paymentDate}" format="dd/MM/yyyy"/>)</g:if>
         </p>
+
+        <sec:ifAnyGranted roles="ROLE_OFFICER">
         <h2>Refund (Club Officer Only)</h2>
         <p>
             <g:message
