@@ -94,7 +94,7 @@
                         </g:if>
                     </p>
                     <g:if test="${abst.endsWith(' ...')}">
-                    <p class="completeArticle" style="display:none" id="fullNewsBody${news.id}">${news.body.encodeAsHTML().replace('\n\n', '<br/><br/>')}</p>
+                    <p class="completeArticle" style="display:none" id="fullNewsBody${news.id}">${news.body.encodeAsHTML().replace('\n\n', '<br/><br/>').replace('\r\n\r\n', '<br/><br/>').replace('\r\r', '<br/><br/>')}</p>
                     </g:if>
                 </g:each>
                 <g:if test="${!params.maxNews}">

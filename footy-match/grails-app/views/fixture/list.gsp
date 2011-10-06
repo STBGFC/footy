@@ -50,7 +50,7 @@
                                     <g:message code="org.davisononline.footy.match.viewreport.link" default="View Report"/>
                                 </a>
                                 <p id="matchReport${fixture.id}" style="display:none">
-                                    ${fixture.matchReport.encodeAsHTML().replace('\n\n', '<br/><br/>')}
+                                    ${fixture.matchReport.encodeAsHTML().replace('\n\n', '<br/><br/>').replace('\r\n\r\n', '<br/><br/>').replace('\r\r', '<br/><br/>')}
                                 </p>
                             </g:if>
                         </td>
