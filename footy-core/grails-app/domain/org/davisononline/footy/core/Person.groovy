@@ -29,15 +29,14 @@ class Person implements Comparable, Serializable {
     Address address
     Boolean eligibleParent = true
     String notes = ''
-    SortedSet qualifications
-    Set payments
+    //SortedSet qualifications
+    //Set payments
     byte[] photo
 
     // security credential
     SecUser user
 
     static hasMany = [qualifications: Qualification, payments: Payment]
-    static fetchMode = [qualifications: 'eager']
 
     /*
      * don't allow both phone numbers to be null
