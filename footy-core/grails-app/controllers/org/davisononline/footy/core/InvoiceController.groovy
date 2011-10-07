@@ -93,7 +93,7 @@ class InvoiceController {
         }
         payment.delete()
         flash.message = "Invoice and payment data deleted"
-        redirect action: 'list'
+        redirect action: 'unpaid'
     }
 
     @Secured(["permitAll"])
