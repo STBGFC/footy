@@ -24,8 +24,9 @@ class FootySecurityService {
 
         def user = springSecurityService.currentUser
         if (!user) return false
-        
-        def person = Person.findByUser(user)
-        (person == team?.manager || SpringSecurityUtils.ifAllGranted('ROLE_CLUB_ADMIN'))
+
+        if (SpringSecurityUtils.ifAllGranted('ROLE_CLUB_ADMIN')) return true
+
+        return (Person.findByUser(user) == team?.manager)
     }
 }
