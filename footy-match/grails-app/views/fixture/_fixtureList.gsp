@@ -2,12 +2,15 @@
 
 <div class="newsbox">
     <h2><g:message code="org.davisononline.footy.match.fixturecal.title" default="Fixture Calendar"/></h2>
-    <ul>
+    <table>
+        <tbody>
         <g:each in="${fixtures}" var="fixture">
-        <g:set var="tag" value="${fixture.opposition} (${fixture.homeGame ? 'H':'A'}) ${fixture.type == Fixture.CUP_GAME ? '(Cup)':''}"/>
         <%-- set list icon to denote cup/friendly/league --%>
-        <li>
-            <strong><g:formatDate date="${fixture.dateTime}" format="dd MMM"/>:</strong>
+        <tr>
+            <td>
+                <strong><g:formatDate date="${fixture.dateTime}" format="dd'-'MMM HH:mm"/></strong>
+            </td>
+            <td>
             <footy:isManager team="${myteam}">
                 <modalbox:createLink
                         controller="fixture"
@@ -15,7 +18,7 @@
                         id="${fixture.id}"
                         title="Add result/report"
                         width="450">
-                    ${tag}
+                    ${fixture.opposition}
                 </modalbox:createLink>
                 <g:if test="${!fixture.played}">
                 <g:remoteLink
@@ -28,11 +31,21 @@
                 </g:if>
             </footy:isManager>
             <footy:isNotManager team="${myteam}">
-                ${tag}
+                ${fixture.opposition}
             </footy:isNotManager>
-        </li>
+            </td>
+            <td>
+                ${fixture.homeGame ? 'H':'A'}&nbsp;${fixture.type == Fixture.CUP_GAME ? '(C)':''}${fixture.type == Fixture.FRIENDLY_GAME ? '(F)':''}
+            </td>
+        </tr>
         </g:each>
-    </ul>
+        <tr>
+            <td colspan="3">
+                <g:message code="org.davisononline.footy.match.fixturetypekey.label" default="(C) = Cup game, (F) = Friendly"/>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 
     <ul>
     <footy:isManager team="${myteam}">
