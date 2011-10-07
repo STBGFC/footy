@@ -63,8 +63,8 @@ class Person implements Comparable, Serializable {
     static mapping = {
         notes type: 'text'
         address cascade: 'all'
-        qualifications cascade: 'all-delete-orphan', lazy: false
-        payments cascade: 'all-delete-orphan', lazy: false
+        qualifications cascade: 'all-delete-orphan'
+        payments cascade: 'all-delete-orphan'
     }
 
     def beforeValidate() {

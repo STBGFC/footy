@@ -128,7 +128,7 @@ class PersonController {
         def p
 
         try {
-            Qualification.withTransaction {status ->
+            Person.withTransaction {status ->
                 
                 def qual = new Qualification(params)
                 p = Person.get(params.personId)
