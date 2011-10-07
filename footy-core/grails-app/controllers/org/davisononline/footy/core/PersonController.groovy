@@ -202,7 +202,8 @@ class PersonController {
             def t = Team.get(params.teamId)
             redirect (controller: 'team', action: 'show', params:[ageBand: t.ageBand, teamName: t.name])
         }
-        redirect controller: 'home'
+        else
+            redirect controller: 'home'
     }
 
     /**
