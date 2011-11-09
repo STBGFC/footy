@@ -38,6 +38,16 @@ class PersonTests extends GrailsUnitTestCase {
         p.phone2 = "213"
         assertTrue p.validate()
     }
+
+    void testBestPhone() {
+        def p = getGood()
+        p.phone1 = 'short'
+        assert 'short' == p.bestPhone()
+
+        p.phone1 = null
+        p.phone2 = '22'
+        assert '22' == p.bestPhone()
+    }
     
     void testComparable() {
         def ss = new TreeSet()
