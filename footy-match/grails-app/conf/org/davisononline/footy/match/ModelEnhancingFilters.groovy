@@ -14,6 +14,7 @@ class ModelEnhancingFilters {
 
             after = { model ->
                 model['fixtures'] = footyMatchService.getFixtures(model['teamInstance'])
+                model['totalFixtureCount'] = Fixture.countByTeam(model['teamInstance'])
                 model['myteam'] = model['teamInstance']
             }
             

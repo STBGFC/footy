@@ -61,6 +61,7 @@
                         <tr class="prop">
                             <td  class="name">
                                 <label for="address.address"><g:message code="org.davisononline.org.footy.core.address.label" default="Home Address" /></label>
+                                <g:render template="/shared/addressMap" model="['address':personCommand.address,'size':175]" plugin="footy-core"/>
                             </td>
                             <td  class="value">
                                 House number or name:<br/>

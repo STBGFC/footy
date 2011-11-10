@@ -61,7 +61,7 @@
             </modalbox:createLink>
         </li>
     </footy:isManager>
-    <g:if test="${fixtures.size() > 0}">
+    <g:if test="${totalFixtureCount > 0}">
         <li class="inline">
         <img src="${createLinkTo(dir:'images/skin', file:'database_table.png', plugin:'footy-core')}" alt=""/>
         <g:link controller="fixture" action="list" id="${myteam.id}">

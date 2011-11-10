@@ -29,8 +29,7 @@ class Person implements Comparable, Serializable {
     Address address
     Boolean eligibleParent = true
     String notes = ''
-    //SortedSet qualifications
-    //Set payments
+    SortedSet qualifications
     byte[] photo
 
     // security credential

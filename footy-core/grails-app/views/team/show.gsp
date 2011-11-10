@@ -2,7 +2,7 @@
 <%@ page import="org.grails.paypal.PaymentItem; org.grails.paypal.Payment; org.davisononline.footy.core.*" %>
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="description" content="News, fixtures and information about the ${teamInstance} team"/>
         <feed:meta kind="rss" version="2.0" controller="team" action="feed" id="${teamInstance.id}"/>
         <title>${teamInstance}</title>
         <link rel="stylesheet" href="${resource(dir:'css',file:'bubbletips.css',plugin:'footy-core')}" />
