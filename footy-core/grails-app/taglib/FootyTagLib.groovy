@@ -131,7 +131,8 @@ class FootyTagLib {
      * @param attrs
      */
     def teamNews ={ attrs ->
-        def items = NewsItem.findAllByClubWide(true, [max: 10, sort: 'createdDate', order: 'desc'])
+        def n = attrs.max ?: 10
+        def items = NewsItem.findAllByClubWide(true, [max: n, sort: 'createdDate', order: 'desc'])
         items.each { item ->
             def t = item.team
             out << """<h3>${t}, ${formatDate(date: item.createdDate, format: 'dd MMM')}</h3>
