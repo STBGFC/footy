@@ -28,7 +28,11 @@
                 <g:each in="${teamInstanceList}" status="i" var="teamInstance">
                     <tr class="${(i % 2) == 0 ? 'odd' : 'even'}">
                         <td><g:link action="edit" id="${teamInstance.id}">${teamInstance}</g:link></td>
-                        <td>${teamInstance.league} / ${teamInstance.division}</td>
+                        <td>
+                            <g:if test="${teamInstance.division}">
+                            <g:link controller="division" action="edit" id="${teamInstance.division.id}">${teamInstance?.division}</g:link>
+                            </g:if>
+                        </td>
                         <td><g:link controller="person" action="edit" id="${teamInstance.manager.id}">${teamInstance.manager}</g:link> (${teamInstance.manager.phone1})</td>
                         <td>
                             <g:each in="${teamInstance.coaches}" var="coach">

@@ -14,7 +14,7 @@ class Team implements Serializable {
     // a team can play in a different League to the one
     // their Club is affiliated with
     League league
-    String division
+    Division division
     String name
     Person manager
     SortedSet coaches

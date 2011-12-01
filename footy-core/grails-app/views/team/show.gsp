@@ -65,20 +65,21 @@
             <img src="${createLinkTo(dir:'images', file:'rss.png', plugin:'footy-core')}" alt="${message(code: 'team.feed.label', default: 'Subscribe')}"/>
             </g:link>
         </div>
-    
+
         <div id="homemain">
             <%-- obligatory facebook stuff --%>
             <g:if test="${fb}">
             <div class="fb-like" data-href="${grailsApplication.config.grails.serverURL}/u${teamInstance.ageBand}/${teamInstance.name}" style="height:24px;width:450px"></div>
             </g:if>
 
-            <g:if test="${latestNews.size() == 0}">
-            <h2><g:message code="org.davisononline.footy.core.team.news.title" default="Latest News &amp; Results"/></h2>
-            <p>
-                <g:message code="org.davisononline.footy.core.team.nonews.test" default="No news yet."/>
-            </p>
+            <g:if test="${teamInstance?.division}">
+            <div id="leagueTable">
+                <h2>${teamInstance.division}</h2>
+                <footy:fullTimeLeagueTable division="${teamInstance?.division}"/>
+            </div>
             </g:if>
-            <g:else>
+
+            <g:if test="${latestNews.size() != 0}">
                 <g:each in="${latestNews}" var="news">
                     <g:set var="abst" value="${news.abstractText()}"/>
                     <h2>${news.subject.encodeAsHTML()}</h2>
@@ -98,13 +99,13 @@
                     </g:if>
                 </g:each>
                 <g:if test="${!params.maxNews}">
-                <p style="text-align:right">
+                <p>
                     <g:link controller="team" action="show" params="${[ageBand:teamInstance.ageBand, teamName:teamInstance.name, maxNews: 100]}">
-                    <g:message code="org.davisononline.footy.match.readall.link" default="Read All"/>
+                    <g:message code="org.davisononline.footy.match.readall.link" default="Read All News..."/>
                     </g:link>
                 </p>
                 </g:if>
-            </g:else>
+            </g:if>
 
             <footy:isManager team="${teamInstance}">
             <h2>Squad (${teamInstance.players.size()} Players)</h2>
@@ -177,11 +178,6 @@
 
             <div class="newsbox">
                 <h2>${teamInstance}</h2>
-                <ul>
-                    <li>League: <strong>${teamInstance.league}</strong></li>
-                    <g:if test="${teamInstance.division}">
-                    <li>Division: <strong>${teamInstance.division}</strong></li></g:if>
-                </ul>
                 <ul>
                     <li>Manager:
                         <footy:tooltip link="mailto:${teamInstance.manager.email}" value="${teamInstance.manager}">

@@ -131,7 +131,9 @@ class FootyTagLib {
      * @param attrs
      */
     def teamNews ={ attrs ->
-        def items = NewsItem.findAllByClubWide(true, [max: 10, sort: 'createdDate', order: 'desc'])
+
+        def n = attrs.max ?: 10
+        def items = NewsItem.findAllByClubWide(true, [max: n, sort: 'createdDate', order: 'desc'])
         items.each { item ->
             def t = item.team
             out << """<h3>${t}, ${formatDate(date: item.createdDate, format: 'dd MMM')}</h3>
@@ -139,6 +141,28 @@ class FootyTagLib {
             <a href="${createLink(controller:'team', action:'show', params:[ageBand:t.ageBand, teamName: t.name])}">
             <br/>${t} homepage..</a></p>"""
         }
+    }
+
+    /**
+     * render the league table from the FA's fullTime site.  Note, this has to be
+     * pre-generated at the fullTime site in a genius rendition of web services
+     * in action.  Not.
+     *
+     * @param attrs
+     */
+    def fullTimeLeagueTable = { attrs ->
+
+        def div = attrs?.division
+        if (!div || !div?.code) return
+
+        out << """
+            <div id="lrep${div.code}">Data loading....<a href="http://thefa.com/FULL-TIME">FULL-TIME Home</a></div>
+            <script language="javascript" type="text/javascript">
+            var lrcode = '${div.code}'
+            </script>
+            <script language="Javascript" type="text/javascript" src="http://full-time.thefa.com/client/api/cs1.js"></script>
+            <p class="footer">(League table is supplied by the FA's "FullTime" web site. All links will take you to the relevant page on that site)</p>
+        """
     }
 
     private boolean checkManager(attrs) {
