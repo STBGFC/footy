@@ -46,7 +46,7 @@
                                     <label for="division"><g:message code="entry.division.label" default="Division" /></label>
                                 </td>
                                 <td  class="value ${hasErrors(bean: teamCommand, field: 'division', 'errors')}">
-                                    <g:textField name="division" value="${teamCommand?.division}" />
+                                    <g:select name="division.id" from="${Division.list()}" value="${teamCommand?.division?.id}" optionKey="id" noSelection="${['null':'-- none --']}"/>
                                     <g:render template="/shared/fieldError" model="['instance':teamCommand,'field':'division']" plugin="footy-core"/>
                                 </td>
                             </tr>

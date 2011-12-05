@@ -75,7 +75,9 @@
                           Send Email Message(s)
                       </modalbox:createLink>
                   </li>
-                  <sec:ifAnyGranted roles="ROLE_CLUB_ADMIN">
+              </ul>
+              <sec:ifAnyGranted roles="ROLE_CLUB_ADMIN">
+              <ul>
                   <li>
                       <g:link controller="person" action="list">Member List</g:link>
                   </li>
@@ -85,8 +87,13 @@
                   <li>
                       <g:link controller="team" action="list">Team List</g:link>
                   </li>
-                  </sec:ifAnyGranted>
-                  <sec:ifAnyGranted roles="ROLE_OFFICER">
+                  <li>
+                      <g:link controller="club" action="addresscards">Download all parent contact details</g:link>
+                  </li>
+              </ul>
+              </sec:ifAnyGranted>
+              <sec:ifAnyGranted roles="ROLE_OFFICER">
+              <ul>
                   <li>
                       <g:link controller="person" action="qualifications">Qualifications expiring soon</g:link>
                   </li>
