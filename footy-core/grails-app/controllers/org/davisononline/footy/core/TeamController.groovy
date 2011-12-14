@@ -259,9 +259,44 @@ class TeamController {
     def photo = {
         cache "pics"
         def t = Team.get(params.id)
+        renderImage t?.photo
+    }
+
+    private renderImage(byte[] bytes) {
+        if (!bytes) {
+            response.sendError(404)
+            return
+        }
         response.contentType = "image/png"
-    	response.contentLength = t?.photo?.length
-    	response.outputStream.write(t?.photo)
+    	response.contentLength = bytes?.length
+    	response.outputStream.write(bytes)
+        response.outputStream.close()
+    }
+
+    /**
+     * edit or add the sponsor information
+     */
+    @Secured(["ROLE_COACH", "ROLE_EDITOR"])
+    def selectSponsorDialog = {
+        params['teamInstance'] = Team.get(params.id)
+        render (template: 'selectSponsorDialog', model: params, contentType: 'text/plain', plugin: 'footy-core')
+    }
+
+    /**
+     * assign a pre-created sponsor to the team
+     */
+    @Secured(["ROLE_COACH", "ROLE_EDITOR"])
+    def assignSponsor = {
+        def t = Team.get(params.id)
+        if (!t) {
+            response.sendError 404, "No such team"
+            return
+        }
+        else {
+            t.properties = params
+            t.save()
+            redirect (action: 'show', params:[ageBand: t.ageBand, teamName: t.name])
+        }
     }
 
     /**

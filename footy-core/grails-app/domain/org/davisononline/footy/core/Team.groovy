@@ -8,7 +8,6 @@ class Team implements Serializable {
     static searchable = {
         spellCheck "include"
         name boost: 2.0
-
     }
 
     // a team can play in a different League to the one
@@ -17,13 +16,14 @@ class Team implements Serializable {
     Division division
     String name
     Person manager
+    Sponsor sponsor
     SortedSet coaches
     SortedSet players
     int ageBand = 8
     boolean girlsTeam = false
     boolean vetsTeam = false
     byte[] photo
-    
+
     static belongsTo = [club: Club]
     static hasMany = [coaches: Person, players: Player]
 
@@ -34,11 +34,13 @@ class Team implements Serializable {
 		coaches(nullable: true)
         ageBand(inList: [6,7,8,9,10,11,12,13,14,15,16,17,18,35])
         photo(nullable: true)
+        sponsor(nullable:true)
     }
     
     def beforeUpdate() {
         checkAges()
     }
+
     def beforeInsert() {
         checkAges()
     }
@@ -73,6 +75,5 @@ class Team implements Serializable {
             otherTeam?.club == club
         )
     }
-    
-    
+
 }
