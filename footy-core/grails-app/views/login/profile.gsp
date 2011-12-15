@@ -88,7 +88,7 @@
                       <g:link controller="team" action="list">Team List</g:link>
                   </li>
                   <li>
-                      <g:link controller="division" action="list">Leagues/Divisions List</g:link>
+                      <g:link controller="league" action="list">Leagues/Divisions List</g:link>
                   </li>
                   <li>
                       <g:link controller="sponsor" action="list">Sponsor List</g:link>

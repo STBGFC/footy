@@ -1,5 +1,5 @@
 
-<%@ page import="org.davisononline.footy.core.League" %>
+<%@ page import="org.davisononline.footy.core.Division; org.davisononline.footy.core.League" %>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -21,12 +21,14 @@
                     <thead>
                         <tr>
                             <g:sortableColumn property="name" title="${message(code: 'league.name.label', default: 'Name')}" />
+                            <th>&nbsp;</th>
                         </tr>
                     </thead>
                     <tbody>
                     <g:each in="${leagueInstanceList}" status="i" var="leagueInstance">
                         <tr class="${(i % 2) == 0 ? 'odd' : 'even'}">
                             <td><g:link action="edit" id="${leagueInstance.id}">${fieldValue(bean: leagueInstance, field: "name")}</g:link></td>
+                            <td>${Division.countByLeague(leagueInstance)} divisions created</td>
                         </tr>
                     </g:each>
                     </tbody>
