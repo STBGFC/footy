@@ -123,7 +123,7 @@
             </g:if>
 
             <footy:isManager team="${teamInstance}">
-            <h2>Squad (${teamInstance.players.size()} Players)</h2>
+            <h2 style="clear: both; margin-top: 40px;">Squad (${teamInstance.players.size()} Players)</h2>
             <table class="list">
                 <thead>
                     <tr>
