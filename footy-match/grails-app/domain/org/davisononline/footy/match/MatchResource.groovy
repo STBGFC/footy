@@ -6,9 +6,18 @@ package org.davisononline.footy.match
  */
 class MatchResource {
 
+    public static final String PITCH = "Pitch"
+    public static final String CHANGING_ROOM = "Changing Room"
+
     String type
     String name
 
     static constraints = {
+        name blank: false, nullable: false
+        type inList: [PITCH, CHANGING_ROOM]
+    }
+
+    public String toString() {
+        "${type} ${name}"
     }
 }

@@ -1,6 +1,7 @@
 package org.davisononline.footy.match
 
 import org.davisononline.footy.core.Team
+import org.davisononline.footy.core.utils.DateTimeUtils
 
 class FootyMatchService {
 
@@ -50,6 +51,28 @@ class FootyMatchService {
             or {
                 ge ("dateTime", date)
                 eq ("played", false)
+            }
+            order ("dateTime", "asc")
+        }
+        list
+    }
+
+    /**
+     * returns a list of fixtures that are being played at home on a certain date
+     *
+     * @param date the date that the fixtures are being played
+     * @return
+     */
+    def getHomeGamesOn(Date date) {
+        Date from = DateTimeUtils.setMidnight(date)
+
+        def fc = Fixture.createCriteria()
+        def list = fc.list () {
+            eq ("homeGame", true)
+            eq ("played", false)
+            and {
+                ge ("dateTime", from)
+                lt ("dateTime", from + 1)
             }
             order ("dateTime", "asc")
         }
