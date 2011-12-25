@@ -2,10 +2,22 @@ package org.davisononline.footy.match
 
 import org.davisononline.footy.core.Team
 import org.davisononline.footy.core.utils.DateTimeUtils
+import org.davisononline.footy.core.Person
+import org.codehaus.groovy.grails.commons.ConfigurationHolder
+import org.davisononline.footy.core.SecUser
+import org.davisononline.footy.core.utils.TemplateUtils
 
 class FootyMatchService {
 
     static transactional = true
+
+    def mailService
+
+    def springSecurityService
+
+    def refereeEmailBody = ConfigurationHolder.config?.org?.davisononline?.footy?.match?.referee?.emailbody
+    def managerEmailBody = ConfigurationHolder.config?.org?.davisononline?.footy?.match?.manager?.emailbody
+
 
     /**
      * returns a list of all fixtures for the supplied team for the season
@@ -77,5 +89,73 @@ class FootyMatchService {
             order ("dateTime", "asc")
         }
         list
+    }
+
+    /**
+     * updates the fixture list with committed resource allocations (refs,
+     * pitches, changing rooms etc) and sends the notification emails to
+     * managers and referees.  Additionally, creates a summary document for
+     * downloading.
+     */
+    def saveResourceAllocations(fixtures) {
+
+        // ensure we have a valid logged-in person with an email address to send the emails
+        String username =  springSecurityService.authentication.name
+        def user = SecUser.findByUsername(username)
+        def person = Person.findByUser(user)
+        if (!person) {
+            throw new Exception("Logged in user has no valid email address.. cannot send confirmation emails")
+        }
+
+        Set<Person> refs = [] as Set
+
+        // save all and gather set of refs to send email to
+        fixtures?.each {fixture ->
+            if (fixture.referee) refs.add(fixture.referee)
+            if (fixture.isDirty('dateTime')) fixture.adjustedKickOff = true
+            fixture.save()
+        }
+
+        // ensure all fixtures saved before sending emails. Refs first..
+        refs?.each {ref ->
+            def myFixtures = fixtures.grep{it.referee == ref}
+            try {
+                mailService.sendMail {
+                    to      ref.email
+                    from    person.email
+                    subject "Fixture Confirmations for ${myFixtures[0].dateTime.format('dd/MM/yyyy')}"
+                    body    TemplateUtils.eval(
+                                refereeEmailBody,
+                                [ref:ref, myFixtures:myFixtures]
+                            )
+                }
+            }
+            catch (Exception ex) {
+                throw new Exception("Unable to send email to referee $ref; $ex.message")
+            }
+        }
+
+        //.. and managers
+        fixtures?.each {fixture ->
+            if (!fixture.team.manager) {
+                log.info "No manager for team $fixture.team - no email sent for resource allocations"
+            }
+            else {
+                try {
+                    mailService.sendMail {
+                        to      fixture.team.manager.email
+                        from    person.email
+                        subject """Pitch/Referee Confirmation for your ${fixture.team} game on ${fixture.dateTime.format('dd/MM/yyyy')}"""
+                        body    TemplateUtils.eval(
+                                    managerEmailBody,
+                                    [fixture:fixture]
+                                )
+                    }
+                }
+                catch (Exception ex) {
+                    throw new Exception("Unable to send email to manager $fixture.team.manager; $ex.message")
+                }
+            }
+        }
     }
 }

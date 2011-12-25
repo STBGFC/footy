@@ -12,6 +12,8 @@ class MatchResource {
     String type
     String name
 
+    static belongsTo = [Fixture]
+    
     static constraints = {
         name blank: false, nullable: false
         type inList: [PITCH, CHANGING_ROOM]

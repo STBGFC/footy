@@ -22,8 +22,12 @@ class Fixture {
     Date dateTime
     String type = LEAGUE_GAME
     Person referee
+    boolean adjustedKickOff = false
 
     static hasMany = [resources: MatchResource]
+
+    // used to determine if the fixture secretary changed the KO time
+    static transients = ['adjustedKickOff']
 
     // result
     boolean played = false
