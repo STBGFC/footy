@@ -67,10 +67,25 @@
         </div>
 
         <div id="homemain">
-            <%-- obligatory facebook stuff --%>
-            <g:if test="${fb}">
-            <div class="fb-like" data-href="${grailsApplication.config.grails.serverURL}/u${teamInstance.ageBand}/${teamInstance.name}" style="height:24px;width:450px"></div>
-            </g:if>
+
+            <div id="sponsor">
+                <p>
+                    ${teamInstance.sponsor ? teamInstance.toString() + " are proud to be sponsored by" : "No sponsor identified for this team"}
+                </p>
+                <footy:sponsorLogo sponsor="${teamInstance?.sponsor}"/>
+                <footy:isManager team="${teamInstance}">
+                <p>
+                <modalbox:createLink
+                        controller="team"
+                        action="selectSponsorDialog"
+                        id="${teamInstance.id}"
+                        title="Team Sponsor"
+                        width="330">
+                    <g:message code="org.davisononline.footy.core.sponsoreditlabel" default="Add/Change sponsor"/>
+                </modalbox:createLink>
+                </p>
+                </footy:isManager>
+            </div>
 
             <g:if test="${teamInstance?.division}">
             <div id="leagueTable">
@@ -108,7 +123,7 @@
             </g:if>
 
             <footy:isManager team="${teamInstance}">
-            <h2>Squad (${teamInstance.players.size()} Players)</h2>
+            <h2 style="clear: both; margin-top: 40px;">Squad (${teamInstance.players.size()} Players)</h2>
             <table class="list">
                 <thead>
                     <tr>
@@ -141,6 +156,11 @@
                 </tbody>
             </table>
             </footy:isManager>
+
+            <%-- obligatory facebook stuff --%>
+            <g:if test="${fb}">
+            <div class="fb-like" data-href="${grailsApplication.config.grails.serverURL}/u${teamInstance.ageBand}/${teamInstance.name}" style="margin-top:50px;"></div>
+            </g:if>
         </div>
 
         <div id="newspanel">
@@ -156,6 +176,7 @@
                 <footy:teamPhoto team="${teamInstance}"/>
             </modalbox:createLink>
             </footy:isManager>
+
             <%-- 2. EDITOR but not manager can also do this.. --%>
             <sec:ifAnyGranted roles="ROLE_EDITOR">
             <footy:isNotManager team="${teamInstance}">
@@ -169,6 +190,7 @@
             </modalbox:createLink>
             </footy:isNotManager>
             </sec:ifAnyGranted>
+
             <%-- 3. neither EDITOR nor manager --%>
             <footy:isNotManager team="${teamInstance}">
             <sec:ifNotGranted roles="ROLE_EDITOR">

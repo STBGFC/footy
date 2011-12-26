@@ -1,15 +1,15 @@
 
-<%@ page import="org.davisononline.footy.core.Division; org.davisononline.footy.core.League" %>
+<%@ page import="org.davisononline.footy.core.Sponsor" %>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <g:set var="entityName" value="${message(code: 'league.label', default: 'League')}" />
+        <g:set var="entityName" value="${message(code: 'league.label', default: 'Sponsor')}" />
         <title><g:message code="default.list.label" args="[entityName]" /></title>
     </head>
     <body>
         <div class="list">
             <p>
-                <g:message code="org.davisononoline.footy.core.leaguelistview.text" default="League list"/>
+                <g:message code="org.davisononoline.footy.core.sponsorlistview.text" default="Click the sponsor name to edit an existing entry"/>
             </p>
             <div class="nav">
                 <span class="menuButton"><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></span>
@@ -21,21 +21,23 @@
                     <thead>
                         <tr>
                             <g:sortableColumn property="name" title="${message(code: 'league.name.label', default: 'Name')}" />
-                            <th>&nbsp;</th>
+                            <th>Logo</th>
                         </tr>
                     </thead>
                     <tbody>
-                    <g:each in="${leagueInstanceList}" status="i" var="leagueInstance">
+                    <g:each in="${sponsorInstanceList}" status="i" var="sponsorInstance">
                         <tr class="${(i % 2) == 0 ? 'odd' : 'even'}">
-                            <td><g:link action="edit" id="${leagueInstance.id}">${fieldValue(bean: leagueInstance, field: "name")}</g:link></td>
-                            <td>${Division.countByLeague(leagueInstance)} divisions created</td>
+                            <td><g:link action="edit" id="${sponsorInstance.id}">${fieldValue(bean: sponsorInstance, field: "name")}</g:link></td>
+                            <td>
+                                <footy:sponsorLogo sponsor="${sponsorInstance}"/>
+                            </td>
                         </tr>
                     </g:each>
                     </tbody>
                 </table>
             </div>
             <div class="paginateButtons">
-                <g:paginate total="${leagueInstanceTotal}" />
+                <g:paginate total="${sponsorInstanceTotal}" />
             </div>
         </div>
     </body>

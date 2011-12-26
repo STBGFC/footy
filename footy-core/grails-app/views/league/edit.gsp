@@ -1,5 +1,5 @@
 
-<%@ page import="org.davisononline.footy.core.League" %>
+<%@ page import="org.davisononline.footy.core.Division; org.davisononline.footy.core.League" %>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -12,10 +12,13 @@
     <body>
         <div class="dialog">
             <p>
-                Create or edit the league details below
+                Create or edit the league and division details below
             </p>
             <div class="nav">
                 <g:render template="/shared/editNavButtons" model="${[entityName:entityName]}"/>
+                <span class="menuButton">
+                    <g:link class="create" controller="division" action="create" params="${['league.id':leagueInstance.id]}"><g:message code="default.new.label" args="['Division']" /></g:link>
+                </span>
             </div>
 
             <g:form method="post"  enctype="multipart/form-data">
@@ -27,11 +30,24 @@
                         
                             <tr class="prop">
                                 <td valign="top" class="name">
-                                  <label for="name"><g:message code="league.name.label" default="Name" /></label>
+                                    <label for="name"><g:message code="league.name.label" default="Name" /></label>
                                 </td>
                                 <td valign="top" class="value ${hasErrors(bean: leagueInstance, field: 'name', 'errors')}">
                                     <g:textField name="name" maxlength="50" value="${leagueInstance?.name}" />
                                     <g:render template="/shared/fieldError" model="['instance':leagueInstance,'field':'name']" plugin="footy-core"/>
+                                </td>
+                            </tr>
+
+                            <tr class="prop">
+                                <td valign="top" class="name">
+                                    <label><g:message code="league.divisions.label" default="Divisions" /></label>
+                                </td>
+                                <td valign="top" class="value">
+                                    <ul>
+                                    <g:each in="${Division.findAllByLeague(leagueInstance)}" var="d">
+                                        <li><g:link controller="division" action="edit" id="${d.id}">U${d.ageBand} ${d.name}</g:link></li>
+                                    </g:each>
+                                    </ul>
                                 </td>
                             </tr>
                         

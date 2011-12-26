@@ -31,6 +31,29 @@ class FootyTagLib {
     }
 
     /**
+     * render a sponsor logo if one exists
+     */
+    def sponsorLogo = { attrs ->
+
+        def sp = attrs.sponsor
+        if (sp) {
+            if (sp.url)
+                out << "<a href='${sp.url}' title='${sp.name}'>"
+            out << "<img id='sponsorlogo'"
+            out << "    src='${createLink(controller:'sponsor', action:'logo', id:sp.id)}'"
+            if (!sp.url)
+                out << "    title='${sp.name} sponsors our team'"
+            out << "    alt='${sp.name}'/>"
+            if (sp.url)
+                out << "</a>"
+        }
+        else {
+            out << "<!-- no sponsor -->"
+        }
+
+    }
+
+    /**
      * renders a team photo, if one has been added to the database, or
      * the stock "awaiting photo" image if not.
      *
