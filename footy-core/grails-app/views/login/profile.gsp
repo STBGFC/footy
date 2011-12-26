@@ -20,21 +20,21 @@
                     <footy:personPhoto person="${person}"/>
                 </modalbox:createLink>
               </div>
-          <div>
-          <table>
-              <tbody>
-              <tr><td class="label">username</td><td class="value"><sec:username /></td></tr>
-              <g:if test="${person}">
-              <tr><td class="label">full name</td><td class="value">${person}</td></tr>
-              <tr><td class="label">email</td><td class="value">${person.email}</td></tr>
-              <tr><td class="label">mobile</td><td class="value">${person.phone1}</td></tr>
-              <tr><td class="label">other phone</td><td class="value">${person.phone2}</td></tr>
-              <tr><td class="label">address</td><td class="value">${person.address}</td></tr>
-              <tr><td>qualifications</td><td><g:render template="/person/qualificationsList" model="[person:person]" plugin="footy-core"/></td></tr>
-              <tr><td class="label"></td><td class="value"><g:link controller="person" action="edit" id="${person.id}">edit details</g:link> </td></tr>
-              </g:if>
-              </tbody>
-          </table>
+          <div style="float:left">
+              <table>
+                  <tbody>
+                  <tr><td class="label">username</td><td class="value"><sec:username /></td></tr>
+                  <g:if test="${person}">
+                  <tr><td class="label">full name</td><td class="value">${person}</td></tr>
+                  <tr><td class="label">email</td><td class="value">${person.email}</td></tr>
+                  <tr><td class="label">mobile</td><td class="value">${person.phone1}</td></tr>
+                  <tr><td class="label">other phone</td><td class="value">${person.phone2}</td></tr>
+                  <tr><td class="label">address</td><td class="value">${person.address}</td></tr>
+                  <tr><td>qualifications</td><td><g:render template="/person/qualificationsList" model="[person:person]" plugin="footy-core"/></td></tr>
+                  <tr><td class="label"></td><td class="value"><g:link controller="person" action="edit" id="${person.id}">edit details</g:link> </td></tr>
+                  </g:if>
+                  </tbody>
+              </table>
           </div>
           </g:if>
           <g:else>
@@ -112,8 +112,10 @@
                   <li>
                       <g:link controller="qualificationType" action="list">Qualification types</g:link>
                   </li>
-                  </sec:ifAnyGranted>
-                  <sec:ifAnyGranted roles="ROLE_EDITOR">
+              </ul>
+              </sec:ifAnyGranted>
+              <sec:ifAnyGranted roles="ROLE_EDITOR">
+              <ul>
                   <li>
                       <g:link url="../wcm-admin">
                           <g:message
@@ -121,8 +123,10 @@
                                   default="Content Administration" />
                       </g:link>
                   </li>
-                  </sec:ifAnyGranted>
-                  <sec:ifAnyGranted roles="ROLE_TOURNAMENT_ADMIN">
+              </ul>
+              </sec:ifAnyGranted>
+              <sec:ifAnyGranted roles="ROLE_TOURNAMENT_ADMIN">
+              <ul>
                   <li>
                       <g:link controller="tournament" action="list">
                           <g:message
@@ -130,8 +134,19 @@
                                   default="Tournament Administration" />
                       </g:link>
                   </li>
-                  </sec:ifAnyGranted>
               </ul>
+              </sec:ifAnyGranted>
+              <sec:ifAnyGranted roles="ROLE_FIXTURE_ADMIN">
+              <ul>
+                  <li>
+                      <g:link controller="resource" action="index">
+                          <g:message
+                                  code="org.davisononline.footy.match.fixtureadmin.label"
+                                  default="Fixture Resource Allocations" />
+                      </g:link>
+                  </li>
+              </ul>
+              </sec:ifAnyGranted>
           </div>
       </div>
   </body>

@@ -109,11 +109,14 @@ class FootyMatchService {
 
         Set<Person> refs = [] as Set
 
+        // sort again by date/time which might have been modified since fetching from db
+        fixtures = fixtures.sort().reverse()
+
         // save all and gather set of refs to send email to
         fixtures?.each {fixture ->
             if (fixture.referee) refs.add(fixture.referee)
             if (fixture.isDirty('dateTime')) fixture.adjustedKickOff = true
-            fixture.save()
+            if (fixture.isDirty()) fixture.save()
         }
 
         // ensure all fixtures saved before sending emails. Refs first..
@@ -140,7 +143,7 @@ class FootyMatchService {
             if (!fixture.team.manager) {
                 log.info "No manager for team $fixture.team - no email sent for resource allocations"
             }
-            else {
+            else if (fixture.isDirty()) {
                 try {
                     mailService.sendMail {
                         to      fixture.team.manager.email

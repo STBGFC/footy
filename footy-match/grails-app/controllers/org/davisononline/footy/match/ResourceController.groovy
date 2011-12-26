@@ -38,7 +38,7 @@ class ResourceController {
      */
     def commitAllocations = {
         // fixtures to operate on from the hidden id array
-        def fixtures = Fixture.findAllByIdInList(params.fixtures.collect{it as Long})
+        def fixtures = Fixture.findAllByIdInList(params.fixtures.collect{it as Long}, [sort: 'dateTime'])
 
         // update each fixture and send the collection to be saved
         fixtures.each { fixture ->
@@ -61,7 +61,8 @@ class ResourceController {
         }
 
         footyMatchService.saveResourceAllocations(fixtures)
-        
-        render text:"OK"
+
+        flash.message = 'Fixtures updated and relevant emails have been sent'
+        redirect action:'index'
     }
 }

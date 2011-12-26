@@ -1,3 +1,4 @@
+<%@ page import="org.davisononline.footy.match.MatchResource" %>
             <g:if test="${fixtures.size()>0}">
             <g:form method="post" action="commitAllocations">
 
@@ -25,18 +26,44 @@
                         <g:each in="${fixtures}" var="f" status="i">
                         <g:hiddenField name="fixtures" value="${f.id}"/>
                         <tr class="${(i % 2) == 0 ? 'odd' : 'even'}">
-                            <td id="fixture${f.id}">${f}<br/>(Requested time: <g:formatDate date="${f.dateTime}" format="HH:mm"/>)</td>
+                            <td id="fixture${f.id}" class="${f.type}Game">${f}<br/>(Requested time: <g:formatDate date="${f.dateTime}" format="HH:mm"/>)</td>
                             <td class="date">
-                                <g:select onchange="previewAllocations()" name="hour${f.id}" from="${7..21}" value="${g.formatDate(date:f.dateTime, format:'HH')}"/>:<g:select onchange="previewAllocations()" name="minute${f.id}" from="${['00', '15', '30', '45']}" value="${g.formatDate(date:f.dateTime, format:'mm')}"/>
+                                <g:select
+                                        class="${f.type}Game"
+                                        onchange="previewAllocations()"
+                                        name="hour${f.id}"
+                                        from="${7..21}"
+                                        value="${g.formatDate(date:f.dateTime, format:'HH')}"/>:<g:select class="${f.type}Game" onchange="previewAllocations()" name="minute${f.id}" from="${['00', '15', '30', '45']}" value="${g.formatDate(date:f.dateTime, format:'mm')}"/>
                             </td>
                             <td class="date">
-                                <g:select onchange="previewAllocations()" name="pitch${f.id}" from="${availablePitches}" noSelection="['-1':'-- Not Assigned --']" optionKey="id" />
+                                <g:select
+                                        class="${f.type}Game"
+                                        onchange="previewAllocations()"
+                                        name="pitch${f.id}"
+                                        from="${availablePitches}"
+                                        value="${f.resources.find{it.type==MatchResource.PITCH}?.id}"
+                                        noSelection="['-1':'-- Not Assigned --']"
+                                        optionKey="id" />
                             </td>
                             <td class="date">
-                                <g:select onchange="previewAllocations()" name="ref${f.id}" from="${availableReferees}" noSelection="['-1':'-- Not Assigned --']"  optionKey="id" />
+                                <g:select
+                                        class="${f.type}Game"
+                                        onchange="previewAllocations()"
+                                        name="ref${f.id}"
+                                        from="${availableReferees}"
+                                        value="${f.referee?.id}"
+                                        noSelection="['-1':'-- Not Assigned --']"
+                                        optionKey="id" />
                             </td>
                             <td class="date">
-                                <g:select onchange="previewAllocations()" name="chrm${f.id}" from="${availableChangingRooms}" noSelection="['-1':'-- Not Assigned --']" optionKey="id" />
+                                <g:select
+                                        class="${f.type}Game"
+                                        onchange="previewAllocations()"
+                                        name="chrm${f.id}"
+                                        from="${availableChangingRooms}"
+                                        value="${f.resources.find{it.type==MatchResource.CHANGING_ROOM}?.id}"
+                                        noSelection="['-1':'-- Not Assigned --']"
+                                        optionKey="id" />
                             </td>
                         </tr>
                         </g:each>

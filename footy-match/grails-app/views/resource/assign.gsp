@@ -8,6 +8,20 @@
         </title>
         <script type="text/javascript">
             /**
+             * get all fixtures for this new date
+             */
+            function dateChange() {
+                ${remoteFunction(
+                    update: 'fixtureList',
+                    action:'changeDate',
+                    controller: 'resource',
+                    params: 'Form.serialize($(\'date_day\').form)',
+                    options: [asynchronous:false],
+                    after: 'previewAllocations()'
+                    )}
+            }
+
+            /**
              * enable an array of misc object types to be searched through based on a
              * property of one of the objects.
              * Credit: http://blog.webonweboff.com/2010/05/javascript-search-array-of-objects.html
@@ -112,13 +126,14 @@
                 <g:set var="now" value="${new Date()}"/>
                 <div class="nav">
                     Date to assign resources: <g:datePicker name="date" precision="day" years="${(now.year-1 + 1900)..(now.year+1901)}"/>
+                    Key:- || <span class="LeagueGame">League Game</span> || <span class="CupGame">Cup Game</span> || <span class="FriendlyGame">Friendly Game</span> ||
                 </div>
 
                 <%-- for fields created by the datePicker --%>
                 <script type="text/javascript">
-                    $('date_day').onchange = function() {${remoteFunction(update: 'fixtureList', action:'changeDate', controller: 'resource', params: 'Form.serialize($(\'date_day\').form)')}}
-                    $('date_month').onchange = function() {${remoteFunction(update: 'fixtureList', action:'changeDate', controller: 'resource', params: 'Form.serialize($(\'date_month\').form)')}}
-                    $('date_year').onchange = function() {${remoteFunction(update: 'fixtureList', action:'changeDate', controller: 'resource', params: 'Form.serialize($(\'date_year\').form)')}}
+                    $('date_day').onchange = dateChange
+                    $('date_month').onchange = dateChange
+                    $('date_year').onchange = dateChange
                 </script>
             </g:form>
 
