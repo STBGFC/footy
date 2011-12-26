@@ -44,6 +44,7 @@ class TeamController {
             return [
                     teamInstance: teamInstance,
                     players: Player.findAllByTeam(teamInstance, [sort:"person.familyName", order:"asc"]),
+                    otherTeamsThisAge: Team.findAllByClubAndAgeBand(Club.homeClub, teamInstance.ageBand),
                     latestNews: NewsItem.findAllByTeam(teamInstance, [max: params?.maxNews ?: 5, sort:'createdDate', order:'desc'])
             ]
         }
