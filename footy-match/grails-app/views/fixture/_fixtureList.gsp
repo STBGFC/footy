@@ -20,7 +20,7 @@
                         width="450">
                     ${fixture.opposition}
                 </modalbox:createLink>
-                <g:if test="${!fixture.played}">
+                <g:if test="${!fixture.played && fixture.resources.size() == 0 && !fixture.referee}">
                 <g:remoteLink
                         controller="fixture"
                         action="delete"
@@ -29,6 +29,9 @@
                         title="delete fixture"
                 ><img src="${createLinkTo(dir:'images/skin', file:'database_delete.png', plugin:'footy-core')}" alt="del"/></g:remoteLink>
                 </g:if>
+                <g:else>
+                <img src="${createLinkTo(dir:'images', file:'whistle_icon.png', plugin:'footy-match')}" alt="" title="Resources have been assigned to this fixture. Contact the fixture secretary to cancel" />
+                </g:else>
             </footy:isManager>
             <footy:isNotManager team="${myteam}">
                 ${fixture.opposition}
