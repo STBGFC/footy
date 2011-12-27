@@ -23,6 +23,7 @@ class Fixture implements Comparable {
     String type = LEAGUE_GAME
     Person referee
     boolean adjustedKickOff = false
+    boolean amendedResources = false
 
     // result
     boolean played = false
@@ -45,8 +46,8 @@ class Fixture implements Comparable {
 
     static hasMany = [resources: MatchResource]
 
-    // used to determine if the fixture secretary changed the KO time
-    static transients = ['adjustedKickOff']
+    // used to determine if the fixture secretary changed the KO time or adjusted resources
+    static transients = ['adjustedKickOff', 'amendedResources']
 
     static constraints = {
         opposition blank: false, size: 6..70

@@ -116,10 +116,31 @@ class FootyMatchService {
         fixtures?.each {fixture ->
             if (fixture.referee) refs.add(fixture.referee)
             if (fixture.isDirty('dateTime')) fixture.adjustedKickOff = true
-            if (fixture.isDirty()) fixture.save()
+
+            if (!fixture.team.manager) {
+                log.info "No manager for team $fixture.team - no email sent for resource allocations"
+            }
+            if (fixture.isDirty() || fixture.amendedResources) {
+                try {
+                    mailService.sendMail {
+                        to      fixture.team.manager.email
+                        from    person.email
+                        subject """Pitch/Referee Confirmation for your ${fixture.team} game on ${fixture.dateTime.format('dd/MM/yyyy')}"""
+                        body    TemplateUtils.eval(
+                                    managerEmailBody,
+                                    [fixture:fixture]
+                                )
+                    }
+                }
+                catch (Exception ex) {
+                    log.warn("Unable to send email to manager $fixture.team.manager; $ex.message")
+                }
+            }
+
+            fixture.save()
         }
 
-        // ensure all fixtures saved before sending emails. Refs first..
+        // Refs emails..
         refs?.each {ref ->
             def myFixtures = fixtures.grep{it.referee == ref}
             try {
@@ -134,30 +155,7 @@ class FootyMatchService {
                 }
             }
             catch (Exception ex) {
-                throw new Exception("Unable to send email to referee $ref; $ex.message")
-            }
-        }
-
-        //.. and managers
-        fixtures?.each {fixture ->
-            if (!fixture.team.manager) {
-                log.info "No manager for team $fixture.team - no email sent for resource allocations"
-            }
-            else if (fixture.isDirty()) {
-                try {
-                    mailService.sendMail {
-                        to      fixture.team.manager.email
-                        from    person.email
-                        subject """Pitch/Referee Confirmation for your ${fixture.team} game on ${fixture.dateTime.format('dd/MM/yyyy')}"""
-                        body    TemplateUtils.eval(
-                                    managerEmailBody,
-                                    [fixture:fixture]
-                                )
-                    }
-                }
-                catch (Exception ex) {
-                    throw new Exception("Unable to send email to manager $fixture.team.manager; $ex.message")
-                }
+                log.warn("Unable to send email to referee $ref; $ex.message")
             }
         }
     }

@@ -53,11 +53,20 @@ class ResourceController {
 
             fixture.referee = Person.get(params["ref$id"] as Long)
 
+            /*
+             * attempt to ascertain whether the resources for a match have
+             * been changed from how they were (so that emails can later be
+             * sent only to those managers who's fixtures have been amended)
+             */
+            def prior = []
+            prior.addAll fixture.resources
             fixture.resources.clear()
             def pitch = MatchResource.get(params["pitch$id"] as Long)
             if (pitch) fixture.addToResources(pitch)
             def chRm = MatchResource.get(params["chrm$id"] as Long)
             if (chRm) fixture.addToResources(chRm)
+
+            fixture.amendedResources = (!prior.containsAll(fixture.resources))
         }
 
         footyMatchService.saveResourceAllocations(fixtures)
