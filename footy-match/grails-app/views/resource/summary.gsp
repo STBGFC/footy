@@ -55,7 +55,7 @@
                         <td>
                             <p style="font-size:larger;font-weight: bold;margin-bottom: 0px"><g:formatDate date="${fixture.dateTime}" format="HH:mm"/>: ${fixture}</p>
                             <g:if test="${fixture.team?.manager}">
-                            Contact: ${fixture.team.manager} (${fixture.team.manager.bestPhone()})<br/>
+                            Manager: ${fixture.team.manager} (${fixture.team.manager.bestPhone()})<br/>
                             <a href="mailto:${fixture.team.manager.email}">${fixture.team.manager.email}</a>
                             </g:if>
                             <g:else><em>No manager listed for this team</em></g:else>
