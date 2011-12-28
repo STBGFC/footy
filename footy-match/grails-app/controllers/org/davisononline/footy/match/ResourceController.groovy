@@ -20,6 +20,14 @@ class ResourceController {
     }
 
     /**
+     * keep-alive.. async calls to keep the session alive may be required from pages
+     * that do a lot of client-side processing priot to submitting
+     */
+    def keepAlive = {
+        render text: 'ok', contentType: 'text/plain'
+    }
+    
+    /**
      * when a date is changed, automatically renders the fixtures to be considered
      * for that date.
      */
@@ -72,6 +80,28 @@ class ResourceController {
         footyMatchService.saveResourceAllocations(fixtures)
 
         flash.message = 'Fixtures updated and relevant emails have been sent'
-        redirect action:'index'
+        def date = fixtures.first().dateTime
+        redirect action: 'summary', params: [year: (date.year + 1900), month: (date.month + 1), day: date.date]
+    }
+
+    /**
+     * show the summary view of pitch and other resource allocations
+     * s/be accessed via UrlMaping "/pitches/$year/$month/$day"
+     */
+    @Secured(["ROLE_COACH"])
+    def summary = {
+        def date
+        if (params.year)
+            date = new Date("$params.year/$params.month/$params.day")
+        else {
+            // today, if the day is a Sat/Sun, or the following Sat.
+            def c = Calendar.instance
+            def dow = c.get(Calendar.DAY_OF_WEEK)
+            if (dow != 1 && dow != 7) {
+                c.set(Calendar.DAY_OF_WEEK, 7)
+            }
+            date = c.time
+        }
+        [fixtures: footyMatchService.getHomeGamesOn(date), date: date]
     }
 }

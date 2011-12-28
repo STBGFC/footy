@@ -43,6 +43,13 @@
              * pivot the pitches/refs/changing rooms to show a schedule by all
              */
             function previewAllocations() {
+
+                /*
+                 * make a server-side call (async) just to keep the session alive
+                 * as this is a page that could take a long time to complete
+                 */
+                ${remoteFunction(action:'keepAlive', controller: 'resource')}
+
                 var resDiv = $('previewAllocations')
 
                 // lots of code depends on the number and order of these for now
