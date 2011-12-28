@@ -36,6 +36,8 @@ class TeamController {
 
     @Secured(["permitAll"])
     def show = {
+        cache 'content'
+
         def teamInstance = Team.findWhere(club: Club.homeClub, ageBand:params.ageBand.toInteger(), name:params.teamName)
         if (!teamInstance || teamInstance.club != Club.homeClub) {
             response.sendError(404)

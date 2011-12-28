@@ -115,8 +115,15 @@
               </ul>
               </sec:ifAnyGranted>
               <%-- TODO: stuff below implies knowledge of other optional plugins.. needs making safe --%>
-              <sec:ifAnyGranted roles="ROLE_EDITOR">
               <ul>
+                  <li>
+                      <g:link url="../content/staff">
+                          <g:message
+                                  code="org.davisononline.footy.core.staffcontent.label"
+                                  default="Manager's Pages" />
+                      </g:link>
+                  </li>
+                <sec:ifAnyGranted roles="ROLE_EDITOR">
                   <li>
                       <g:link url="../wcm-admin">
                           <g:message
@@ -124,8 +131,8 @@
                                   default="Content Administration" />
                       </g:link>
                   </li>
+                </sec:ifAnyGranted>
               </ul>
-              </sec:ifAnyGranted>
               <sec:ifAnyGranted roles="ROLE_TOURNAMENT_ADMIN">
               <ul>
                   <li>
