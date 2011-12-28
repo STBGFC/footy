@@ -27,7 +27,7 @@
                         <g:hiddenField name="fixtures" value="${f.id}"/>
                         <tr class="${(i % 2) == 0 ? 'odd' : 'even'}">
                             <td id="fixture${f.id}" class="${f.type}Game">${f}<br/>(Requested time: <g:formatDate date="${f.dateTime}" format="HH:mm"/>)</td>
-                            <td class="date">
+                            <td class="date ${f.type}Game">
                                 <g:select
                                         class="${f.type}Game"
                                         onchange="previewAllocations()"
@@ -35,7 +35,7 @@
                                         from="${7..21}"
                                         value="${g.formatDate(date:f.dateTime, format:'HH')}"/>:<g:select class="${f.type}Game" onchange="previewAllocations()" name="minute${f.id}" from="${['00', '15', '30', '45']}" value="${g.formatDate(date:f.dateTime, format:'mm')}"/>
                             </td>
-                            <td class="date">
+                            <td class="date ${f.type}Game">
                                 <g:select
                                         class="${f.type}Game"
                                         onchange="previewAllocations()"
@@ -45,7 +45,7 @@
                                         noSelection="['-1':'-- Not Assigned --']"
                                         optionKey="id" />
                             </td>
-                            <td class="date">
+                            <td class="date ${f.type}Game">
                                 <g:select
                                         class="${f.type}Game"
                                         onchange="previewAllocations()"
@@ -55,7 +55,7 @@
                                         noSelection="['-1':'-- Not Assigned --']"
                                         optionKey="id" />
                             </td>
-                            <td class="date">
+                            <td class="date ${f.type}Game">
                                 <g:select
                                         class="${f.type}Game"
                                         onchange="previewAllocations()"

@@ -114,6 +114,7 @@
                   </li>
               </ul>
               </sec:ifAnyGranted>
+              <%-- TODO: stuff below implies knowledge of other optional plugins.. needs making safe --%>
               <sec:ifAnyGranted roles="ROLE_EDITOR">
               <ul>
                   <li>
