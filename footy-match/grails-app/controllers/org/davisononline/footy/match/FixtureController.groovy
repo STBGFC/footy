@@ -13,6 +13,8 @@ class FixtureController {
 
     def footyMatchService
 
+    def personService
+
     def grailsApplication
 
 
@@ -60,20 +62,34 @@ class FixtureController {
         render template: 'fixtureList', model: [fixtures: footyMatchService.getFixtures(fixtureInstance.team), myteam: fixtureInstance.team], plugin: 'footy-match', contentType: 'text/plain'
     }
 
-    def editDialog = {
-        def fixtureInstance = Fixture.get(params.id)
-        if (!fixtureInstance) {
-            flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'fixture.label', default: 'Fixture'), params.id])}"
-            redirect(action: "list")
+    def addResult = {
+        def fx = Fixture.get(params.id)
+
+        if (!fx) {
+            log.error "No fixture found to update"
+            response.status = 404
+            return
         }
         else {
-            def minAge = grailsApplication.config.org.davisononline.footy.match.minimumagetopublishresults as Integer
-            if (fixtureInstance.team.ageBand < minAge) {
-                render text: "<h2>Cannot Publish</h2><p>Age groups below U${minAge} are not allowed to publish results</p>", contentType: 'text/plain'
-            }
-            else
-                render template: 'editDialog', model:[fixtureInstance: fixtureInstance], contentType: 'text/plain', plugin: 'footy-match'
+            modelForResults(fx)
         }
+    }
+
+    def modelForResults(fx) {
+        def cfg = grailsApplication.config.org?.davisononline?.footy?.match
+        def minAge = cfg.minimumagetopublishresults as Integer ?: 9
+        def includeRefReport = ((cfg.referee.reportquestions as Integer) > 0)
+        def m = [
+            fixtureInstance: fx,
+            minAge: minAge,
+            includeRefReport: includeRefReport
+        ]
+        if (includeRefReport)
+            m.putAll([
+                refReportExists: (RefereeReport.findByFixture(fx) != null),
+                availableReferees: personService.referees
+            ])
+        m
     }
 
     /**
@@ -88,40 +104,67 @@ class FixtureController {
             return
         }
 
-        def minAge = grailsApplication.config.org.davisononline.footy.match.minimumagetopublishresults as Integer
-        if (fx.team.ageBand < minAge) {
-            response.status = 400
-            render text: "Age groups below U${minAge} are not allowed to publish results"
-            return
+        def cfg = grailsApplication.config.org?.davisononline?.footy?.match
+        def minAge = cfg.minimumagetopublishresults as Integer ?: 9
+        def reportQuestions = cfg.referee?.reportquestions as Integer ?: 0
+        def includeRefReport = (reportQuestions > 0)
+
+        if (fx.team.ageBand >= minAge) {
+
+            fx.played = (params.homeGoalsFullTime != null && params.homeGoalsFullTime != "")
+            fx.extraTime = (params.homeGoalsExtraTime != null && params.homeGoalsExtraTime != "")
+            fx.penalties = (params.homeGoalsPenalties != null && params.homeGoalsPenalties != "")
+
+            if (!fx.played) {
+                params.homeGoalsFullTime = 0
+                params.awayGoalsFullTime = 0
+                params.homeGoalsHalfTime = 0
+                params.awayGoalsHalfTime = 0
+            }
+            if (!fx.extraTime) {
+                params.homeGoalsExtraTime = 0
+                params.awayGoalsExtraTime = 0
+            }
+            if (!fx.penalties) {
+                params.homeGoalsPenalties = 0
+                params.awayGoalsPenalties = 0
+            }
+
+            fx.properties = params
         }
 
-        fx.played = (params.homeGoalsFullTime != null && params.homeGoalsFullTime != "")
-        fx.extraTime = (params.homeGoalsExtraTime != null && params.homeGoalsExtraTime != "")
-        fx.penalties = (params.homeGoalsPenalties != null && params.homeGoalsPenalties != "")
+        // ref report
+        RefereeReport report = new RefereeReport()
+        if (includeRefReport && params['ref']?.size() > 0) {
+            report.properties = params['ref']
+            report.fixture = fx
+            // auto type convertsion appears not to occur for the scores.. they remain as string
+            if (report.referee) {
+                report.scores = report.scores.collect {it as Integer}
+                if (report.scores.size() < reportQuestions) {
+                    report.errors.rejectValue('scores', 'Please answer ALL questions in the report')
+                    flash.message = 'Please answer ALL questions in the report'
+                }
+            }
+            else
+                report.scores = []
 
-        if (!fx.played) {
-            params.homeGoalsFullTime = 0
-            params.awayGoalsFullTime = 0
-            params.homeGoalsHalfTime = 0
-            params.awayGoalsHalfTime = 0
+            if (!report.save(flush: true)) {
+                flash.message = "Unable to save referee report"
+            }
         }
-        if (!fx.extraTime) {
-            params.homeGoalsExtraTime = 0
-            params.awayGoalsExtraTime = 0
-        }
-        if (!fx.penalties) {
-            params.homeGoalsPenalties = 0
-            params.awayGoalsPenalties = 0
-        }
-
-        fx.properties = params
                 
         if (!fx.save(flush: true)) {
-            def msg = "Unable to save fixture [${fx}]; " + fx.errors
-            log.error msg
+            flash.message = "Unable to save result"
+        }
+
+        if (fx.hasErrors() || report.hasErrors()) {
+            render view: 'addResult', model: modelForResults(fx)
             return
         }
-        render template: 'fixtureList', model: [fixtures: footyMatchService.getFixtures(fx.team), myteam: fx.team], plugin: 'footy-match', contentType: 'text/plain'
+
+        flash.message = "Fixture details ${params['ref']?.size() > 0 ? 'and referee report ' : ''}saved"
+        redirect controller: 'team', action: 'show', params:[ageBand: fx.team.ageBand, teamName: fx.team.name]
     }
 
     def delete = {

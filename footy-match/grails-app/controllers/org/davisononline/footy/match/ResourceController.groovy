@@ -7,7 +7,7 @@ import org.davisononline.footy.core.Person
  * controller for resource allocations (pitches/refs/changing rooms etc) for the
  * fixture secretary to use.
  */
-@Secured(["ROLE_CLUB_ADMIN"])
+@Secured(["ROLE_FIXTURE_ADMIN"])
 class ResourceController {
 
     def footyMatchService

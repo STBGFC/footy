@@ -12,15 +12,15 @@
             </td>
             <td>
             <footy:isManager team="${myteam}">
-                <modalbox:createLink
+                <g:link
                         controller="fixture"
-                        action="editDialog"
+                        action="addResult"
                         id="${fixture.id}"
                         title="Add result/report"
                         width="450">
                     ${fixture.opposition}
-                </modalbox:createLink>
-                <g:if test="${!fixture.played && fixture.resources.size() == 0 && !fixture.referee}">
+                </g:link>
+                <g:if test="${!fixture.played && fixture.resources?.size() == 0 && !fixture.referee}">
                 <g:remoteLink
                         controller="fixture"
                         action="delete"

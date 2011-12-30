@@ -43,17 +43,16 @@
                             </g:if>
                             <div>
                                 <footy:isManager team="${myteam}">
-                                        <modalbox:createLink
+                                        <g:link
                                             controller="fixture"
-                                            action="editDialog"
+                                            action="addResult"
                                             id="${fixture.id}"
-                                            title="Edit result or add match report"
-                                            width="450">
+                                            title="Edit result or add match report">
                                             <img
                                                 src="${createLinkTo(dir:'images/skin', file:'database_edit.png', plugin: 'footy-core')}"
                                                 alt=""/>
                                             <g:message code="org.davisononline.footy.match.label.editfixture" default="Edit Fixture"/>
-                                        </modalbox:createLink>
+                                        </g:link>
                                     <g:remoteLink
                                             controller="fixture"
                                             action="delete"
