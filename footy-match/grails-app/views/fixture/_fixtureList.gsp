@@ -30,7 +30,12 @@
                 ><img src="${createLinkTo(dir:'images/skin', file:'database_delete.png', plugin:'footy-core')}" alt="del"/></g:remoteLink>
                 </g:if>
                 <g:else>
-                <img src="${createLinkTo(dir:'images', file:'whistle_icon.png', plugin:'footy-match')}" alt="" title="Resources have been assigned to this fixture. Contact the fixture secretary to cancel" />
+                <g:link controller="resource" action="summary" params="${[year:fixture.dateTime.year+1900, month:fixture.dateTime.month+1, day:fixture.dateTime.date]}">
+                    <img
+                        src="${createLinkTo(dir:'images', file:'whistle_icon.png', plugin:'footy-match')}"
+                        alt=""
+                        title="Resources have been assigned to this fixture. Contact the fixture secretary to cancel" />
+                </g:link>
                 </g:else>
             </footy:isManager>
             <footy:isNotManager team="${myteam}">
