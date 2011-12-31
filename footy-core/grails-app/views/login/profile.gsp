@@ -59,6 +59,25 @@
               </ul>
           </div>
           </g:if>
+
+          <div class="newsbox">
+              <h2><g:message code="org.davisononline.footy.core.links.label" default="Pages and Links" /></h2>
+              <ul>
+                  <%-- TODO: stuff below implies knowledge of other optional plugins.. needs making safe --%>
+                  <li>
+                      <g:link controller="resource" action="summary">
+                          <g:message code="org.davisononline.footy.match.pitches.label" default="Pitch Allocations" />
+                      </g:link>
+                  </li>
+                  <li>
+                      <g:link url="../content/staff">
+                          <g:message
+                                  code="org.davisononline.footy.core.staffcontent.label"
+                                  default="Managers Pages" />
+                      </g:link>
+                  </li>
+              </ul>
+          </div>
           
           <div class="newsbox">
               <h2><g:message code="org.davisononline.footy.core.administration.label" default="Administration" /></h2>
@@ -116,14 +135,7 @@
               </sec:ifAnyGranted>
               <%-- TODO: stuff below implies knowledge of other optional plugins.. needs making safe --%>
               <ul>
-                  <li>
-                      <g:link url="../content/staff">
-                          <g:message
-                                  code="org.davisononline.footy.core.staffcontent.label"
-                                  default="Manager's Pages" />
-                      </g:link>
-                  </li>
-                <sec:ifAnyGranted roles="ROLE_EDITOR">
+                  <sec:ifAnyGranted roles="ROLE_EDITOR">
                   <li>
                       <g:link url="../wcm-admin">
                           <g:message
@@ -131,10 +143,8 @@
                                   default="Content Administration" />
                       </g:link>
                   </li>
-                </sec:ifAnyGranted>
-              </ul>
-              <sec:ifAnyGranted roles="ROLE_TOURNAMENT_ADMIN">
-              <ul>
+                  </sec:ifAnyGranted>
+                  <sec:ifAnyGranted roles="ROLE_TOURNAMENT_ADMIN">
                   <li>
                       <g:link controller="tournament" action="list">
                           <g:message
@@ -142,10 +152,8 @@
                                   default="Tournament Administration" />
                       </g:link>
                   </li>
-              </ul>
-              </sec:ifAnyGranted>
-              <sec:ifAnyGranted roles="ROLE_FIXTURE_ADMIN">
-              <ul>
+                  </sec:ifAnyGranted>
+                  <sec:ifAnyGranted roles="ROLE_FIXTURE_ADMIN">
                   <li>
                       <g:link controller="resource" action="index">
                           <g:message
@@ -153,8 +161,8 @@
                                   default="Fixture Resource Allocations" />
                       </g:link>
                   </li>
+                  </sec:ifAnyGranted>
               </ul>
-              </sec:ifAnyGranted>
           </div>
       </div>
   </body>
