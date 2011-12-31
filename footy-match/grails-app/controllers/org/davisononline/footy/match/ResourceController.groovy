@@ -35,8 +35,8 @@ class ResourceController {
         def m = [
                 fixtures: footyMatchService.getHomeGamesOn(params.date ?: new Date()),
                 availableReferees: personService.referees,
-                availablePitches: MatchResource.findAllByType(MatchResource.PITCH),
-                availableChangingRooms: MatchResource.findAllByType(MatchResource.CHANGING_ROOM)
+                availablePitches: MatchResource.findAllByType(MatchResource.PITCH, [sort: 'name', order: 'asc']),
+                availableChangingRooms: MatchResource.findAllByType(MatchResource.CHANGING_ROOM, [sort: 'name', order: 'asc'])
         ]
         render template: 'fixtures', model: m, contentType: 'text/plain', plugin: 'footy-match'
     }
