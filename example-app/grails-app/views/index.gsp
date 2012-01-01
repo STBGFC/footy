@@ -22,46 +22,6 @@
               <g:link controller="registration">Register Player</g:link>
           </div>
 
-          <sec:ifAnyGranted roles="ROLE_SYSADMIN,ROLE_CLUB_ADMIN">
-          <div class="newsbox">
-              <h2>Club Administration</h2>
-              <ul>
-                  <li>
-                      <g:link controller="person" action="list">People</g:link>
-                  </li>
-                  <li>
-                      <g:link controller="player" action="list">Players</g:link>
-                  </li>
-                  <li>
-                      <g:link controller="team" action="list">Teams</g:link>
-                  </li>
-                  <li>
-                      <g:link controller="person" action="qualifications">Qualifications expiring soon</g:link>
-                  </li>
-                  <li>
-                      <g:link controller="invoice" action="list">Payment Reconciliations</g:link>
-                  </li>
-                  <li>
-                      <g:link controller="registrationTier" action="list">Registration tiers</g:link>
-                  </li>
-                  <li>
-                      <g:link controller="qualificationType" action="list">Qualification types</g:link>
-                  </li>
-              </ul>
-          </div>
-          </sec:ifAnyGranted>
-
-          <sec:ifAnyGranted roles="ROLE_TOURNAMENT_ADMIN">
-          <div class="newsbox">
-              <h2>Tournament Administration</h2>
-              <ul>
-                  <li>
-                      <g:link controller="tournament" action="list">All Tournaments</g:link>
-                  </li>
-              </ul>
-          </div>
-          </sec:ifAnyGranted>
-
       </div>
 
   </body>

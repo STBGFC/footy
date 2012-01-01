@@ -4,12 +4,11 @@ import geb.Page
 import org.davisononline.footy.*
 
 
-class CreateTeamPage extends Page {
+class CreateTeamPage extends FootyPage {
     static content = {
         teamForm { $("form#team") }
         manager { $("form#team").find("select", name:"manager.id") }
-        crud { module CrudModule, titleText: "Add New Team" }
-        auth { module AuthModule }
+        crud { module CrudModule, titleText: "Add New Team", label: "Save" }
     }
 }
 

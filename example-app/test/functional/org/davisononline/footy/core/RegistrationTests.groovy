@@ -1,10 +1,9 @@
 package org.davisononline.footy.core
 
 import geb.Browser
-import geb.Page
 import org.davisononline.footy.*
 
-class TierPage extends Page {
+class TierPage extends FootyPage {
     static at = { title == "Registration Type" }
     static content = {
         regForm { $("form#registration") }
@@ -12,7 +11,7 @@ class TierPage extends Page {
     }
 }
 
-class PlayerPage extends Page {
+class PlayerPage extends FootyPage {
     static at = { title.endsWith("Registration") }
     static content = {
         playerForm { $("form#registration") }
@@ -22,17 +21,16 @@ class PlayerPage extends Page {
     }
 }
 
-class PersonPage extends Page {
+class PersonPage extends FootyPage {
     static at = { title == "Enter Parent/Guardian Details" }
     static content = {
         anotherParent { $("input", value:"Add another parent...") }
         person { module PersonFormModule, formName: 'registration' }
         flow { module CrudModule }
-        auth { module AuthModule }
     }
 }
 
-class TeamPage extends Page {
+class TeamPage extends FootyPage {
     static at = { title == "Assign Team" }
     static content = {
         teamForm { $("form#registration") }
@@ -40,11 +38,11 @@ class TeamPage extends Page {
     }
 }
 
-class DupePage extends Page {
+class DupePage extends FootyPage {
     static at = { title == "Already Registered" }
 }
 
-class InvoicePage extends Page {
+class InvoicePage extends FootyPage {
     static at = { title == "Payment" }
     static content = {
         lineItems { $("tr.invoiceBody") }
@@ -93,12 +91,12 @@ class RegistrationTests extends AbstractTestHelper {
         go "" //home
         waitFor { at(HomePage) }
         auth.login("sa", "admin")
-        go "player/list"
+        playerList.click()
         $("a", value:"Jody Bloggs").click()
 
         // invoice
-        go ""
-        waitFor { at(HomePage) }
+        go "login/profile"
+        waitFor { at(ProfilePage) }
         invoices.click()
         
     }
@@ -203,7 +201,8 @@ class RegistrationTests extends AbstractTestHelper {
         flow.contButton.click()
         waitFor { at(PlayerPage) }
         doPlayer("Jock", "Bloggs")
-        $("guardian.id").value("Dad Bloggs")
+        // can only seem to make the longhand version work to set this field..
+        playerForm.find("select", name:"guardian.id").value("Dad Bloggs")
         flow.contButton.click()
         waitFor { at(TeamPage) }
         teamForm.leagueRegistrationNumber = '123456'

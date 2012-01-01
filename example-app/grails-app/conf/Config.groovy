@@ -44,6 +44,19 @@ grails.spring.bean.packages = []
 
 
 // local
+grails.plugins.springsecurity.userLookup.userDomainClassName = 'org.davisononline.footy.core.SecUser'
+grails.plugins.springsecurity.userLookup.authorityJoinClassName = 'org.davisononline.footy.core.SecUserSecRole'
+grails.plugins.springsecurity.authority.className = 'org.davisononline.footy.core.SecRole'
+grails.plugins.springsecurity.successHandler.defaultTargetUrl = '/login/profile'
+grails.plugins.springsecurity.roleHierarchy = '''
+   ROLE_SYSADMIN > ROLE_OFFICER
+   ROLE_OFFICER > ROLE_CLUB_ADMIN
+   ROLE_OFFICER > ROLE_TOURNAMENT_ADMIN
+   ROLE_OFFICER > ROLE_FIXTURE_ADMIN
+   ROLE_CLUB_ADMIN > ROLE_EDITOR
+   ROLE_CLUB_ADMIN > ROLE_COACH
+'''
+
 grails.mail.host='mail'
 org.davisononline.footy.core.homeclubname='Example FC'
 org.davisononline.footy.core.registration.email="registration-confirm@examplefc.com"
@@ -61,6 +74,37 @@ at http://www.examplefc.com/invoice/show/${payment.transactionId}
 
 Kind regards,
 ExampleFC Registrations.
+'''
+
+org.davisononline.footy.core.resetPassword.emailbody='''
+Hi ${person.knownAsName ?: person.givenName},
+
+We received a request to reset the password for your account.  If you
+didn't make this request, you can just ignore the email and no changes
+will be made to your account.
+
+To continue with the password reset, click the link below or copy and
+paste into your browser:
+
+${cfg.grails.serverURL}/login/reset/${link}
+
+Please note, this link is only valid for 24 hours.
+
+Kind regards,
+Club Admin.
+'''
+
+org.davisononline.footy.core.resetComplete.emailbody='''
+Hi ${person.knownAsName ?: person.givenName},
+
+You have been assigned a temporary password of:
+
+${pwd}
+
+When you next login, you will be asked to change it.
+
+Kind regards,
+Club Admin.
 '''
 
 org.davisononline.footy.tournament.registration.email="tournament-confirm@examplefc.com"
@@ -81,6 +125,12 @@ We'll see you there!
 ExampleFC Tournament Committee.
 '''
 
+cache.headers.presets = [
+    authed_page: false, // No caching for logged in user
+    content: [shared:false, validFor: 3600], // 1hr on content
+    pics: [shared: true, validFor: 3600*24], // 1 day on pictures
+
+]
 
 // set per-environment serverURL stem for creating absolute links
 environments {
@@ -101,6 +151,7 @@ environments {
         grails.paypal.server = "https://www.sandbox.paypal.com/cgi-bin/webscr"
         grails.paypal.email = "seller_1295042208_biz@googlemail.com"
         grails.mail.overrideAddress="example@examplefc.com"
+        grails.mail.disabled = true // for func. tests
     }
 }
 

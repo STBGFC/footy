@@ -24,7 +24,11 @@
             </form>
             </sec:ifNotLoggedIn>
             <sec:ifLoggedIn>
-            <div>Logged in: <span id="username"><strong><sec:username /></strong></span> <g:link controller="logout">[logout]</g:link></div>
+            <div>
+                Logged in: <span id="username"><strong><sec:username /></strong></span> 
+                <g:link controller="logout">[logout]</g:link>
+                <g:link controller="login" action="profile">[profile]</g:link>
+            </div>
             </sec:ifLoggedIn>
         </div>
 

@@ -1,19 +1,15 @@
 package org.davisononline.footy.core
 
-import geb.Page
 import org.davisononline.footy.*
 
 
-class EditPersonPage extends Page {
+class EditPersonPage extends FootyPage {
     static at = { title.startsWith("Edit details for: ") }
 }
 
 class PersonTests extends AbstractTestHelper {
 
     def addPerson(gn, fn, email) {
-        go ""
-        waitFor { at(HomePage) }
-        auth.login("sa", "admin")
         personList.click()
         newPersonButton.click()
         person.personForm.givenName = gn
@@ -27,9 +23,6 @@ class PersonTests extends AbstractTestHelper {
     }
 
     def doQuals(mgr, quals) {
-        go ""
-        waitFor { at(HomePage) }
-        auth.login("sa", "admin")
         personList.click()
         $("a", text: mgr).click()
         waitFor { at(CreatePersonPage) }
@@ -43,9 +36,6 @@ class PersonTests extends AbstractTestHelper {
     }
 
     def addTeam(name, age, mgr) {
-        go ""
-        waitFor { at(HomePage) }
-        auth.login("sa", "admin")
         teamList.click()
         newTeamButton.click()
         teamForm.ageBand = age
@@ -55,27 +45,43 @@ class PersonTests extends AbstractTestHelper {
     }
 
     void testCreatePerson() {
+        login("sa", "admin")
         addPerson("Rob", "Roberts", "rob@examplefc.com")
-        go ""
-        waitFor { at(HomePage) }
+        auth.profilePage()
         personList.click()
         $("a", text: "Rob Roberts").click()
         auth.logout()
     }
 
     void testLoginForManager() {
-        addPerson("Jack", "Manager", "manager2@examplefc.com")
-        doQuals("Jack Manager", ["FA Level 1"])
-        addTeam("Boys", 8, "Jack Manager")
-        assert crud.flash.text() == "Team U8 Boys created"
-        addPerson("John", "Manager", "manager1@examplefc.com")
-        doQuals("John Manager", ["FA Level 1", "Emergency Aid", "CRB"])
-        addTeam("Reds", 8, "John Manager")
-        assert crud.flash.text() == "Team U8 Reds created"
+        login("sa", "admin")
+        // parents created in app bootstrap
+        doQuals("John Parent", ["FA Level 1"])
+        auth.profilePage()
+        addTeam("Boys", 8, "John Parent")
+        auth.profilePage()
+        doQuals("Jules Parent", ["FA Level 1", "Emergency Aid", "CRB"])
+        auth.profilePage()
+        addTeam("Reds", 8, "Jules Parent")
+        auth.logout()
+        auth.login("manager1", "manager1")
+        waitFor { at(ProfilePage) }
+        $('a', text: 'U8 Boys').click()
+        $("a", text: "Add/Change Sponsor").click()
+        $('a', text: 'U8 Reds').click()
+        assert $("a", text: "Add/Change Sponsor").size() == 0
+        auth.logout()
+        auth.login("manager2", "manager2")
+        waitFor { at(ProfilePage) }
+        $('a', text: 'U8 Reds').click()
+        $("a", text: "Add/Change Sponsor").click()
+        $('a', text: 'U8 Boys').click()
+        assert $("a", text: "Add/Change Sponsor").size() == 0
         auth.logout()
     }
 
     void testDuplicateEmailWhenCreating() {
+        login("sa", "admin")
         addPerson("Ralph", "TheGreat", "john.parent@examplefc.com")
         assert crud.errors.size() == 1
         assert crud.error(0).text() == "Property [email] of class [class org.davisononline.footy.core.Person] with value [john.parent@examplefc.com] must be unique"
