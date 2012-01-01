@@ -6,7 +6,7 @@ import org.davisononline.footy.*
 /**
  * create/edit form for Person
  */
-class CreatePersonPage extends Page {
+class CreatePersonPage extends FootyPage {
     static at = {
         $("form", id:"personEditForm")
     }
@@ -19,7 +19,6 @@ class CreatePersonPage extends Page {
 
         person { module PersonFormModule, formName:'personEditForm' }
         crud { module CrudModule, label: "Save" }
-        auth { module AuthModule }
     }
 }
 

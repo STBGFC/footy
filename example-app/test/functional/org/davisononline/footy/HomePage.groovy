@@ -1,36 +1,21 @@
 package org.davisononline.footy
 
-import geb.Page
 import org.davisononline.footy.core.*
 
 
 /**
  * home page for the example app under test
  */
-class HomePage extends Page { 
+class HomePage extends FootyPage { 
     static url = ""
     static at = { title == "Example FC Registrations and Payments" }
     static content = {
-        auth { module AuthModule }
 
-        // admin links
-        personList(to: PersonListPage) { 
-            $("a", text: "People") 
+        // register player link
+        registerPlayer() {
+            $("a", text: "Register Player")
         }
-        playerList(to: PlayerListPage) { 
-            $("a", text: "Players") 
-        }
-        teamList(to: TeamListPage) { 
-            $("a", text: "Teams") 
-        }
-        /*
-        qualifications(to: QualificationsExpiringListPage) { 
-            $("a", text: "Qualifications Expiring Soon") 
-        }
-        */
-        invoices(to: InvoiceListPage) { 
-            $("a", text: "Payment Reconciliations") 
-        }
+
     }
 }
 

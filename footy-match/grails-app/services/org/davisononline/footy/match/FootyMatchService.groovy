@@ -57,6 +57,7 @@ class FootyMatchService {
      * @return
      */
     def getFixtures(Team team, int n, Date date) {
+        if (!team) return null
         def fc = Fixture.createCriteria()
         def list = fc.list (max:n) {
             eq ("team", team)

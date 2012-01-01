@@ -13,10 +13,9 @@ class ListModule extends Module {
 /**
  * generic page with a (possibly paginated) list on it
  */
-class ListPage extends Page {
+class ListPage extends FootyPage {
     static content = {
         list { module ListModule }
-        auth { module AuthModule }
         homeButton { $("a", text: "Home") }
     }
 }

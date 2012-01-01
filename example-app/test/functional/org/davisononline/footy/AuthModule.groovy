@@ -10,11 +10,18 @@ class AuthModule extends Module {
     static content  = {
         // logged in elements
         username(required: false) { $("#username").text() }
-        logoutButton(required: false) { $("a", text:"[logout]") }
+        profileButton(required: false, to: ProfilePage) {
+            $('a', text: '[profile]')
+        }
+        logoutButton(required: false, to: HomePage) { 
+            $("a", text:"[logout]") 
+        }
 
         // not logged in elements
         form(required: false) { $("form#login") }
-        loginButton(required: false) { $("a", text:"login") }
+        loginButton(required: false, to: ProfilePage) {
+            $("a", text:"login") 
+        }
     }
 
     boolean isLoggedIn() {
@@ -23,12 +30,22 @@ class AuthModule extends Module {
 
     void login(String name, String password) { 
         if (loggedIn) {
-            println "Already logged in, logging out!"
-            logout()
+            println "Already logged in!!"
+            return
         }
         form.j_username = name
         form.j_password = password
         loginButton.click()
+        // why does this error in here..?
+        //waitFor { at(ProfilePage) }
+    }
+
+    void profilePage() {
+        if (!loggedIn) {
+            println "Need to be logged in to see profile page!"
+            return
+        }
+        profileButton.click()
     }
 
     void logout() {
@@ -37,6 +54,8 @@ class AuthModule extends Module {
             return
         }
         logoutButton.click()
+        // as above..
+        //waitFor { at(HomePage) }
     }
 }
 

@@ -7,60 +7,6 @@ class BootStrap {
     def springSecurityService
 
     def init = { servletContext ->
-        if (League.count() == 0) {
-            def l=new League(name:"North").save()
-            def l2=new League(name:"South").save()
-        }
-        def clubSec
-        def club
-        if (!Club.homeClub) {
-            clubSec = new Person(
-                givenName: 'John',
-                familyName: 'Secretary',
-                phone1: '07000000000',
-                email: 'john.secretary@examplefc.com',
-                eligibleParent: true
-            ).save(flush: true)
-            club = new Club(
-                name: 'Example FC',
-                colours: 'Blue and White',
-                secretary: clubSec
-            ).save()
-
-        }
-
-        def p1 = new Person(
-            givenName: 'John',
-            familyName: 'Parent',
-            phone1: '07000000001',
-            email: 'john.parent@examplefc.com',
-            eligibleParent: true
-        ).save(flush: true)
-        def p2 = new Person(
-            givenName: 'Jules',
-            familyName: 'Parent',
-            phone1: '07000000002',
-            email: 'jules.parent@examplefc.com',
-            eligibleParent: true
-        ).save(flush: true)
-
-        if (RegistrationTier.count() == 0) {
-            new RegistrationTier(
-                    name: "Junior",
-                    amount: 60.00,
-                    siblingDiscount: 15.00
-            ).save()
-            new RegistrationTier(
-                    name: "Senior",
-                    amount: 80.00,
-                    siblingDiscount: 15.00
-            ).save()
-        }        
-        
-        def sa = SecUser.findByUsername('sa')
-        sa.passwordExpired = false
-        sa.save(failOnError: true)
-
         // set up a couple of logins that can be used in tests
         def manager1 = SecUser.findByUsername('manager1') ?: new SecUser(
             username: 'manager1',
@@ -108,6 +54,75 @@ class BootStrap {
         if (!officer.authorities.contains(coachRole)) {
             SecUserSecRole.create officer, coachRole
         }
+
+        // leagues
+        if (League.count() == 0) {
+            def l=new League(name:"North").save()
+            def l2=new League(name:"South").save()
+        }
+
+        // common address
+        def commune = new Address(
+            house: '1',
+            address:'Some St.', 
+            town:'Anytown', 
+            postCode:'GU1 1DB'
+        ).save(flush:true)
+
+        // club data
+        def clubSec
+        def club
+        if (!Club.homeClub) {
+            clubSec = new Person(
+                givenName: 'John',
+                familyName: 'Secretary',
+                phone1: '07000000000',
+                email: 'john.secretary@examplefc.com',
+                eligibleParent: true,
+                address: commune
+            ).save(flush: true)
+            club = new Club(
+                name: 'Example FC',
+                colours: 'Blue and White',
+                secretary: clubSec
+            ).save()
+
+        }
+
+        def p1 = new Person(
+            givenName: 'John',
+            familyName: 'Parent',
+            phone1: '07000000001',
+            email: 'john.parent@examplefc.com',
+            eligibleParent: true,
+            address: commune,
+            user: manager1
+        ).save(flush: true)
+        def p2 = new Person(
+            givenName: 'Jules',
+            familyName: 'Parent',
+            phone1: '07000000002',
+            email: 'jules.parent@examplefc.com',
+            eligibleParent: true,
+            user: manager2
+        ).save(flush: true)
+
+        if (RegistrationTier.count() == 0) {
+            new RegistrationTier(
+                    name: "Junior",
+                    amount: 60.00,
+                    siblingDiscount: 15.00
+            ).save()
+            new RegistrationTier(
+                    name: "Senior",
+                    amount: 80.00,
+                    siblingDiscount: 15.00
+            ).save()
+        }        
+        
+        def sa = SecUser.findByUsername('sa')
+        sa.passwordExpired = false
+        sa.save(failOnError: true)
 
         // workaround for crappy reindix bug in searchableService that prevents player table
         // being reindexed
