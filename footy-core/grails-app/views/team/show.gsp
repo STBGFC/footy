@@ -233,7 +233,7 @@
             
             <div id="otherteams">
                 <ul>
-                    <g:each in="${Team.findAllByClubAndAgeBand(Club.homeClub, teamInstance.ageBand, [sort:'division'])}" var="t">
+                    <g:each in="${otherTeamsThisAge.sort {a,b-> (a?.division && b?.division) ? b.division.compareTo(a.division) : 0}}" var="t">
                     <g:if test="${t != teamInstance}">
                     <li><g:link action="show" params="${[ageBand:t.ageBand, teamName:t.name]}">U${t.ageBand}&nbsp;${t.name}</g:link></li>
                     </g:if>

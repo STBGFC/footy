@@ -8,7 +8,7 @@ import org.davisononline.footy.core.Person
  * type of game, the date, the <tt>Result</tt> (if any) and other
  * data.
  */
-class Fixture {
+class Fixture implements Comparable {
 
     public static final String LEAGUE_GAME = 'League'
     public static final String CUP_GAME = 'Cup'
@@ -22,8 +22,8 @@ class Fixture {
     Date dateTime
     String type = LEAGUE_GAME
     Person referee
-
-    static hasMany = [resources: MatchResource]
+    boolean adjustedKickOff = false
+    boolean amendedResources = false
 
     // result
     boolean played = false
@@ -43,6 +43,11 @@ class Fixture {
     int awayGoalsPenalties = 0
 
     String matchReport
+
+    static hasMany = [resources: MatchResource]
+
+    // used to determine if the fixture secretary changed the KO time or adjusted resources
+    static transients = ['adjustedKickOff', 'amendedResources']
 
     static constraints = {
         opposition blank: false, size: 6..70
@@ -76,5 +81,10 @@ class Fixture {
             "${homeGoalsFullTime} - ${awayGoalsFullTime}"
         else
             "${homeGoalsExtraTime} - ${awayGoalsExtraTime}"
+    }
+
+    int compareTo(Object f) {
+        if (! f?.dateTime) return -1
+        return (f?.dateTime?.compareTo(dateTime))
     }
 }

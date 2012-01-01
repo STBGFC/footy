@@ -18,6 +18,8 @@ class TeamController {
 
     def springSecurityService
 
+    def personService
+
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST", photoUpload: "POST"]
 
@@ -34,6 +36,8 @@ class TeamController {
 
     @Secured(["permitAll"])
     def show = {
+        cache 'content'
+
         def teamInstance = Team.findWhere(club: Club.homeClub, ageBand:params.ageBand.toInteger(), name:params.teamName)
         if (!teamInstance || teamInstance.club != Club.homeClub) {
             response.sendError(404)
@@ -42,6 +46,7 @@ class TeamController {
             return [
                     teamInstance: teamInstance,
                     players: Player.findAllByTeam(teamInstance, [sort:"person.familyName", order:"asc"]),
+                    otherTeamsThisAge: Team.findAllByClubAndAgeBand(Club.homeClub, teamInstance.ageBand),
                     latestNews: NewsItem.findAllByTeam(teamInstance, [max: params?.maxNews ?: 5, sort:'createdDate', order:'desc'])
             ]
         }
@@ -70,7 +75,7 @@ class TeamController {
     def create = {
         def teamInstance = new Team()
         teamInstance.properties = params
-        render(view: "edit", model: [teamInstance: teamInstance, managers: getManagers()])
+        render(view: "edit", model: [teamInstance: teamInstance, managers: personService.getManagers()])
     }
 
     def save = {
@@ -80,7 +85,7 @@ class TeamController {
             redirect(session.breadcrumb ? [uri: session.breadcrumb] : [action: "list"])
         }
         else {
-            render(view: "edit", model: [teamInstance: teamInstance, managers: getManagers()])
+            render(view: "edit", model: [teamInstance: teamInstance, managers: personService.getManagers()])
         }
     }
 
@@ -91,7 +96,7 @@ class TeamController {
             redirect(session.breadcrumb ? [uri: session.breadcrumb] : [action: "list"])
         }
         else {
-            return [teamInstance: teamInstance, managers: getManagers(), players: Player.findAllByTeam(teamInstance, [sort:"person.familyName", order:"asc"])]
+            return [teamInstance: teamInstance, managers: personService.getManagers(), players: Player.findAllByTeam(teamInstance, [sort:"person.familyName", order:"asc"])]
         }
     }
 
@@ -103,7 +108,7 @@ class TeamController {
                 if (teamInstance.version > version) {
                     
                     teamInstance.errors.rejectValue("version", "default.optimistic.locking.failure", [message(code: 'team.label', default: 'Team')] as Object[], "Another user has updated this Team while you were editing")
-                    render(view: "edit", model: [teamInstance: teamInstance, managers: getManagers()])
+                    render(view: "edit", model: [teamInstance: teamInstance, managers: personService.getManagers()])
                     return
                 }
             }
@@ -113,7 +118,7 @@ class TeamController {
                 redirect(session.breadcrumb ? [uri: session.breadcrumb] : [action: "list"])
             }
             else {
-                render(view: "edit", model: [teamInstance: teamInstance, managers: getManagers()])
+                render(view: "edit", model: [teamInstance: teamInstance, managers: personService.getManagers()])
             }
         }
         else {
@@ -376,12 +381,7 @@ class TeamController {
         redirect(session.breadcrumb ? [uri: session.breadcrumb] : [uri:'/'])
 
     }
-
-    private getManagers() {
-        Person.executeQuery(
-                "select distinct q.person from Qualification q where q.type.category=:category order by q.person.familyName asc",
-                [category: QualificationType.COACHING])
-    }
+    
 }
 
 

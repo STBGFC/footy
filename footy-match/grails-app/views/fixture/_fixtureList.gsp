@@ -12,15 +12,15 @@
             </td>
             <td>
             <footy:isManager team="${myteam}">
-                <modalbox:createLink
+                <g:link
                         controller="fixture"
-                        action="editDialog"
+                        action="addResult"
                         id="${fixture.id}"
                         title="Add result/report"
                         width="450">
                     ${fixture.opposition}
-                </modalbox:createLink>
-                <g:if test="${!fixture.played}">
+                </g:link>
+                <g:if test="${!fixture.played && fixture.resources?.size() == 0 && !fixture.referee}">
                 <g:remoteLink
                         controller="fixture"
                         action="delete"
@@ -29,6 +29,14 @@
                         title="delete fixture"
                 ><img src="${createLinkTo(dir:'images/skin', file:'database_delete.png', plugin:'footy-core')}" alt="del"/></g:remoteLink>
                 </g:if>
+                <g:else>
+                <g:link controller="resource" action="summary" params="${[year:fixture.dateTime.year+1900, month:fixture.dateTime.month+1, day:fixture.dateTime.date]}">
+                    <img
+                        src="${createLinkTo(dir:'images', file:'whistle_icon.png', plugin:'footy-match')}"
+                        alt=""
+                        title="Resources have been assigned to this fixture. Contact the fixture secretary to cancel" />
+                </g:link>
+                </g:else>
             </footy:isManager>
             <footy:isNotManager team="${myteam}">
                 ${fixture.opposition}
