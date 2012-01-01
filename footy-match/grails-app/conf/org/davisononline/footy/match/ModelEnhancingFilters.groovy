@@ -13,9 +13,12 @@ class ModelEnhancingFilters {
         teamShow (controller:'team', action:'show') { 
 
             after = { model ->
-                model['fixtures'] = footyMatchService.getFixtures(model['teamInstance'])
-                model['totalFixtureCount'] = Fixture.countByTeam(model['teamInstance'])
-                model['myteam'] = model['teamInstance']
+                // model will not exist if team was not found..
+                if (model) {
+                    model['fixtures'] = footyMatchService.getFixtures(model['teamInstance'])
+                    model['totalFixtureCount'] = Fixture.countByTeam(model['teamInstance'])
+                    model['myteam'] = model['teamInstance']
+                }
             }
             
         }
