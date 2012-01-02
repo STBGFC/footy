@@ -145,6 +145,7 @@ environments {
         grails.paypal.server = "https://www.sandbox.paypal.com/cgi-bin/webscr"
         grails.paypal.email = "seller_1295042208_biz@googlemail.com"
         grails.mail.overrideAddress="example@examplefc.com"
+        grails.mail.disabled = true // for func. tests
     }
     test {
         grails.serverURL = "http://localhost:8080/${appName}"
