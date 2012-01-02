@@ -28,6 +28,7 @@ class PersonTests extends AbstractTestHelper {
         waitFor { at(CreatePersonPage) }
         addQual.click()
         waitFor { qualForm.present }
+        Thread.sleep(2000)
         quals.each { q ->
             qual.value(q)
             qualSubmit.click()
