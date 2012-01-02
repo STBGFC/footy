@@ -11,7 +11,7 @@
                     default="Password can be changed here"/>
             </p>
 
-            <g:form action='updatePassword' id='passwordResetForm' autocomplete='off'>
+            <g:form action='updatePassword' name='passwordResetForm' autocomplete='off'>
             <table>
                 <tbody>
                 <tr class="prop">
