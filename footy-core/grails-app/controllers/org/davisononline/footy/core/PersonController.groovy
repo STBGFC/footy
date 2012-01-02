@@ -9,7 +9,10 @@ import org.davisononline.footy.core.utils.ImageUtils
 @Secured(['ROLE_CLUB_ADMIN'])
 class PersonController {
 
-    static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
+    static allowedMethods = [save: "POST", update: "POST", delete: "POST", addQualification: "POST"]
+
+    def personService
+
 
     def index = {
         redirect(action: "list", params: params)
@@ -125,29 +128,16 @@ class PersonController {
 
     def addQualification = {
 
-        def p
-
+        def p = Person.get(params.personId)
+        def qual = new Qualification(params)
+                
         try {
-            Person.withTransaction {status ->
-                
-                def qual = new Qualification(params)
-                p = Person.get(params.personId)
-                p.refresh()
-                
-                // remove expiring qualifications of the same type
-                def old = p.qualifications.find {it.type == qual.type}
-                old?.each {
-                    p.removeFromQualifications(it)
-                    it.delete()
-                }
-
-                // add new, save
-                p.addToQualifications(qual)
-                p.save(flush:true)
-            }
+           personService.addQualificationToPerson(qual, p)
         }
         catch (Exception ex) {
             log.warn "Unable to add qualification: $ex"
+            response.sendError 500, "Error adding qualification"
+            return
         }
 
         // text/plain prevents sitemesh decoreation
