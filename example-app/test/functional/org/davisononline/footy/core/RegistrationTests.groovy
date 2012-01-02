@@ -88,9 +88,7 @@ class RegistrationTests extends AbstractTestHelper {
 
     void testAdminLists() {
         doFullReg("Jody", "Bloggs", "abc123@bloggs.com")
-        go "" //home
-        waitFor { at(HomePage) }
-        auth.login("sa", "admin")
+        login("sa", "admin")
         playerList.click()
         $("a", value:"Jody Bloggs").click()
 
@@ -98,7 +96,8 @@ class RegistrationTests extends AbstractTestHelper {
         go "login/profile"
         waitFor { at(ProfilePage) }
         invoices.click()
-        
+        // TODO: check invoice values
+        auth.logout()
     }
     
     void testDuplicateRegistration() {

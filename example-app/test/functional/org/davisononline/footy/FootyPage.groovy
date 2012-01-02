@@ -6,6 +6,7 @@ class FootyPage extends Page {
 
     static content = {
         auth { module AuthModule }
+        msg { $("div.message") }
     }
 
 }

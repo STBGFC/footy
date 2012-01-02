@@ -8,6 +8,11 @@ class ProfilePage extends FootyPage {
 
     static content = {
 
+        // links for all
+        changePassword(to: ChangePasswordPage) { 
+            $("a", text: "Change Password") 
+        }
+
         // admin links
         personList(required: false, to: PersonListPage) { 
             $("a", text: "Member List") 
