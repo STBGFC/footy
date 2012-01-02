@@ -64,7 +64,7 @@ class PersonTests extends AbstractTestHelper {
         auth.profilePage()
         addTeam("Reds", 8, "Jules Parent")
         auth.logout()
-        auth.login("manager1", "manager1")
+        auth.login("Manager1", "Manager1")
         waitFor { at(ProfilePage) }
         $('a', text: 'U8 Boys').click()
         $("a", text: "Add/Change Sponsor").click()

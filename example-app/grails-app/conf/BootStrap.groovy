@@ -8,24 +8,24 @@ class BootStrap {
 
     def init = { servletContext ->
         // set up a couple of logins that can be used in tests
-        def manager1 = SecUser.findByUsername('manager1') ?: new SecUser(
-            username: 'manager1',
-            password: springSecurityService.encodePassword('manager1'),
+        def manager1 = SecUser.findByUsername('Manager1') ?: new SecUser(
+            username: 'Manager1',
+            password: springSecurityService.encodePassword('Manager1'),
             enabled: true
         ).save(failOnError: true)
-        def manager2 = SecUser.findByUsername('manager2') ?: new SecUser(
-            username: 'manager2',
-            password: springSecurityService.encodePassword('manager2'),
+        def manager2 = SecUser.findByUsername('Manager2') ?: new SecUser(
+            username: 'Manager2',
+            password: springSecurityService.encodePassword('Manager2'),
             enabled: true
         ).save(failOnError: true)
         def clubAdmin = SecUser.findByUsername('clubAdmin') ?: new SecUser(
             username: 'clubAdmin',
-            password: springSecurityService.encodePassword('clubAdmin'),
+            password: springSecurityService.encodePassword('clubAdmin1'),
             enabled: true
         ).save(failOnError: true)
         def officer = SecUser.findByUsername('officer') ?: new SecUser(
             username: 'officer',
-            password: springSecurityService.encodePassword('officer'),
+            password: springSecurityService.encodePassword('Officer1'),
             enabled: true
         ).save(failOnError: true)
 
