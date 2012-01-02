@@ -57,7 +57,6 @@ grails.plugins.springsecurity.roleHierarchy = '''
    ROLE_CLUB_ADMIN > ROLE_COACH
 '''
 
-grails.mail.host='mail'
 org.davisononline.footy.core.homeclubname='Example FC'
 org.davisononline.footy.core.registration.email="registration-confirm@examplefc.com"
 org.davisononline.footy.core.registration.emailbody='''(Automatic email, please do not reply to this address)
@@ -94,7 +93,11 @@ Kind regards,
 Club Admin.
 '''
 
-org.davisononline.footy.core.resetComplete.emailbody='''
+// in the email body example below, the password is placed as the 
+// first part of the body so that it can be parsed more easily by
+// functional tests.. not recommended or required for real apps.
+org.davisononline.footy.core.resetComplete.emailbody='''${pwd}###
+
 Hi ${person.knownAsName ?: person.givenName},
 
 You have been assigned a temporary password of:
@@ -139,6 +142,7 @@ environments {
         grails.serverURL = "http://www.examplefc.com"
         grails.paypal.server = "https://www.paypal.com/cgi-bin/webscr"
         grails.paypal.email = "realemail@examplefc.com"
+        grails.mail.host='mail'
     }
     development {
         grails.serverURL = "http://localhost:8080/${appName}"
@@ -151,8 +155,9 @@ environments {
         grails.serverURL = "http://localhost:8080/${appName}"
         grails.paypal.server = "https://www.sandbox.paypal.com/cgi-bin/webscr"
         grails.paypal.email = "seller_1295042208_biz@googlemail.com"
-        grails.mail.overrideAddress="example@examplefc.com"
-        grails.mail.disabled = true // for func. tests
+        // configure mail plugin to use dumbster runnning on 2525
+        grails.mail.host = "localhost"
+        grails.mail.port = 2525
     }
 }
 

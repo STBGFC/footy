@@ -2,6 +2,9 @@ package org.davisononline.footy.core
 
 import geb.Browser
 import org.davisononline.footy.*
+import com.dumbster.smtp.*
+import org.junit.*
+
 
 class TierPage extends FootyPage {
     static at = { title == "Registration Type" }
@@ -54,6 +57,19 @@ class InvoicePage extends FootyPage {
 
 class RegistrationTests extends AbstractTestHelper {
 
+    def smtp
+
+    @Before
+    void setUp() {
+        println "Starting smtp server.."
+        smtp = SimpleSmtpServer.start(2525)
+    }
+
+    @After
+    void tearDown() {
+        smtp.stop()
+    }
+
     def doPlayer(gn, fn, reg="Junior") {
         go "registration"
         waitFor { at(TierPage) }
@@ -88,6 +104,11 @@ class RegistrationTests extends AbstractTestHelper {
 
     void testAdminLists() {
         doFullReg("Jody", "Bloggs", "abc123@bloggs.com")
+        assert smtp.receivedEmailSize == 1
+        smtp.receivedEmail.each { email ->
+            assert email.body.contains("Dear Dad,")
+            assert email.body.contains("Jody Bloggs")
+        }
         login("sa", "admin")
         playerList.click()
         $("a", value:"Jody Bloggs").click()
@@ -192,6 +213,7 @@ class RegistrationTests extends AbstractTestHelper {
         waitFor { at(InvoicePage) }
         assert itemName(0) == "Joe Bloggs Junior"
         assert itemAmount(0).contains("1 x £60.00")
+        assert smtp.receivedEmailSize == 1
 
         // dupe reg number
         go "registration"
@@ -213,13 +235,14 @@ class RegistrationTests extends AbstractTestHelper {
         teamForm.leagueRegistrationNumber = '123458'
         flow.contButton.click()
         waitFor { at(InvoicePage) }
-
+        assert smtp.receivedEmailSize == 2
     }
 
     void testSeniorRegistration() {
         doFullReg("Alf", "Alpha", "zak@alpha.com", "Senior")
         assert itemName(0) == "Alf Alpha Senior"
         assert itemAmount(0).contains("1 x £80.00")
+        assert smtp.receivedEmailSize == 1
     }
     
 }
