@@ -8,16 +8,22 @@ class BootStrap {
 
     def init = { servletContext ->
         // set up a couple of logins that can be used in tests
-        def manager1 = SecUser.findByUsername('Manager1') ?: new SecUser(
-            username: 'Manager1',
-            password: springSecurityService.encodePassword('Manager1'),
-            enabled: true
-        ).save(failOnError: true)
-        def manager2 = SecUser.findByUsername('Manager2') ?: new SecUser(
-            username: 'Manager2',
-            password: springSecurityService.encodePassword('Manager2'),
-            enabled: true
-        ).save(failOnError: true)
+        def coachRole = SecRole.findByAuthority('ROLE_COACH') ?: new SecRole(authority: 'ROLE_COACH').save(failOnError: true)
+        def clubAdminRole = SecRole.findByAuthority('ROLE_CLUBADMIN') ?: new SecRole(authority: 'ROLE_CLUBADMIN').save(failOnError: true)
+        def officerRole = SecRole.findByAuthority('ROLE_OFFICER') ?: new SecRole(authority: 'ROLE_OFFICER').save(failOnError: true)
+
+        def manager
+        5.times {i->
+            manager = SecUser.findByUsername("Manager${i}") ?: new SecUser(
+                username: "Manager${i}",
+                password: springSecurityService.encodePassword("Manager${i}"),
+                enabled: true
+            ).save(failOnError: true)
+
+            if (!manager.authorities.contains(coachRole)) {
+                SecUserSecRole.create manager, coachRole
+            }
+        }
         def clubAdmin = SecUser.findByUsername('clubAdmin') ?: new SecUser(
             username: 'clubAdmin',
             password: springSecurityService.encodePassword('clubAdmin1'),
@@ -29,16 +35,6 @@ class BootStrap {
             enabled: true
         ).save(failOnError: true)
 
-        def coachRole = SecRole.findByAuthority('ROLE_COACH') ?: new SecRole(authority: 'ROLE_COACH').save(failOnError: true)
-        def clubAdminRole = SecRole.findByAuthority('ROLE_CLUBADMIN') ?: new SecRole(authority: 'ROLE_CLUBADMIN').save(failOnError: true)
-        def officerRole = SecRole.findByAuthority('ROLE_OFFICER') ?: new SecRole(authority: 'ROLE_OFFICER').save(failOnError: true)
-
-        if (!manager1.authorities.contains(coachRole)) {
-            SecUserSecRole.create manager1, coachRole
-        }
-        if (!manager2.authorities.contains(coachRole)) {
-            SecUserSecRole.create manager2, coachRole
-        }
         if (!clubAdmin.authorities.contains(clubAdminRole)) {
             SecUserSecRole.create clubAdmin, clubAdminRole
         }
@@ -56,9 +52,15 @@ class BootStrap {
         }
 
         // leagues
+        def l
+        def dn1
         if (League.count() == 0) {
-            def l=new League(name:"North").save()
+            l=new League(name:"North").save()
+            dn1 = new Division(league: l, name: "Northern Premier", index: 0).save()
+            def dn2 = new Division(league: l, name: "Northern Second", index: 1).save()
             def l2=new League(name:"South").save()
+            def ds1 = new Division(league: l2, name: "Southern Premier", index: 0).save()
+            def ds2 = new Division(league: l2, name: "Southern Second", index: 1).save()
         }
 
         // common address
@@ -96,7 +98,7 @@ class BootStrap {
             email: 'john.parent@examplefc.com',
             eligibleParent: true,
             address: commune,
-            user: manager1
+            user: SecUser.findByUsername('Manager1')
         ).save(flush: true)
         def p2 = new Person(
             givenName: 'Jules',
@@ -104,9 +106,26 @@ class BootStrap {
             phone1: '07000000002',
             email: 'jules.parent@examplefc.com',
             eligibleParent: true,
-            user: manager2
+            user:  SecUser.findByUsername('Manager2')
+        ).save(flush: true)
+        def p3 = new Person(
+            givenName: 'Jeff',
+            familyName: 'Manager',
+            phone1: '07000000003',
+            email: 'jeff.manager@examplefc.com',
+            eligibleParent: true,
+            user:  SecUser.findByUsername('Manager3')
         ).save(flush: true)
 
+        // team
+        def t = new Team(
+            league: l,
+            division: dn1,
+            club: club,
+            manager: p3,
+            ageBand: 11,
+            name: 'Rascals'
+        ).save()
         if (RegistrationTier.count() == 0) {
             new RegistrationTier(
                     name: "Junior",
