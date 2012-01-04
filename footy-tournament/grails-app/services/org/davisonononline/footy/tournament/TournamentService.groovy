@@ -3,8 +3,8 @@ package org.davisonononline.footy.tournament
 import org.grails.paypal.Payment
 import org.grails.paypal.PaymentItem
 import org.davisononline.footy.tournament.Entry
-import org.davisononline.footy.core.utils.TemplateUtils
 import org.codehaus.groovy.grails.commons.ConfigurationHolder
+
 
 class TournamentService {
 
@@ -13,7 +13,7 @@ class TournamentService {
     def mailService
 
     def fromEmail = ConfigurationHolder.config?.org?.davisononline?.footy?.tournament?.registration?.email
-    def registrationEmailBody = ConfigurationHolder.config?.org?.davisononline?.footy?.tournament?.registration?.emailbody
+
 
     /**
      * send confirmation email after a successful payment has been made
@@ -28,7 +28,8 @@ class TournamentService {
             to      entry.contact.email
             from    fromEmail
             subject "Tournament Entry Confirmation"
-            body    TemplateUtils.eval(registrationEmailBody, [entry: entry])
+            body    (view: '/email/tournament/registrationComplete',
+                     model: [entry: entry])
         }
     }
 

@@ -5,7 +5,6 @@ import org.codehaus.groovy.grails.commons.ConfigurationHolder
 import org.grails.paypal.PaymentItem
 import org.hibernate.jdbc.Work
 import java.sql.Connection
-import org.davisononline.footy.core.utils.TemplateUtils
 
 class RegistrationService {
 
@@ -17,7 +16,6 @@ class RegistrationService {
     static transactional = true
 
     def fromEmail = ConfigurationHolder.config?.org?.davisononline?.footy?.core?.registration?.email
-    def registrationEmailBody = ConfigurationHolder.config?.org?.davisononline?.footy?.core?.registration?.emailbody
 
     /**
      * save domain objects for registration flow and return generated payment to
@@ -80,10 +78,8 @@ class RegistrationService {
                 to      buyer.email
                 from    fromEmail
                 subject "Registration Confirmation"
-                body    TemplateUtils.eval(
-                            registrationEmailBody,
-                            [buyer: buyer, registrations:registrations, payment:payment, homeClub: Club.homeClub]
-                        )
+                body    (view: '/email/core/registrationComplete',
+                         model: [buyer: buyer, registrations:registrations, payment:payment, homeClub: Club.homeClub])
             }
         }
         catch (Exception ex) {

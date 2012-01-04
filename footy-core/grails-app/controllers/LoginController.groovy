@@ -14,8 +14,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import org.davisononline.footy.core.SecUser
 import org.davisononline.footy.core.Person
-import org.davisononline.footy.core.utils.TemplateUtils
-import org.codehaus.groovy.grails.commons.ConfigurationHolder
 import org.davisononline.footy.core.Club
 import org.davisononline.footy.core.Team
 import grails.plugins.springsecurity.Secured
@@ -225,10 +223,8 @@ class LoginController {
                         // ensure mail address override is set in dev/test in Config.groovy
                         to      person.email
                         subject 'Password Reset'
-                        body    TemplateUtils.eval(
-                                    ConfigurationHolder.config?.org?.davisononline?.footy?.core?.resetPassword?.emailbody,
-                                    [link: user.resetToken, person: person, club: Club.homeClub]
-                                )
+                        body    ( view:'/email/core/resetPassword',
+                                  model:[link: user.resetToken, person: person, club: Club.homeClub])
                     }
 
                     flash.message = 'An email has been sent to the registered address for this account.'
@@ -279,10 +275,8 @@ class LoginController {
                 // ensure mail address override is set in dev/test in Config.groovy
                 to      person.email
                 subject 'Password Reset Complete'
-                body    TemplateUtils.eval(
-                            ConfigurationHolder.config?.org?.davisononline?.footy?.core?.resetComplete?.emailbody,
-                            [pwd:pwd, person: person, club: Club.homeClub]
-                        )
+                body    (view: '/email/core/resetComplete',
+                         model: [pwd:pwd, person: person, club: Club.homeClub])
             }
 
             render text: 'Password reset successful.  A temporary password has been sent to you by email.'

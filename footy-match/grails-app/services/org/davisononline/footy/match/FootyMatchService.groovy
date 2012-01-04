@@ -3,9 +3,8 @@ package org.davisononline.footy.match
 import org.davisononline.footy.core.Team
 import org.davisononline.footy.core.utils.DateTimeUtils
 import org.davisononline.footy.core.Person
-import org.codehaus.groovy.grails.commons.ConfigurationHolder
 import org.davisononline.footy.core.SecUser
-import org.davisononline.footy.core.utils.TemplateUtils
+
 
 class FootyMatchService {
 
@@ -14,9 +13,6 @@ class FootyMatchService {
     def mailService
 
     def springSecurityService
-
-    def refereeEmailBody = ConfigurationHolder.config?.org?.davisononline?.footy?.match?.referee?.emailbody
-    def managerEmailBody = ConfigurationHolder.config?.org?.davisononline?.footy?.match?.manager?.emailbody
 
 
     /**
@@ -126,11 +122,9 @@ class FootyMatchService {
                     mailService.sendMail {
                         to      fixture.team.manager.email
                         from    person.email
-                        subject """Pitch/Referee Confirmation for your ${fixture.team} game on ${fixture.dateTime.format('dd/MM/yyyy')}"""
-                        body    TemplateUtils.eval(
-                                    managerEmailBody,
-                                    [fixture:fixture]
-                                )
+                        subject "Pitch/Referee Confirmation for your ${fixture.team} game on ${fixture.dateTime.format('dd/MM/yyyy')}"
+                        body    (view: '/email/match/managerResources',
+                                 model: [fixture:fixture])
                     }
                 }
                 catch (Exception ex) {
@@ -149,10 +143,8 @@ class FootyMatchService {
                     to      ref.email
                     from    person.email
                     subject "Fixture Confirmations for ${myFixtures[0].dateTime.format('dd/MM/yyyy')}"
-                    body    TemplateUtils.eval(
-                                refereeEmailBody,
-                                [ref:ref, myFixtures:myFixtures]
-                            )
+                    body    (view: '/email/match/refereeResources',
+                             model: [ref:ref, myFixtures:myFixtures])
                 }
             }
             catch (Exception ex) {

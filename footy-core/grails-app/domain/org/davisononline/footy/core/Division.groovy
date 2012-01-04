@@ -5,7 +5,7 @@ package org.davisononline.footy.core
  * links and other data to external sites (principally
  * the FA's full-time web site)
  */
-class Division implements Comparable {
+class Division implements Comparable, Serializable {
 
     League league
     int ageBand = 9

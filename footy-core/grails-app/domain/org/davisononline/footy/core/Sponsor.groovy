@@ -5,7 +5,7 @@ import org.codehaus.groovy.grails.commons.ConfigurationHolder
 /**
  * team or club financial sponsor
  */
-class Sponsor {
+class Sponsor implements Serializable {
 
     public static final int MAX_LOGO_SIZE =
         ConfigurationHolder.config?.org?.davisononline?.footy?.core?.sponsor?.logoMaxSizeBytes ?: 50*1024

@@ -4,7 +4,7 @@ package org.davisononline.footy.core
  * simple record of a subject/body news item that can be displayed on the team
  * site or emailed out etc.
  */
-class NewsItem {
+class NewsItem implements Serializable {
 
     Date createdDate = new Date()
     String subject

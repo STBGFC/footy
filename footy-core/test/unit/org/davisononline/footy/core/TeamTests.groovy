@@ -126,10 +126,6 @@ class TeamTests extends GrailsUnitTestCase {
         def reds2 = new Team(name:'Reds', ageBand: 8, club: c)
         assertEquals reds, reds2
         
-        reds.division = "B"
-        reds2.division = "A"
-        assertEquals reds, reds2
-        
         reds.girlsTeam = false
         reds2.girlsTeam = true
         assert reds != reds2
