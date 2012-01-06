@@ -59,74 +59,7 @@ grails.plugins.springsecurity.roleHierarchy = '''
 
 org.davisononline.footy.core.homeclubname='Example FC'
 org.davisononline.footy.core.registration.email="registration-confirm@examplefc.com"
-org.davisononline.footy.core.registration.emailbody='''(Automatic email, please do not reply to this address)
-
-Dear ${buyer.givenName},
-
-Thank you for registering at ExampleFC.  This email confirms that the
-following players are registered in the database:
-
-${registrations*.player.join('\n')}
-
-Your invoice number is ${payment.transactionId} and you can access this
-at http://www.examplefc.com/invoice/show/${payment.transactionId}
-
-Kind regards,
-ExampleFC Registrations.
-'''
-
-org.davisononline.footy.core.resetPassword.emailbody='''
-Hi ${person.knownAsName ?: person.givenName},
-
-We received a request to reset the password for your account.  If you
-didn't make this request, you can just ignore the email and no changes
-will be made to your account.
-
-To continue with the password reset, click the link below or copy and
-paste into your browser:
-
-${cfg.grails.serverURL}/login/reset/${link}
-
-Please note, this link is only valid for 24 hours.
-
-Kind regards,
-Club Admin.
-'''
-
-// in the email body example below, the password is placed as the 
-// first part of the body so that it can be parsed more easily by
-// functional tests.. not recommended or required for real apps.
-org.davisononline.footy.core.resetComplete.emailbody='''${pwd}###
-
-Hi ${person.knownAsName ?: person.givenName},
-
-You have been assigned a temporary password of:
-
-${pwd}
-
-When you next login, you will be asked to change it.
-
-Kind regards,
-Club Admin.
-'''
-
 org.davisononline.footy.tournament.registration.email="tournament-confirm@examplefc.com"
-org.davisononline.footy.tournament.registration.emailbody='''(Automatic email, please do not reply to this address)
-
-Hi ${entry.contact.knownAsName ?: entry.contact.givenName},
-
-Thank you for your entry to the ExampleFC tournament.  This email confirms that
-the the following teams are entered into the ${entry.tournament.name}
-competition:
-
-${entry.teams.join(' \\n')}
-
-Your invoice number is ${entry.payment.transactionId} and you can access this
-at http://www.examplefc.com/invoice/show/${entry.payment.transactionId}
-
-We'll see you there!
-ExampleFC Tournament Committee.
-'''
 
 cache.headers.presets = [
     authed_page: false, // No caching for logged in user
