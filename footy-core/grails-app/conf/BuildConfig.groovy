@@ -25,7 +25,7 @@ grails.project.dependency.resolution = {
     }
     plugins {
         compile ':paypal:0.6.5'
-        compile ':searchable:0.6.2'
+        compile ':searchable:0.6.3'
         compile ':export:0.8'
         compile ':mail:1.0'
         compile ':spring-security-core:1.2.6'
