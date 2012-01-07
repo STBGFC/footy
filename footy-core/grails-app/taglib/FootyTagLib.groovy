@@ -1,6 +1,4 @@
 import org.codehaus.groovy.grails.web.taglib.exceptions.GrailsTagException
-import org.davisononline.footy.core.Person
-import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
 import org.grails.paypal.Payment
 import org.davisononline.footy.core.NewsItem
 
