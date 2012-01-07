@@ -1,5 +1,5 @@
 <%@ page import="org.davisononline.footy.match.Fixture" %>
-
+<r:require module="modalBox"/>
 <div class="newsbox">
     <h2><g:message code="org.davisononline.footy.match.fixturecal.title" default="Fixture Calendar"/></h2>
     <table>
@@ -27,7 +27,7 @@
                         params="[fixtureId:fixture.id,teamId:myteam.id]"
                         update="fixtureList"
                         title="delete fixture"
-                ><img src="${createLinkTo(dir:'images/skin', file:'database_delete.png', plugin:'footy-core')}" alt="del"/></g:remoteLink>
+                ><r:img dir="images/skin" file="database_delete.png" plugin="footy-core" alt="del"/></g:remoteLink>
                 </g:if>
                 <g:else>
                 <g:link controller="resource" action="summary" params="${[year:fixture.dateTime.year+1900, month:fixture.dateTime.month+1, day:fixture.dateTime.date]}">
@@ -58,7 +58,7 @@
     <ul>
     <footy:isManager team="${myteam}">
         <li class="inline">
-            <img src="${createLinkTo(dir:'images/skin', file:'database_add.png', plugin:'footy-core')}" alt="add"/>
+            <r:img dir="images/skin" file="database_add.png" plugin="footy-core"/>
             <modalbox:createLink
                     controller="fixture"
                     action="createDialog"
@@ -71,13 +71,13 @@
     </footy:isManager>
     <g:if test="${totalFixtureCount > 0}">
         <li class="inline">
-        <img src="${createLinkTo(dir:'images/skin', file:'database_table.png', plugin:'footy-core')}" alt=""/>
+        <r:img dir="images/skin" file="database_table.png" plugin="footy-core" alt=""/>
         <g:link controller="fixture" action="list" id="${myteam.id}">
             <g:message code="org.davisononline.footy.match.link.viewall" default="View All"/>
         </g:link>
         </li>
         <li class="inline">
-        <img src="${createLinkTo(dir:'images', file:'cal.png', plugin:'footy-core')}" alt="ICS"/>
+        <r:img dir="images" file="cal.png" plugin="footy-core" alt="ICS"/>
         <a href="${createLink(absolute:true, controller:'fixture', action:'calendar', id:myteam.id).replace('http','webcal').replace('https','webcal')}"
            title="Subscribe to ${myteam} calendar (Outlook/Thunderbird/iPhone etc.)">
             <g:message code="org.davisononline.footy.match.link.viewall" default="Subscribe"/>
