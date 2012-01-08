@@ -68,19 +68,19 @@ class PersonTests extends AbstractTestHelper {
         auth.login("Manager1", "Manager1")
         waitFor { at(ProfilePage) }
         $('a', text: 'U8 Boys').click()
-        waitFor { at(TeamPage) }
+        waitFor { at(ShowTeamPage) }
         changeSponsor.click()
         $('a', text: 'U8 Reds').click()
-        waitFor { at(TeamPage) }
+        waitFor { at(ShowTeamPage) }
         assert !changeSponsor.present()
         auth.logout()
         auth.login("Manager2", "Manager2")
         waitFor { at(ProfilePage) }
         $('a', text: 'U8 Reds').click()
-        waitFor { at(TeamPage) }
+        waitFor { at(ShowTeamPage) }
         changeSponsor.click()
         $('a', text: 'U8 Boys').click()
-        waitFor { at(TeamPage) }
+        waitFor { at(ShowTeamPage) }
         assert !changeSponsor.present()
         auth.logout()
     }
