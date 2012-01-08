@@ -5,10 +5,10 @@
         <meta name="description" content="News, fixtures and information about the ${teamInstance} team"/>
         <feed:meta kind="rss" version="2.0" controller="team" action="feed" id="${teamInstance.id}"/>
         <title>${teamInstance}</title>
-        <link rel="stylesheet" href="${resource(dir:'css',file:'bubbletips.css',plugin:'footy-core')}" />
+        <r:require modules="footyCore, modalBox"/>
         <g:set var="fb" value="${grailsApplication.config.org?.davisononline?.footy?.usefacebook}"/>
         <g:if test="${fb}">
-        <script src="http://connect.facebook.net/en_US/all.js#xfbml=1"></script>
+        <script src="https://connect.facebook.net/en_US/all.js#xfbml=1"></script>
         </g:if>
     </head>
     <body>
@@ -16,14 +16,14 @@
         <div id="iconbar">
             <sec:ifAnyGranted roles="ROLE_CLUB_ADMIN">
             <g:link action="edit" id="${teamInstance.id}" title="${message(code: 'team.vedit.label', default: 'Edit this team')}">
-            <img src="${createLinkTo(dir:'images', file:'vedit.png', plugin:'footy-core')}" alt="${message(code: 'team.vedit.label', default: 'Edit this team')}"/>
+            <r:img dir="images" file="vedit.png" plugin="footy-core" alt="${message(code: 'team.vedit.label', default: 'Edit this team')}"/>
             </g:link>
             </sec:ifAnyGranted>
 
             <footy:isManager team="${teamInstance}">
             <g:if test="${teamInstance?.id && players.size() > 0}">
             <g:link action="leagueForm" id="${teamInstance?.id}" title="${message(code: 'team.vprint.label', default: 'Print registration form')}">
-            <img src="${createLinkTo(dir:'images', file:'vprint.png', plugin:'footy-core')}" alt="${message(code: 'team.vprint.label', default: 'Print registration form')}"/>
+            <r:img dir="images" file="vprint.png" plugin="footy-core"  alt="${message(code: 'team.vprint.label', default: 'Print registration form')}"/>
             </g:link>
             </g:if>
 
@@ -33,7 +33,7 @@
                   title="Send Email Message"
                   id="${teamInstance.id}"
                   width="420">
-                <img src="${createLinkTo(dir:'images', file:'vmail.png', plugin:'footy-core')}" alt="${message(code: 'team.vmail.label', default: 'Send Email')}"/>
+                <r:img dir="images" file="vmail.png" plugin="footy-core"  alt="${message(code: 'team.vmail.label', default: 'Send Email')}"/>
             </modalbox:createLink>
             </footy:isManager>
             <footy:isNotManager team="${teamInstance}">
@@ -41,13 +41,13 @@
                 title="${message(code: 'team.vmail.label', default: 'Email Manager/Coaches')}"
                 href="mailto:${[teamInstance.manager, teamInstance.coaches]*.email.flatten().join(",")}"
             >
-                <img src="${createLinkTo(dir:'images', file:'vmail.png', plugin:'footy-core')}" alt="${message(code: 'team.vmail.label', default: 'Email Manager/Coaches')}"/>
+                <r:img dir="images" file="vmail.png" plugin="footy-core"  alt="${message(code: 'team.vmail.label', default: 'Email Manager/Coaches')}"/>
             </a>
             </footy:isNotManager>
 
             <!-- address -->
             <g:link action="addresscards" id="${teamInstance.id}" title="${message(code: 'team.vmail.label', default: 'Download contact details for your address book')}">
-            <img src="${createLinkTo(dir:'images', file:'vcards.png', plugin:'footy-core')}" alt="${message(code: 'team.vcards.label', default: 'Download Contact Details')}"/>
+            <r:img dir="images" file="vcards.png" plugin="footy-core"  alt="${message(code: 'team.vcards.label', default: 'Download Contact Details')}"/>
             </g:link>
 
             <!-- RSS -->
@@ -58,11 +58,11 @@
                   title="Create News Item"
                   id="${teamInstance.id}"
                   width="420">
-                <img src="${createLinkTo(dir:'images', file:'vnews.png', plugin:'footy-core')}" alt="${message(code: 'team.vnews.label', default: 'Add Team News')}"/>
+                <r:img dir="images" file="vnews.png" plugin="footy-core"  alt="${message(code: 'team.vnews.label', default: 'Add Team News')}"/>
             </modalbox:createLink>
             </footy:isManager>
             <g:link action="feed" id="${teamInstance.id}" title="${message(code: 'team.feed.label', default: 'Subscribe to news feed for ' + teamInstance.toString())}">
-            <img src="${createLinkTo(dir:'images', file:'rss.png', plugin:'footy-core')}" alt="${message(code: 'team.feed.label', default: 'Subscribe')}"/>
+            <r:img dir="images" file="rss.png" plugin="footy-core"  alt="${message(code: 'team.feed.label', default: 'Subscribe')}"/>
             </g:link>
         </div>
 

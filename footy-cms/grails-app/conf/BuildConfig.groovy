@@ -24,7 +24,7 @@ grails.project.dependency.resolution = {
         //mavenRepo "http://repository.jboss.com/maven2/"
     }
     plugins {
-        runtime ':spring-security-core:1.2.1'
+        runtime ':spring-security-core:1.2.6'
         runtime ':weceem:1.0'
     }
     dependencies {
