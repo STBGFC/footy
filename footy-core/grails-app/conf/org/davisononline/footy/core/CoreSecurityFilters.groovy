@@ -26,7 +26,7 @@ class CoreSecurityFilters {
 
         newsAdd(controller: 'team', action: 'addNews') {
             before = {
-                if (!footySecurityService.isAuthorisedForManager(params['team.id'])) {
+                if (!footySecurityService.isAuthorisedForManager(Team.get(params['team.id']))) {
                     response.sendError 403
                     return false
                 }
