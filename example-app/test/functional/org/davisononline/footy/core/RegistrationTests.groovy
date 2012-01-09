@@ -212,7 +212,7 @@ class RegistrationTests extends AbstractTestHelper {
         flow.contButton.click()
         waitFor { at(InvoicePage) }
         assert itemName(0) == "Joe Bloggs Junior"
-        assert itemAmount(0).contains("1 x £60.00")
+        assert itemAmount(0).contains("1 x £60.00")||itemAmount(0).contains("1 x GBP60.00")
         assert smtp.receivedEmailSize == 1
 
         // dupe reg number
@@ -241,7 +241,7 @@ class RegistrationTests extends AbstractTestHelper {
     void testSeniorRegistration() {
         doFullReg("Alf", "Alpha", "zak@alpha.com", "Senior")
         assert itemName(0) == "Alf Alpha Senior"
-        assert itemAmount(0).contains("1 x £80.00")
+        assert itemAmount(0).contains("1 x £80.00")||itemAmount(0).contains("1 x GBP80.00")
         assert smtp.receivedEmailSize == 1
     }
     
