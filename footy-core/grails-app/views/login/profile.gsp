@@ -70,7 +70,7 @@
                       </g:link>
                   </li>
                   <li>
-                      <g:link url="../content/staff">
+                      <g:link url="../content/staff/">
                           <g:message
                                   code="org.davisononline.footy.core.staffcontent.label"
                                   default="Managers Pages" />
