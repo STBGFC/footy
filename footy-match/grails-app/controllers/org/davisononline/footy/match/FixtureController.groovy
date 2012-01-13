@@ -148,14 +148,6 @@ class FixtureController {
             }
             else
                 report.scores = []
-
-            if (!report.save(flush: true)) {
-                flash.message = "Unable to save referee report"
-            }
-        }
-                
-        if (!fx.save(flush: true)) {
-            flash.message = "Unable to save result"
         }
 
         if (fx.hasErrors() || report.hasErrors()) {
@@ -163,8 +155,16 @@ class FixtureController {
             return
         }
 
-        flash.message = "Fixture details ${params['ref']?.size() > 0 ? 'and referee report ' : ''}saved"
-        redirect controller: 'team', action: 'show', params:[ageBand: fx.team.ageBand, teamName: fx.team.name]
+        def saved = (fx.save(flush: true) && report.save(flush: true))
+        if (saved) {
+            flash.message = "Fixture details ${params['ref']?.size() > 0 ? 'and referee report ' : ''}saved"
+            redirect controller: 'team', action: 'show', params:[ageBand: fx.team.ageBand, teamName: fx.team.name]
+        }
+        else {
+            flash.message = 'Unable to save fixture or report details'
+            render view: 'addResult', model: modelForResults(fx)
+            return
+        }
     }
 
     def delete = {
