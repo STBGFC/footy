@@ -33,6 +33,7 @@
                 leave the drop-down set to "-- Not Listed --"
                 <br/>
                 --%>
+                <g:hiddenField name="opposition" value="-1"/>
                 <g:textField name="opposition2"/>
             </td>
         </tr>
