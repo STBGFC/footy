@@ -155,7 +155,7 @@ class FixtureController {
             return
         }
 
-        def saved = (fx.save(flush: true) && report.save(flush: true))
+        def saved = (fx.save(flush: true) && (includeRefReport ? report.save(flush: true) : true))
         if (saved) {
             flash.message = "Fixture details ${params['ref']?.size() > 0 ? 'and referee report ' : ''}saved"
             redirect controller: 'team', action: 'show', params:[ageBand: fx.team.ageBand, teamName: fx.team.name]

@@ -20,6 +20,7 @@
         <tr>
             <td>Opposition</td>
             <td>
+                <%-- // leave off for now.. confusing.
                 <g:select 
                         name="opposition" 
                         from="${oppositionTeams}" 
@@ -31,6 +32,7 @@
                 If your opposition is not listed in the drop-down above, simply write their team name in the box below instead (ensure you 
                 leave the drop-down set to "-- Not Listed --"
                 <br/>
+                --%>
                 <g:textField name="opposition2"/>
             </td>
         </tr>
@@ -39,6 +41,7 @@
             <td class="date">
                 <g:set var="now" value="${new Date()}"/>
                 <g:datePicker name="dateTime" precision="minute" years="${now.year+1899..now.year+1901}"/>
+                <p>(For home games, select your PREFERRED kick off time)</p>
             </td>
         </tr>
     </table>
