@@ -28,6 +28,7 @@ grails.project.dependency.resolution = {
         compile ':searchable:0.6.3'
         compile ':export:0.8'
         compile ':mail:1.0'
+        compile ':webxml:1.4.1'
         compile ':spring-security-core:1.2.6'
         compile ':modalbox:0.4'
         compile ':cache-headers:1.1.5'
