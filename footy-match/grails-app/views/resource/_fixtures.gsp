@@ -27,7 +27,7 @@
                         <g:hiddenField name="fixtures" value="${f.id}"/>
                         <tr class="${(i % 2) == 0 ? 'odd' : 'even'}">
                             <td id="fixture${f.id}" class="${f.type}Game">${f}<br/>(Requested time: <g:formatDate date="${f.dateTime}" format="HH:mm"/>)</td>
-                            <td class="date ${f.type}Game">
+                            <td class="date ${f.type}Game" style="min-width:90px">
                                 <g:select
                                         class="${f.type}Game"
                                         onchange="previewAllocations()"
