@@ -25,7 +25,7 @@ grails.project.dependency.resolution = {
     }
     plugins {
         runtime ':spring-security-core:1.2.6'
-        runtime ':weceem:1.0'
+        runtime ':weceem:1.1.2'
     }
     dependencies {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes eg.
