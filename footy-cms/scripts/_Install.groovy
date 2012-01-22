@@ -36,15 +36,6 @@ weceem.default.space.template='classpath:/org/weceem/resources/footy-space-templ
 weceem.space.templates = [
     'footy' : 'classpath:/org/weceem/resources/footy-space-template.zip'
 ]
-weceem.springsecurity.details.mapper = { ->
-    [ // Stuff required by weceem spring sec
-        username: username,
-        password: password,
-        enabled: enabled,
-        authorities: authorities,
-        id: id
-    ]
-}
 '''
     }
 }

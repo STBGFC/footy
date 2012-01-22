@@ -57,11 +57,9 @@ Acts as a thin wrapper around the weceem plugin at present
                 }
             },
             getUserEmail : { ->
-                def princ = authenticateService.principal
-                if (log.debugEnabled) {
-                    log.debug "Weceem security getUserEmail callback - user principal is: ${princ} (an instance of ${princ?.class})"
-                }
-                return (princ instanceof String) ? null : princ?.email
+                // we manage an email address as part of a Person record and
+                // not necessarily at the principal.
+                return "unknown@user.tld"
             },
             getUserRoles : { ->
                 def princ = authenticateService.principal
@@ -79,7 +77,10 @@ Acts as a thin wrapper around the weceem plugin at present
                 return auths ?: ['ROLE_GUEST']
             },
             getUserPrincipal : { ->
-                authenticateService.principal
+                // weceem 1.1.2 FORCES the presence of "firstName", "lastName" and
+                // "email" fields on the principal (see RenderEngine.makeUserInfo() )
+                //authenticateService.principal
+                [firstName:'John', lastName:'Doe', email:'unknown@user.tld']
             }
         ]
     }
