@@ -147,23 +147,6 @@ class FootyTagLib {
     }
 
     /**
-     * render a list of team news that has been marked site-wide.
-     *
-     * @param attrs
-     */
-    def teamNews ={ attrs ->
-        def n = attrs.max ?: 10
-        def items = NewsItem.findAllByClubWide(true, [max: n, sort: 'createdDate', order: 'desc'])
-        items.each { item ->
-            def t = item.team
-            out << """<h3>${t}, ${formatDate(date: item.createdDate, format: 'dd MMM')}</h3>
-            <p>${item.abstractText().encodeAsHTML()}
-            <a href="${createLink(controller:'team', action:'show', params:[ageBand:t.ageBand, teamName: t.name])}">
-            <br/>${t} homepage..</a></p>"""
-        }
-    }
-
-    /**
      * render the league table from the FA's fullTime site.  Note, this has to be
      * pre-generated at the fullTime site in a genius rendition of web services
      * in action.  Not.

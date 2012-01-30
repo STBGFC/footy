@@ -17,6 +17,8 @@
 
             <div class="left" id="main-left">
 
+                <h1>${teamInstance} Home Page</h1>
+
                 <div id="iconbar">
                     <sec:ifAnyGranted roles="ROLE_CLUB_ADMIN">
                     <g:link action="edit" id="${teamInstance.id}" title="${message(code: 'team.vedit.label', default: 'Edit this team')}">
@@ -72,7 +74,7 @@
 
                 <g:if test="${teamInstance?.division}">
                 <div id="leagueTable">
-                    <h2>${teamInstance.division}</h2>
+                    <h3>${teamInstance.division}</h3>
                     <footy:fullTimeLeagueTable division="${teamInstance?.division}"/>
                 </div>
                 </g:if>
@@ -85,7 +87,7 @@
 
                     <div class="post-title"><h2>${news.subject.encodeAsHTML()}</h2></div>
 
-                    <div class="post-date"><g:formatDate date="${news.createdDate}" format="dd MMM 'at' HH:mm"/></div>
+                    <div class="post-date"><g:formatDate date="${news.createdDate}" format="HH:mm EEEE, MMMM dd yyyy"/></div>
 
                     <div class="post-body" id="abstractNewsBody${news.id}">
                         ${abst.encodeAsHTML()}
@@ -158,7 +160,7 @@
                 </g:if>
 
             </div>
-
+        
             <div class="right sidebar" id="sidebar">
 
                 <div class="section">
@@ -206,7 +208,7 @@
                                 <footy:tooltip link="mailto:${teamInstance.manager.email}" value="${teamInstance.manager}">
                                     Click to send email to ${teamInstance.manager.givenName}.
                                     <footy:personPhoto person="${teamInstance.manager}"/>
-                                    <p>Contact ${teamInstance.manager.givenName} on: <strong>${teamInstance.manager.bestPhone().encodeAsHTML()}</strong></p>
+                                    <br/>Contact ${teamInstance.manager.givenName} on: <strong>${teamInstance.manager.bestPhone().encodeAsHTML()}</strong>
                                 </footy:tooltip>
                                 <g:render template="coachPhotoLink" model="[person:teamInstance.manager]"/>
                             </li>
@@ -215,7 +217,7 @@
                                 <footy:tooltip link="mailto:${c.email}" value="${c}">
                                     Click to send email to ${c.givenName}.
                                     <footy:personPhoto person="${c}"/>
-                                    <p>Contact ${c.givenName} on: <strong>${c.bestPhone().encodeAsHTML()}</strong></p>
+                                    <br/>Contact ${c.givenName} on: <strong>${c.bestPhone().encodeAsHTML()}</strong>
                                 </footy:tooltip>
                                 <g:render template="coachPhotoLink" model="[person:c]"/>
                             </li>
