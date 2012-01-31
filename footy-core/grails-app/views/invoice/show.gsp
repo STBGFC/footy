@@ -6,8 +6,7 @@
         <title><g:message code="default.paymentdetails.label" default="Payment" /></title>
     </head>
     <body>
-        <div class="list">
-            <g:render template="invoiceBody" model="[controller: controller]" plugin="footy-core"/>
-        </div>
+        <h1><g:message code="default.paymentdetails.label" default="Payment" /></h1>
+        <g:render template="invoiceBody" model="[controller: controller]" plugin="footy-core"/>
     </body>
 </html>

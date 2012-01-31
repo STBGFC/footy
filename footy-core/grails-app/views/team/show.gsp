@@ -258,7 +258,7 @@
 
                 <div class="section">
 
-                    <div class="section-title">Other Teams</div>
+                    <div class="section-title">All U${teamInstance.ageBand} Teams</div>
 
                     <div class="section-content">
                         <ul class="nice-list">
