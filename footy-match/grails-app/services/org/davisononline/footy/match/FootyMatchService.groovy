@@ -4,6 +4,7 @@ import org.davisononline.footy.core.Team
 import org.davisononline.footy.core.utils.DateTimeUtils
 import org.davisononline.footy.core.Person
 import org.davisononline.footy.core.SecUser
+import org.davisononline.footy.core.Player
 
 
 class FootyMatchService {
@@ -89,6 +90,28 @@ class FootyMatchService {
     }
 
     /**
+     * returns a list of ref reports that are for fixtures on a certain date
+     *
+     * @param date the date that the fixtures are being played
+     * @return
+     */
+    def getRefReportsOn(Date date) {
+        Date from = DateTimeUtils.setMidnight(date)
+
+        def rc = RefereeReport.createCriteria()
+        def list = rc.list () {
+            fixture {
+                and {
+                    ge ("dateTime", from)
+                    lt ("dateTime", from + 1)
+                }
+                order ("dateTime", "asc")
+            }
+        }
+        list
+    }
+
+    /**
      * updates the fixture list with committed resource allocations (refs,
      * pitches, changing rooms etc) and sends the notification emails to
      * managers and referees.  Additionally, creates a summary document for
@@ -139,8 +162,14 @@ class FootyMatchService {
         refs?.each {ref ->
             def myFixtures = fixtures.grep{it.referee == ref}
             try {
+                def target = ref.email
+                if (!target) {
+                    // might be a player.. send to guardian if so
+                    def g = Player.findByPerson(ref)
+                    target = g.guardian?.email ?: g.secondGuardian?.email
+                }
                 mailService.sendMail {
-                    to      ref.email
+                    to      target
                     from    person.email
                     subject "Fixture Confirmations for ${myFixtures[0].dateTime.format('dd/MM/yyyy')}"
                     body    (view: '/email/match/refereeResources',
