@@ -58,14 +58,14 @@
                             Manager: ${fixture.team.manager} (${fixture.team.manager.bestPhone()})<br/>
                             <a href="mailto:${fixture.team.manager.email}">${fixture.team.manager.email}</a>
                             </g:if>
-                            <g:else><em>No manager listed for this team</em></g:else>
+                            <g:else><em><g:message code="org.davisononline.footy.match.label.nomanager" default="No manager listed for this team"/></em></g:else>
                         </td>
                         <td>
                             <g:if test="${fixture.referee}">
                             ${fixture.referee} (${fixture.referee.bestPhone()})<br/>
                             <a href="mailto:${fixture.referee.email}">${fixture.referee.email}</a>
                             </g:if>
-                            <g:else><em>Not Assigned</em></g:else>
+                            <g:else><em><g:message code="org.davisononline.footy.match.label.noreferee" default="Not Assigned or League Appointed"/></em></g:else>
                         </td>
                         <td>
                             <g:set var="other" value="${fixture.resources.findAll{it.type != MatchResource.PITCH}}"/>
