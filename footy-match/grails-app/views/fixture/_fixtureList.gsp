@@ -20,7 +20,7 @@
                         width="450">
                     ${fixture.opposition}
                 </g:link>
-                <g:if test="${!fixture.played && fixture.resources?.size() == 0 && !fixture.referee}">
+                <g:if test="${!fixture.played && ((fixture.homeGame && fixture.resources?.size() == 0 && !fixture.referee) || !fixture.homeGame)}">
                 <g:remoteLink
                         controller="fixture"
                         action="delete"
