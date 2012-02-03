@@ -161,6 +161,13 @@
                                   default="Fixture Resource Allocations" />
                       </g:link>
                   </li>
+                  <li>
+                      <g:link controller="resource" action="reports">
+                          <g:message
+                                  code="org.davisononline.footy.match.refreportsummary.label"
+                                  default="Referee Report Summary" />
+                      </g:link>
+                  </li>
                   </sec:ifAnyGranted>
               </ul>
           </div>
