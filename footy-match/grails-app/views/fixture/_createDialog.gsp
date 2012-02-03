@@ -18,7 +18,7 @@
             </td>
         </tr>
         <tr>
-            <td>Opposition</td>
+            <td>Opposition (full name)</td>
             <td>
                 <%-- // leave off for now.. confusing.
                 <g:select 
