@@ -364,7 +364,8 @@ class TeamController {
                     if (p.secondGuardian) recipients << p.secondGuardian.email
                 }
         }
-        recipients = recipients.flatten().unique()
+        // tidy up, remove any null/blank emails (shouldn't be any, but..)
+        recipients = recipients.flatten().unique() - null - ''
 
         // do it!
         def user = springSecurityService.currentUser
