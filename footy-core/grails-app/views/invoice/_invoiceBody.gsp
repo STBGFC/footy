@@ -95,6 +95,7 @@
                     default="You don't NEED a PayPal account to pay online!  Click the 'Checkout with PayPal' button above and you can either use your PayPal account OR enter credit card details without needing to register or login"/>
 
         </p>
+        <g:if test="${payment.transactionId.startsWith('REG-')}">
         <h2>Pay Offline</h2>
         <p>
             <g:message
@@ -108,6 +109,7 @@
             ${Club.homeClub.treasurer}
             ${Club.homeClub.treasurer?.address}
         </p>
+        </g:if>
         </g:if>
 
         <%-- already paid --%>
