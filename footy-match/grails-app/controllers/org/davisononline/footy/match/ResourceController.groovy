@@ -45,8 +45,10 @@ class ResourceController {
      * sends all of the daily fixtures with committed resource allocations
      */
     def commitAllocations = {
-        // fixtures to operate on from the hidden id array
-        def fixtures = Fixture.findAllByIdInList(params.fixtures.collect{it as Long}, [sort: 'dateTime'])
+        // fixtures to operate on from the hidden id array.. cope with a possible single
+        // item by wrapping as a List and flattening
+        def idList = [params.fixtures].flatten()
+        def fixtures = Fixture.findAllByIdInList(idList.collect{it as Long}, [sort: 'dateTime'])
 
         // update each fixture and send the collection to be saved
         fixtures.each { fixture ->
