@@ -5,6 +5,8 @@ import org.davisononline.footy.core.utils.DateTimeUtils
 import org.davisononline.footy.core.Person
 import org.davisononline.footy.core.SecUser
 import org.davisononline.footy.core.Player
+import org.davisononline.footy.core.SecRole
+import org.davisononline.footy.core.SecUserSecRole
 
 
 class FootyMatchService {
@@ -162,14 +164,8 @@ class FootyMatchService {
         refs?.each {ref ->
             def myFixtures = fixtures.grep{it.referee == ref}
             try {
-                def target = ref.email
-                if (!target) {
-                    // might be a player.. send to guardian if so
-                    def g = Player.findByPerson(ref)
-                    target = g.guardian?.email ?: g.secondGuardian?.email
-                }
                 mailService.sendMail {
-                    to      target
+                    to      getRefEmail(ref)
                     from    person.email
                     subject "Fixture Confirmations for ${myFixtures[0].dateTime.format('dd/MM/yyyy')}"
                     body    (view: '/email/match/refereeResources',
@@ -180,5 +176,57 @@ class FootyMatchService {
                 log.warn("Unable to send email to referee $ref; $ex.message")
             }
         }
+    }
+
+    /**
+     * delete a Fixture, potentially emailing fixture secs. if resources were
+     * allocated.  Any exception will be thrown back to the caller
+     */
+    def deleteFixture(fixtureInstance) {
+        try {
+
+            if (fixtureInstance.resources.size() > 0 || fixtureInstance.referee) {
+                fixtureInstance.resources.clear()
+                fixtureInstance.delete(flush: true)
+                def fixSecEmails = getFixtureSec()*.email
+                if (fixtureInstance.referee?.email) fixSecEmails << getRefEmail(fixtureInstance.referee)
+                mailService.sendMail {
+                    to      fixSecEmails
+                    subject "Deleted Fixture ${fixtureInstance.dateTime.format('dd/MM/yyyy')}"
+                    body    (view: '/email/match/deletedFixture',
+                             model: [fixture:fixtureInstance])
+                }
+            }
+            else
+                fixtureInstance.delete(flush: true)
+        }
+        catch (Exception ex) {
+            log.error("Failed to delete fixture or to email fixture sec(s) with deletion of fixture [$fixtureInstance]; ${ex.message}")
+        }
+    }
+
+    /**
+     * return a list of all fixture secretaries (ROLE_FIXTURE_ADMIN)
+     */
+    def getFixtureSec() {
+        def fa = SecRole.findByAuthority("ROLE_FIXTURE_ADMIN")
+        def secs = SecUserSecRole.findAllBySecRole(fa).secUser as List
+        def persons = Person.findAllByUserInList(secs)
+        persons
+    }
+
+    /**
+     * get a ref's email address.  Might simply have her own, in which case it's returned,
+     * but if the ref is a player without their owm, it will lookup the parent email
+     * address and return that if available
+     */
+    def getRefEmail(ref) {
+        def target = ref.email
+        if (!target) {
+            // might be a player.. send to guardian if so
+            def g = Player.findByPerson(ref)
+            target = g.guardian?.email ?: g.secondGuardian?.email
+        }
+        target
     }
 }
