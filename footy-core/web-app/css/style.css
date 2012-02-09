@@ -187,15 +187,16 @@ legend {font-weight: bold; font-size: 1.2em;}
 textarea {overflow: auto;}
 input[type="text"], input[type="password"], textarea, select {
 	background: #FCFCFC;
-	border: 1px inset #eee;
+	border: 1px solid #ddd;
 	margin: 0.5em 0;
 	padding: 2px 5px;
+    width: 192px;
 }
 input[type="text"]:focus, input[type="password"]:focus, textarea:focus, select:focus {background: #FFFFF5;}
 
 input.button {
 	background: #DDD;
-	border: 1px outset #AAA;
+	border: 1px solid #888;
 	padding: 4px 5px;
 }
 input.button:active {border-style: inset;}
@@ -208,7 +209,7 @@ div.errors ul {
     padding: 0;
 }
 div.errors li {
-       background: url(../images/skin/exclamation.png) 8px 0% no-repeat;
+    background: url(../images/skin/exclamation.png) 8px 0% no-repeat;
     line-height: 16px;
     padding-left: 30px;
 }
@@ -238,27 +239,25 @@ td.errors textarea {
     padding: 0 5px;
 }
 .menuButton a {
+    font-weight: bold;
+    text-decoration: none;
     color: #333;
     padding: 4px 6px;
 }
 .menuButton a.home {
     background: url(../images/skin/house.png) center left no-repeat;
-    color: #333;
     padding-left: 25px;
 }
 .menuButton a.list {
     background: url(../images/skin/database_table.png) center left no-repeat;
-    color: #333;
     padding-left: 25px;
 }
 .menuButton a.edit {
     background: url(../images/skin/database_edit.png) center left no-repeat;
-    color: #333;
     padding-left: 25px;
 }
 .menuButton a.create {
     background: url(../images/skin/database_add.png) center left no-repeat;
-    color: #333;
     padding-left: 25px;
 }
 
