@@ -78,8 +78,6 @@ a.feed {
 	background: url('../images/skin/icon-feed.gif') no-repeat left center;
 	padding-left: 18px;
 }
-
-/* More links */
 a.more {
 	color: #888;
 	font-weight: bold;
@@ -433,6 +431,8 @@ div#checkout {
     padding-right: 20px;
     margin-bottom: -60px;
 }
+#leagueTable a {text-decoration: none;}
+#leagueTable a:hover {text-decoration: underline;}
 #leagueTable .footer {
     /* cover some of the FA icons */
     height: 24px;
