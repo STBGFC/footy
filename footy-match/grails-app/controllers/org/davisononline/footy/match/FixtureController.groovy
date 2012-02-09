@@ -172,18 +172,17 @@ class FixtureController {
         def myteam = Team.get(params.teamId)
         if (fixtureInstance && myteam) {
             try {
-                fixtureInstance.delete(flush: true)
-                render template: 'fixtureList', model: [fixtures: footyMatchService.getFixtures(myteam), myteam: myteam], plugin: 'footy-match', contentType: 'text/plain'
+                footyMatchService.deleteFixture(fixtureInstance)
             }
-            catch (org.springframework.dao.DataIntegrityViolationException e) {
-                flash.message = "${message(code: 'default.not.deleted.message', args: [message(code: 'fixture.label', default: 'Fixture'), params.id])}"
-                redirect(action: "show", id: params.id)
+            catch (Exception e) {
+                response.status = 500
             }
         }
         else {
-            flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'fixture.label', default: 'Fixture'), params.id])}"
-            redirect(action: "list")
+            response.status = 404
         }
+
+        render template: 'fixtureList', model: [fixtures: footyMatchService.getFixtures(myteam), myteam: myteam], plugin: 'footy-match', contentType: 'text/plain'
     }
 
     /**

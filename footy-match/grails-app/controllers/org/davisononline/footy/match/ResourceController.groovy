@@ -45,8 +45,10 @@ class ResourceController {
      * sends all of the daily fixtures with committed resource allocations
      */
     def commitAllocations = {
-        // fixtures to operate on from the hidden id array
-        def fixtures = Fixture.findAllByIdInList(params.fixtures.collect{it as Long}, [sort: 'dateTime'])
+        // fixtures to operate on from the hidden id array.. cope with a possible single
+        // item by wrapping as a List and flattening
+        def idList = [params.fixtures].flatten()
+        def fixtures = Fixture.findAllByIdInList(idList.collect{it as Long}, [sort: 'dateTime'])
 
         // update each fixture and send the collection to be saved
         fixtures.each { fixture ->
@@ -90,18 +92,33 @@ class ResourceController {
      */
     @Secured(["ROLE_COACH"])
     def summary = {
+        def date = getDateForHomeFixtures(params)
+        [fixtures: footyMatchService.getHomeGamesOn(date), date: date]
+    }
+
+    /**
+     * view ref reports for the given date
+     */
+    def reports = {
+        def date = getDateForHomeFixtures(params, true)
+        [reports: footyMatchService.getRefReportsOn(date), date: date]
+    }
+
+    private getDateForHomeFixtures(params, previous=false) {
         def date
         if (params.year)
             date = new Date("$params.year/$params.month/$params.day")
         else {
-            // today, if the day is a Sat/Sun, or the following Sat.
+            // today, if the day is a Sat/Sun, or the next/previous Sat.
             def c = Calendar.instance
             def dow = c.get(Calendar.DAY_OF_WEEK)
             if (dow != 1 && dow != 7) {
                 c.set(Calendar.DAY_OF_WEEK, 7)
+                if (previous)
+                    c.set(Calendar.WEEK_OF_YEAR, c.get(Calendar.WEEK_OF_YEAR) - 1)
             }
             date = c.time
         }
-        [fixtures: footyMatchService.getHomeGamesOn(date), date: date]
+        date
     }
 }

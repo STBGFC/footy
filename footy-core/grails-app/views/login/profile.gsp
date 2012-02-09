@@ -123,6 +123,9 @@
                               <g:link controller="person" action="list">Member List</g:link>
                           </li>
                           <li>
+                              <g:link controller="person" action="qualifications">Qualifications expiring soon</g:link>
+                          </li>
+                          <li>
                               <g:link controller="player" action="list">Player List</g:link>
                           </li>
                           <li>
@@ -177,6 +180,13 @@
                                   <g:message
                                           code="org.davisononline.footy.match.fixtureadmin.label"
                                           default="Fixture Resource Allocations" />
+                              </g:link>
+                          </li>
+                          <li>
+                              <g:link controller="resource" action="reports">
+                                  <g:message
+                                          code="org.davisononline.footy.match.refreportsummary.label"
+                                          default="Referee Report Summary" />
                               </g:link>
                           </li>
                           </sec:ifAnyGranted>

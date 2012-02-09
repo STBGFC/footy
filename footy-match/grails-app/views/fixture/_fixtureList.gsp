@@ -41,23 +41,23 @@
                                         width="450">
                                     ${fixture.opposition}
                                 </g:link>
-                                <g:if test="${!fixture.played && fixture.resources?.size() == 0 && !fixture.referee}">
                                 <g:remoteLink
                                         controller="fixture"
                                         action="delete"
                                         params="[fixtureId:fixture.id,teamId:myteam.id]"
                                         update="fixtureList"
-                                        title="delete fixture"
+                                        on500="alert('An error occurred attempting to delete this fixture')"
+                                        on404="alert('Fixture not found')"
+                                        title="delete fixture (if resources have been assigned, please also liaise with fixture sec.)"
                                 ><r:img dir="images/skin" file="database_delete.png" plugin="footy-core" alt="del"/></g:remoteLink>
-                                </g:if>
-                                <g:else>
+                                <g:if test="${fixture.homeGame && (fixture.resources?.size() > 0 || fixture.referee)}">
                                 <g:link controller="resource" action="summary" params="${[year:fixture.dateTime.year+1900, month:fixture.dateTime.month+1, day:fixture.dateTime.date]}">
                                     <img
                                         src="${createLinkTo(dir:'images', file:'whistle_icon.png', plugin:'footy-match')}"
                                         alt=""
-                                        title="Resources have been assigned to this fixture. Contact the fixture secretary to cancel" />
+                                        title="Resources have been assigned to this fixture. Click to view the summary sheet" />
                                 </g:link>
-                                </g:else>
+                                </g:if>
                             </footy:isManager>
                             <footy:isNotManager team="${myteam}">
                                 ${fixture.opposition}

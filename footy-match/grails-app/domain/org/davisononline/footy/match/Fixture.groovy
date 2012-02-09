@@ -50,7 +50,7 @@ class Fixture implements Comparable {
     static transients = ['adjustedKickOff', 'amendedResources']
 
     static constraints = {
-        opposition blank: false, size: 6..70
+        opposition blank: false, size: 3..70
         matchReport nullable: true
         dateTime nullable: true
         referee nullable: true

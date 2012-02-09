@@ -19,5 +19,16 @@ class FootyMatchUrlMappings {
             }
         }
 
+        // date params for ref reports
+        "/resource/reports/$year/$month/$day" {
+            controller = 'resource'
+            action = 'reports'
+            constraints {
+                year(matches: /\d{4}/)
+                month(matches: /\d{1,2}/)
+                day(matches: /\d{1,2}/)
+            }
+        }
+
 	}
 }
