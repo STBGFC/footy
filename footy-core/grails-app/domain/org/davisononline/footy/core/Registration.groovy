@@ -24,10 +24,7 @@ class Registration implements Serializable, Comparable {
      * @return
      */
     static createFrom(tier) {
-        def renewOn = new Date()
-        def mth = renewOn[Calendar.MONTH] + tier.monthsValidFor
-        renewOn.set(month: mth)
-        new Registration(tier: tier, date: renewOn)
+        new Registration(tier: tier, date: tier.validUntil)
     }
 
     int compareTo(other) {
