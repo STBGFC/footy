@@ -131,7 +131,7 @@
                         <th>${message(code: 'player.medical.label', default: 'Medical')}</th>
                         <th>${message(code: 'player.contactDetails.label', default: 'Contact')}</th>
                         <th>${message(code: 'player.leagueRegistrationNumber.label', default: 'League#')}</th>
-                        <th>${message(code: 'player.currentRegistrationStatus.label', default: 'Payment')}</th>
+                        <th>${message(code: 'player.currentRegistrationStatus.label', default: 'Status')}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -149,7 +149,7 @@
                         </td>
                         <td>${fieldValue(bean: player, field: "leagueRegistrationNumber")}</td>
                         <td>
-                            <footy:paymentStatus payment="${PaymentItem.findByItemNumber(player?.currentRegistration?.id)?.payment}"/>
+                            <footy:registrationStatus player="${player}"/>
                         </td>
                     </tr>
                 </g:each>
