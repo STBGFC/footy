@@ -238,4 +238,73 @@ class RegistrationController {
         }
     }
 
+    /**
+     * re-registration of one or more existing players following a rollover
+     * of team age bands (and archival of ex-U18 players)
+     */
+    def renewRegistrationFlow = {
+
+        start {
+            on ("continue") {
+                flow.registrations = flow.registrations ?: []
+                def team = Team.get(params.teamId)
+                [players:team.players]
+
+            }.to "selectPlayer"
+        }
+
+        selectPlayer {
+            on ("continue") {
+                Player player = Player.get(params.playerId)
+                flow.player = player
+
+            }.to "checkRegistration"
+        }
+
+        checkRegistration {
+            action {
+                if (flow.player.dateOfBirth != params.dateOfBirth) {
+                    flow.endMessage = "${message(code:'org.davisononline.footy.core.registration.renewal.wrongdob.text', args:[flow.player], default:'{0}\'s DoB is supplied incorrectly.')}"
+                    return end()
+                }
+                if (flow.player.currentRegistration.date > new Date()) {
+                    flow.endMessage = "${message(code:'org.davisononline.footy.core.registration.renewal.indate.text', args:[flow.player], default:'{0}\'s registration details are already up to date.  No re-registration is required at this time')}"
+                    return end()
+                }
+                else
+                    return valid()
+            }
+
+            on ("end").to "end"
+            on ("valid").to "selectTier"
+        }
+
+        end { /* end flow with a message */ }
+
+        selectTier {
+            on ("continue") {
+                def tier = RegistrationTier.get(params.regTierId)
+                def registration = Registration.createFrom(tier)
+                flow.player.currentRegistration = registration
+                registration.player = flow.player
+                flow.registrations << registration
+
+            }.to "addMore"
+        }
+
+        addMore {
+            on ("yes").to "start"
+            on ("no") {
+                // start transaction to create/save domain
+                def payment = registrationService.createPayment(flow.registrations)
+                [payment:payment]
+
+            }.to "invoice"
+        }
+
+        invoice {
+            redirect (controller: 'invoice', action: 'show', id: flow.payment.transactionId)
+        }
+    }
+
 }
