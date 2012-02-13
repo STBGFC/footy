@@ -15,8 +15,8 @@
                 </p>
 
                 <ul>
-                    <g:each in="${registrations}" var="r">
-                    <li>${r.player}</li>
+                    <g:each in="${registeredPlayers}" var="p">
+                    <li>${p}</li>
                     </g:each>
                 </ul>
 

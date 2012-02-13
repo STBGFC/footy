@@ -247,6 +247,7 @@ class RegistrationController {
         start {
             on ("continue") {
                 flow.registrations = flow.registrations ?: []
+                flow.registeredPlayers = flow.registeredPlayers ?: []
                 def team = Team.get(params.teamId)
                 [players:team.players]
 
@@ -262,20 +263,24 @@ class RegistrationController {
         }
 
         checkRegistration {
+            def endMessage
             action {
                 if (flow.player.dateOfBirth != params.dateOfBirth) {
-                    flow.endMessage = "${message(code:'org.davisononline.footy.core.registration.renewal.wrongdob.text', args:[flow.player], default:'{0}\'s DoB is supplied incorrectly.')}"
+                    endMessage = "${message(code:'org.davisononline.footy.core.registration.renewal.wrongdob.text', args:[flow.player], default:'{0}\'s DoB is supplied incorrectly.')}"
                     return end()
                 }
                 if (flow.player.currentRegistration.date > new Date()) {
-                    flow.endMessage = "${message(code:'org.davisononline.footy.core.registration.renewal.indate.text', args:[flow.player], default:'{0}\'s registration details are already up to date.  No re-registration is required at this time')}"
+                    endMessage = "${message(code:'org.davisononline.footy.core.registration.renewal.indate.text', args:[flow.player], default:'{0}\'s registration details are already up to date.  No re-registration is required at this time')}"
                     return end()
                 }
                 else
                     return valid()
             }
 
-            on ("end").to "end"
+            on ("end") {
+                [endMessage:endMessage]
+            }.to "end"
+            
             on ("valid").to "selectTier"
         }
 
@@ -285,9 +290,8 @@ class RegistrationController {
             on ("continue") {
                 def tier = RegistrationTier.get(params.regTierId)
                 def registration = Registration.createFrom(tier)
-                flow.player.currentRegistration = registration
-                registration.player = flow.player
                 flow.registrations << registration
+                flow.registeredPlayers << flow.player
 
             }.to "addMore"
         }
@@ -295,6 +299,11 @@ class RegistrationController {
         addMore {
             on ("yes").to "start"
             on ("no") {
+                flow.registeredPlayers.eachWithIndex { p,i ->
+                    p.currentRegistration = flow.registrations[i]
+                    flow.registrations[i].player = p
+                }
+                
                 // start transaction to create/save domain
                 def payment = registrationService.createPayment(flow.registrations)
                 [payment:payment]
