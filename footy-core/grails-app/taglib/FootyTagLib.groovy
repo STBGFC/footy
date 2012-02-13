@@ -170,10 +170,10 @@ class FootyTagLib {
             def expired = (reg.date < new Date())
             if (!expired) {
                 def payment = PaymentItem.findByItemNumber(reg.id)?.payment
-                def paid = (payment.status == Payment.COMPLETE)
+                def paid = (payment?.status == Payment.COMPLETE)
 
                 // link to invoice, paid or otherwise
-                out << """<a href="${createLink(controller:'invoice', action:'show', id:payment.transactionId)}">
+                out << """<a href="${createLink(controller:'invoice', action:'show', id:payment?.transactionId)}">
                 <img align="middle" title="Current ${paid ? 'and paid' : 'BUT NOT PAID'}"
                 alt="Current ${paid ? 'and paid' : 'BUT NOT PAID'}"
                 src="${resource(dir:'images',file:'registration-' + (paid ? '' : 'un') + 'paid.png', plugin:'footy-core')}"/>
