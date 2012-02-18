@@ -18,6 +18,7 @@
 
             <table>
                 <tbody>
+                <g:set var="now" value="${new Date()}"/>
                 <g:each in="${fixtures}" var="fixture">
                     <tr id="fixt${fixture.id}">
                         <td class="fixtureList">
@@ -43,6 +44,7 @@
                             </g:if>
                             <div>
                                 <footy:isManager team="${myteam}">
+                                    <g:if test="${fixture.dateTime < now}">
                                         <g:link
                                             controller="fixture"
                                             action="addResult"
@@ -53,6 +55,7 @@
                                                 alt=""/>
                                             <g:message code="org.davisononline.footy.match.label.editfixture" default="Edit Fixture"/>
                                         </g:link>
+                                    </g:if>
                                     <g:remoteLink
                                             controller="fixture"
                                             action="delete"

@@ -4,6 +4,7 @@
     <h2><g:message code="org.davisononline.footy.match.fixturecal.title" default="Fixture Calendar"/></h2>
     <table>
         <tbody>
+        <g:set var="now" value="${new Date()}"/>
         <g:each in="${fixtures}" var="fixture">
         <%-- set list icon to denote cup/friendly/league --%>
         <tr>
@@ -12,6 +13,7 @@
             </td>
             <td>
             <footy:isManager team="${myteam}">
+                <g:if test="${fixture.dateTime < now}">
                 <g:link
                         controller="fixture"
                         action="addResult"
@@ -20,6 +22,10 @@
                         width="450">
                     ${fixture.opposition}
                 </g:link>
+                </g:if>
+                <g:else>
+                    ${fixture.opposition}
+                </g:else>
                 <g:remoteLink
                         controller="fixture"
                         action="delete"
