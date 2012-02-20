@@ -46,7 +46,9 @@
                     <g:each in="${reports}" var="report" status="c">
                     <tr class="${c%2 == 0 ?'odd' : 'even'}">
                         <td>
-                            <p>${report.fixture}</p>
+                            <p>
+                                <g:link title="View Details" action="refReport" id="${report.id}">${report.fixture}</g:link>
+                            </p>
                             <g:if test="${report.fixture.team?.manager}">
                             Manager: ${report.fixture.team.manager} (${report.fixture.team.manager.bestPhone()})
                             </g:if>
