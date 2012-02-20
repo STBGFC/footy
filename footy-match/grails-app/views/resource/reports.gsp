@@ -37,7 +37,7 @@
                         <th>
                             <g:message code="org.davisononline.footy.match.label.refscore" default="Score" />
                         </th>
-                        <th>
+                        <th style="width:300px">
                             <g:message code="org.davisononline.footy.match.label.refcomment" default="Manager's Comments" />
                         </th>
                     </tr>
