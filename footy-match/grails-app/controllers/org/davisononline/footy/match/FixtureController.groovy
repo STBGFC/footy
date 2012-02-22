@@ -150,7 +150,7 @@ class FixtureController {
             // auto type convertsion appears not to occur for the scores.. they remain as string
             if (report.referee) {
                 report.scores = report.scores.collect {it as Integer}
-                if (report.scores.size() < reportQuestions) {
+                if ((report.scores-null).size() < reportQuestions) {
                     report.errors.rejectValue('scores', 'Please answer ALL questions in the report')
                     flash.message = 'Please answer ALL questions in the report'
                 }
