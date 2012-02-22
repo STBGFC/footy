@@ -56,6 +56,7 @@
                                             <g:message code="org.davisononline.footy.match.label.editfixture" default="Edit Fixture"/>
                                         </g:link>
                                     </g:if>
+                                    <g:if test="${!fixture.played}">
                                     <g:remoteLink
                                             controller="fixture"
                                             action="delete"
@@ -68,6 +69,7 @@
                                         <img src="${createLinkTo(dir:'images/skin', file:'database_delete.png', plugin:'footy-core')}" alt=""/>
                                         <g:message code="org.davisononline.footy.match.label.deletefixture" default="Delete Fixture"/>
                                     </g:remoteLink>
+                                    </g:if>
                                 </footy:isManager>
                             </div>
                         </td>
