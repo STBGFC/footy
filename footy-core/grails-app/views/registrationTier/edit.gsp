@@ -34,11 +34,12 @@
 
                             <tr class="prop">
                                 <td valign="top" class="name">
-                                  <label for="monthsValidFor"><g:message code="org.davisononline.org.footy.core.registrationTier.monthsValidFor.label" default="Number of Months Valid For" /></label>
+                                  <label for="validUntil"><g:message code="org.davisononline.org.footy.core.registrationTier.validUntil.label" default="Date that registrations will expire" /></label>
                                 </td>
-                                <td valign="top" class="value ${hasErrors(bean: registrationTierInstance, field: 'name', 'errors')}">
-                                    <g:select name="monthsValidFor" from="${(1..12)}" value="${registrationTierInstance?.monthsValidFor}" />
-                                    <g:render template="/shared/fieldError" model="['instance':registrationTierInstance,'field':'monthsValidFor']" plugin="footy-core"/>
+                                <td valign="top" class="date value ${hasErrors(bean: registrationTierInstance, field: 'validUntil', 'errors')}">
+                                    <g:set var="now" value="${new Date()}"/>
+                                    <g:datePicker name="validUntil" precision="day" years="${(now.year+1900)..(now.year+1902)}" value="${registrationTierInstance?.validUntil}" />
+                                    <g:render template="/shared/fieldError" model="['instance':registrationTierInstance,'field':'validUntil']" plugin="footy-core"/>
                                 </td>
                             </tr>
                         

@@ -66,7 +66,7 @@ class RegistrationTierController {
             }
             registrationTierInstance.properties = params
             if (!registrationTierInstance.hasErrors() && registrationTierInstance.save(flush: true)) {
-                flash.message = "${message(code: 'default.updated.message', args: [message(code: 'registrationTier.label', default: 'RegistrationTier'), registrationTierInstance.id])}"
+                flash.message = "${message(code: 'default.updated.message', args: [message(code: 'registrationTier.label', default: 'RegistrationTier'), registrationTierInstance.name])}"
                 redirect(action: "list")
             }
             else {
