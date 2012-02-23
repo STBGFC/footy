@@ -40,7 +40,7 @@
                                 <br/><a class="email" href="mailto:${player.guardian?.email}">${player.guardian?.email}</a>
                             </td>
                             <td>
-                                <footy:paymentStatus payment="${PaymentItem.findByItemNumber(player?.currentRegistration?.id)?.payment}"/>
+                                <footy:registrationStatus player="${player}"/>
                                 ${player.currentRegistration ?: "Not Registered"}
                             </td>
                             <td>${fieldValue(bean: player, field: "leagueRegistrationNumber")}</td>
