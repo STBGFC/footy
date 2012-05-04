@@ -26,7 +26,7 @@
                                 <g:formatDate date="${fixture.dateTime}" format="dd MMMM yyyy 'at' HH:mm"/>
                                 :: ${fixture.type}
                                 <g:if test="${fixture.type == Fixture.LEAGUE_GAME}">
-                                     :: ${fixture.team.league} Div. ${fixture.team.division}
+                                     :: ${fixture.team.division}
                                 </g:if>
                             </div>
 
