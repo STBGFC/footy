@@ -1,6 +1,6 @@
 <%@ page import="org.davisononline.footy.match.Fixture" %>
 <r:require module="modalBox"/>
-
+<g:set var="now" value="${new Date()}"/>
                 <div class="section-title">
                     <div class="left">
                         <g:message code="org.davisononline.footy.match.fixturecal.title" default="Fixture Calendar"/>
@@ -33,6 +33,7 @@
                             </td>
                             <td>
                             <footy:isManager team="${myteam}">
+                                <g:if test="${fixture.dateTime < now}">
                                 <g:link
                                         controller="fixture"
                                         action="addResult"
@@ -41,6 +42,10 @@
                                         width="450">
                                     ${fixture.opposition}
                                 </g:link>
+                                </g:if>
+                                <g:else>
+                                    ${fixture.opposition}
+                                </g:else>
                                 <g:remoteLink
                                         controller="fixture"
                                         action="delete"
@@ -93,3 +98,4 @@
                     </footy:isManager>
                     
                 </div>
+

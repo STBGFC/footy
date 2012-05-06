@@ -18,6 +18,7 @@
 
             <table>
                 <tbody>
+                <g:set var="now" value="${new Date()}"/>
                 <g:each in="${fixtures}" var="fixture">
                     <tr id="fixt${fixture.id}">
                         <td class="fixtureList">
@@ -25,7 +26,7 @@
                                 <g:formatDate date="${fixture.dateTime}" format="dd MMMM yyyy 'at' HH:mm"/>
                                 :: ${fixture.type}
                                 <g:if test="${fixture.type == Fixture.LEAGUE_GAME}">
-                                     :: ${fixture.team.league} Div. ${fixture.team.division}
+                                     :: ${fixture.team.division}
                                 </g:if>
                             </div>
 
@@ -43,6 +44,7 @@
                             </g:if>
                             <div>
                                 <footy:isManager team="${myteam}">
+                                    <g:if test="${fixture.dateTime < now}">
                                         <g:link
                                             controller="fixture"
                                             action="addResult"
@@ -53,6 +55,8 @@
                                                 alt=""/>
                                             <g:message code="org.davisononline.footy.match.label.editfixture" default="Edit Fixture"/>
                                         </g:link>
+                                    </g:if>
+                                    <g:if test="${!fixture.played}">
                                     <g:remoteLink
                                             controller="fixture"
                                             action="delete"
@@ -65,6 +69,7 @@
                                         <img src="${createLinkTo(dir:'images/skin', file:'database_delete.png', plugin:'footy-core')}" alt=""/>
                                         <g:message code="org.davisononline.footy.match.label.deletefixture" default="Delete Fixture"/>
                                     </g:remoteLink>
+                                    </g:if>
                                 </footy:isManager>
                             </div>
                         </td>

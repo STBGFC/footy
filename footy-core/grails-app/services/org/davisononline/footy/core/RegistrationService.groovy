@@ -15,7 +15,12 @@ class RegistrationService {
 
     static transactional = true
 
-    def fromEmail = ConfigurationHolder.config?.org?.davisononline?.footy?.core?.registration?.email
+    def CFG = ConfigurationHolder.config?.org?.davisononline?.footy?.core?.registration
+
+    def fromEmail = CFG?.email
+
+    def currencyCode = CFG?.currency ?: "GBP"
+    
 
     /**
      * save domain objects for registration flow and return generated payment to
@@ -37,7 +42,7 @@ class RegistrationService {
         def payment = new Payment (
             buyerId: buyer.id,
             transactionIdPrefix: "REG",
-            currency: Currency.getInstance(ConfigurationHolder.config.org?.davisononline?.footy?.registration?.currency ?: "GBP")
+            currency: Currency.getInstance(currencyCode)
         )
         
         // and again to create items..

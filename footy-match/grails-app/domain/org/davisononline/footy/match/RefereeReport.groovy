@@ -32,7 +32,9 @@ class RefereeReport {
     static transients = ['total']
 
     def getTotal() {
-        scores.sum()
+        // nulls shouldn't be possible if the input validation works, but
+        // removing them guards against NPE at least..
+        (scores - null).sum()
     }
 
     String toString() {

@@ -7,6 +7,23 @@
             <g:message code="org.davisononline.footy.match.addresult.title" default="Result" />
             (<g:formatDate date="${fixtureInstance.dateTime}" format="dd/MM/yyyy"/>)
         </title>
+        <g:javascript>
+            function toggleQuestions(sel) {
+                var noref = (sel[sel.selectedIndex].value == "null")
+                if (noref) {
+                    for (var i=0; i<10; i++) {
+                        Effect.Fade('rowQ' + i)
+                    }
+                    Effect.Fade('rowQcomments')
+                }
+                else {
+                    for (var i=0; i<10; i++) {
+                        Effect.Appear('rowQ' + i)
+                    }
+                    Effect.Appear('rowQcomments')
+                }
+            }
+        </g:javascript>
     </head>
     <body>
         <div class="dialog">
@@ -103,7 +120,42 @@
                 </g:else>
 
                 <g:if test="${includeRefReport}">
-                    <g:render template="/refReport"/>
+                <h2>Referee Report</h2>
+                <g:if test="${fixtureInstance.homeGame && !refReportExists}">
+                <p>
+                    Once submitted, the referee report cannot be amended.  Please answer <strong>ALL</strong>
+                    multiple choice questions
+                </p>
+                <div class="dialog">
+                    <table>
+                        <tbody>
+                            <tr class="prop">
+                                <td valign="top" class="name">
+                                    <g:message code="org.davisononline.footy.match.label.referee" default="Referee" />
+                                </td>
+                                <td class="value">
+                                    <g:select
+                                            name="ref.referee.id"
+                                            from="${availableReferees}"
+                                            value="${fixtureInstance.referee?.id}"
+                                            noSelection="[null:'-- Unlisted ref / No-one --']"
+                                            onchange="toggleQuestions(this)"
+                                            optionKey="id"/>
+                                </td>
+                            </tr>
+                            <%-- question template should be provided by the application, not the plugin as the question/answer format is variable --%>
+                            <g:render template="/editRefReport"/>
+                        </tbody>
+                    </table>
+                </div>
+                <g:javascript>toggleQuestions($('ref.referee.id'))</g:javascript>
+                </g:if>
+                <g:if test="${!fixtureInstance.homeGame}">
+                    <p>Referee report not required for this fixture</p>
+                </g:if>
+                <g:if test="${fixtureInstance.homeGame && refReportExists}">
+                    <p>Referee report already submitted for this fixture</p>
+                </g:if>
                 </g:if>
                 <div class="buttons">
                     <span class="button"><g:actionSubmit class="save" action="saveResult" value="${message(code: 'default.button.save.label', default: 'Save')}" /></span>

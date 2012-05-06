@@ -1,6 +1,7 @@
 import org.codehaus.groovy.grails.web.taglib.exceptions.GrailsTagException
 import org.grails.paypal.Payment
 import org.davisononline.footy.core.NewsItem
+import org.grails.paypal.PaymentItem
 
 class FootyTagLib {
 
@@ -143,6 +144,69 @@ class FootyTagLib {
             alt="${payment?.status?.toLowerCase()}"
             src="${resource(dir:'images',file:'payment-' + payment?.status?.toLowerCase() + (cash ? 'b' : '') + '.png', plugin:'footy-core')}"/>
             </a>"""
+        }
+    }
+
+    /**
+     * output a registration status icon for a supplied Player object.
+     *
+     * a registration status can be in one of 4 states:
+     *
+     *    i) Missing (should never happen for a real player - probable DB or code error)
+     *   ii) Expired (was current, now out of date - not renewed)
+     *  iii) Current, unpaid (has been renewed, but not paid for)
+     *   iv) Current, paid.  (we like)
+     *
+     * @attr payment REQUIRED the payment object to show the status for
+     */
+    def registrationStatus = { attrs, body ->
+
+        def player = attrs.player
+        if (!player) return
+
+        def reg = player.currentRegistration
+
+        if (reg) {
+            def expired = (reg.date < new Date())
+            if (!expired) {
+                def payment = PaymentItem.findByItemNumber(reg.id)?.payment
+                def paid = (payment?.status == Payment.COMPLETE)
+
+                // link to invoice, paid or otherwise
+                out << """<a href="${createLink(controller:'invoice', action:'show', id:payment?.transactionId)}">
+                <img align="middle" title="Current ${paid ? 'and paid' : 'BUT NOT PAID'}"
+                alt="Current ${paid ? 'and paid' : 'BUT NOT PAID'}"
+                src="${resource(dir:'images',file:'registration-' + (paid ? '' : 'un') + 'paid.png', plugin:'footy-core')}"/>
+                </a>"""
+            }
+            else {
+                // non-linked expired icon
+                out << """<img align="middle" title="EXPIRED!" alt="EXPIRED!"
+                src="${resource(dir:'images',file:'registration-expired.png', plugin:'footy-core')}"/>"""
+            }
+        }
+        else {
+            // no registration found
+            out << """<img align="middle" title="Not Found!" alt="Not Found!"
+                src="${resource(dir:'images',file:'registration-missing.png', plugin:'footy-core')}"/>"""
+        }
+
+    }
+
+    /**
+     * render a list of team news that has been marked site-wide.
+     *
+     * @param attrs
+     */
+    def teamNews ={ attrs ->
+        def n = attrs.max ?: 10
+        def items = NewsItem.findAllByClubWide(true, [max: n, sort: 'createdDate', order: 'desc'])
+        items.each { item ->
+            def t = item.team
+            out << """<h3>${t}, ${formatDate(date: item.createdDate, format: 'dd MMM')}</h3>
+            <p>${item.abstractText().encodeAsHTML()}
+            <a href="${createLink(controller:'team', action:'show', params:[ageBand:t.ageBand, teamName: t.name])}">
+            <br/>${t} homepage..</a></p>"""
         }
     }
 

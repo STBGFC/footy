@@ -70,9 +70,18 @@ class FixtureController {
             response.status = 404
             return
         }
-        else {
-            modelForResults(fx)
+
+        // can't add result before game has been played
+        if (fx.dateTime > new Date()) {
+            log.error "Attempt to add a result to a fixture not yet played"
+            flash.message = "Cannot add a result for a fixture not yet played (${fx.dateTime.format('dd/MM HH:mm')})"
+            redirect controller: 'team', action: 'show', ageBand: fx.team.ageBand, teamName: fx.team.name
         }
+
+        // ok..
+        else
+            modelForResults(fx)
+
     }
 
     def modelForResults(fx) {
@@ -141,21 +150,26 @@ class FixtureController {
             // auto type convertsion appears not to occur for the scores.. they remain as string
             if (report.referee) {
                 report.scores = report.scores.collect {it as Integer}
-                if (report.scores.size() < reportQuestions) {
+                if ((report.scores-null).size() < reportQuestions) {
                     report.errors.rejectValue('scores', 'Please answer ALL questions in the report')
                     flash.message = 'Please answer ALL questions in the report'
                 }
             }
             else
                 report.scores = []
+
+            if (report.hasErrors()) {
+                render view: 'addResult', model: modelForResults(fx)
+                return
+            }
         }
 
-        if (fx.hasErrors() || report.hasErrors()) {
+        if (fx.hasErrors()) {
             render view: 'addResult', model: modelForResults(fx)
             return
         }
 
-        def saved = (fx.save(flush: true) && (includeRefReport ? report.save(flush: true) : true))
+        def saved = (fx.save(flush: true) && ((includeRefReport && fx.homeGame) ? report.save(flush: true) : true))
         if (saved) {
             flash.message = "Fixture details ${params['ref']?.size() > 0 ? 'and referee report ' : ''}saved"
             redirect controller: 'team', action: 'show', params:[ageBand: fx.team.ageBand, teamName: fx.team.name]

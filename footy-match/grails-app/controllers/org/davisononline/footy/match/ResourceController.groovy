@@ -2,6 +2,7 @@ package org.davisononline.footy.match
 
 import grails.plugins.springsecurity.Secured
 import org.davisononline.footy.core.Person
+import org.codehaus.groovy.grails.commons.ConfigurationHolder
 
 /**
  * controller for resource allocations (pitches/refs/changing rooms etc) for the
@@ -102,6 +103,16 @@ class ResourceController {
     def reports = {
         def date = getDateForHomeFixtures(params, true)
         [reports: footyMatchService.getRefReportsOn(date), date: date]
+    }
+
+    /**
+     * individual report detail
+     */
+    def refReport = {
+        [
+                report: RefereeReport.get(params.id),
+                totQuestions: grailsApplication.config.org?.davisononline?.footy?.match?.referee?.reportquestions as Integer ?: 0
+        ]
     }
 
     private getDateForHomeFixtures(params, previous=false) {
