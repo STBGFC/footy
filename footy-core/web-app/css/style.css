@@ -429,18 +429,12 @@ div#checkout {
     width: 350px;
     float: left;
     padding-right: 20px;
-    margin-bottom: -60px;
 }
 #leagueTable a {text-decoration: none;}
 #leagueTable a:hover {text-decoration: underline;}
 #leagueTable .footer {
-    /* cover some of the FA icons */
-    height: 24px;
-    background-color: white;
     position: relative;
-    margin-left: 50px;
-    top: -78px;
-    padding-top: 12px;
+    top: -25px;
     font-size: smaller;
     font-style: italic;
 }
