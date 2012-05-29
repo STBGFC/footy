@@ -5,7 +5,7 @@ import com.lowagie.text.pdf.PdfReader
 import com.lowagie.text.pdf.PdfStamper
 import com.lowagie.text.Rectangle
 import com.lowagie.text.pdf.PdfContentByte
-import org.davisononline.footy.core.Player
+
 
 /**
  * PDF output for NEHYL
@@ -20,7 +20,6 @@ class NEHYL {
         def DOB_FORMAT = "   dd         MM           yyyy"
         def left = 120
         def content
-        def players = Player.findAllByTeam(team, [sort:"person.familyName", order:"asc"])
         def template = org.davisononline.footy.core.RegistrationService.class.getResourceAsStream("NEHYLPlayerRegForm-1.pdf")
 
         PdfReader pdfReader = new PdfReader(template)
@@ -29,7 +28,7 @@ class NEHYL {
         BaseFont bf_symbol = BaseFont.createFont(BaseFont.ZAPFDINGBATS, "Cp1252", false);
         Date today = new Date()
 
-        players.eachWithIndex { player, i ->
+        team.players.eachWithIndex { player, i ->
             def page = i+1
             if (page > 1) {
                 content.endText()
@@ -51,7 +50,7 @@ class NEHYL {
             // player
             def r = 0
             def sh = 662
-            def rh = 19
+            def rh = 18
             content.showTextAligned(PdfContentByte.ALIGN_LEFT, player.person.familyName, left, sh + (r * rh), 0)
             content.showTextAligned(PdfContentByte.ALIGN_LEFT, player.leagueRegistrationNumber, 485, sh + (r-- * rh), 0)
             content.showTextAligned(PdfContentByte.ALIGN_LEFT, player.person.givenName, left, sh + (r-- * rh), 0)
@@ -62,13 +61,13 @@ class NEHYL {
             content.showTextAligned(PdfContentByte.ALIGN_LEFT, player.guardian.address.postCode, left, sh + (r-- * rh), 0)
 
             // dates
-            content.showTextAligned(PdfContentByte.ALIGN_LEFT, today.format("dd / MM / yyyy"), 455, 321, 0)
-            content.showTextAligned(PdfContentByte.ALIGN_LEFT, today.format("dd / MM / yyyy"), 475, 221, 0)
-            content.showTextAligned(PdfContentByte.ALIGN_LEFT, today.format("dd / MM / yyyy"), 475, 193, 0)
+            content.showTextAligned(PdfContentByte.ALIGN_LEFT, today.format("dd / MM / yyyy"), 455, 311, 0)
+            content.showTextAligned(PdfContentByte.ALIGN_LEFT, today.format("dd / MM / yyyy"), 475, 197, 0)
+            content.showTextAligned(PdfContentByte.ALIGN_LEFT, today.format("dd / MM / yyyy"), 475, 171, 0)
             // tick marks
             content.setFontAndSize(bf_symbol, 12)
-            def sh2 = 444
-            6.times {
+            def sh2 = 454
+            7.times {
                 content.showTextAligned(PdfContentByte.ALIGN_LEFT, "4", 540, sh2 - (it * 20), 0)
             }
         }
@@ -76,6 +75,6 @@ class NEHYL {
         if (content) content.endText()
         pdfStamper.close()
 
-
     }
 }
+

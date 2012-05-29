@@ -2,9 +2,8 @@ package org.davisononline.footy.core.utils
 
 import javax.imageio.ImageIO
 import java.awt.image.BufferedImage
-import java.awt.AlphaComposite
-import java.awt.Graphics2D
-import java.awt.RenderingHints
+import static org.imgscalr.Scalr.*
+
 
 /**
  * utilities for image/photo processing in the footy app
@@ -24,6 +23,7 @@ class ImageUtils {
     }
 
     static BufferedImage resize(BufferedImage image, int width, int height) {
+        /*
         int type = image.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : image.getType()
         def resizedImage = new BufferedImage(width, height, type)
         def g = resizedImage.createGraphics()
@@ -42,6 +42,9 @@ class ImageUtils {
         g.dispose()
 
         resizedImage
+        */
+        
+        resize(image, Method.QUALITY, Mode.FIT_EXACT, height, width, OP_ANTIALIAS)
     }
 
     static BufferedImage resize(File file, int width, int height) {
