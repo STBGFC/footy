@@ -207,6 +207,8 @@ class FixtureController {
 
         cache "content"
 
+        def locale = grailsApplication.config.org?.davisononline?.footy?.locale ?: Locale.default
+
         def t = Team.get(params?.id)
         if (!t) {
             response.status = 404
@@ -231,7 +233,7 @@ class FixtureController {
 
             fixtures.each { f->
 
-                def cal = Calendar.instance
+                def cal = Calendar.getInstance(locale)
                 cal.time = f.dateTime
                 cal.add(Calendar.MINUTE,90)
 
