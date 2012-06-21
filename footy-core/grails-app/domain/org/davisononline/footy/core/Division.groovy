@@ -7,21 +7,31 @@ package org.davisononline.footy.core
  */
 class Division implements Comparable, Serializable {
 
-    League league
     int ageBand = 9
     String name
     String code // for generating tables, RESTful id etc.
     int index = 0 // lower the number, higher the division
 
+    static belongsTo = [league: League]
+    
     static constraints = {
         code nullable:true
         ageBand range: 8..18
-        name blank: false, size: 1..30, unique: ['ageBand','league']
+        name blank: false, size: 1..30, unique: ['ageBand']
     }
 
+    /**
+     * compares by ageBand first, then index
+     */
     int compareTo(Object t) {
-        if (! t?.index) return -1
-        return (t?.index - index)
+
+        if (t?.ageBand != ageBand)
+            return ageBand - t?.ageBand
+
+        if (! t?.index)
+            return -1
+
+        return (index - t?.index)
     }
 
     String toString() {

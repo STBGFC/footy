@@ -18,7 +18,7 @@ class EBYFL {
     def createPdf() {
 
         def players = Player.findAllByTeam(team, [sort:"person.familyName", order:"asc"])
-        def template = org.davisononline.footy.core.RegistrationService.class.getResourceAsStream("ebyfl-reg-2011_2012.pdf")
+        def template = org.davisononline.footy.core.RegistrationService.class.getResourceAsStream("ebyfl-reg.pdf")
 
         def teamY = 465
         def txaxis = [103,193,520]
