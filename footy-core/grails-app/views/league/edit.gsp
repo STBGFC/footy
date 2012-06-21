@@ -44,7 +44,7 @@
                                 </td>
                                 <td valign="top" class="value">
                                     <ul>
-                                    <g:each in="${Division.findAllByLeague(leagueInstance)}" var="d">
+                                    <g:each in="${leagueInstance.divisions}" var="d">
                                         <li><g:link controller="division" action="edit" id="${d.id}">U${d.ageBand} ${d.name}</g:link></li>
                                     </g:each>
                                     </ul>
