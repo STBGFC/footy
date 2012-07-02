@@ -28,47 +28,52 @@ class NEHYL {
         BaseFont bf_symbol = BaseFont.createFont(BaseFont.ZAPFDINGBATS, "Cp1252", false);
         Date today = new Date()
 
-        team.players.eachWithIndex { player, i ->
-            def page = i+1
-            if (page > 1) {
-                content.endText()
-                pdfStamper.insertPage(page, new Rectangle(0, 0))
-                pdfStamper.replacePage(pdfReader, 1, page)
-            }
+        def i = 0;
+        team.players.each { player ->
 
-            content = pdfStamper.getOverContent(page)
-            content.beginText()
+            if (player.currentRegistration?.inDate()) {
+                def page = i+1
+                if (page > 1) {
+                    content.endText()
+                    pdfStamper.insertPage(page, new Rectangle(0, 0))
+                    pdfStamper.replacePage(pdfReader, 1, page)
+                }
 
-            // team
-            content.setFontAndSize(bf, 10)
-            content.showTextAligned(PdfContentByte.ALIGN_LEFT, "${team.ageBand}", 300, 737, 0)
-            def GB = team.girlsTeam ? 478 : 542
-            content.showTextAligned(PdfContentByte.ALIGN_LEFT, "X", GB, 737, 0)
-            content.showTextAligned(PdfContentByte.ALIGN_LEFT, team.club.name, left-10, 704, 0)
-            content.showTextAligned(PdfContentByte.ALIGN_LEFT, team.name, 375, 704, 0)
+                content = pdfStamper.getOverContent(page)
+                content.beginText()
 
-            // player
-            def r = 0
-            def sh = 662
-            def rh = 18
-            content.showTextAligned(PdfContentByte.ALIGN_LEFT, player.person.familyName, left, sh + (r * rh), 0)
-            content.showTextAligned(PdfContentByte.ALIGN_LEFT, player.leagueRegistrationNumber, 485, sh + (r-- * rh), 0)
-            content.showTextAligned(PdfContentByte.ALIGN_LEFT, player.person.givenName, left, sh + (r-- * rh), 0)
-            content.showTextAligned(PdfContentByte.ALIGN_LEFT, player.dateOfBirth.format(DOB_FORMAT), left, sh + (r-- * rh), 0)
-            content.showTextAligned(PdfContentByte.ALIGN_LEFT, "${player.guardian.address.house} ${player.guardian.address.address}", left, sh + (r-- * rh), 0)
-            content.showTextAligned(PdfContentByte.ALIGN_LEFT, player.guardian.address.town, left, sh + (r-- * rh), 0)
-            r--
-            content.showTextAligned(PdfContentByte.ALIGN_LEFT, player.guardian.address.postCode, left, sh + (r-- * rh), 0)
+                // team
+                content.setFontAndSize(bf, 10)
+                content.showTextAligned(PdfContentByte.ALIGN_LEFT, "${team.ageBand}", 300, 737, 0)
+                def GB = team.girlsTeam ? 478 : 542
+                content.showTextAligned(PdfContentByte.ALIGN_LEFT, "X", GB, 737, 0)
+                content.showTextAligned(PdfContentByte.ALIGN_LEFT, team.club.name, left-10, 704, 0)
+                content.showTextAligned(PdfContentByte.ALIGN_LEFT, team.name, 375, 704, 0)
 
-            // dates
-            content.showTextAligned(PdfContentByte.ALIGN_LEFT, today.format("dd / MM / yyyy"), 455, 311, 0)
-            content.showTextAligned(PdfContentByte.ALIGN_LEFT, today.format("dd / MM / yyyy"), 475, 197, 0)
-            content.showTextAligned(PdfContentByte.ALIGN_LEFT, today.format("dd / MM / yyyy"), 475, 171, 0)
-            // tick marks
-            content.setFontAndSize(bf_symbol, 12)
-            def sh2 = 454
-            7.times {
-                content.showTextAligned(PdfContentByte.ALIGN_LEFT, "4", 540, sh2 - (it * 20), 0)
+                // player
+                def r = 0
+                def sh = 662
+                def rh = 18
+                content.showTextAligned(PdfContentByte.ALIGN_LEFT, player.person.familyName, left, sh + (r * rh), 0)
+                content.showTextAligned(PdfContentByte.ALIGN_LEFT, player.leagueRegistrationNumber, 485, sh + (r-- * rh), 0)
+                content.showTextAligned(PdfContentByte.ALIGN_LEFT, player.person.givenName, left, sh + (r-- * rh), 0)
+                content.showTextAligned(PdfContentByte.ALIGN_LEFT, player.dateOfBirth.format(DOB_FORMAT), left, sh + (r-- * rh), 0)
+                content.showTextAligned(PdfContentByte.ALIGN_LEFT, "${player.guardian.address.house} ${player.guardian.address.address}", left, sh + (r-- * rh), 0)
+                content.showTextAligned(PdfContentByte.ALIGN_LEFT, player.guardian.address.town, left, sh + (r-- * rh), 0)
+                r--
+                content.showTextAligned(PdfContentByte.ALIGN_LEFT, player.guardian.address.postCode, left, sh + (r-- * rh), 0)
+
+                // dates
+                content.showTextAligned(PdfContentByte.ALIGN_LEFT, today.format("dd / MM / yyyy"), 455, 311, 0)
+                content.showTextAligned(PdfContentByte.ALIGN_LEFT, today.format("dd / MM / yyyy"), 475, 197, 0)
+                content.showTextAligned(PdfContentByte.ALIGN_LEFT, today.format("dd / MM / yyyy"), 475, 171, 0)
+                // tick marks
+                content.setFontAndSize(bf_symbol, 12)
+                def sh2 = 454
+                7.times {
+                    content.showTextAligned(PdfContentByte.ALIGN_LEFT, "4", 540, sh2 - (it * 20), 0)
+                }
+                i++
             }
         }
 

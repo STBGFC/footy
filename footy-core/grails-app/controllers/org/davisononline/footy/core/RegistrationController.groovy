@@ -269,7 +269,7 @@ class RegistrationController {
                     endMessage = "${message(code:'org.davisononline.footy.core.registration.renewal.wrongdob.text', args:[flow.player], default:'{0}\'s DoB is supplied incorrectly.')}"
                     return end()
                 }
-                if (flow.player.currentRegistration.date > new Date()) {
+                if (flow.player.currentRegistration?.date > new Date()) {
                     endMessage = "${message(code:'org.davisononline.footy.core.registration.renewal.indate.text', args:[flow.player], default:'{0}\'s registration details are already up to date.  No re-registration is required at this time')}"
                     return end()
                 }

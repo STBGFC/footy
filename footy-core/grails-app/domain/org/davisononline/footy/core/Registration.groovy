@@ -40,4 +40,12 @@ class Registration implements Serializable, Comparable {
     String toString() {
         date.format('dd/MM/yyyy')
     }
+
+    boolean inDate() {
+        !expiresBefore(new Date())
+    }
+
+    boolean expiresBefore(Date dateToCheck) {
+        (date < dateToCheck)
+    }
 }
