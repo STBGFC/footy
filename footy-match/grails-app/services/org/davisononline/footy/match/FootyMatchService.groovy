@@ -29,6 +29,7 @@ class FootyMatchService {
         def fc = Fixture.createCriteria()
         def list = fc.list () {
             eq ("team", team)
+            ge ("dateTime", DateTimeUtils.getCurrentSeasonStart())
             order ("dateTime", "asc")
         }
         list
@@ -60,6 +61,7 @@ class FootyMatchService {
         def fc = Fixture.createCriteria()
         def list = fc.list (max:n) {
             eq ("team", team)
+            ge ("dateTime", DateTimeUtils.getCurrentSeasonStart())
             or {
                 ge ("dateTime", date)
                 eq ("played", false)
