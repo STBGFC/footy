@@ -25,7 +25,7 @@ class Team implements Serializable {
     byte[] photo
 
     static belongsTo = [club: Club]
-    static hasMany = [coaches: Person, players: Player]
+    static hasMany = [coaches: Person, players: Player, newsItems: NewsItem]
 
     static constraints = {
         division(nullable: true)
