@@ -60,7 +60,7 @@ class DivisionController {
             }
             divisionInstance.properties = params
             if (!divisionInstance.hasErrors() && divisionInstance.save(flush: true)) {
-                flash.message = "${message(code: 'default.updated.message', args: [message(code: 'division.label', default: 'Division'), divisionInstance.id])}"
+                flash.message = "${message(code: 'default.updated.message', args: [message(code: 'division.label', default: 'Division'), divisionInstance.toString()])}"
                 redirect(controller: "league", action: "edit", id: divisionInstance.league.id)
             }
             else {

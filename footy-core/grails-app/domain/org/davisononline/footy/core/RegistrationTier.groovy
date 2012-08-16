@@ -11,6 +11,7 @@ class RegistrationTier implements Serializable {
     double amount = 10.00
     double siblingDiscount = 0.00
     double repeatDiscount = 0.00
+    boolean enabled = true
 
     static constraints = {
         name (blank: false, unique: true)

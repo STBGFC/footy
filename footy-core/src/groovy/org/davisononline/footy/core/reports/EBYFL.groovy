@@ -33,42 +33,45 @@ class EBYFL {
         Date today = new Date()
 
         def content
-        players.eachWithIndex { player, i ->
+        def i = 0
+        players.each { player ->
 
-            def pg = (int) Math.ceil((i+1) / playersPerPage)
-            def pi = i % playersPerPage
+            if (player.currentRegistration?.inDate()) {
+                def pg = (int) Math.ceil((i+1) / playersPerPage)
+                def pi = i % playersPerPage
 
-            if (pi == 0) {
-                if (pg > 1) {
-                    content.endText()
-                    pdfStamper.insertPage(pg, new Rectangle(0, 0))
-                    pdfStamper.replacePage(pdfReader, 1, pg)
+                if (pi == 0) {
+                    if (pg > 1) {
+                        content.endText()
+                        pdfStamper.insertPage(pg, new Rectangle(0, 0))
+                        pdfStamper.replacePage(pdfReader, 1, pg)
+                    }
+
+                    content = pdfStamper.getOverContent(pg)
+                    content.beginText()
+
+                    // team
+                    content.setFontAndSize(bf, 12)
+                    content.showTextAligned(PdfContentByte.ALIGN_LEFT, "U${team.ageBand}", txaxis[0], teamY, 0)
+                    content.showTextAligned(PdfContentByte.ALIGN_LEFT, team.club.name, txaxis[1], teamY, 0)
+                    content.showTextAligned(PdfContentByte.ALIGN_LEFT, team.name, txaxis[2], teamY, 0)
+
+                    // secretary, date
+                    content.setFontAndSize(bf, 10)
+                    content.showTextAligned(PdfContentByte.ALIGN_LEFT, team.club.secretary.toString(), 470, 45, 0)
+                    content.showTextAligned(PdfContentByte.ALIGN_LEFT, today.format("dd   MM   yyyy"), 725, 45, 0)
                 }
 
-                content = pdfStamper.getOverContent(pg)
-                content.beginText()
-
-                // team
-                content.setFontAndSize(bf, 12)
-                content.showTextAligned(PdfContentByte.ALIGN_LEFT, "U${team.ageBand}", txaxis[0], teamY, 0)
-                content.showTextAligned(PdfContentByte.ALIGN_LEFT, team.club.name, txaxis[1], teamY, 0)
-                content.showTextAligned(PdfContentByte.ALIGN_LEFT, team.name, txaxis[2], teamY, 0)
-
-                // secretary, date
+                // player
+                content.showTextAligned(PdfContentByte.ALIGN_LEFT, "${player.person.givenName} ${player.person.familyName}", xaxis[0], p1y - (pi * ysize), 0)
+                content.showTextAligned(PdfContentByte.ALIGN_LEFT, player.dateOfBirth.format("dd/MM/yyyy"), xaxis[1], p1y - (pi * ysize), 0)
+                content.showTextAligned(PdfContentByte.ALIGN_LEFT, player.leagueRegistrationNumber, xaxis[2], p1y - (pi * ysize), 0)
+                if (player.guardian.address.house.size() > 8) content.setFontAndSize(bf, 6)
+                content.showTextAligned(PdfContentByte.ALIGN_LEFT, player.guardian.address.house, xaxis[3], p1y - (pi * ysize), 0)
                 content.setFontAndSize(bf, 10)
-                content.showTextAligned(PdfContentByte.ALIGN_LEFT, team.club.secretary.toString(), 470, 45, 0)
-                content.showTextAligned(PdfContentByte.ALIGN_LEFT, today.format("dd   MM   yyyy"), 725, 45, 0)
+                content.showTextAligned(PdfContentByte.ALIGN_LEFT, player.guardian.address.postCode, xaxis[4], p1y - (pi * ysize), 0)
+                i++
             }
-
-            // player
-            content.showTextAligned(PdfContentByte.ALIGN_LEFT, "${player.person.givenName} ${player.person.familyName}", xaxis[0], p1y - (pi * ysize), 0)
-            content.showTextAligned(PdfContentByte.ALIGN_LEFT, player.dateOfBirth.format("dd/MM/yyyy"), xaxis[1], p1y - (pi * ysize), 0)
-            content.showTextAligned(PdfContentByte.ALIGN_LEFT, player.leagueRegistrationNumber, xaxis[2], p1y - (pi * ysize), 0)
-            if (player.guardian.address.house.size() > 8) content.setFontAndSize(bf, 6)
-            content.showTextAligned(PdfContentByte.ALIGN_LEFT, player.guardian.address.house, xaxis[3], p1y - (pi * ysize), 0)
-            content.setFontAndSize(bf, 10)
-            content.showTextAligned(PdfContentByte.ALIGN_LEFT, player.guardian.address.postCode, xaxis[4], p1y - (pi * ysize), 0)
-
         }
 
         if (content) content.endText()

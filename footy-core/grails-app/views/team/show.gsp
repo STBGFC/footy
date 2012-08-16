@@ -160,6 +160,7 @@
                 </g:if>
 
             </div>
+
             <div class="right sidebar" id="sidebar">
 
                 <div class="section">
@@ -273,7 +274,6 @@
                     </div>
 
                 </div>
-
             </div>
 
             <div class="clearer">&nbsp;</div>

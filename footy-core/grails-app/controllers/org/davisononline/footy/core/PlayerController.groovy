@@ -10,7 +10,10 @@ class PlayerController {
 
     static allowedMethods = [save: "POST", update: "POST"]
 
+    def playerService
+
     def exportService
+
 
     /**
      * default action redirect to list
@@ -132,24 +135,13 @@ class PlayerController {
                 }
             }
 
-            // TODO move to tx service
-            // This often throws an NPE in prod (only) which seems to be due to:
-            // http://jira.grails.org/browse/GRAILS-7471
-            try {
-                playerInstance.properties = params
-                log.debug playerInstance
-                if (!playerInstance.hasErrors() && !playerInstance?.person?.hasErrors() && playerInstance.person.save() && playerInstance.save()) {
-                    flash.message = "${message(code: 'default.updated.message', args: [message(code: 'player.label', default: ''), playerInstance])}"
-                    redirect(session.breadcrumb ? [uri: session.breadcrumb] : [action: "list"])
-                }
-                else {
-                    render(view: "edit", model: modelForPlayerEdit(playerInstance))
-                }
+            playerInstance.properties = params
+            log.debug playerInstance
+            if (!playerInstance.hasErrors() && !playerInstance?.person?.hasErrors() && playerService.updatePlayer(playerInstance)) {
+                flash.message = "${message(code: 'default.updated.message', args: [message(code: 'player.label', default: ''), playerInstance])}"
+                redirect(session.breadcrumb ? [uri: session.breadcrumb] : [action: "list"])
             }
-            catch (NullPointerException npe) {
-                log.error "NPE saving player data"
-                log.error "Player is [${playerInstance}]"
-                log.error "Errors are [${playerInstance?.errors}]"
+            else {
                 render(view: "edit", model: modelForPlayerEdit(playerInstance))
             }
         }
@@ -163,7 +155,8 @@ class PlayerController {
         def playerInstance = Player.get(params.id)
         if (playerInstance) {
             try {
-                playerInstance.delete(flush: true)
+                // also remove person record if no qualifications (ie ref or coach)
+                playerService.deletePlayer(playerInstance, (playerInstance.person.qualifications?.size() == 0))
                 flash.message = "${message(code: 'default.deleted.message', args: [message(code: 'player.label', default: 'Player'), params.id])}"
             }
             catch (org.springframework.dao.DataIntegrityViolationException e) {

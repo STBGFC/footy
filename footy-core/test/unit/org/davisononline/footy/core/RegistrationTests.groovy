@@ -11,7 +11,9 @@ class RegistrationTests extends GrailsUnitTestCase {
         super.tearDown()
     }
 
-    void testSomething() {
-
+    void testCheckDate() {
+        def r = new Registration()
+        r.date = new Date('2012/05/15')
+        assert r.expiresBefore(new Date('2012/05/16'))
     }
 }

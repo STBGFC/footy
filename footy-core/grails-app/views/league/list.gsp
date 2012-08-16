@@ -28,7 +28,7 @@
                     <g:each in="${leagueInstanceList}" status="i" var="leagueInstance">
                         <tr class="${(i % 2) == 0 ? 'odd' : 'even'}">
                             <td><g:link action="edit" id="${leagueInstance.id}">${fieldValue(bean: leagueInstance, field: "name")}</g:link></td>
-                            <td>${Division.countByLeague(leagueInstance)} divisions created</td>
+                            <td>${leagueInstance.divisions.size()} divisions created</td>
                         </tr>
                     </g:each>
                     </tbody>
