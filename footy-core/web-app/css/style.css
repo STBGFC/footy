@@ -285,7 +285,6 @@ td.errors textarea {
 
 /* ACTION BUTTONS */
 .buttons {
-    float: left;
     width: 490px;
     background: #fff url(../images/skin/shadow.jpg) bottom repeat-x;
     border: 1px solid #ccc;
@@ -505,7 +504,6 @@ div.chrm {
 /* DIALOG */
 
 .dialog {
-    float: left;
     width: 490px;
     padding-right: 40px;
 }
@@ -518,7 +516,6 @@ div.chrm {
     background-color: #eee;
     padding: 5px 0;
     margin: 10px 0 5px;
-    border-radius: 6px;
 }
 
 .dialog ul {
