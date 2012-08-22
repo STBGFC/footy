@@ -6,13 +6,13 @@
         <title><g:message code="org.davisononline.org.footy.core.registration.renewal.selectplayer.label" default="Select Player" /></title>
     </head>
     <body>
+        <h3>
+           <g:message
+                   code="org.davisononline.footy.core.registration.renew.selectplayer.text"
+                   default="Please select the player to renew a registration for"/>
+        </h3>
         <div class="dialog">
             <g:form name="registration" action="renewRegistration">
-                <p>
-                   <g:message
-                           code="org.davisononline.footy.core.registration.renew.selectplayer.text"
-                           default="Please select the player to renew a registration for"/>
-                </p>
 
                 <table>
                     <tbody>

@@ -262,7 +262,7 @@
 
                     <div class="section-content">
                         <ul class="nice-list">
-                            <g:each in="${otherTeamsThisAge.sort {a,b-> (a?.division && b?.division) ? b.division.compareTo(a.division) : 0}}" var="t">
+                            <g:each in="${otherTeamsThisAge.sort {a,b-> (a?.division && b?.division) ? a.division.compareTo(b.division) : 0}}" var="t">
                             <g:if test="${t != teamInstance}">
                             <li><g:link action="show" params="${[ageBand:t.ageBand, teamName:t.name]}">U${t.ageBand}&nbsp;${t.name}</g:link></li>
                             </g:if>

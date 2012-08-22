@@ -1,5 +1,5 @@
 
-                                    <ul>
+                                    <ul class="nice-list">
                                     <g:each in="${person.qualifications}" var="qual">
                                     <g:set var="now" value="${new Date()}"/>
                                     <g:set var="qualClass" value="${(qual.expiresOn && qual.expiresOn < now) ? 'qualExpired' : 'qualInDate'}"/>

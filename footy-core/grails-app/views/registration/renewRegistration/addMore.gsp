@@ -6,13 +6,13 @@
         <title><g:message code="org.davisononline.org.footy.core.registration.renewal.confirms.label" default="Confirm Registrations" /></title>
     </head>
     <body>
+        <h3>
+           <g:message
+                   code="org.davisononline.footy.core.registration.renew.addmore.text"
+                   default="The following player(s) are selected for registration renewal.  Please choose whether to re-register more or continue to payment"/>
+        </h3>
         <div class="dialog">
             <g:form name="registration" action="renewRegistration">
-                <p>
-                   <g:message
-                           code="org.davisononline.footy.core.registration.renew.addmore.text"
-                           default="The following player(s) are selected for registration renewal.  Please choose whether to re-register more or continue to payment"/>
-                </p>
 
                 <ul>
                     <g:each in="${registeredPlayers}" var="p">

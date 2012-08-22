@@ -74,7 +74,8 @@ class FootyTagLib {
         def havePhoto = attrs.team.photo?.size() > 0
 
         out << "<img class='shadow' id='teamphoto'"
-        out << "    src='${havePhoto ? createLink(controller:'team', action:'photo', id:attrs.team.id) : createLinkTo(dir:'images', file:'noteam.png')}'"
+        out << "    src='${havePhoto ? createLink(controller:'team', action:'photo', id:attrs.team.id) : createLinkTo(dir:'images', file:'noteam.png', plugin:'footy-core')}'"
+        out << "    style='${attrs.style}'"
         out << "    alt='TeamPhoto'/>"
     }
 

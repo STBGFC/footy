@@ -6,11 +6,9 @@
                         <g:message code="org.davisononline.footy.match.fixturecal.title" default="Fixture Calendar"/>
                     </div>
                     <div class="right">
-                    <g:if test="${totalFixtureCount > 0}">
                         <g:link controller="fixture" action="list" id="${myteam.id}" title="View All">
-                            <r:img dir="images/skin" file="database_table.png" plugin="footy-core" alt="View All"/>
+                            <r:img dir="images" file="view.png" plugin="footy-core" alt="View All"/>
                         </g:link>
-                    </g:if>
                         <a href="${createLink(absolute:true, controller:'fixture', action:'calendar', id:myteam.id).replace('http','webcal').replace('https','webcal')}"
                             title="Subscribe to ${myteam} calendar (Outlook/Thunderbird/iPhone etc.)">
                             <r:img dir="images" file="cal.png" plugin="footy-core" alt="ICS"/>
@@ -54,13 +52,11 @@
                                         on500="alert('An error occurred attempting to delete this fixture')"
                                         on404="alert('Fixture not found')"
                                         title="delete fixture (if resources have been assigned, please also liaise with fixture sec.)"
-                                ><r:img dir="images/skin" file="database_delete.png" plugin="footy-core" alt="del"/></g:remoteLink>
+                                ><r:img dir="images" file="delete.png" plugin="footy-core" alt="del"/></g:remoteLink>
                                 <g:if test="${fixture.homeGame && (fixture.resources?.size() > 0 || fixture.referee)}">
                                 <g:link controller="resource" action="summary" params="${[year:fixture.dateTime.year+1900, month:fixture.dateTime.month+1, day:fixture.dateTime.date]}">
-                                    <img
-                                        src="${createLinkTo(dir:'images', file:'whistle_icon.png', plugin:'footy-match')}"
-                                        alt=""
-                                        title="Resources have been assigned to this fixture. Click to view the summary sheet" />
+                                    <r:img dir="images" file="resources.png" plugin="footy-match" alt=""
+                                        title="Resources have been assigned to this fixture. Click to view the summary sheet"/>
                                 </g:link>
                                 </g:if>
                             </footy:isManager>
@@ -86,7 +82,7 @@
                     </g:else>
 
                     <footy:isManager team="${myteam}">
-                    <r:img dir="images/skin" file="database_add.png" plugin="footy-core"/>
+                    <r:img dir="images" file="add.png" plugin="footy-core"/>
                     <modalbox:createLink
                             controller="fixture"
                             action="createDialog"
