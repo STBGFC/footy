@@ -9,7 +9,7 @@ import net.fortuna.ical4j.model.property.DtStamp
 @Secured(["ROLE_COACH"])
 class FixtureController {
 
-    private static final String ICAL_DTFORMAT = "yyyyMMdd'T'HHmmSS'Z'"
+    private static final String ICAL_DTFORMAT = "yyyyMMdd'T'HHmmSS"
 
     def footyMatchService
 
@@ -215,7 +215,8 @@ class FixtureController {
             return
         }
 
-        def fixtures = Fixture.findAllByTeam(t, [sort: 'dateTime', order: 'asc'])
+        // last 3 months and all future dates
+        def fixtures = Fixture.findAllByTeamAndDateTimeGreaterThan(t, (new Date() - 90), [sort: 'dateTime', order: 'asc'])
 
         def link = g.createLink(
             absolute:true,
@@ -237,6 +238,9 @@ class FixtureController {
                 cal.time = f.dateTime
                 cal.add(Calendar.MINUTE,90)
 
+                def loc = (f.resources ? f.resources.join(',') + ', ' : '')
+                loc += (t.club?.address?.postCode ?: 'Home')
+
                 vevent() {
                     uid(f.guid)
                     summary(f.toString())
@@ -244,8 +248,8 @@ class FixtureController {
                     dtstart(f.dateTime.format(ICAL_DTFORMAT))
                     dtend(cal.time.format(ICAL_DTFORMAT))
                     action('DISPLAY')
-                    if (f.homeGame) location(t.club?.address?.postCode)
-                    description(f.matchReport ?: link)
+                    if (f.homeGame) location(loc)
+                    if (f.matchReport) description(f.matchReport ?: '')
                 }
 
             }
