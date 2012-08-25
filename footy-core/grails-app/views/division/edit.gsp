@@ -10,10 +10,10 @@
         </title>
     </head>
     <body>
+        <h1>
+            Create or edit the division details below
+        </h1>
         <div class="dialog">
-            <p>
-                Create or edit the division details below
-            </p>
             <div class="nav">
                 <g:render template="/shared/editNavButtons" model="${[entityName:entityName]}"/>
             </div>

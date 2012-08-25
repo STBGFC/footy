@@ -6,6 +6,7 @@
         <title><g:message code="org.davisononline.org.footy.core.registration.label" default="Registration Type" /></title>
     </head>
     <body>
+        <h1><g:message code="org.davisononline.org.footy.core.registration.label" default="Registration Type" /></h1>
         <div class="dialog">
             <g:form name="registration" action="registerPlayer">
                 <p>

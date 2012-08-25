@@ -7,6 +7,7 @@
         <script type="text/javascript">var focusField='givenName'</script>
     </head>
     <body>
+        <h1><g:message code="default.guardiandetails.label" default="Enter Parent/Guardian Details" /></h1>
         <div class="dialog">
             <g:form name="registration" action="registerPlayer">
                 <p>

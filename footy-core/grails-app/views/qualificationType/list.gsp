@@ -7,10 +7,10 @@
         <title><g:message code="default.list.label" args="[entityName]" /></title>
     </head>
     <body>
+        <h1>
+            <g:message code="org.davisononoline.footy.core.qualificationtypelistview.text" default="Qualifications that can be assigned to people at the club"/>
+        </h1>
         <div class="list">
-            <p>
-                <g:message code="org.davisononoline.footy.core.qualificationtypelistview.text" default="Qualifications that can be assigned to people at the club"/>
-            </p>
             <div class="nav">
                 <span class="menuButton"><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></span>
                 <span class="menuButton"><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></span>

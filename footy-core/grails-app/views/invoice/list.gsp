@@ -8,10 +8,10 @@
         <export:resource/>
     </head>
     <body>
+        <h1>
+            <g:message code="org.davisononline.footy.core.payment.text" default="Payment reconciliations"/>
+        </h1>
         <div class="list">
-            <p>
-                <g:message code="org.davisononline.footy.core.payment.text" default="Payment reconciliations"/>
-            </p>
             <div class="nav">
                 <span class="menuButton"><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></span>
                 <span class="menuButton"><g:link class="list" action="unpaid"><g:message code="org.davisononline.footy.core.unpaidinvoicelist.label" default="Unpaid invoices" /></g:link></span>

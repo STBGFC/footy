@@ -7,10 +7,10 @@
         <title><g:message code="default.list.label" args="[entityName]" /></title>
     </head>
     <body>
+        <h1>
+            <g:message code="org.davisononoline.footy.core.registrationtierlistview.text" default="Current registration tiers"/>
+        </h1>
         <div class="list">
-            <p>
-                <g:message code="org.davisononoline.footy.core.registrationtierlistview.text" default="Current registration tiers"/>
-            </p>
             <div class="nav">
                 <span class="menuButton"><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></span>
                 <span class="menuButton"><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></span>
@@ -24,6 +24,7 @@
                         <g:sortableColumn property="amount" title="${message(code: 'registrationTier.amount.label', default: 'Amount')}" />
                         <g:sortableColumn property="repeatDiscount" title="${message(code: 'registrationTier.repeatDiscount.label', default: 'Repeat Discount')}" />
                         <g:sortableColumn property="siblingDiscount" title="${message(code: 'registrationTier.siblingDiscount.label', default: 'Sibling Discount')}" />
+                        <g:sortableColumn property="enabled" title="${message(code: 'registrationTier.enabled.label', default: 'Enabled')}" />
                     </tr>
                 </thead>
                 <tbody>
@@ -34,6 +35,7 @@
                         <td><g:formatNumber number="${registrationTierInstance.amount}" type="currency" currencyCode="${currency}" /></td>
                         <td><g:formatNumber number="${registrationTierInstance.repeatDiscount}" type="currency" currencyCode="${currency}" /></td>
                         <td><g:formatNumber number="${registrationTierInstance.siblingDiscount}" type="currency" currencyCode="${currency}" /></td>
+                        <td>${registrationTierInstance.enabled}</td>
                     </tr>
                 </g:each>
                 </tbody>

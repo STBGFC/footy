@@ -7,6 +7,7 @@
         <script type="text/javascript">var focusField='team.id'</script>
     </head>
     <body>
+        <h1><g:message code="default.paymentdetails.label" default="Assign Team" /></h1>
         <div class="dialog">
             <g:form name="registration" action="registerPlayer"> 
                 <p>

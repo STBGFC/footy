@@ -5,18 +5,18 @@
             default="Change Password"/></title>
 	</head>
     <body>
+        <h1>
+            <g:message code="org.davisononline.footy.core.body.changepassword"
+                default="Enter password details below"/>
+        </h1>
         <div class="dialog">
-            <p>
-                <g:message code="org.davisononline.footy.core.body.changepassword"
-                    default="Password can be changed here"/>
-            </p>
 
             <g:form action='updatePassword' name='passwordResetForm' autocomplete='off'>
             <table>
                 <tbody>
                 <tr class="prop">
                     <td  class="name">
-                        <label for="username"><g:message code="org.davisononline.org.footy.core.username.label" default="User Name" /></label>
+                        <label><g:message code="org.davisononline.org.footy.core.username.label" default="User Name" /></label>
                     </td>
                     <td  class="value ${hasErrors(bean: personCommand, field: 'familyName', 'errors')}">
                         <strong>${username}</strong>

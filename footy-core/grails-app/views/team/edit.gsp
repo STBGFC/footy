@@ -7,10 +7,10 @@
         <title><g:message code="default.edit.label" args="[entityName]" /></title>
     </head>
     <body>
+        <h1>
+            Create or edit details of the team below
+        </h1>
         <div class="dialog">
-            <p>
-                Create or edit details of the team below
-            </p>
             <div class="nav">
                 <g:render template="/shared/editNavButtons" model="${[entityName:entityName]}"/>
             </div>

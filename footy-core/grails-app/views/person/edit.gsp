@@ -8,7 +8,7 @@
     <body>
         <div class="main" id="main-two-columns">
 			<div class="left" id="main-left">
-
+                <h1>${personCommand?.id ? "Edit details for: " + personCommand : "Add New Person"}</h1>
                 <div class="dialog">
                     <g:if test="${!personCommand?.id}">
                     <p>
@@ -119,11 +119,11 @@
 				</div>
                 </g:if>
                 </sec:ifAnyGranted>
+            </g:if>
             </div>
 
             <div class="clearer"></div>
 
         </div>
-        </g:if>
     </body>
 </html>

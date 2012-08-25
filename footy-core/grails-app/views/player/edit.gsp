@@ -6,10 +6,10 @@
         <title>Edit ${playerInstance.person}</title>
     </head>
     <body>
+        <h1>
+            Amend any details of the player you need to, and then click "Update"
+        </h1>
         <div class="dialog">
-            <p>
-                Amend any details of the player you need to, and then click "Update"
-            </p>
             
             <div class="nav">
                 <g:render template="/shared/editNavButtons" model="${[entityName:entityName]}"/>
