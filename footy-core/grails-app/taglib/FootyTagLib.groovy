@@ -9,6 +9,8 @@ class FootyTagLib {
 
     def footySecurityService
 
+    def random = Random.newInstance()
+
 
     /**
      * renders a tooltip within the body of a link..
@@ -224,11 +226,8 @@ class FootyTagLib {
         if (!div || !div?.code) return
 
         out << """
-            <div id="lrep${div.code}">Data loading....<a href="http://thefa.com/FULL-TIME">FULL-TIME Home</a></div>
-            <script language="javascript" type="text/javascript">
-            var lrcode = '${div.code}'
-            </script>
-            <script language="Javascript" type="text/javascript" src="http://full-time.thefa.com/client/api/cs1.js"></script>
+            <div id="lrep${div.code}">League table loading....</div>
+            <script type="text/javascript" src="https://full-time.thefa.com/js/cs1.do?cs=${div.code}&random=${random.nextLong()}"></script>
             <p class="footer">(League table is supplied by the FA's "FullTime" web site. All links will take you to the relevant page on that site)</p>
         """
     }
