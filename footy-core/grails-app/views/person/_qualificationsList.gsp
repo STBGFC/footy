@@ -11,7 +11,7 @@
                                                     params="[personId:person.id,qualificationId:qual.id]"
                                                     update="qualifications"
                                                     title="delete"
-                                            ><img src="${createLinkTo(dir:'images/skin', file:'database_delete.png')}" alt="del"/></g:remoteLink>
+                                            ><img src="${createLinkTo(dir:'images', file:'delete.png', plugin: 'footy-core')}" alt="del"/></g:remoteLink>
                                             </sec:ifAnyGranted>
                                         </li>
                                     </g:each>
