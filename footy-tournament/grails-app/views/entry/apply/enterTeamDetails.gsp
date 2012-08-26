@@ -3,9 +3,10 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title><g:message code="enter.teamdetails.label" default="Enter Team Details" /></title>
+        <title><g:message code="org.davisononline.footy.tournament.views.entry.apply.teamdetails.title" default="Enter Team Details" /></title>
     </head>
     <body>
+        <h1><g:message code="org.davisononline.footy.tournament.views.entry.apply.teamdetails.title" default="Enter Team Details" /></h1>
         <div class="dialog">
             <g:form action="apply" >
                 <p>

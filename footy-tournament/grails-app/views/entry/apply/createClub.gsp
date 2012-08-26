@@ -6,17 +6,18 @@
         <title><g:message code="default.create.label" args="[entityName]" /></title>
     </head>
     <body>
+        <h1><g:message code="default.create.label" args="[entityName]" /></h1>
         <div class="dialog">
             <g:form action="apply" >
                 <p>
-                    Enter the details for your club below, including the affiliation county and number if you have them.
+                    Enter the details for your club below, including the affiliation county and number (both mandatory).
                 </p>
                     <table>
                         <tbody>
                         
                             <tr class="prop">
                                 <td  class="name">
-                                    <label for="name"><g:message code="club.name.label" default="Name" /></label>
+                                    <label for="name"><g:message code="org.davisononline.footy.tournament.views.entry.apply.clubname.label" default="Club Name" /></label>
                                 </td>
                                 <td  class="value ${hasErrors(bean: clubCommand, field: 'name', 'errors')}">
                                     <g:textField name="name" value="${clubCommand?.name}" />
@@ -26,7 +27,7 @@
                         
                             <tr class="prop">
                                 <td  class="name">
-                                    <label for="colours"><g:message code="club.colours.label" default="Colours" /></label>
+                                    <label for="colours"><g:message code="org.davisononline.footy.tournament.views.entry.apply.clubcolours.label" default="Colours" /></label>
                                 </td>
                                 <td  class="value ${hasErrors(bean: clubCommand, field: 'colours', 'errors')}">
                                     <g:textField name="colours" value="${clubCommand?.colours}" />
@@ -36,7 +37,7 @@
                         
                             <tr class="prop">
                                 <td  class="name">
-                                    <label for="clubSecretaryName"><g:message code="club.clubSecretaryName.label" default="Club Secretary Name" /></label>
+                                    <label for="clubSecretaryName"><g:message code="org.davisononline.footy.tournament.views.entry.apply.clubclubSecretaryName.label" default="Club Secretary Name" /></label>
                                 </td>
                                 <td  class="value ${hasErrors(bean: clubCommand, field: 'clubSecretaryName', 'errors')}">
                                     <g:textField name="clubSecretaryName" value="${clubCommand?.clubSecretaryName}" />
@@ -46,7 +47,7 @@
                         
                             <tr class="prop">
                                 <td  class="name">
-                                    <label for="clubSecretaryEmail"><g:message code="club.clubSecretaryEmail.label" default="Club Secretary Email" /></label>
+                                    <label for="clubSecretaryEmail"><g:message code="org.davisononline.footy.tournament.views.entry.apply.clubSecretaryEmail.label" default="Club Secretary Email" /></label>
                                 </td>
                                 <td  class="value ${hasErrors(bean: clubCommand, field: 'clubSecretaryEmail', 'errors')}">
                                     <g:textField name="clubSecretaryEmail" value="${clubCommand?.clubSecretaryEmail}" />
@@ -56,7 +57,7 @@
 
                             <tr class="prop">
                                 <td  class="name">
-                                    <label for="clubSecretaryPhone"><g:message code="club.clubSecretaryPhone.label" default="Club Secretary Phone" /></label>
+                                    <label for="clubSecretaryPhone"><g:message code="org.davisononline.footy.tournament.views.entry.apply.clubSecretaryPhone.label" default="Club Secretary Phone" /></label>
                                 </td>
                                 <td  class="value ${hasErrors(bean: clubCommand, field: 'clubSecretaryPhone', 'errors')}">
                                     <g:textField name="clubSecretaryPhone" value="${clubCommand?.clubSecretaryPhone}" />
@@ -66,7 +67,7 @@
                         
                             <tr class="prop">
                                 <td  class="name">
-                                    <label for="clubSecretaryAddress.house"><g:message code="club.clubSecretaryAddress.label" default="Club Secretary Address" /></label>
+                                    <label for="clubSecretaryAddress.house"><g:message code="org.davisononline.footy.tournament.views.entry.apply.clubSecretaryAddress.label" default="Club Secretary Address" /></label>
                                 </td>
                             <td  class="value">
                                 House number or name:<br/>
@@ -86,7 +87,7 @@
                         
                             <tr class="prop">
                                 <td  class="name">
-                                    <label for="countyAffiliatedTo"><g:message code="club.countyAffiliatedTo.label" default="County Affiliated To" /></label>
+                                    <label for="countyAffiliatedTo"><g:message code="org.davisononline.footy.tournament.views.entry.apply.countyAffiliatedTo.label" default="County Affiliated To" /></label>
                                 </td>
                                 <td  class="value ${hasErrors(bean: clubCommand, field: 'countyAffiliatedTo', 'errors')}">
                                     <g:textField name="countyAffiliatedTo" value="${clubCommand?.countyAffiliatedTo}" />
@@ -96,7 +97,7 @@
                         
                             <tr class="prop">
                                 <td  class="name">
-                                    <label for="countyAffiliationNumber"><g:message code="club.countyAffiliationNumber.label" default="County Affiliation Number" /></label>
+                                    <label for="countyAffiliationNumber"><g:message code="org.davisononline.footy.tournament.views.entry.apply.countyAffiliationNumber.label" default="County Affiliation Number" /></label>
                                 </td>
                                 <td  class="value ${hasErrors(bean: clubCommand, field: 'countyAffiliationNumber', 'errors')}">
                                     <g:textField name="countyAffiliationNumber" value="${clubCommand?.countyAffiliationNumber}" />

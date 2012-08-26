@@ -2,10 +2,11 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title><g:message code="select.club.heading" default="Select Club" /></title>
+        <title><g:message code="org.davisononline.footy.tournament.views.entry.apply.selectclub.title" default="Select Club" /></title>
     </head>
 
     <body>
+        <h1><g:message code="org.davisononline.footy.tournament.views.entry.apply.selectclub.title" default="Select Club" /></h1>
         <div class="dialog">
         <g:form action="apply">
         <p>

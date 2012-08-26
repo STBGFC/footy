@@ -3,9 +3,10 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title><g:message code="enter.contactdetails.label" default="${entryInstance.tournament.name} Entry" /></title>
+        <title><g:message code="org.davisononline.footy.tournament.views.entry.apply.title" default="${entryInstance.tournament.name} Entry" /></title>
     </head>
     <body>
+        <h1><g:message code="org.davisononline.footy.tournament.views.entry.apply.title" default="${entryInstance.tournament.name} Entry" /></h1>
         <div class="dialog">
             <g:form action="apply" >
                 <p>
@@ -20,7 +21,7 @@
                         
                             <tr class="prop">
                                 <td  class="name">
-                                    <label for="givenName"><g:message code="entry.contactGivenName.label" default="Given Name" /></label>
+                                    <label for="givenName"><g:message code="org.davisononline.footy.tournament.views.entry.apply.contactGivenName.label" default="First (Given) Name" /></label>
                                 </td>
                                 <td  class="value ${hasErrors(bean: personInstance, field: 'givenName', 'errors')}">
                                     <g:textField name="givenName" value="${personInstance?.givenName}" />
@@ -30,7 +31,7 @@
                         
                             <tr class="prop">
                                 <td  class="name">
-                                    <label for="familyName"><g:message code="entry.contactFamilyName.label" default="Family Name" /></label>
+                                    <label for="familyName"><g:message code="org.davisononline.footy.tournament.views.entry.apply.contactFamilyName.label" default="Last (Family) Name" /></label>
                                 </td>
                                 <td  class="value ${hasErrors(bean: personInstance, field: 'familyName', 'errors')}">
                                     <g:textField name="familyName" value="${personInstance?.familyName}" />
@@ -40,7 +41,7 @@
                         
                             <tr class="prop">
                                 <td  class="name">
-                                    <label for=phone1><g:message code="entry.contactPhone.label" default="Contact Tel." /></label>
+                                    <label for=phone1><g:message code="org.davisononline.footy.tournament.views.entry.apply.contactPhone.label" default="Contact Tel." /></label>
                                 </td>
                                 <td  class="value ${hasErrors(bean: personInstance, field: 'phone1', 'errors')}">
                                     <g:textField name="phone1" value="${personInstance?.phone1}" />
@@ -50,7 +51,7 @@
                         
                             <tr class="prop">
                                 <td  class="name">
-                                    <label for="email"><g:message code="entry.email.label" default="Email" /></label>
+                                    <label for="email"><g:message code="org.davisononline.footy.tournament.views.entry.apply.email.label" default="Email" /></label>
                                 </td>
                                 <td  class="value ${hasErrors(bean: personInstance, field: 'email', 'errors')}">
                                     <g:textField name="email" value="${personInstance?.email}" />

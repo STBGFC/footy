@@ -200,7 +200,7 @@ class EntryController {
         }
 
         confirmEntry {
-            on("back").to("enterTeamDetails")
+            on("back").to("selectTeam")
             
             // if (flow.newClub == null) the following
             // should go back to "selectTeam" instead
