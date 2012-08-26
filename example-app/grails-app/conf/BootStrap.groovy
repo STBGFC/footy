@@ -127,15 +127,18 @@ class BootStrap {
             name: 'Rascals'
         ).save()
         if (RegistrationTier.count() == 0) {
+            def date = new Date() + 300
             new RegistrationTier(
                     name: "Junior",
                     amount: 60.00,
-                    siblingDiscount: 15.00
+                    siblingDiscount: 15.00,
+                    validUntil: date
             ).save()
             new RegistrationTier(
                     name: "Senior",
                     amount: 80.00,
-                    siblingDiscount: 15.00
+                    siblingDiscount: 15.00,
+                    validUntil: date
             ).save()
         }        
         
