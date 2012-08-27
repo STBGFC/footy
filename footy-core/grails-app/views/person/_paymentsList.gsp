@@ -1,6 +1,6 @@
 <%@ page import="org.grails.paypal.Payment" %>
 
-                                    <ul class="clear">
+                                    <ul class="nice-list">
                                     <g:each in="${payments.sort {a,b -> b.transactionId.compareTo(a.transactionId)}}" var="payment">
                                         <li>
                                         <footy:paymentStatus payment="${payment}"/>

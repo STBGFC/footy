@@ -7,6 +7,7 @@
         <script type="text/javascript">var focusField='person.givenName'</script>
     </head>
     <body>
+        <h1><g:message code="default.paymentdetails.label" default="${registration.tier.name} Registration" /></h1>
         <div class="dialog">
             <g:form name="registration" action="registerPlayer">
                 <p><g:message code="org.davisononline.footy.registration.views.registration.registerPlayer.enterPlayerDetails.para1"

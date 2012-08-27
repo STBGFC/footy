@@ -1,4 +1,4 @@
-package org.davisonononline.footy.tournament
+package org.davisononline.footy.tournament
 
 import org.grails.paypal.Payment
 import org.grails.paypal.PaymentItem

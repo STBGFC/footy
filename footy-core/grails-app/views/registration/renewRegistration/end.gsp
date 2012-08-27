@@ -6,10 +6,8 @@
         <title><g:message code="org.davisononline.org.footy.core.registration.renewal.end.label" default="Renewal Ended" /></title>
     </head>
     <body>
-        <div class="dialog">
-            <p>
-                ${endMessage}
-            </p>
-        </div>
+        <h3>
+            ${endMessage}
+        </h3>
     </body>
 </html>

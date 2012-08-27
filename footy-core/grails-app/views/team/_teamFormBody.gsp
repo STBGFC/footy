@@ -43,17 +43,17 @@
                         
                             <tr class="prop">
                                 <td  class="name">
-                                    <label for="division"><g:message code="entry.division.label" default="Division" /></label>
+                                    <label for="division.id"><g:message code="entry.division.label" default="Division" /></label>
                                 </td>
                                 <td  class="value ${hasErrors(bean: teamCommand, field: 'division', 'errors')}">
-                                    <g:select name="division.id" from="${Division.list()}" value="${teamCommand?.division?.id}" optionKey="id" noSelection="${['null':'-- none --']}"/>
+                                    <g:select name="division.id" from="${Division.list([sort:'ageBand',order:'asc'])}" value="${teamCommand?.division?.id}" optionKey="id" noSelection="${['null':'-- none / not listed --']}"/>
                                     <g:render template="/shared/fieldError" model="['instance':teamCommand,'field':'division']" plugin="footy-core"/>
                                 </td>
                             </tr>
 
                             <tr class="prop">
                                 <td  class="name">
-                                    <label for="sponsor"><g:message code="entry.sponsor.label" default="Sponsor" /></label>
+                                    <label for="sponsor.id"><g:message code="entry.sponsor.label" default="Sponsor" /></label>
                                 </td>
                                 <td  class="value ${hasErrors(bean: teamCommand, field: 'sponsor', 'errors')}">
                                     <g:select name="sponsor.id" from="${Sponsor.list()}" value="${teamCommand?.sponsor?.id}" optionKey="id" noSelection="${['null':'-- none --']}"/>

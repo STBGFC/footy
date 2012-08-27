@@ -12,7 +12,7 @@
             The following teams are already in our database for your club.  If
             you wish to register one or more of them for this tournament, please
             check the box next to the team name.  Teams in grey, without a check
-            box have already been registered.
+            box have already been registered for this tournament.
         </p>
         <p>
             If you need to add a team that's not currently listed, please click
@@ -23,12 +23,12 @@
         <g:each in="${teamList}" var="team">
             <g:if test="${allEntries?.flatten().contains(team)}">
             <li class="teamRegistered">
-                ${team}
+                ${team} (${team.manager})
             </li>
             </g:if>
             <g:else>
             <li class="teamNotRegistered">
-                <g:checkBox name="teamIds" value="${team.id}" checked="${false}"/> ${team}
+                <g:checkBox name="teamIds" value="${team.id}" checked="${false}"/> <strong>${team}</strong> (${team.manager})
             </li>
             </g:else>
         </g:each>

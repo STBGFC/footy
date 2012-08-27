@@ -41,14 +41,15 @@
         </sec:ifLoggedIn>
 
         <div class="body">
-            <h1><g:layoutTitle default="Example FC"/></h1>
             <g:if test="${flash.message}">
             <div class="message">${flash.message}</div>
             </g:if>
             <g:layoutBody />
         </div>
         <div id="footer">
-            <g:message code="site.footer.text" default="(c) Example FC"/>
+            <p><g:message code="site.footer.text" default="(c) Example FC"/></p>
+            <p><g:link uri='/'>Home</g:link> |
+            <a href="http://github.com/davison/footy">Source</a></p>
         </div>
     </body>
 </html>

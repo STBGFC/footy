@@ -1,0 +1,857 @@
+/*  
+Template name: Simple Magazine
+Template URI: http://templates.arcsin.se/simple-magazine-website-template/
+Release date: 2009-08-02
+Last updated: 2009-08-10
+Description: A simple and lightweight magazine styled website template.
+Author: Viktor Persson
+Author URI: http://arcsin.se/
+
+This template is licensed under a Creative Commons Attribution 2.5 License:
+http://templates.arcsin.se/license/
+*/
+
+
+/* 
+   Reset
+------------------------------------------------------------------- */
+
+html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, code, del, dfn, em, img, q, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, textarea, input, select {margin: 0; padding: 0; font-weight: inherit; font-style: inherit; font-size: 100%; font-family: inherit; vertical-align: baseline;}
+table {border-collapse: collapse; border-spacing: 0;}
+caption, th, td {text-align: left; font-weight: normal;}
+table, td, th {vertical-align: middle;}
+blockquote:before, blockquote:after, q:before, q:after {content: "";}
+blockquote, q {quotes: "" "";}
+a img {border: none;}
+:focus {outline: 0;}
+
+
+/* 
+   General 
+------------------------------------------------------------------- */
+
+html {
+	height: 100%;
+	padding-bottom: 1px; /* force scrollbars */
+}
+
+body {
+    height: 100%;
+	background: #FFF;
+	color: #334;
+	font: normal 75% sans-serif;
+	line-height: 1.5;
+}
+
+
+/* 
+   Typography 
+------------------------------------------------------------------- */
+
+/* Headings */
+
+h1,h2,h3,h4,h5,h6 {
+	color: #444;
+	font-weight: normal;
+	line-height: 1;
+	margin-bottom: 0.3em;
+}
+h4,h5,h6 {font-weight: bold;}
+
+h1 {font-size: 2.6em;}
+h2 {font-size: 2em;}
+h3 {font-size: 1.5em;}
+h4 {font-size: 1.25em;}
+h5 {font-size: 1.1em;}
+h6 {font-size: 1em;}
+
+h1 img, h2 img, h3 img, h4 img, h5 img, h6 img {margin: 0; border: 0}
+
+
+/* Links */
+
+a:focus,a:hover {color: #357;}
+a {
+	color: #357;
+	text-decoration: underline;
+}
+a.feed {
+	background: url('../images/skin/icon-feed.gif') no-repeat left center;
+	padding-left: 18px;
+}
+a.more {
+	color: #888;
+	font-weight: bold;
+}
+a.more:hover {color: #444;}
+
+
+/* Text elements */
+
+p {margin-bottom: 1em;}
+
+abbr, acronym {border-bottom: 1px dotted #666;}
+address {margin-bottom: 1.5em;}
+blockquote {margin: 1.5em;}
+del, blockquote { color:#666; }
+em, dfn, blockquote, address {font-style: italic;}
+strong, dfn {font-weight: bold;}
+sup, sub {line-height: 0;}
+
+pre {
+	margin: 1.5em 0;
+	white-space: pre;
+}
+pre,code,tt {
+	font: 1em monospace;
+	line-height: 1.5;
+}
+
+
+/* Lists */
+
+li ul, li ol {margin-left: 1.5em;}
+ul, ol {margin: 0 0 1.5em 1.5em;}
+
+ul {list-style-type: disc;}
+ol {list-style-type: decimal;}
+
+dl {margin: 0 0 1.5em 0;}
+dl dt {font-weight: bold;}
+dd {margin-left: 1.5em;}
+
+
+
+/* Special lists */
+
+ul.plain-list li, ul.nice-list li, ul.tabbed li {list-style: none;}
+
+ul.tabbed {
+	display: inline;
+	margin: 0;
+}
+ul.tabbed li {float: left;}
+
+ul.plain-list {margin: 0;}
+
+ul.nice-list {margin-left: 0;}
+ul.nice-list li {
+	list-style: none;
+	border-top: 1px solid #EEE;
+	padding: 4px 0;
+}
+ul.nice-list li:first-child {border-top: none;}
+ul.nice-list li .right {color: #999;}
+
+
+
+
+/* Tables */
+
+table {margin-bottom: 1.4em; width: 100%; border: 0}
+th {font-weight: bold;}
+thead th {background: #C3D9FF;}
+th,td,caption {padding: 4px 10px 4px 5px;}
+tr.even td {background: #F2F6FA;}
+tfoot {font-style: italic;}
+caption {background: #EEE;}
+
+table.data-table {
+	border: 1px solid #CCB;
+	margin-bottom: 2em;
+	width: 100%;
+}
+table.data-table th {
+	background: #F0F0F0;
+	border: 1px solid #DDD;
+	color: #555;
+	text-align: left;
+}
+table.data-table tr {border-bottom: 1px solid #DDD;}
+table.data-table td, table th {padding: 10px;}
+table.data-table td {
+	background: #F6F6F6;
+	border: 1px solid #DDD;
+}
+table.data-table tr.even td {background: #FCFCFC;}
+
+
+/*
+   Forms
+------------------------------------------------------------------- */
+
+label {font-weight: bold; cursor: pointer;}
+fieldset {padding: 1.4em; margin: 0 0 1.5em 0; border: 1px solid #ccc;}
+legend {font-weight: bold; font-size: 1.2em;}
+textarea {overflow: auto;}
+input[type="text"], input[type="password"], textarea, select {
+	background: #FCFCFC;
+	border: 1px solid #ddd;
+	margin: 0.5em 0;
+	padding: 2px 5px;
+    width: 192px;
+}
+
+input.button {
+	background: #DDD;
+	border: 1px solid #888;
+	padding: 4px 5px;
+}
+input.button:active, input[type="submit"]:active {
+    border-style: inset;
+}
+input[type="submit"] {
+	padding: 4px 5px;
+    border-style:  outset;
+}
+div.errors {
+    color: #cc0000;
+    padding: 5px 0 5px 0;
+}
+div.errors ul {
+    list-style: none;
+    padding: 0;
+}
+div.errors li {
+    background: url(../images/skin/exclamation.png) 8px 0% no-repeat;
+    line-height: 16px;
+    padding-left: 30px;
+}
+td.errors select {
+    border: 1px solid red;
+}
+td.errors input {
+    border: 1px solid red;
+}
+td.errors textarea {
+    border: 1px solid red;
+}
+.date input, .date select {
+    width: auto;
+}
+
+/* NAVIGATION MENU */
+
+.nav {
+    background: #fff url(../images/skin/shadow.jpg) bottom repeat-x;
+    border: 1px solid #ccc;
+    margin-top: 5px;
+    padding: 7px 12px;
+}
+.menuButton {
+    font-size: 10px;
+    padding: 0 5px;
+}
+.menuButton a {
+    font-weight: bold;
+    text-decoration: none;
+    color: #333;
+    padding: 4px 6px;
+}
+.menuButton a.home {
+    background: url(../images/skin/house.png) center left no-repeat;
+    padding-left: 25px;
+}
+.menuButton a.list {
+    background: url(../images/skin/database_table.png) center left no-repeat;
+    padding-left: 25px;
+}
+.menuButton a.edit {
+    background: url(../images/skin/database_edit.png) center left no-repeat;
+    padding-left: 25px;
+}
+.menuButton a.create {
+    background: url(../images/skin/database_add.png) center left no-repeat;
+    padding-left: 25px;
+}
+
+
+/* PAGINATION */
+.paginateButtons {
+    background: #fff url(../images/skin/shadow.jpg) bottom repeat-x;
+    border: 1px solid #ccc;
+    border-top: 0;
+    color: #666;
+    font-size: 10px;
+    overflow: hidden;
+    padding: 10px 3px;
+}
+.paginateButtons a {
+    background: #fff;
+    border: 1px solid #ccc;
+    border-color: #ccc #aaa #aaa #ccc;
+    color: #666;
+    margin: 0 3px;
+    padding: 2px 6px;
+}
+.paginateButtons span {
+    padding: 2px 3px;
+}
+
+
+/* ACTION BUTTONS */
+.buttons {
+    width: 490px;
+    background: #fff url(../images/skin/shadow.jpg) bottom repeat-x;
+    border: 1px solid #ccc;
+    color: #666;
+    font-size: 10px;
+    margin-top: 5px;
+    overflow: hidden;
+    padding: 7px 0;
+}
+.flowcontrol {
+    text-align: right;
+}
+.flowcontrol .button input {
+    font-size: 14px;
+}
+.buttons input {
+    background: #fff;
+    border: 0;
+    color: #666;
+    cursor: pointer;
+    font-size: 9px;
+    font-weight: bold;
+    margin-left: 3px;
+    overflow: visible;
+    padding: 2px 6px;
+    text-align: left;
+}
+.buttons input.delete {
+    background: transparent url(../images/skin/database_delete.png) 5px 50% no-repeat;
+    padding-left: 28px;
+}
+.buttons input.edit {
+    background: transparent url(../images/skin/database_edit.png) 5px 50% no-repeat;
+    padding-left: 28px;
+}
+.buttons input.save {
+    background: transparent url(../images/skin/database_save.png) 5px 50% no-repeat;
+    padding-left: 28px;
+}
+.buttons input.create {
+    background: transparent url(../images/skin/database_add.png) 5px 50% no-repeat;
+    padding-left: 28px;
+}
+
+
+/* Misc classes */
+
+.content {font-size: 11px;}
+.small {font-size: 0.9em;}
+.smaller {font-size: 0.8em;}
+.smallest {font-size: 0.7em;}
+
+.large {font-size: 1.15em;}
+.larger {font-size: 1.25em;}
+.largest {font-size: 1.35em;}
+
+.hidden {display: none;}
+
+.quiet {color: #999;}
+.loud {color: #000;}
+.highlight {background:#ff0;}
+
+.text-left {text-align: left;}
+.text-right {text-align: right;}
+.text-center {text-align: center;}
+.text-separator {padding: 0 5px;}
+
+.error, .notice, .success {
+	border: 1px solid #DDD;
+	margin-bottom: 1em;
+	padding: 0.6em 0.8em;
+}
+
+.error {background: #FBE3E4; color: #8A1F11; border-color: #FBC2C4;}
+.error a {color: #8A1F11;}
+
+.notice {background: #FFF6BF; color: #514721; border-color: #FFD324;}
+.notice a {color: #514721;}
+
+.success {background: #E6EFC2; color: #264409; border-color: #C6D880;}
+.success a {color: #264409;}
+
+.alert {
+    color: red;
+    font-weight:bold;
+    font-size:large;
+    text-align:center;
+    padding:9px;
+}
+
+
+/* INVOICES */
+div.invoice {
+   width: 650px;
+}
+table#invoice {
+    width: 100%;
+    border-collapse: collapse;
+    border-bottom: 0;
+}
+table#invoice tr {
+    border: 0;
+}
+tr.invoiceHeader th {
+    border: 1px solid #aaa;
+}
+tr.invoiceBody td {
+    border-left: 1px solid #aaa;
+    border-right: 1px solid #aaa;
+}
+tr.invoiceTotal td {
+    border: 1px solid #aaa;
+    font-weight: bold;
+}
+td.amount, th.amount {
+    text-align: right;
+}
+input.paypal {
+    width: 145px;
+    border: 0px;
+}
+td#invisible {
+    border-left: 0;
+    border-bottom: 0;
+}
+div#checkout {
+    text-align: right;
+    margin-top: 20px;
+}
+
+
+
+/* TEAM PAGES */
+#iconbar {margin: 5px 0 20px;}
+#iconbar img {border: 0px;}
+#iconbar a {text-decoration: none;}
+#leagueTable {
+    width: 350px;
+    float: left;
+    padding-right: 20px;
+}
+#leagueTable a {text-decoration: none;}
+#leagueTable a:hover {text-decoration: underline;}
+#leagueTable .footer {
+    position: relative;
+    top: -25px;
+    font-size: smaller;
+    font-style: italic;
+}
+img.userpic {
+    border: 1px solid #333;
+    margin: 5px;
+    clear: both;
+}
+img#teamphoto {
+    margin-bottom:12px;
+    width: 258px;
+    height: 192px;
+    border: 1px solid #000;
+}
+/*
+ * result input
+ */
+td.title {
+    font-size: large
+}
+td.title input {
+    font-size: large;
+    font-weight: bold;
+}
+td.right {
+    text-align: right
+}
+input.goalInput {
+    width: 20px;
+    text-align: center;
+}
+
+
+/*
+ * fixture previews
+ */
+div.previewAllocations {
+}
+div.pivotPreview {
+    float: left;
+    width: 256px;
+    margin: 5px;
+    font-size: smaller;
+}
+div.pivotPreview h2 {
+    text-align: center;
+    font-style: normal;
+}
+div.pitch {
+    background: url(../images/pitch-bg.png) no-repeat center top;
+}
+div.ref {
+    background: url(../images/ref-bg.png) no-repeat center top;
+}
+div.chrm {
+    background: url(../images/chrm-bg.png) no-repeat center top;
+}
+.LeagueGame {
+    color: #000;
+}
+.CupGame {
+    background-color: #ffd;
+}
+.FriendlyGame {
+    color: green;
+}
+
+/* DIALOG */
+
+.dialog {
+    width: 490px;
+    padding-right: 40px;
+}
+
+.dialog p {
+    margin-bottom: 8px;
+}
+
+.dialog table {
+    background-color: #eee;
+    padding: 5px 0;
+    margin: 10px 0 5px;
+}
+
+.dialog ul {
+}
+
+.prop {
+    padding: 5px;
+}
+.prop .name {
+    text-align: left;
+    width: 45%;
+    padding-left: 40px;
+}
+.prop .value {
+    text-align: left;
+    width: 85%;
+    vertical-align: top;
+}
+
+
+/* 
+   Alignment 
+------------------------------------------------------------------- */
+
+/* General */
+
+.center,.aligncenter {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+
+/* Images */
+
+img.bordered,img.alignleft,img.alignright,img.aligncenter {
+	background-color: #FFF;
+	border: 1px solid #DDD;
+	padding: 3px;
+}
+img.alignleft, img.left {margin: 0 1.5em 1em 0;}
+img.alignright, img.right {margin: 0 0 1em 1.5em;}
+
+
+/* Floats */   
+
+.left,.alignleft {float: left;}
+.right,.alignright {float: right;}
+
+.clear,.clearer {clear: both;}
+.clearer {
+	display: block;
+	font-size: 0;
+	line-height: 0;
+	height: 0;
+}
+
+
+/* 
+   Separators 
+------------------------------------------------------------------- */
+
+.content-separator, .archive-separator {
+	background: #D5D5D5;
+	clear: both;
+	color: #FFE;
+	display: block;
+	font-size: 0;
+	line-height: 0;
+	height: 1px;	
+}
+.content-separator {margin: 20px 0;}
+.archive-separator {margin: 10px 0;}
+
+
+/* 
+   Posts 
+------------------------------------------------------------------- */
+
+.post a {text-decoration: none;}
+.post a:hover {text-decoration: underline;}
+
+.post img.left, .post img.right {margin-bottom: 0;}
+
+.post-date {
+	color: #777;
+	margin: 2px 0 10px;
+}
+.post-date a {color: #444;}
+
+.post-title h1, .post-title h2, .post-title h3 {margin-bottom: 0;}
+
+.post-meta {
+	background: #F6F6F6;
+	border: 1px solid #DDD;
+	color: #777;
+	padding: 6px 10px;
+}
+.post-meta a {color: #666; }
+.post-meta a:hover {color: #000;}
+
+.post-body, #main-left p {font-size: 1.1em;}
+.post-body a {color: #039;}
+.post-body a:hover {color: #039;}
+
+.post-body img.left, .post-body img.right {margin-bottom: 1em;}
+
+
+
+/* Archives */
+.archive-pagination {margin-bottom: 16px;}
+.archive-post-date {
+	background: #F5F5F5;
+	border-bottom: 1px solid #C5C5C5;
+	border-right: 1px solid #CFCFCF;
+	float: left;
+	margin-right: 12px;
+	padding: 2px 0 5px;
+	text-align: center;
+	width: 46px;
+}
+.archive-post-title .post-date {margin: 0;}
+.archive-post-title {padding-top: 4px;}
+.archive-post-day {font: normal 1.6em Georgia,serif;}
+.archive-post-month {text-transform: uppercase;}
+
+
+/* 
+   Layout 
+------------------------------------------------------------------- */
+
+/* General */
+.center-wrapper {
+	margin: 0 auto;
+	width: 980px;
+}
+
+/* Network */
+
+#network {background: #EEE;}
+#network .left {
+	color: #333;
+	padding: 6px 0;
+}
+#network .tabbed a {
+	display: block;
+	padding: 6px 10px 7px;
+	text-decoration: none;
+	color: #666;
+}
+#network li a:hover {
+	background: #F6F6F6;
+	color: #000;
+}
+#network li.current-tab a {
+	background: #FFF;
+	font-weight: bold;
+}
+#network .text-separator, #network span {color: #999;}
+
+
+/* Toolbar */
+#toolbar {
+	padding: 12px 0 8px;
+	font-size: 1.1em;
+	color: #999;
+}
+#toolbar img {vertical-align: middle;}
+
+
+/* Header */
+
+#header {margin-bottom: 24px;}
+
+/* Site title */
+#site-title {
+    font: normal 1.6em serif;
+    border-bottom: 1px solid #CCC;
+    padding-bottom: 24px;
+}
+#site-title span {color: #999;}
+#site-title a {
+	color: #000;
+	text-decoration: none;
+}
+
+
+/* Navigation */
+
+#navigation {margin-bottom: 24px;}
+#navigation a {
+	display: block;
+	text-decoration: none;
+}
+
+/* Main navigation */
+
+#main-nav a {
+	color: #888;
+	font-size: 1.4em;
+	padding: 9px 14px;
+}
+#main-nav li {background: url('../images/skin/navigation-separator.gif') no-repeat left center;}
+#main-nav li:first-child {background: none;}
+#main-nav li.current-tab a, #main-nav a:hover {color: #002;}
+#main-nav li.current-tab a {background: url('../images/skin/navigation-arrow.gif') no-repeat center bottom;}
+
+
+/* Subnav */
+
+#sub-nav {background: #000; padding: 0 5px;}
+#sub-nav a {
+	color: #ccc;
+	font: bold 1.2em sans-serif;
+	padding: 10px;
+}
+#sub-nav li.current-tab a, #sub-nav a:hover {color: #DDEDF7;}
+
+
+/* Main */
+
+.main {margin-bottom: 18px;}
+
+.main#main-three-columns {background: url('../images/skin/main-three-columns.gif') repeat-y right top;}
+.main#main-three-columns .sidebar {width: 193px;}
+.main#main-three-columns #main-left {width: 520px;}
+
+.main#main-two-columns {background: url('../images/skin/main-two-columns.gif') repeat-y right top;}
+.main#main-two-columns .sidebar {width: 260px;}
+.main#main-two-columns #main-left {width: 671px;}
+
+.sidebar a {text-decoration: none;}
+.sidebar a:hover {text-decoration: underline;}
+
+#sidebar-1 {margin-left: 37px;}
+
+/* Columns */
+.col3 {width: 32%;}
+.col3-mid {margin-left: 2%;}
+
+/* Sidebar */
+
+#sidebar-wrapper {}
+#sidebar {}
+
+
+/* Sidebar sections */
+.section {margin-bottom: 16px;}
+.section-title {
+	background-color: #F2F6FA;
+	border-top: 2px solid #ABC;
+	font: bold 1.1em sans-serif;
+	margin-bottom: 5px;
+	min-height: 0;
+	padding: 5px 8px 6px;
+}
+
+.network-section .section-title {
+	background-color: #F6F6F6;
+	border-color: #D6D6D6;
+}
+
+
+/* Dashboard */
+
+#dashboard {
+    margin-top: 30px;
+	background: #FAFAFA url('../images/skin/dashboard.gif') repeat-y left top;
+	border: 1px solid #E7E7E7;
+}
+
+#dashboard .column {width: 244px;}
+#dashboard #column-4 {border-right: none;}
+
+#dashboard .column-content {
+	padding: 14px 16px;
+}
+#dashboard .column-title {
+	color: #666;
+	font-size: 1.4em;
+	font-weight: bold;
+	padding-bottom: 5px;
+}
+#dashboard a {color: #666;}
+#dashboard a:hover {color: #000;}
+
+
+/* Footer */
+
+#footer {padding: 10px 0;}
+#footer a {
+	color: #579;
+	text-decoration: none;
+}
+#footer .right, #footer .right a {
+	color: #999;
+	text-decoration: none;
+}
+#footer .text-separator {
+	padding: 0 3px;
+	color: #BBB;
+}
+#footer a:hover {color: #000;}
+
+
+/* 
+   Misc overriding classes
+------------------------------------------------------------------- */
+
+/* Border */
+
+.noborder {border: 0;}
+.notborder {border-top: 0;}
+.norborder {border-right: 0;}
+.nobborder {border-bottom: 0;}
+.nolborder {border-left: 0;}
+
+/* Margin */
+
+.nomargin {margin: 0;}
+.notmargin {margin-top: 0;}
+.normargin {margin-right: 0;}
+.nobmargin {margin-bottom: 0;}
+.nolmargin {margin-left: 0;}
+
+/* Padding */
+
+.nopadding {padding: 0;}
+.notpadding {padding-top: 0;}
+.norpadding {padding-right: 0;}
+.nobpadding {padding-bottom: 0;}
+.nolpadding {padding-left: 0;}
+
+/* Single line IE fix */
+* html #sub-nav, * html .section-title, * html .main {height: 0.01%; min-height: 0.01%;}
+

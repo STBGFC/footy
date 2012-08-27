@@ -8,7 +8,7 @@
                             <th>
                                 <g:message code="org.davisononline.footy.match.fixtureName" default="Fixture"/>
                             </th>
-                            <th>
+                            <th style="min-width:92px">
                                 <g:message code="org.davisononline.footy.match.kickoff" default="Kick Off (HH:MM)"/>
                             </th>
                             <th>

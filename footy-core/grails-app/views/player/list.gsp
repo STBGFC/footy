@@ -8,10 +8,10 @@
         <export:resource/>
     </head>
     <body>
+        <h1>
+            <g:message code="org.davisononline.footy.core.playerlist.text" default="Players who play with the club"/>
+        </h1>
         <div class="list">
-            <p>
-                <g:message code="org.davisononline.footy.core.playerlist.text" default="Players who play with the club"/>
-            </p>
             <div class="nav">
                 <span class="menuButton"><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></span>
                 <span class="menuButton"><g:link class="create" controller="registration"><g:message code="default.new.label" args="[entityName]" /></g:link></span>

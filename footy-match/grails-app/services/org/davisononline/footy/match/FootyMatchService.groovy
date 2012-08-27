@@ -30,7 +30,7 @@ class FootyMatchService {
         def list = fc.list () {
             eq ("team", team)
             ge ("dateTime", DateTimeUtils.getCurrentSeasonStart())
-            order ("dateTime", "asc")
+            order ("dateTime", "desc")
         }
         list
     }

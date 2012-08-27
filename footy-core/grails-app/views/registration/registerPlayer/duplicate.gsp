@@ -5,6 +5,7 @@
         <title><g:message code="org.davisononline.footy.core.duplicateregistration.title" default="Already Registered" /></title>
     </head>
     <body>
+        <h1><g:message code="org.davisononline.footy.core.duplicateregistration.title" default="Already Registered" /></h1>
         <div class="dialog">
             <div class="message">
                 A player named <strong>${player}</strong> with the same date of birth is already registered in the

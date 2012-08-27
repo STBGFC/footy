@@ -6,10 +6,10 @@
         <title><g:message code="default.edit.label" args="[entityName]" /></title>
     </head>
     <body>
+        <h1>
+            Create or edit details of the registration tier below
+        </h1>
         <div class="dialog">
-            <p>
-                Create or edit details of the registration tier below
-            </p>
             <div class="nav">
                 <span class="menuButton"><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></span>
                 <span class="menuButton"><g:link class="list" action="list"><g:message code="default.list.label" args="[entityName]" /></g:link></span>
@@ -70,6 +70,16 @@
                                 <td valign="top" class="value ${hasErrors(bean: registrationTierInstance, field: 'siblingDiscount', 'errors')}">
                                     <g:textField name="siblingDiscount" value="${fieldValue(bean: registrationTierInstance, field: 'siblingDiscount')}" />
                                     <g:render template="/shared/fieldError" model="['instance':registrationTierInstance,'field':'siblingDiscount']" plugin="footy-core"/>
+                                </td>
+                            </tr>
+
+                            <tr class="prop">
+                                <td valign="top" class="name">
+                                  <label for="enabled"><g:message code="org.davisononline.org.footy.core.registrationTier.enabled.label" default="Enabled" /></label>
+                                </td>
+                                <td valign="top" class="value ${hasErrors(bean: registrationTierInstance, field: 'enabled', 'errors')}">
+                                    <g:checkBox name="enabled" value="${registrationTierInstance?.enabled}" />
+                                    <g:render template="/shared/fieldError" model="['instance':registrationTierInstance,'field':'enabled']" plugin="footy-core"/>
                                 </td>
                             </tr>
                         

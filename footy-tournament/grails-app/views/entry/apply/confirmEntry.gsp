@@ -2,10 +2,11 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title><g:message code="confirm.entry.heading" default="Confirm Entry" /></title>
+        <title><g:message code="org.davisononline.footy.tournament.views.entry.apply.confirmentry.title" default="Confirm Entry" /></title>
     </head>
 
     <body>
+        <h1><g:message code="org.davisononline.footy.tournament.views.entry.apply.confirmentry.title" default="Confirm Entry" /></h1>
         <div class="dialog">
         <p>
             The following teams are ready to be entered.  Please choose whether to add more 
@@ -13,9 +14,9 @@
             longer be able to go back and make changes.
         </p>
         <g:form action="apply">
-        <ul id="confirmEntryList">
+        <ul id="confirmEntryList" class="nice-list">
         <g:each in="${entryInstance.teams}" var="team">
-            <li>${team.club} ${team} <g:if test="${!team.vetsTeam}">(${team.league} Div. ${team.division})</g:if></li>
+            <li>${team.club} ${team} <g:if test="${!team.vetsTeam}">(${team.division})</g:if></li>
         </g:each>       
         </ul>
         <div class="buttons">

@@ -1,5 +1,5 @@
 
-                                    <ul>
+                                    <ul class="nice-list">
                                     <g:each in="${person.qualifications}" var="qual">
                                     <g:set var="now" value="${new Date()}"/>
                                     <g:set var="qualClass" value="${(qual.expiresOn && qual.expiresOn < now) ? 'qualExpired' : 'qualInDate'}"/>
@@ -11,7 +11,7 @@
                                                     params="[personId:person.id,qualificationId:qual.id]"
                                                     update="qualifications"
                                                     title="delete"
-                                            ><img src="${createLinkTo(dir:'images/skin', file:'database_delete.png')}" alt="del"/></g:remoteLink>
+                                            ><img src="${createLinkTo(dir:'images', file:'delete.png', plugin: 'footy-core')}" alt="del"/></g:remoteLink>
                                             </sec:ifAnyGranted>
                                         </li>
                                     </g:each>
