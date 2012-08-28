@@ -15,6 +15,7 @@ class UpdateStandingsJob {
     }
 
     def execute(){
+        log.info "Starting job execution; UpdateStandings"
         leagueService.updateAllLeagueTables()
     }
 }
