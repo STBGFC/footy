@@ -4,6 +4,12 @@ import org.davisononline.footy.core.Team
 import grails.plugins.springsecurity.Secured
 import net.fortuna.ical4j.model.ContentBuilder
 import net.fortuna.ical4j.model.property.DtStamp
+import net.fortuna.ical4j.model.TimeZoneRegistryFactory
+import org.codehaus.groovy.grails.commons.ConfigurationHolder
+import net.fortuna.ical4j.model.property.DtStart
+import net.fortuna.ical4j.model.property.DtEnd
+import net.fortuna.ical4j.model.Date
+import net.fortuna.ical4j.model.TimeZone
 
 
 @Secured(["ROLE_COACH"])
@@ -16,6 +22,11 @@ class FixtureController {
     def personService
 
     def grailsApplication
+
+    def CFG = ConfigurationHolder.config.org?.davisononline?.footy
+    def locale = CFG?.locale ?: Locale.default
+    def registry = TimeZoneRegistryFactory.getInstance().createRegistry();
+    def timezone = registry.getTimeZone(CFG?.timezone ?: "Europe/London");
 
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
@@ -207,8 +218,6 @@ class FixtureController {
 
         cache "content"
 
-        def locale = grailsApplication.config.org?.davisononline?.footy?.locale ?: Locale.default
-
         def t = Team.get(params?.id)
         if (!t) {
             response.status = 404
@@ -245,8 +254,8 @@ class FixtureController {
                     uid(f.guid)
                     summary(f.toString())
                     dtstamp(new DtStamp())
-                    dtstart(f.dateTime.format(ICAL_DTFORMAT))
-                    dtend(cal.time.format(ICAL_DTFORMAT))
+                    dtstart(new DtStart(date:new net.fortuna.ical4j.model.DateTime(f.dateTime), timeZone: timezone))
+                    dtend(new DtEnd(date: new net.fortuna.ical4j.model.DateTime(cal.time), timeZone: timezone)) 
                     action('DISPLAY')
                     if (f.homeGame) location(loc)
                     if (f.matchReport) description(f.matchReport ?: '')
@@ -260,6 +269,6 @@ class FixtureController {
             "attachment; filename=${URLEncoder.encode(t.toString().replace(' ',''),'UTF-8')}-fixtures.ics"
         )
         render text:calendar, contentType: 'text/calendar'
-        
+
     }
 }
