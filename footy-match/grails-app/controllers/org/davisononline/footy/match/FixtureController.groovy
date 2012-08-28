@@ -9,7 +9,6 @@ import org.codehaus.groovy.grails.commons.ConfigurationHolder
 import net.fortuna.ical4j.model.property.DtStart
 import net.fortuna.ical4j.model.property.DtEnd
 import net.fortuna.ical4j.model.Date
-import net.fortuna.ical4j.model.TimeZone
 
 
 @Secured(["ROLE_COACH"])
