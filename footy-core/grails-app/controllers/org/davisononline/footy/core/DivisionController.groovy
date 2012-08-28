@@ -7,6 +7,9 @@ class DivisionController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
+    def leagueService
+
+
     def index = {
         redirect(controller: "league", action: "list")
     }
@@ -27,6 +30,7 @@ class DivisionController {
     def save = {
         def divisionInstance = new Division(params)
         if (divisionInstance.save(flush: true)) {
+            leagueService.updateLeagueTable(divisionInstance)
             flash.message = "${message(code: 'default.created.message', args: [message(code: 'division.label', default: 'Division'), divisionInstance.toString()])}"
             redirect(controller: "league", action: "edit", id: divisionInstance.league.id)
         }
@@ -60,6 +64,7 @@ class DivisionController {
             }
             divisionInstance.properties = params
             if (!divisionInstance.hasErrors() && divisionInstance.save(flush: true)) {
+                leagueService.updateLeagueTable(divisionInstance)
                 flash.message = "${message(code: 'default.updated.message', args: [message(code: 'division.label', default: 'Division'), divisionInstance.toString()])}"
                 redirect(controller: "league", action: "edit", id: divisionInstance.league.id)
             }

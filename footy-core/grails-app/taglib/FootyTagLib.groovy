@@ -218,6 +218,10 @@ class FootyTagLib {
      * pre-generated at the fullTime site in a genius rendition of web services
      * in action.  Not.
      *
+     * A better option might be to use some offline caching of this data so that the
+     * user is not further confused by the broken SSL setup at the FA site.  See the
+     * LeagueService methods instead.
+     *
      * @param attrs
      */
     def fullTimeLeagueTable = { attrs ->
