@@ -72,10 +72,11 @@
                     </g:link>
                 </div>
 
-                <g:if test="${teamInstance?.division}">
+                <g:if test="${teamInstance?.division?.standings}">
                 <div id="leagueTable">
                     <h3>${teamInstance.division}</h3>
-                    <footy:fullTimeLeagueTable division="${teamInstance?.division}"/>
+                    <%--<footy:fullTimeLeagueTable division="${teamInstance?.division}"/>--%>
+                    ${teamInstance.division.standings}
                 </div>
                 </g:if>
 

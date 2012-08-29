@@ -34,6 +34,7 @@ grails.project.dependency.resolution = {
         compile ':cache-headers:1.1.5'
         compile ':feeds:1.5'
         compile ':resources:1.1.6'
+        compile ':quartz:1.0-RC2'
         runtime ':hibernate:1.3.7'
         runtime ':webflow:1.3.7'
         runtime ':tomcat:1.3.7'

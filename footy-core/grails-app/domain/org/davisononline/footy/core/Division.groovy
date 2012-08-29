@@ -11,13 +11,19 @@ class Division implements Comparable, Serializable {
     String name
     String code // for generating tables, RESTful id etc.
     int index = 0 // lower the number, higher the division
+    String standings // for holding cached HTML or other table data
 
     static belongsTo = [league: League]
     
     static constraints = {
         code nullable:true
+        standings nullable: true
         ageBand range: 8..18
         name blank: false, size: 1..30, unique: ['ageBand']
+    }
+
+    static mapping = {
+        standings type: 'text'
     }
 
     /**
