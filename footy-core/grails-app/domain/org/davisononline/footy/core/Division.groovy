@@ -35,7 +35,7 @@ class Division implements Comparable, Serializable {
             return ageBand - t?.ageBand
 
         if (! t?.index)
-            return -1
+            return 99
 
         return (index - t?.index)
     }
