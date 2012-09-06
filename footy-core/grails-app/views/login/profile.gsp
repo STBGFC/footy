@@ -143,9 +143,6 @@
                           </sec:ifAnyGranted>
                           <sec:ifAnyGranted roles="ROLE_OFFICER">
                           <li>
-                              <g:link controller="person" action="qualifications">Qualifications expiring soon</g:link>
-                          </li>
-                          <li>
                               <g:link controller="invoice" action="list">Payment Reconciliations</g:link>
                           </li>
                           <li>

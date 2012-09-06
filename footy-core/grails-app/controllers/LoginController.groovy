@@ -296,7 +296,7 @@ class LoginController {
         def teams = []
         if (person) {
             Team.list().each { t ->
-                if (t.manager == person || t.coaches.contains(person)) teams << t
+                if (t.manager.id == person.id || t.coaches.collect{it.id}.contains(person.id)) teams << t
             }
         }
         [person:person, teams:teams]
