@@ -10,7 +10,6 @@ import net.fortuna.ical4j.model.property.DtStart
 import net.fortuna.ical4j.model.property.DtEnd
 import net.fortuna.ical4j.model.Date
 
-
 @Secured(["ROLE_COACH"])
 class FixtureController {
 
@@ -82,10 +81,10 @@ class FixtureController {
         }
 
         // can't add result before game has been played
-        if (fx.dateTime > new Date()) {
+        if (new java.util.Date(fx.dateTime.time) > new java.util.Date()) {
             log.error "Attempt to add a result to a fixture not yet played"
             flash.message = "Cannot add a result for a fixture not yet played (${fx.dateTime.format('dd/MM HH:mm')})"
-            redirect controller: 'team', action: 'show', ageBand: fx.team.ageBand, teamName: fx.team.name
+            redirect(controller: 'team', action: 'show', ageBand: fx.team.ageBand, name: fx.team.name)
         }
 
         // ok..
