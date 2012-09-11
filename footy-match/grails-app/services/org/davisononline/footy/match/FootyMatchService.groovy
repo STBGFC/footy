@@ -164,7 +164,7 @@ class FootyMatchService {
 
         // Refs emails..
         refs?.each {ref ->
-            def myFixtures = fixtures.grep{it.referee.id == ref.id}
+            def myFixtures = fixtures.grep{it.referee?.id == ref?.id}
             try {
                 mailService.sendMail {
                     to      getRefEmail(ref)
