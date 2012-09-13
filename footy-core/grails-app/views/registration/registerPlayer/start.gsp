@@ -22,7 +22,7 @@
                                 <label for="regTierId"><g:message code="org.davisononline.org.footy.core.registration.label" default="Registration Type" /></label>
                             </td>
                             <td  class="value">
-                                <g:select name="regTierId" from="${RegistrationTier.findAllByEnabled(true)}" optionKey="id"/>
+                                <g:select name="regTierId" from="${tiers}" optionKey="id"/>
                             </td>
                         </tr>
                     </tbody>

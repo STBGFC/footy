@@ -23,6 +23,28 @@ class RegistrationController {
      * main web flow for player registration 
      */
     def registerPlayerFlow = {
+        
+        checkOpen {
+            def tiers = []
+            action {
+                tiers = RegistrationTier.findAllByEnabledAndValidUntilGreaterThan(true, new Date());
+                if (tiers.size() > 0) {
+                    return ok()
+                }
+                else
+                    return closed()
+            }
+
+            on ("ok") {
+                [tiers: tiers]
+            }.to "start"
+
+            on ("closed") {
+                [endMessage:"Registration is currently closed"]
+            }.to "registrationClosed"
+        }
+
+        registrationClosed() {}
 
         start {
             on ("continue") {
