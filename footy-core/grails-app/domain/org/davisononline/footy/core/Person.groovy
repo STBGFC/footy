@@ -104,6 +104,13 @@ class Person implements Comparable, Serializable {
     }
 
     /**
+     * force lower case email
+     */
+    void setEmail(String email) {
+        this.email = email?.toLowerCase()
+    }
+
+    /**
      * return the best phone  number for display
      */
     def bestPhone() {
