@@ -4,6 +4,7 @@ package org.davisononline.footy.core
 import org.grails.paypal.Payment
 import org.grails.paypal.PaymentItem
 import org.codehaus.groovy.grails.commons.ConfigurationHolder
+import org.apache.commons.validator.Validator
 
 /**
  * flows for the registration and creation of players, parents and other
@@ -14,6 +15,9 @@ import org.codehaus.groovy.grails.commons.ConfigurationHolder
 class RegistrationController {
 
     def registrationService
+
+    def mailService
+
     
     def index = {
         redirect (action:'registerPlayer')
@@ -36,7 +40,7 @@ class RegistrationController {
             }
 
             on ("ok") {
-                [tiers: tiers]
+                [tiers: tiers, person: new Person()]
             }.to "start"
 
             on ("closed") {
@@ -46,7 +50,45 @@ class RegistrationController {
 
         registrationClosed() {}
 
+        /*
+         * request an email address and send a token to it to be re-submitted to
+         * validate the address.
+         */
         start {
+            on ("continue") {
+                flow.person = new Person(params)
+                if(! (flow.person.validate(["email"]))) {
+                    return error()
+                }
+                flow.registrantEmail = flow.person.email
+                flow.person = null
+
+                // send mail with token
+                flow.token = UUID.randomUUID().toString()[0..7]
+
+                try {
+                    mailService.sendMail {
+                        // ensure mail address override is set in dev/test in Config.groovy
+                        to      flow.registrantEmail
+                        subject 'Email Validation'
+                        body    ( view:'/email/core/validate',
+                                  model:[token:flow.token, club: Club.homeClub])
+                    }
+                }
+                catch (Exception ex) {
+                    log.error "Unable to send email for validation during registration; $ex"
+                }
+
+            }.to "validateToken"
+        }
+
+        validateToken() {
+            on ("continue") {
+                if (params.token != flow.token) return error()
+            }.to "chooseTier"
+        }
+
+        chooseTier() {
             on ("continue") {
                 def tier = RegistrationTier.get(params.regTierId)
                 flow.registration = Registration.createFrom(tier)
@@ -70,22 +112,13 @@ class RegistrationController {
                 def player = flow.player
                 player.properties = params
 
-                // have to fudge the validation a little.. null parent is ok
-                // for now, we haven't asked for those details yet.
-                def tempGuardian = false
-                if (!player.guardian) {
-                    player.guardian = new Person()
-                    tempGuardian = true
-                }
-                if (!player.validate() | !player.person?.validate()) {
+                if (!player.validate(["person", "doctor", "doctorTelephone", "medical", "ethnicOrigin", "dateOfBirth"])
+                    | !player.person?.validate()) {
                     // odd.. if i don't do this, the errors object is not visible in the view.
                     // TODO: log this in grails JIRA
                     flow.person = player.person
                     return error()
                 }
-
-                if (tempGuardian)
-                    player.guardian = null
                 
             }.to "checkPlayerRegistered"
         }
@@ -134,6 +167,8 @@ class RegistrationController {
                 flow.personCommand = flow.guardian1 ?: new Person (
                     familyName: flow.player.person.familyName
                 )
+                flow.personCommand.email = flow.registrantEmail
+
             }.to "enterGuardianDetails"
 
             // TODO: if no guardian required, must get player contact details instead
@@ -150,6 +185,9 @@ class RegistrationController {
             on ("addanother") {Person person ->
                 person.address = person.address ?: new Address()
 
+                // override any change to email address. Use the validated one
+                person.email = flow.registrantEmail
+
                 flow.personCommand = person
                 if (!person.address?.validate() | !person.validate()) {
                     flow.address = person.address // see earlier to do item about grails bug
@@ -162,14 +200,15 @@ class RegistrationController {
 
             on ("continue") { Person person ->
                 person.address = person.address ?: new Address()
-                person.email = person.email ?: ''
+
+                // override any change to email address. Use the validated one
+                person.email = flow.registrantEmail
 
                 flow.personCommand = person
                 if (!person.address?.validate() | !person.validate()) {
                     flow.address = person.address // see earlier to do item about grails bug
                     return error()
                 }
-
                 flow.guardian1 = person
 
             }.to "prepTeam"

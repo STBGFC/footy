@@ -3,27 +3,26 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <g:set var="entityName" value="${message(code: 'club.label', default: 'Club')}" />
-        <title><g:message code="org.davisononline.org.footy.core.registration.start.title" default="Player Registration" /></title>
+        <title><g:message code="org.davisononline.org.footy.core.registration.validatetoken.title" default="Email Validation Token" /></title>
     </head>
     <body>
-        <h1><g:message code="org.davisononline.org.footy.core.registration.start.title" default="Player Registration" /></h1>
+        <h1><g:message code="org.davisononline.org.footy.core.registration.validatetoken.title" default="Email Validation Token" /></h1>
         <div class="dialog">
             <g:form name="registration" action="registerPlayer">
                 <p>
                    <g:message
-                           code="org.davisononline.footy.core.registrationemail.text"
-                           default="First, please confirm your email address so that we can validate it (a working email address is an absolute requirement for player registration)"/>
+                           code="org.davisononline.footy.core.registration.token.text"
+                           default="An email containing a token has been sent to the address you entered.  Please enter that token here so that we know your email address works."/>
                 </p>
 
                 <table>
                     <tbody>
                         <tr class="prop">
                             <td  class="name">
-                                <label for="email"><g:message code="org.davisononline.org.footy.core.registrationemail.label" default="Your email address" /></label>
+                                <label for="token"><g:message code="org.davisononline.org.footy.core.registration.token.label" default="Token from your email" /></label>
                             </td>
-                            <td  class="value ${hasErrors(bean: person, field: 'email', 'errors')}">
-                                <g:textField name="email" value="${person?.email}" />
-                                <g:render template="/shared/fieldError" model="['instance':person,'field':'email']" plugin="footy-core"/>
+                            <td  class="value">
+                                <g:textField name="token" value="" />
                             </td>
                         </tr>
                     </tbody>
