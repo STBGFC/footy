@@ -12,7 +12,7 @@
                 <p>
                    <g:message
                            code="org.davisononline.footy.core.registrationemail.text"
-                           default="First, please confirm your email address so that we can validate it (a working email address is an absolute requirement for player registration)"/>
+                           default="First, please confirm your email address so that we can validate it (a working email address is an absolute requirement for player registration). Enter it CAREFULLY as we will send a token (password) to it which you must be able to receive in order to continue."/>
                 </p>
 
                 <table>
