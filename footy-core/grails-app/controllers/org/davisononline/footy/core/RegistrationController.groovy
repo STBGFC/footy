@@ -56,12 +56,18 @@ class RegistrationController {
          */
         start {
             on ("continue") {
-                flow.person = new Person(params)
-                if(! (flow.person.validate(["email"]))) {
-                    return error()
+                def p = Person.findByEmail(params.email)
+                if (p) {
+                    flow.guardian1 = p
                 }
-                flow.registrantEmail = flow.person.email
-                flow.person = null
+                else {
+                    flow.person = new Person(params)
+                    if(!flow.person.email || ! (flow.person.validate(["email"]))) {
+                        return error()
+                    }
+                }
+
+                flow.registrantEmail = params.email
 
                 // send mail with token
                 flow.token = UUID.randomUUID().toString()[0..7]
@@ -99,6 +105,7 @@ class RegistrationController {
         setupPlayer {
             action {
                 flow.player = new Player(person: new Person(eligibleParent: false, phone1: 'x'))
+                flow.player.guardian = flow.guardian1 // may not exist if new parent registering
                 [playerInstance: flow.player,parents: Person.findAllByEligibleParent(true, [sort:'familyName'])]
             }
             on ("success").to "enterPlayerDetails"
