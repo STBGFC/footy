@@ -40,6 +40,7 @@
                             </td>
                         </tr>
 
+                        <g:if test="${!token}"><%-- token shows that we are in a registration flow where parent selection is done differently --%>
                         <tr class="prop">
                             <td  class="name">
                                 <label for="guardian.id"><g:message code="org.davisononline.footy.core.playerGuardian.label" default="Parent/Guardian" /></label>
@@ -49,6 +50,7 @@
                                 <g:render template="/shared/fieldError" model="['instance':playerInstance,'field':'guardian']" plugin="footy-core"/>
                             </td>
                         </tr>
+                        </g:if>
 
                         <tr class="prop">
                             <td  class="name">

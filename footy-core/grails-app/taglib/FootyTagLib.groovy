@@ -160,7 +160,6 @@ class FootyTagLib {
      *  iii) Current, unpaid (has been renewed, but not paid for)
      *   iv) Current, paid.  (we like)
      *
-     * @attr payment REQUIRED the payment object to show the status for
      */
     def registrationStatus = { attrs, body ->
 
