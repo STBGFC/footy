@@ -181,6 +181,34 @@ class FootyMatchService {
     }
 
     /**
+     * save a fixture to the DB, optionally emailing the fixture sec if the
+     * fixture is being added for a date that other fixtures already have
+     * resources allocated
+     */
+    def saveFixture(Fixture fixtureInstance) {
+        if (!fixtureInstance.save(flush: true))
+            return false
+
+        // check date and other fixtures with resources
+        def otherGamesThatDay = getHomeGamesOn(fixtureInstance.dateTime)
+        if (otherGamesThatDay.find {it.referee != null || it.resources?.size() > 0}) {
+            // send email to fixture sec.
+            def fixSecEmails = getFixtureSec()*.email
+            try {
+                mailService.sendMail {
+                    to      fixSecEmails
+                    subject "New Fixture Created"
+                    body    (view: '/email/match/additionalFixture',
+                             model: [fixture:fixtureInstance])
+                }
+            } catch (Exception ex) {
+                log.error("Failed to send email for late fixture addition; ${ex.message}")
+            }
+        }
+        return true
+    }
+
+    /**
      * delete a Fixture, potentially emailing fixture secs. if resources were
      * allocated.  Any exception will be thrown back to the caller
      */
