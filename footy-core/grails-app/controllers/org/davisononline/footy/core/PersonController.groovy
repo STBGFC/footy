@@ -2,6 +2,7 @@ package org.davisononline.footy.core
 
 import grails.plugins.springsecurity.Secured
 import org.davisononline.footy.core.utils.ImageUtils
+import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
 
 /**
  * admin controller for Person operations
@@ -59,22 +60,17 @@ class PersonController {
     }
 
     /**
-     * checks to see if the Person being edited is a Player and edits the Player
-     * instead if so.
+     * security for editing is via the ACL (see FootySecurityService)
      */
-    @Secured(["ROLE_COACH"]) // <-- TEMP
+    //@Secured(["ROLE_COACH"]) // <-- TEMP
     def edit = {
         def personInstance = Person.get(params.id)
         if (!personInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'person.label', default: 'Person'), params.id])}"
             redirect(action: "list")
         }
-        else {
-            def player = Player.findByPerson(personInstance)
-            if (player)
-                redirect controller: 'player', action: 'edit', id: player.id
+        else
             return [personCommand: personInstance]
-        }
     }
 
     @Secured(["ROLE_COACH"]) // <-- TEMP
