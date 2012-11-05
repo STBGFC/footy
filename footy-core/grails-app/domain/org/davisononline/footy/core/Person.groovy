@@ -30,6 +30,7 @@ class Person implements Comparable, Serializable {
     Boolean eligibleParent = true
     String notes = ''
     SortedSet qualifications
+    String fanNumber
     byte[] photo
 
     // security credential
@@ -56,6 +57,7 @@ class Person implements Comparable, Serializable {
         user(nullable: true)
         notes(blank: true)
         qualifications(nullable: true)
+        fanNumber(nullable: true)
         photo(nullable: true)
     }
 

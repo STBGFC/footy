@@ -34,6 +34,16 @@
                             <table>
                                 <tbody>
                                     <g:render template="personFormBody" plugin="footy-core" />
+                                    <%-- following is kept off the template so it doesn't appear when registering for parents --%>
+                                    <tr class="prop">
+                                        <td  class="name">
+                                            <label for="fanNumber"><g:message code="org.davisononline.org.footy.core.fanNumber.label" default="FAN Number (coaches only)" /></label>
+                                        </td>
+                                        <td  class="value ${hasErrors(bean: personCommand, field: 'fanNumber', 'errors')}">
+                                            <g:textField name="fanNumber" value="${personCommand?.fanNumber}" />
+                                            <g:render template="/shared/fieldError" model="['instance':personCommand,'field':'fanNumber']" plugin="footy-core"/>
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
