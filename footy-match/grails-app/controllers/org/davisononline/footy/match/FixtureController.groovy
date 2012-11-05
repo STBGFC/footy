@@ -63,12 +63,16 @@ class FixtureController {
         else
             fixtureInstance.opposition = params.opposition2
 
-        if (!fixtureInstance.save(flush: true)) {
+        if (!footyMatchService.saveFixture(fixtureInstance)) {
             def msg = "Unable to save fixture [${Fixture}]; " + fixtureInstance.errors
             log.error msg
             response.status = 500
         }
-        render template: 'fixtureList', model: [fixtures: footyMatchService.getFixtures(fixtureInstance.team), myteam: fixtureInstance.team], plugin: 'footy-match', contentType: 'text/plain'
+        else
+            render template: 'fixtureList',
+                   model: [fixtures: footyMatchService.getFixtures(fixtureInstance.team), myteam: fixtureInstance.team],
+                   plugin: 'footy-match',
+                   contentType: 'text/plain'
     }
 
     def addResult = {

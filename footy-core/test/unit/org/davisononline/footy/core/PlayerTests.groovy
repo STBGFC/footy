@@ -63,11 +63,9 @@ class PlayerTests extends GrailsUnitTestCase {
         def currYr = d.format('yyyy') as int
         def currMonth = d.month
         def birthYr = currYr - 10 - ((currMonth < 8) ? 0 : 1)
-        p.dateOfBirth = new Date("$birthYr/11/23")
-        assertEquals(9, p.getAgeAtNextCutoff())
         p.dateOfBirth = new Date("$birthYr/08/31")
-        assertEquals(9, p.getAgeAtNextCutoff())
+        assertEquals(12, p.getAgeAtNextCutoff())
         p.dateOfBirth = new Date("$birthYr/09/01")
-        assertEquals(10, p.getAgeAtNextCutoff())
+        assertEquals(11, p.getAgeAtNextCutoff())
     }
 }

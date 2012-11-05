@@ -22,6 +22,7 @@
                         <tr>
                             <g:sortableColumn property="familyName" title="${message(code: 'person.name.label', default: 'Name')}" />
                             <g:sortableColumn property="email" title="${message(code: 'person.email.label', default: 'Email')}" />
+                            <g:sortableColumn property="fanNumber" title="${message(code: 'person.fannumber.label', default: 'FAN number (coaches)')}" />
                             <th><g:message code='person.phone1.label' default='Tel.' />
                             <th><g:message code="person.address.label" default="Address" /></th>
                         </tr>
@@ -31,6 +32,7 @@
                         <tr class="${(i % 2) == 0 ? 'odd' : 'even'}">
                             <td><g:link action="edit" id="${personInstance.id}">${personInstance}</g:link></td>
                             <td>${fieldValue(bean: personInstance, field: "email")}</td>
+                            <td>${fieldValue(bean: personInstance, field: "fanNumber")}</td>
                             <td>${personInstance.bestPhone().encodeAsHTML()}</td>
                             <td>${fieldValue(bean: personInstance, field: "address")}</td>
                         </tr>

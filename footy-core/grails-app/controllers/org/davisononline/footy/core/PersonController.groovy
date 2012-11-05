@@ -2,6 +2,7 @@ package org.davisononline.footy.core
 
 import grails.plugins.springsecurity.Secured
 import org.davisononline.footy.core.utils.ImageUtils
+import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
 
 /**
  * admin controller for Person operations
@@ -30,13 +31,15 @@ class PersonController {
     def list = {
         params.max = Math.min(params.max ? params.int('max') : 25, 100)
         if (!params.sort) params.sort = 'familyName'
+        if (!params.order) params.order = 'asc'
+
         /*
          * I want to do Person.findAllByEligibleParent(true, params)
          * but the pagination fails because it does the select from the db, then filters the list, so I
          * get pages with 'gaps' where the non-eligibleParent records would be.  The hql version works
          * but now I lose sortableColumns as that would have to be specified in the order by clause
          */
-        def l = Person.findAll("from Person p where eligibleParent = ? order by p.familyName", [true], params)
+        def l = Person.findAll("from Person p where eligibleParent = ? order by p.${params.sort} ${params.order}", [true])
         [personInstanceList: l, personInstanceTotal: Person.countByEligibleParent(true)]
     }
 
@@ -59,22 +62,17 @@ class PersonController {
     }
 
     /**
-     * checks to see if the Person being edited is a Player and edits the Player
-     * instead if so.
+     * security for editing is via the ACL (see FootySecurityService)
      */
-    @Secured(["ROLE_COACH"]) // <-- TEMP
+    //@Secured(["ROLE_COACH"]) // <-- TEMP
     def edit = {
         def personInstance = Person.get(params.id)
         if (!personInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'person.label', default: 'Person'), params.id])}"
             redirect(action: "list")
         }
-        else {
-            def player = Player.findByPerson(personInstance)
-            if (player)
-                redirect controller: 'player', action: 'edit', id: player.id
+        else
             return [personCommand: personInstance]
-        }
     }
 
     @Secured(["ROLE_COACH"]) // <-- TEMP

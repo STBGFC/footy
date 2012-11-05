@@ -31,7 +31,21 @@
                           <tr><td class="label">email</td><td class="value">${person.email}</td></tr>
                           <tr><td class="label">mobile</td><td class="value">${person.phone1}</td></tr>
                           <tr><td class="label">other phone</td><td class="value">${person.phone2}</td></tr>
-                          <tr><td class="label">address</td><td class="value">${person.address}</td></tr>
+                          <tr>
+                              <td class="label">address</td>
+                              <td class="value">
+                                  ${person.address}
+                                  <div>
+                                    <g:render template="/shared/addressMap" model="['address':person.address,'size':175]" plugin="footy-core"/>
+                                  </div>
+                              </td>
+                          </tr>
+                          <g:if test="${person.fanNumber}">
+                          <tr>
+                              <td class="label"><g:message code="org.davisononline.org.footy.core.fanNumber.label" default="FAN Number" /></td>
+                              <td class="value">${person.fanNumber}</td>
+                          </tr>
+                          </g:if>
                           <tr><td>qualifications</td><td><g:render template="/person/qualificationsList" model="[person:person]" plugin="footy-core"/></td></tr>
                           <tr><td class="label"></td><td class="value"><g:link controller="person" action="edit" id="${person.id}">edit details</g:link> </td></tr>
                           </g:if>
