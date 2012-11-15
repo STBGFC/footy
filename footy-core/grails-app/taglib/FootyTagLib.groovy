@@ -76,7 +76,7 @@ class FootyTagLib {
         def havePhoto = attrs.team.photo?.size() > 0
 
         out << "<img class='shadow' id='teamphoto'"
-        out << "    src='${havePhoto ? createLink(controller:'team', action:'photo', id:attrs.team.id) : createLinkTo(dir:'images', file:'noteam.png', plugin:'footy-core')}'"
+        out << "    src='${havePhoto ? createLink(controller:'team', action:'photo', id:attrs.team.id) : r.resource(dir:'images', file:'noteam.png', plugin:'footy-core')}'"
         out << "    style='${attrs.style}'"
         out << "    alt='TeamPhoto'/>"
     }
@@ -103,7 +103,7 @@ class FootyTagLib {
         def havePhoto = attrs.person.photo?.size() > 0
 
         out << "<img class='userpic'"
-        out << "    src='${havePhoto ? createLink(controller:'person', action:'photo', id:attrs.person.id) : createLinkTo(dir:'images', file:'nouser.jpg', plugin:'footy-core')}'"
+        out << "    src='${havePhoto ? createLink(controller:'person', action:'photo', id:attrs.person.id) : r.resource(dir:'images', file:'nouser.jpg', plugin:'footy-core')}'"
         out << "    alt='${havePhoto ? attrs.person.toString() : 'Awaiting Photo'}'/>"
 
         //<img class="userpic" src="${createLinkTo(dir:'images',file:'nouser.jpg',plugin:'footy-core')}" alt="No Picture"/>
@@ -178,19 +178,19 @@ class FootyTagLib {
                 out << """<a href="${createLink(controller:'invoice', action:'show', id:payment?.transactionId)}">
                 <img align="middle" title="Current ${paid ? 'and paid' : 'BUT NOT PAID'}"
                 alt="Current ${paid ? 'and paid' : 'BUT NOT PAID'}"
-                src="${resource(dir:'images',file:'registration-' + (paid ? '' : 'un') + 'paid.png', plugin:'footy-core')}"/>
+                src="${r.resource(dir:'images',file:'registration-' + (paid ? '' : 'un') + 'paid.png', plugin:'footy-core')}"/>
                 </a>"""
             }
             else {
                 // non-linked expired icon
                 out << """<img align="middle" title="EXPIRED!" alt="EXPIRED!"
-                src="${resource(dir:'images',file:'registration-expired.png', plugin:'footy-core')}"/>"""
+                src="${r.resource(dir:'images',file:'registration-expired.png', plugin:'footy-core')}"/>"""
             }
         }
         else {
             // no registration found
             out << """<img align="middle" title="Not Found!" alt="Not Found!"
-                src="${resource(dir:'images',file:'registration-missing.png', plugin:'footy-core')}"/>"""
+                src="${r.resource(dir:'images',file:'registration-missing.png', plugin:'footy-core')}"/>"""
         }
 
     }
