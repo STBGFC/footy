@@ -40,7 +40,7 @@ class FootyTagLib {
         if (sp) {
             if (sp.url)
                 out << "<a href='${sp.url}' title='${sp.name}'>"
-            out << "<img id='sponsorlogo'"
+            out << "<img class='sponsorlogo'"
             out << "    src='${createLink(controller:'sponsor', action:'logo', id:sp.id)}'"
             if (!sp.url)
                 out << "    title='${sp.name} sponsors our team'"
