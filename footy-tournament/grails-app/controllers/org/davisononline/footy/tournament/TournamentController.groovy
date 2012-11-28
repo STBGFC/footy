@@ -80,8 +80,16 @@ class TournamentController {
          * export of the current tournament values
          */
         if(params?.format && params.format != "html"){
-            List fields = ["ageBand", "name", "league", "division", "manager"] 
-            Map labels = ["ageBand": "Age Group", "name": "Team", "league": "League", "division": "Division", "manager": "Manager"]
+            List fields = ["ageBand", "name", "league", "division", "manager", "manager.email", "manager.phone1"]
+            Map labels = [
+                    "ageBand": "Age Group",
+                    "name": "Team",
+                    "league": "League",
+                    "division": "Division",
+                    "manager": "Manager",
+                    "manager.email": "Email",
+                    "manager.phone1": "Tel."
+            ]
 
             // Formatter closure 
             def teamName = { team, value -> 
@@ -92,7 +100,7 @@ class TournamentController {
             }
 
             Map formatters = [name: teamName, ageBand: ageBandLabel] 
-            Map parameters = [title: t.name, "column.widths": [0.1, 0.4, 0.2, 0.1, 0.2]]
+            Map parameters = [title: t.name, "column.widths": [0.1, 0.4, 0.1, 0.2, 0.2, 0.4, 0.2]]
         
             response.contentType = ConfigurationHolder.config.grails.mime.types[params.format] 
             response.setHeader(
