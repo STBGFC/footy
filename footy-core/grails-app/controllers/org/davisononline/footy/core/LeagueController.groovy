@@ -1,6 +1,8 @@
 package org.davisononline.footy.core
 
 import grails.plugins.springsecurity.Secured
+import grails.converters.*
+
 
 /**
  * controller methods for CRUD on League
@@ -90,5 +92,24 @@ class LeagueController {
         }
 
         redirect(action: "list")
+    }
+
+    @Secured("permitAll")
+    def divisionsInLeague = {
+        def leagueInstance = League.get(params.id)
+        if (!leagueInstance) {
+            render (contentType: 'text/json', status:  404, text: '{404: "No Such League"}')
+        }
+        else {
+            render (contentType: 'text/json') {
+                array {
+                    for (d in leagueInstance.divisions.sort()) {
+                        division id:d.id,
+                        index:d.index,
+                        name: "${leagueInstance.name} U${d.ageBand} ${d.name}"
+                    }
+                }
+            }
+        }
     }
 }
