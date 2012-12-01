@@ -123,8 +123,11 @@ class EntryController {
                             phone1: clubCommand.clubSecretaryPhone
                     )
                     secr.fullName = clubCommand.clubSecretaryName
-                    // create domain and save early so we can persist club details too
-                    secr.save(flush: true)
+                    if (!secr.validate()) {
+                        flow.clubCommand.errors = secr.errors
+                        log.error "Failed to validate club: ${secr.errors}"
+                        return error()
+                    }
                 }
                 
                 def c = new Club(
@@ -141,8 +144,6 @@ class EntryController {
                 flow.clubInstance = c
                 flow.newClub = c
 
-                // save early to prevent duplicate creation by another user
-                c.save(flush: true)
             }.to "createTeam"  // no teams to select if club has just been created
         }
         
@@ -188,6 +189,8 @@ class EntryController {
             on("submit") {
                 def team = new Team(params)
                 team.manager = flow.entryInstance.contact
+                team.club = team.club ?: flow.clubInstance
+
                 if (!team.validate()) {
                     log.error team.errors
                     flow.teamCommand = team
@@ -205,9 +208,15 @@ class EntryController {
             // if (flow.newClub == null) the following
             // should go back to "selectTeam" instead
             on("createMore").to("createTeam")
+
+            on("removeTeams") { RegisterCommand regCmd ->
+                if (regCmd.validate()) {
+                    def teams = Team.getAll(regCmd.teamIds?.toList())
+                    teams.each {flow.entryInstance.removeFromTeams(it)}
+                }
+            }.to("confirmEntry")
             
             on("submit") {
-
                 def payment = tournamentService.createPayment(flow.entryInstance)
                 try {
                     tournamentService.sendConfirmEmail(flow.entryInstance)

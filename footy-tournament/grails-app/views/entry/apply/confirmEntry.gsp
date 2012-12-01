@@ -16,10 +16,13 @@
         <g:form action="apply">
         <ul id="confirmEntryList" class="nice-list">
         <g:each in="${entryInstance.teams}" var="team">
-            <li>${team.club} ${team} <g:if test="${!team.vetsTeam}">(${team.division})</g:if></li>
+            <li class="teamNotRegistered">
+                <g:checkBox name="teamIds" value="${team.id}" checked="${false}"/> <strong>${team.club} ${team}</strong> <g:if test="${team.division}">(${team.division})</g:if>
+            </li>
         </g:each>       
         </ul>
         <div class="buttons">
+            <span class="button"><g:submitButton name="removeTeams" class="delete" value="Remove Checked Teams"></g:submitButton></span>
             <span class="button"><g:submitButton name="createMore" class="create" value="Add More Teams"></g:submitButton></span>
             <span class="button"><g:submitButton name="submit" class="save" value="Continue to Payment"></g:submitButton></span>
         </div>
