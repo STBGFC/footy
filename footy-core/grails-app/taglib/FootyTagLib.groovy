@@ -145,8 +145,7 @@ class FootyTagLib {
             out << """<a href="${createLink(controller:'invoice', action:'show', id:payment.transactionId)}">
             <img align="middle" title="Payment ${cash ? 'made by Cash/Cheque/Credit Card': payment.status}"
             alt="${payment?.status?.toLowerCase()}"
-            src="${resource(dir:'images',file:'payment-' + payment?.status?.toLowerCase() + (cash ? 'b' : '') + '.png', plugin:'footy-core')}"/>
-            </a>"""
+            src="${resource(dir:'images',file:'payment-' + payment?.status?.toLowerCase() + (cash ? 'b' : '') + '.png', plugin:'footy-core')}"/></a>"""
         }
     }
 
