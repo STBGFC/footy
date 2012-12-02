@@ -21,6 +21,11 @@
                 <g:hiddenField name="id" value="${tournamentInstance?.id}" />
                 <g:hiddenField name="version" value="${tournamentInstance?.version}" />
                 </g:if>
+                <g:if test="${tournamentInstance.entries}">
+                <div class="notice">
+                    <g:message code="org.davisononline.footy.tournament.views.tournament.edit.entriesexist" default="NB: Entries already exist for this tournament!"/>
+                </div>
+                </g:if>
                 <div class="dialog">
                     <table>
                         <tbody>

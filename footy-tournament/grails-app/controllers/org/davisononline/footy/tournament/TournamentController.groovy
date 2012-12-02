@@ -126,23 +126,7 @@ class TournamentController {
      */
     def edit = {
         def t = checkInstance(params)
-        // can't edit if entries already made
-        if (t?.entries.size() > 0) {
-            flash.message = "${message(code: 'org.davisononline.footy.tournament.entriesexist', default: 'Entries already exist - cannot edit tournament')}"
-            redirect(action: "list", params: params)
-        }
-        else
-            render (view: 'edit', model:[tournamentInstance: t])
-    }
-
-    /**
-     * close tournament to new entries
-     */
-    def close = {
-        def t = checkInstance(params)
-        t.openForEntry = false
-        t.save()
-        redirect(action: "list", params: params)
+        render (view: 'edit', model:[tournamentInstance: t])
     }
     
     /**
