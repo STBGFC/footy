@@ -12,10 +12,6 @@
             A list of all tournaments is shown below.  Tournament names with a green background are open
             for entry and people can register new teams for them.  Remember to close off tournament entries!
         </p>
-        <p>
-            Once teams have registered for a tournament, you will no longer be able to edit the details of
-            that tournament - including entry fee and dates
-        </p>
         <div class="nav">
             <span class="menuButton"><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></span>
             <span class="menuButton"><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></span>
