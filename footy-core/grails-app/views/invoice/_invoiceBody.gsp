@@ -62,10 +62,10 @@
                     cancelAction: 'paypalCancel'
                 ]">
             <input type="image" class="paypal"
-                src="${resource(dir:'images', file:'paypalcards.gif', plugin: 'footy-core')}"
+                src="${r.resource(dir:'images', file:'paypalcards.gif', plugin: 'footy-core')}"
                 alt="Click to pay via PayPal or Credit Card"/>
             <input type="image" class="paypal"
-                src="${resource(dir:'images', file:'paypalcheckout.gif', plugin: 'footy-core')}"
+                src="${r.resource(dir:'images', file:'paypalcheckout.gif', plugin: 'footy-core')}"
                 alt="Click to pay via PayPal or Credit Card"/>
             </g:form>
         </div>
@@ -85,7 +85,7 @@
                 params="${[totalAmount:totalAmount]}"
                 title="Mark this invoice as paid manually"
                 width="350">
-            <img src="${resource(dir:'images',file:'payment-complete-large-b.png', plugin: 'footy-core')}" alt="Mark Received"/>
+            <img src="${r.resource(dir:'images',file:'payment-complete-large-b.png', plugin: 'footy-core')}" alt="Mark Received"/>
         </modalbox:createLink>
         </sec:ifAnyGranted>
         <h2>Pay Online</h2>
@@ -133,7 +133,7 @@
                 params="${[totalAmount:0, refund:true]}"
                 title="Refund all or part of this invoice"
                 width="350">
-            <img src="${resource(dir:'images',file:'payment-complete-large-r.png', plugin: 'footy-core')}" alt="Refund"/>
+            <img src="${r.resource(dir:'images',file:'payment-complete-large-r.png', plugin: 'footy-core')}" alt="Refund"/>
         </modalbox:createLink>
         </sec:ifAnyGranted>
         </g:else>

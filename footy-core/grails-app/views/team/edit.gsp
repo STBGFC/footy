@@ -22,6 +22,17 @@
                     <table>
                         <tbody>
                             <g:render template="teamFormBody" model="[teamCommand: teamInstance, clubInstance: Club.getHomeClub()]" plugin="footy-core"/>
+
+                            <tr class="prop">
+                                <td  class="name">
+                                    <label for="sponsor.id"><g:message code="entry.sponsor.label" default="Sponsor" /></label>
+                                </td>
+                                <td  class="value ${hasErrors(bean: teamCommand, field: 'sponsor', 'errors')}">
+                                    <g:select name="sponsor.id" from="${Sponsor.list()}" value="${teamCommand?.sponsor?.id}" optionKey="id" noSelection="${['null':'-- none --']}"/>
+                                    <g:render template="/shared/fieldError" model="['instance':teamCommand,'field':'sponsor']" plugin="footy-core"/>
+                                </td>
+                            </tr>
+
                             <tr class="prop">
                                 <td valign="top" class="name">
                                   <label for="manager.id"><g:message code="org.davisononline.footy.core.team.manager.label" default="Manager" /></label>

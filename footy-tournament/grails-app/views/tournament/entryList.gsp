@@ -38,14 +38,11 @@
                         <td>
                             <g:if test="${entry.payment}">
                                 <g:set var="cash" value="${entry.payment.status == Payment.COMPLETE && !entry.payment.paypalTransactionId}"/>
-                                <g:link controller="invoice" action="show" id="${entry.payment?.transactionId}">
-                                    <img title="Payment ${cash ? 'by Cash/Cheque': entry.payment.status}" alt="${entry.payment?.status?.toLowerCase()} (click to see invoice)"
-                                         src="${resource(dir:'images',file:'payment-' + entry.payment?.status?.toLowerCase() + (cash ? 'b' : '') + '.png', plugin:'footy-core')}"/>
-                                </g:link>
+                                <footy:paymentStatus payment="${entry.payment}"/>
                             </g:if>
+                            &nbsp;<g:link action="delete" controller="entry" id="${entry.id}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');">delete entry</g:link>
                             <g:if test="${entry.payment?.status != org.grails.paypal.Payment.COMPLETE}">
-                            &nbsp;(<g:link action="paymentMade" controller="entry" id="${entry.id}" onclick="return confirm('${message(code: 'default.button.manualpayment.confirm.message', default: 'Are you sure you want to mark payment as received?')}');">mark payment received</g:link>)
-                            &nbsp;(<g:link action="delete" controller="entry" id="${entry.id}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');">delete entry</g:link>)
+                            &nbsp;<g:link action="paymentMade" controller="entry" id="${entry.id}" onclick="return confirm('${message(code: 'default.button.manualpayment.confirm.message', default: 'Are you sure you want to mark payment as received?')}');">mark payment received</g:link>
                             </g:if>
                         </td>
                     </tr>

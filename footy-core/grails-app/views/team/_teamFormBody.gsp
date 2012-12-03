@@ -1,4 +1,36 @@
 <%@ page import="org.davisononline.footy.core.*" %>
+
+                            <r:script disposition="head">
+                            function updateDiv(e) {
+                                var divisions = eval("(" + e.responseText + ")")	// evaluate JSON returned from ajax call
+
+                                if (divisions) {
+                                    var rselect = document.getElementById('division.id')
+
+                                    // Clear all previous options
+                                    var l = rselect.length
+
+                                    while (l > 1) {
+                                        l--
+                                        rselect.remove(l)
+                                    }
+
+                                    // Rebuild the select
+                                    for (var i=0; i < divisions.length; i++) {
+                                        var division = divisions[i]
+                                        var opt = document.createElement('option');
+                                        opt.text = division.name
+                                        opt.value = division.id
+                                        try {
+                                            rselect.add(opt, null) // standards compliant; doesn't work in IE
+                                        }
+                                        catch(ex) {
+                                            rselect.add(opt) // IE only
+                                        }
+                                    }
+                                }
+                            }
+                            </r:script>
                             <tr class="prop">
                                 <td  class="name">
                                     <label for="club.id"><g:message code="entry.club.label" default="Club" /></label>
@@ -36,7 +68,13 @@
                                     <label for="league.id"><g:message code="entry.league.label" default="League" /></label>
                                 </td>
                                 <td  class="value ${hasErrors(bean: teamCommand, field: 'league.id', 'errors')}">
-                                    <g:select name="league.id" from="${League.list()}" value="${teamCommand?.league?.id}" optionValue="name" optionKey="id" valueMessagePrefix="entry.league"  />
+                                    <g:select name="league.id" from="${League.list()}" value="${teamCommand?.league?.id}" optionValue="name" optionKey="id" valueMessagePrefix="entry.league"
+                                              onchange="${remoteFunction(
+                                                    controller:'league',
+                                                    action:'divisionsInLeague',
+                                                    params:'\'id=\' + escape(this.value)',
+                                                    onComplete:'updateDiv(e)')}"
+                                     />
                                     <g:render template="/shared/fieldError" model="['instance':teamCommand,'field':'league']" plugin="footy-core"/>
                                 </td>
                             </tr>
@@ -46,17 +84,7 @@
                                     <label for="division.id"><g:message code="entry.division.label" default="Division" /></label>
                                 </td>
                                 <td  class="value ${hasErrors(bean: teamCommand, field: 'division', 'errors')}">
-                                    <g:select name="division.id" from="${Division.list([sort:'ageBand',order:'asc'])}" value="${teamCommand?.division?.id}" optionKey="id" noSelection="${['null':'-- none / not listed --']}"/>
+                                    <g:select name="division.id" from="${teamCommand?.league?.divisions ?: League.list()[0].divisions}" value="${teamCommand?.division?.id}" optionKey="id" noSelection="${['null':'-- none / not listed --']}"/>
                                     <g:render template="/shared/fieldError" model="['instance':teamCommand,'field':'division']" plugin="footy-core"/>
-                                </td>
-                            </tr>
-
-                            <tr class="prop">
-                                <td  class="name">
-                                    <label for="sponsor.id"><g:message code="entry.sponsor.label" default="Sponsor" /></label>
-                                </td>
-                                <td  class="value ${hasErrors(bean: teamCommand, field: 'sponsor', 'errors')}">
-                                    <g:select name="sponsor.id" from="${Sponsor.list()}" value="${teamCommand?.sponsor?.id}" optionKey="id" noSelection="${['null':'-- none --']}"/>
-                                    <g:render template="/shared/fieldError" model="['instance':teamCommand,'field':'sponsor']" plugin="footy-core"/>
                                 </td>
                             </tr>

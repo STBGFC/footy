@@ -361,6 +361,7 @@ td.errors textarea {
 .error, .notice, .success {
 	border: 1px solid #DDD;
 	margin-bottom: 1em;
+    margin-top: 1em;
 	padding: 0.6em 0.8em;
 }
 

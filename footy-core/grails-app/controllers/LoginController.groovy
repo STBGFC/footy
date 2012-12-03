@@ -295,7 +295,7 @@ class LoginController {
         def person = user ? Person.findByUser(user) : null
         def teams = []
         if (person) {
-            Team.list().each { t ->
+            Team.findAllByClub(Club.homeClub).each { t ->
                 if (t.manager?.id == person.id || t.coaches?.collect{it?.id}.contains(person.id)) teams << t
             }
         }

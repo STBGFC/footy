@@ -20,18 +20,20 @@ class PersonController {
     }
 
     def qualifications = {
-        params.max = Math.min(params.max ? params.int('max') : 25, 100)
+        params.max = Math.min(params.max ? params.int('max') : 100, 200)
         params.sort = 'expiresOn'
         params.order = 'asc'
+        params.cache = true
         def sixMonths = (new Date()) + 180
         def l = Qualification.findAllByExpiresOnLessThan(sixMonths, params)
         [qualifications: l, qualificationsTotal: Qualification.countByExpiresOnLessThan(sixMonths)]
     }
 
     def list = {
-        params.max = Math.min(params.max ? params.int('max') : 25, 100)
+        params.max = Math.min(params.max ? params.int('max') : 100, 200)
         if (!params.sort) params.sort = 'familyName'
         if (!params.order) params.order = 'asc'
+        params.cache = true
 
         /*
          * I want to do Person.findAllByEligibleParent(true, params)
@@ -39,7 +41,7 @@ class PersonController {
          * get pages with 'gaps' where the non-eligibleParent records would be.  The hql version works
          * but now I lose sortableColumns as that would have to be specified in the order by clause
          */
-        def l = Person.findAll("from Person p where eligibleParent = ? order by p.${params.sort} ${params.order}", [true])
+        def l = Person.findAll("from Person p where eligibleParent = ? order by p.familyName", [true], params)
         [personInstanceList: l, personInstanceTotal: Person.countByEligibleParent(true)]
     }
 
