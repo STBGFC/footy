@@ -64,9 +64,9 @@ class PersonController {
     }
 
     /**
-     * security for editing is via the ACL (see FootySecurityService)
+     * security for editing is also via the ACL (see FootySecurityService)
      */
-    //@Secured(["ROLE_COACH"]) // <-- TEMP
+    @Secured(["ROLE_COACH"])
     def edit = {
         def personInstance = Person.get(params.id)
         if (!personInstance) {
@@ -77,7 +77,7 @@ class PersonController {
             return [personCommand: personInstance]
     }
 
-    @Secured(["ROLE_COACH"]) // <-- TEMP
+    @Secured(["ROLE_COACH"])
     def update = {
         def personInstance = Person.get(params.id)
         if (personInstance) {
