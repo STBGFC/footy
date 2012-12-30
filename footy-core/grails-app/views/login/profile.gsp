@@ -3,6 +3,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	    <title>${person ?: 'Staff'}'s Profile Page</title>
+        <g:set var="pluginManager" value="${applicationContext.getBean('pluginManager')}"/>
     </head>
 
     <body>
@@ -93,12 +94,14 @@
 
                     <div class="section-content">
                       <ul class="nice-list">
-                          <%-- TODO: stuff below implies knowledge of other optional plugins.. needs making safe --%>
+                          <g:if test="${pluginManager.hasGrailsPlugin('footy-tournament')}">
                           <li>
                               <g:link controller="resource" action="summary">
                                   <g:message code="org.davisononline.footy.match.pitches.label" default="Pitch Allocations" />
                               </g:link>
                           </li>
+                          </g:if>
+                          <g:if test="${pluginManager.hasGrailsPlugin('weceem')}">
                           <li>
                               <g:link url="../content/staff/">
                                   <g:message
@@ -106,6 +109,7 @@
                                           default="Managers Pages" />
                               </g:link>
                           </li>
+                          </g:if>
                       </ul>
                     </div>
 
@@ -166,8 +170,8 @@
                               <g:link controller="qualificationType" action="list">Qualification types</g:link>
                           </li>
                           </sec:ifAnyGranted>
-                          <%-- TODO: stuff below implies knowledge of other optional plugins.. needs making safe --%>
                           <sec:ifAnyGranted roles="ROLE_EDITOR">
+                          <g:if test="${pluginManager.hasGrailsPlugin('weceem')}">
                           <li>
                               <g:link url="../wcm-admin">
                                   <g:message
@@ -175,8 +179,10 @@
                                           default="Content Administration" />
                               </g:link>
                           </li>
+                          </g:if>
                           </sec:ifAnyGranted>
                           <sec:ifAnyGranted roles="ROLE_TOURNAMENT_ADMIN">
+                          <g:if test="${pluginManager.hasGrailsPlugin('footy-tournament')}">
                           <li>
                               <g:link controller="tournament" action="list">
                                   <g:message
@@ -184,8 +190,10 @@
                                           default="Tournament Administration" />
                               </g:link>
                           </li>
+                          </g:if>
                           </sec:ifAnyGranted>
                           <sec:ifAnyGranted roles="ROLE_FIXTURE_ADMIN">
+                          <g:if test="${pluginManager.hasGrailsPlugin('footy-match')}">
                           <li>
                               <g:link controller="resource" action="index">
                                   <g:message
@@ -200,6 +208,7 @@
                                           default="Referee Report Summary" />
                               </g:link>
                           </li>
+                          </g:if>
                           </sec:ifAnyGranted>
                       </ul>
                     </div>
