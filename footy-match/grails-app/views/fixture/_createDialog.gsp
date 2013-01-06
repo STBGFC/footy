@@ -62,9 +62,9 @@
                     <option value="12">December</option>
                 </select>
                 <select name="dateTime_year" id="dateTime_year" class="MB_focusable">
-                    <option value="2011">${now.year+1899}</option>
-                    <option value="2012" selected="selected">${now.year+1900}</option>
-                    <option value="2013">${now.year+1901}</option>
+                    <option value="${now.year+1899}">${now.year+1899}</option>
+                    <option value="${now.year+1900}" selected="selected">${now.year+1900}</option>
+                    <option value="${now.year+1901}">${now.year+1901}</option>
                 </select>
                 <br/>
                 <select name="dateTime_hour" id="dateTime_hour" class="MB_focusable">
