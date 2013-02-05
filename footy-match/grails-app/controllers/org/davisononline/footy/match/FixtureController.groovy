@@ -154,6 +154,10 @@ class FixtureController {
 
             fx.properties = params
         }
+        else {
+            // mark the game as played even if the result cannot be published
+            fx.played = true
+        }
 
         // ref report
         RefereeReport report = new RefereeReport()
