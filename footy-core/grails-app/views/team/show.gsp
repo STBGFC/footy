@@ -148,6 +148,7 @@
                             <td>${fieldValue(bean: player, field: "leagueRegistrationNumber")}</td>
                             <td>
                                 <footy:registrationStatus player="${player}"/>
+                                ${player.currentRegistration ?: "Not Registered"}
                             </td>
                         </tr>
                     </g:each>
