@@ -175,14 +175,13 @@ class FootyTagLib {
 
                 // link to invoice, paid or otherwise
                 out << """<a href="${createLink(controller:'invoice', action:'show', id:payment?.transactionId)}">
-                <img align="middle" title="Current ${paid ? 'and paid' : 'BUT NOT PAID'}"
+                <img style="vertical-align:middle" title="Current ${paid ? 'and paid' : 'BUT NOT PAID'}"
                 alt="Current ${paid ? 'and paid' : 'BUT NOT PAID'}"
-                src="${r.resource(dir:'images',file:'registration-' + (paid ? '' : 'un') + 'paid.png', plugin:'footy-core')}"/>
-                </a>"""
+                src="${r.resource(dir:'images',file:'registration-' + (paid ? '' : 'un') + 'paid.png', plugin:'footy-core')}"/></a>"""
             }
             else {
                 // non-linked expired icon
-                out << """<img align="middle" title="EXPIRED!" alt="EXPIRED!"
+                out << """<img style="vertical-align:middle" title="EXPIRED!" alt="EXPIRED!"
                 src="${r.resource(dir:'images',file:'registration-expired.png', plugin:'footy-core')}"/>"""
             }
         }
