@@ -1,6 +1,8 @@
 class TournamentUrlMappings {
 
 	static mappings = {
-		"/tournamentapplication/$id" (controller: "entry", action: "apply")
+		"/tournamentsignup/$name" (controller: "entry", action: "apply")
+
+        "/entry/deleteTeam/$tournamentId/$teamId" (controller: "entry", action: "deleteTeam")
 	}
 }

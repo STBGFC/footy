@@ -20,10 +20,10 @@
             check <g:link controller="tournament" action="entryList" id="${tournamentInstance.id}">here</g:link> to see status of payments)
         </p>
         <g:each in="${Team.constraints.ageBand.inList}" var="age">
-            <g:render template="teamTables" model="['teams':teamList.grep{it.ageBand == age && !it.girlsTeam}, 'age': age]" />
+            <g:render template="teamTables" model="['tournamentInstance':tournamentInstance, 'teams':teamList.grep{it.ageBand == age && !it.girlsTeam}, 'age': age]" />
         </g:each>
         <g:each in="${Team.constraints.ageBand.inList}" var="age">
-            <g:render template="teamTables" model="['teams':teamList.grep{it.ageBand == age && it.girlsTeam}, 'age': age]" />
+            <g:render template="teamTables" model="['tournamentInstance':tournamentInstance, 'teams':teamList.grep{it.ageBand == age && it.girlsTeam}, 'age': age]" />
         </g:each>
         <p>
             You can export the data above to Excel or PDF using the buttons below

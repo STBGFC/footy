@@ -74,6 +74,17 @@
                                     <g:checkBox name="openForEntry" value="${tournamentInstance?.openForEntry}" />
                                 </td>
                             </tr>
+
+                            <g:if test="${tournamentInstance.id}">
+                            <tr class="prop">
+                                <td valign="top" class="name">
+                                  <label><g:message code="tournament.applyLink.label" default="Application Link" /></label>
+                                </td>
+                                <td valign="top" class="value">
+                                    <g:createLink absolute="true" action="apply" controller="entry" params='[name: "${tournamentInstance.name.encodeAsHTML()}"]'/>
+                                </td>
+                            </tr>
+                            </g:if>
                         
                         </tbody>
                     </table>

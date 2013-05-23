@@ -20,8 +20,8 @@ class EntryController {
     def index = {
         redirect(action:"apply")
     }
-    
-    @Secured(["ROLE_CLUB_ADMIN"])
+
+    @Secured(["ROLE_TOURNAMENT_ADMIN"])
     def delete = {
         def e = checkEntry(params)
         def tid = e.tournament.id
@@ -30,7 +30,20 @@ class EntryController {
         redirect(controller: "tournament", action: "entryList", id: tid)
     }
 
-    @Secured(["ROLE_CLUB_ADMIN"])
+    @Secured(["ROLE_TOURNAMENT_ADMIN"])
+    def deleteTeam = {
+        def tournament = Tournament.get(params.tournamentId)
+        def team = Team.get(params.teamId)
+        tournament?.entries.each { e ->
+            if (e.teams.contains(team)) {
+                e.removeFromTeams(team)
+                e.save()
+            }
+        }
+        redirect(controller: "tournament", action: "show", id: tournament.id)
+    }
+
+    @Secured(["ROLE_TOURNAMENT_ADMIN"])
     def paymentMade = {
         def e = checkEntry (params)
         e.payment.status = Payment.COMPLETE
@@ -56,11 +69,11 @@ class EntryController {
         
         setup {
             action {
-                if (!params.id) {
-                    log.error "no tournament id supplied"
+                if (!params.name) {
+                    log.error "no tournament name supplied"
                     return notFound()
                 }
-                def t = Tournament.get(params.id)
+                def t = Tournament.findByName(params.name)
                 if (! t?.openForEntry) {
                     log.error "Tournament not found, or not open for entry" 
                     return notFound()

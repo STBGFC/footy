@@ -5,7 +5,7 @@
         <g:if test="${!scale}"><g:set var="scale" value="1"/></g:if>
         <img 
             class="addressmap" 
-            src="http://maps.google.com/maps/api/staticmap?center=${address?.encodeAsURL()}&markers=color:green|size:mid|label:${address?.name[0]}|${address?.encodeAsURL()}&size=${size}x${size}&sensor=false&zoom=${zoom}&scale=${scale}"
+            src="http://maps.google.com/maps/api/staticmap?center=${address.postCode.encodeAsURL()}&markers=color:green|size:mid|label:${address?.name[0]}|${address.postCode.encodeAsURL()}&size=${size}x${size}&sensor=false&zoom=${zoom}&scale=${scale}"
             title="Address Location"
             alt="Map" />
         </g:if>
