@@ -14,7 +14,8 @@
                     which is ${entryInstance.tournament.startDate == entryInstance.tournament.endDate ? "on " + formatDate(date:entryInstance.tournament.startDate, format:"dd MMMM yyyy") : "from " + formatDate(date:entryInstance.tournament.startDate, format:"dd-") + formatDate(date:entryInstance.tournament.endDate, format: "dd MMMM yyyy")}
                 </p>
                 <p>
-                    Please start by completing your own contact details below.
+                    <g:message code="org.davisononline.footy.tournament.views.entry.apply.text"
+                        default="Please start by completing contact details below of the team manager or administrator." />
                 </p>
                     <table>
                         <tbody>
