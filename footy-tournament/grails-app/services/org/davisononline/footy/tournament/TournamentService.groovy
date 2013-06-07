@@ -12,7 +12,11 @@ class TournamentService {
     
     def mailService
 
-    def fromEmail = ConfigurationHolder.config?.org?.davisononline?.footy?.tournament?.registration?.email
+    def CFG = ConfigurationHolder.config?.org?.davisononline?.footy?.tournament
+
+    def fromEmail = CFG?.registration?.email
+
+    def currencyCode = CFG?.currency ?: "GBP"
 
 
     /**
@@ -46,7 +50,7 @@ class TournamentService {
 
         def payment = new Payment (
             buyerId: entry.contact.id,
-            currency: Currency.getInstance("GBP"),
+            currency: Currency.getInstance(currencyCode),
             transactionIdPrefix: "TRN"
         )
         entry.teams.each { t->
