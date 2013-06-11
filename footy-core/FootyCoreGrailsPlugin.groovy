@@ -9,6 +9,9 @@ class FootyCoreGrailsPlugin {
     def dependsOn = [
         mail: "1.0-SNAPSHOT > *", 
         paypal: "0.6.5 > *", 
+        webflow: "1.3 > *", 
+        export: "0.8 > *",
+        weceem:'1.1.2>*',
     ]
     // resources that are excluded from plugin packaging
     def pluginExcludes = [
@@ -40,6 +43,53 @@ class FootyCoreGrailsPlugin {
         SpringSecurityUtils.securityConfig.userLookup.userDomainClassName = 'org.davisononline.footy.core.SecUser'
         SpringSecurityUtils.securityConfig.userLookup.authorityJoinClassName = 'org.davisononline.footy.core.SecUserSecRole'
         SpringSecurityUtils.securityConfig.authority.className = 'org.davisononline.footy.core.SecRole'
+
+        /*
+         * bridge s2-core to weceem.. this code does the same job as the
+         * weceem-spring-security plugin which is not required and should not
+         * be present.
+         */
+        def authenticateService = applicationContext.springSecurityService
+        applicationContext.wcmSecurityService.securityDelegate = [
+            getUserName : { ->
+                def princ = authenticateService.principal
+                if (log.debugEnabled) {
+                    log.debug "Weceem security getUserName callback - user principal is: ${princ} (an instance of ${princ?.class})"
+                }
+                if (princ instanceof String) {
+                    return null
+                } else {
+                    return princ?.username
+                }
+            },
+            getUserEmail : { ->
+                // we manage an email address as part of a Person record and
+                // not necessarily at the principal.
+                return "unknown@user.tld"
+            },
+            getUserRoles : { ->
+                def princ = authenticateService.principal
+                if (log.debugEnabled) {
+                    log.debug "Weceem security getUserRoles callback - user principal is: ${princ} (an instance of ${princ?.class})"
+                }
+                if (princ instanceof String) {
+                    return ['ROLE_GUEST']
+                }
+                def auths = []
+                def authorities = princ?.authorities
+                if (authorities) {
+                    auths.addAll(authorities?.authority)
+                }
+                return auths ?: ['ROLE_GUEST']
+            },
+            getUserPrincipal : { ->
+                // weceem 1.1.2 FORCES the presence of "firstName", "lastName" and
+                // "email" fields on the principal (see RenderEngine.makeUserInfo() )
+                //authenticateService.principal
+                [firstName:'John', lastName:'Doe', email:'unknown@user.tld']
+            }
+        ]
+
     }
 
     def onChange = { event ->

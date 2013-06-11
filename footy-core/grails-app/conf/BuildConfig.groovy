@@ -22,6 +22,7 @@ grails.project.dependency.resolution = {
         //mavenRepo "http://repository.codehaus.org"
         //mavenRepo "http://download.java.net/maven/2/"
         //mavenRepo "http://repository.jboss.com/maven2/"
+        mavenRepo "http://m2.modularity.net.au/releases"
     }
     plugins {
         compile ':paypal:0.6.5'
@@ -38,11 +39,14 @@ grails.project.dependency.resolution = {
         runtime ':hibernate:1.3.7'
         runtime ':webflow:1.3.7'
         runtime ':tomcat:1.3.7'
+        runtime ':weceem:1.1.2'
     }
     dependencies {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes eg.
         runtime 'org.imgscalr:imgscalr-lib:4.2'
         runtime 'com.lowagie:itext:2.1.5'
         runtime 'com.lowagie:itext-rtf:2.1.5'
+        runtime 'net.fortuna.ical4j:ical4j:1.0.1'
     }
 }
+

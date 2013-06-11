@@ -3,8 +3,6 @@ grails.project.test.class.dir = "target/test-classes"
 grails.project.test.reports.dir = "target/test-reports"
 
 grails.plugin.location.'footy-core' = "../footy-core"
-grails.plugin.location.'footy-match' = "../footy-match"
-grails.plugin.location.'footy-tournament' = "../footy-tournament"
 
 //grails.project.war.file = "target/${appName}-${appVersion}.war"
 grails.project.dependency.resolution = {

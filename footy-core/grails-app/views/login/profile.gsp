@@ -94,13 +94,11 @@
 
                     <div class="section-content">
                       <ul class="nice-list">
-                          <g:if test="${pluginManager.hasGrailsPlugin('footy-tournament')}">
                           <li>
                               <g:link controller="resource" action="summary">
                                   <g:message code="org.davisononline.footy.match.pitches.label" default="Pitch Allocations" />
                               </g:link>
                           </li>
-                          </g:if>
                           <g:if test="${pluginManager.hasGrailsPlugin('weceem')}">
                           <li>
                               <g:link url="../content/staff/">
@@ -182,7 +180,6 @@
                           </g:if>
                           </sec:ifAnyGranted>
                           <sec:ifAnyGranted roles="ROLE_TOURNAMENT_ADMIN">
-                          <g:if test="${pluginManager.hasGrailsPlugin('footy-tournament')}">
                           <li>
                               <g:link controller="tournament" action="list">
                                   <g:message
@@ -190,10 +187,8 @@
                                           default="Tournament Administration" />
                               </g:link>
                           </li>
-                          </g:if>
                           </sec:ifAnyGranted>
                           <sec:ifAnyGranted roles="ROLE_FIXTURE_ADMIN">
-                          <g:if test="${pluginManager.hasGrailsPlugin('footy-match')}">
                           <li>
                               <g:link controller="resource" action="index">
                                   <g:message
@@ -208,7 +203,6 @@
                                           default="Referee Report Summary" />
                               </g:link>
                           </li>
-                          </g:if>
                           </sec:ifAnyGranted>
                       </ul>
                     </div>
