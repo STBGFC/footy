@@ -12,8 +12,7 @@ import grails.plugins.springsecurity.Secured
  * @author darren
  */
 class EntryController {
-    
-    def identityService
+
     def tournamentService
     
 
@@ -34,7 +33,7 @@ class EntryController {
     def deleteTeam = {
         def tournament = Tournament.get(params.tournamentId)
         def team = Team.get(params.teamId)
-        tournament?.entries.each { e ->
+        tournament?.entries?.each { e ->
             if (e.teams.contains(team)) {
                 e.removeFromTeams(team)
                 e.save()
