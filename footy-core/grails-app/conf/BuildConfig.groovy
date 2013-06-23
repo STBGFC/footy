@@ -36,9 +36,11 @@ grails.project.dependency.resolution = {
         compile ':feeds:1.5'
         compile ':resources:1.1.6'
         compile ':quartz:1.0-RC2'
-        runtime ':hibernate:1.3.7'
+        runtime ':hibernate:1.3.9'
+        runtime ':tomcat:1.3.9'
+        runtime ':cached-resources:1.0'
+        runtime ':zipped-resources:1.0'
         runtime ':webflow:1.3.7'
-        runtime ':tomcat:1.3.7'
         runtime ':weceem:1.1.2'
     }
     dependencies {
