@@ -255,7 +255,7 @@
                 </div>
 
                 <div class="section" id="fixtureList">
-                <g:render template="/fixture/fixtureList" plugin="footy-match" model="${fixtures}"/>
+                <g:render template="/fixture/fixtureList" plugin="footy-core" model="${fixtures}"/>
                 </div>
 
                 <div class="section">

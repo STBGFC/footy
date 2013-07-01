@@ -7,7 +7,7 @@ package org.davisononline.footy.core
  */
 class HomeController {
 
-    static final String FOOTY_CMS = "footy-cms"
+    static final String CMS = "weceem"
 
     def pluginManager
 
@@ -17,7 +17,7 @@ class HomeController {
      * default action
      */
     def index = {
-        if (pluginManager.hasGrailsPlugin(FOOTY_CMS))
+        if (pluginManager.hasGrailsPlugin(CMS))
             //redirect uri: '/content/index'
             forward controller: 'wcmContent', action: 'show'
 
