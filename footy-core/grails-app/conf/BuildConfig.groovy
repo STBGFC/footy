@@ -25,21 +25,17 @@ grails.project.dependency.resolution = {
         mavenRepo "http://m2.modularity.net.au/releases"
     }
     plugins {
-        compile ':paypal:0.6.5'
-        compile ':searchable:0.6.3'
+        compile ':searchable:0.6.4'
         compile ':export:1.5'
-        compile ':mail:1.0'
+        compile ':mail:1.0.1'
         compile ':webxml:1.4.1'
         compile ':spring-security-core:1.2.6'
         compile ':modalbox:0.4'
-        compile ':cache-headers:1.1.5'
         compile ':feeds:1.5'
         compile ':resources:1.1.6'
         compile ':quartz:1.0-RC2'
         runtime ':hibernate:1.3.9'
         runtime ':tomcat:1.3.9'
-        runtime ':cached-resources:1.0'
-        runtime ':zipped-resources:1.0'
         runtime ':webflow:1.3.7'
         runtime ':weceem:1.1.2'
     }

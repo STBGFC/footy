@@ -7,10 +7,9 @@ class FootyCoreGrailsPlugin {
     def grailsVersion = "1.3 > *"
     // the other plugins this plugin depends on
     def dependsOn = [
-        mail: "1.0-SNAPSHOT > *", 
-        paypal: "0.6.5 > *", 
-        webflow: "1.3 > *", 
-        export: "0.8 > *",
+        mail: "1.0.1 > *", 
+        webflow: "1.3.7 > *", 
+        export: "1.5 > *",
         weceem:'1.1.2>*',
     ]
     // resources that are excluded from plugin packaging
