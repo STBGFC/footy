@@ -56,7 +56,13 @@
                 <div class="buttons">
                     <g:if test="${teamInstance?.id}">
                     <span class="button"><g:actionSubmit class="save" action="update" value="${message(code: 'default.button.update.label', default: 'Update')}" /></span>
-                    <span class="button"><g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" /></span>
+                    <span class="button">
+                        <g:actionSubmit
+                                class="delete"
+                                action="delete"
+                                value="${message(code: 'default.button.delete.label', default: 'Delete')}"
+                                onclick="return confirm('${message(code: 'team.button.delete.confirm.message', default: 'This will remove all fixtures and referee reports and set any current players to have no team.  Are you sure?')}');" />
+                    </span>
                     </g:if>
                     <g:else>
                     <span class="button"><g:actionSubmit class="save" action="save" value="${message(code: 'default.button.save.label', default: 'Save')}" /></span>
