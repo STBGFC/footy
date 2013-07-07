@@ -18,13 +18,13 @@ class EBYFL {
     def createPdf() {
 
         def players = Player.findAllByTeam(team, [sort:"person.familyName", order:"asc"])
-        def template = org.davisononline.footy.core.RegistrationService.class.getResourceAsStream("ebyfl-reg.pdf")
+        def template = org.davisononline.footy.core.RegistrationService.class.getResourceAsStream("ebfa-reg.pdf")
 
-        def teamY = 465
+        def teamY = 455
         def txaxis = [103,193,520]
-        def p1y = 255
-        def ysize = 29
-        def xaxis = [80,265,370,455,520]
+        def p1y = 247
+        def ysize = 27
+        def xaxis = [70,280,405,495,543]
         def playersPerPage = 6
 
         PdfReader pdfReader = new PdfReader(template)
@@ -58,8 +58,8 @@ class EBYFL {
 
                     // secretary, date
                     content.setFontAndSize(bf, 10)
-                    content.showTextAligned(PdfContentByte.ALIGN_LEFT, team.club.secretary.toString(), 470, 45, 0)
-                    content.showTextAligned(PdfContentByte.ALIGN_LEFT, today.format("dd   MM   yyyy"), 725, 45, 0)
+                    content.showTextAligned(PdfContentByte.ALIGN_LEFT, team.club.secretary.toString(), 530, 45, 0)
+                    content.showTextAligned(PdfContentByte.ALIGN_LEFT, today.format("dd   MM   yyyy"), 715, 45, 0)
                 }
 
                 // player
