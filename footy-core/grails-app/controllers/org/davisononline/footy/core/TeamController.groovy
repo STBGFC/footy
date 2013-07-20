@@ -20,6 +20,8 @@ class TeamController {
 
     def personService
 
+    def teamService
+
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST", photoUpload: "POST"]
 
@@ -131,7 +133,7 @@ class TeamController {
         def teamInstance = Team.get(params.id)
         if (teamInstance) {
             try {
-                teamInstance.delete(flush: true)
+                teamService.deleteTeam(teamInstance)
                 flash.message = "${message(code: 'default.deleted.message', args: [message(code: 'team.label', default: 'Team'), params.id])}"
             }
             catch (org.springframework.dao.DataIntegrityViolationException e) {
