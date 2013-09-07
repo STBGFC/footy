@@ -108,12 +108,12 @@ class RegistrationService {
 
         // GRrrrrr.. WTF does Class.forName fail??
         switch (team.league.name) {
-            case "EBYFL":
-                reporter = org.davisononline.footy.core.reports.EBYFL.newInstance()
-                break
-
             case "NEHYL":
                 reporter = org.davisononline.footy.core.reports.NEHYL.newInstance()
+                break
+
+            default:
+                reporter = org.davisononline.footy.core.reports.EBYFL.newInstance()
                 break
         }
 
