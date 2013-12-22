@@ -28,12 +28,12 @@
             <tbody>
             <g:each in="${tournamentInstanceList}" status="i" var="tourney">
                 <tr class="${(i % 2) == 0 ? 'odd' : 'even'} ${tourney.openForEntry ? "openTournament" : ""}">
-                    <td><g:link action="edit" id="${tourney.id}">${tourney.name}</g:link></td>
+                    <td>${tourney.name}</td>
                     <td><g:formatDate date="${tourney.startDate}" format="dd/MM/yyyy"/></td>
                     <td><g:formatNumber currencyCode="GBP" type="currency" number="${tourney.costPerTeam}"/></td>
                     <td>
-                        <g:if test="${tourney.entries}">
-                        <g:link action="entryList" id="${tourney.id}">view payments</g:link> |
+                        <g:link action="edit" id="${tourney.id}">edit</g:link>
+                        <g:if test="${tourney.hasEntries()}"> |
                         <g:link action="show" id="${tourney.id}">show entries</g:link>
                         </g:if>
                     </td>

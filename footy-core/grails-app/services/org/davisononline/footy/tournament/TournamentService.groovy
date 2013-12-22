@@ -9,7 +9,7 @@ import org.codehaus.groovy.grails.commons.ConfigurationHolder
 class TournamentService {
 
     static transactional = true
-    
+
     def mailService
 
     def CFG = ConfigurationHolder.config?.org?.davisononline?.footy?.tournament
@@ -19,60 +19,76 @@ class TournamentService {
     def currencyCode = CFG?.currency ?: "GBP"
 
 
-    /**
-     * send confirmation email after a successful payment has been made
-     *
-     * @param entry
-     * @return
-     */
-    def sendConfirmEmail(entry) {
-        
-        mailService.sendMail {
-            // ensure mail address override is set in dev/test in Config.groovy
-            to      entry.contact.email
-            from    fromEmail
-            subject "Tournament Entry Confirmation"
-            body    (view: '/email/tournament/registrationComplete',
-                     model: [entry: entry])
-        }
-    }
 
     /**
      * create and persist Payment for invoice based on tournament entry flow
-     * 
-     * @param entry
-     * @return
+     *
+     * @param entries
+     * @param competitions
+     * @return the payment
      */
-    Payment createPayment(Entry entry) {
+    Payment createPayment(tournament, entries, competitions) {
 
-        if (!entry.contact.id)
-            entry.contact.save()
+        if (!entries || !competitions || entries.size() == 0 || entries.size() != competitions.size()) {
+            throw new Exception("Invalid data received for tournament entries, cannot create payment")
+        }
+
+        def contact = entries[0].contact
+
+        if (!contact.id)
+            contact.save(flush:true)
 
         def payment = new Payment (
-            buyerId: entry.contact.id,
+            buyerId: contact.id,
             currency: Currency.getInstance(currencyCode),
             transactionIdPrefix: "TRN"
         )
-        entry.teams.each { t->
-            if (!t.club.id) {
-                t.club.secretary.save()
-                t.club.save()
-            }
-            if (!t.manager.id)
-                t.manager.save()
-            
-            t.save()
+
+        entries.eachWithIndex { e, i ->
+            e.save(flush:true)
+            competitions[i].addEntry(e)
             payment.addToPaymentItems(
                 new PaymentItem (
-                    itemName: "${t.club.name} ${t} entry to ${entry.tournament.name}",
-                    itemNumber: "${entry.tournament.id}-${t.id}",
-                    amount: entry.tournament.costPerTeam
+                    itemName: "${e.clubAndTeam} entry to ${tournament.name}",
+                    itemNumber: "${tournament.id}-${e.id}",
+                    amount: tournament.costPerTeam
                 )
             )
         }
         payment.save()
-        entry.payment = payment
-        entry.save(flush:true)
+        entries.each {
+            it.payment = payment
+            it.save(flush:true)
+        }
+
+        try {
+            def cclist = tournament?.cclist?.split(/(;|,)/) ?: ""
+            mailService.sendMail {
+                // ensure mail address override is set in dev/test in Config.groovy
+                to      contact.email
+                bcc     cclist
+                from    fromEmail
+                subject "Tournament Entry Confirmation"
+                body    (view: '/email/tournament/registrationComplete',
+                         model: [tournament: tournament, entries: entries, contact: contact])
+            }
+        }
+        catch (Exception ex) {
+            log.warn "Unable to send email after tournament entry; $ex"
+        }
+
         payment
+    }
+
+    def deleteEntry(tournament, entry) {
+        tournament?.competitions?.each {c->
+            if (c.entered.contains(entry)) {
+                c.removeFromEntered(entry)
+            }
+            else if (c.waiting.contains(entry)) {
+                c.removeFromWaiting(entry)
+            }
+        }
+        entry.delete(flush:true)
     }
 }

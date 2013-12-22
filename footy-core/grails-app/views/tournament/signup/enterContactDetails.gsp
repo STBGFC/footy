@@ -3,22 +3,28 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title><g:message code="org.davisononline.footy.tournament.views.entry.apply.title" default="${entryInstance.tournament.name} Entry" /></title>
+        <title><g:message code="org.davisononline.footy.tournament.views.entry.apply.title" default="${tournament.name} Entry" /></title>
     </head>
     <body>
-        <h1><g:message code="org.davisononline.footy.tournament.views.entry.apply.title" default="${entryInstance.tournament.name} Entry" /></h1>
+        <h1><g:message code="org.davisononline.footy.tournament.views.entry.apply.title" default="${tournament.name} Entry" /></h1>
         <div class="dialog">
-            <g:form action="apply" >
-                <p>
-                    You are creating team entries for our <strong>${entryInstance.tournament.name}</strong>
-                    which is ${entryInstance.tournament.startDate == entryInstance.tournament.endDate ? "on " + formatDate(date:entryInstance.tournament.startDate, format:"dd MMMM yyyy") : "from " + formatDate(date:entryInstance.tournament.startDate, format:"dd-") + formatDate(date:entryInstance.tournament.endDate, format: "dd MMMM yyyy")}
-                </p>
+            <g:form action="signup">
                 <p>
                     <g:message code="org.davisononline.footy.tournament.views.entry.apply.text"
-                        default="Please start by completing contact details below of the team manager or administrator." />
+                        default="Please enter your name and phone number.." />
                 </p>
                     <table>
                         <tbody>
+
+                            <tr class="prop">
+                                <td  class="name">
+                                    <g:message code="org.davisononline.footy.tournament.views.entry.apply.email.label" default="Email" />
+                                </td>
+                                <td  class="value">
+                                    ${personInstance?.email ?: email}
+                                    <g:hiddenField name="email" value="${personInstance?.email ?: email}" />
+                                </td>
+                            </tr>
                         
                             <tr class="prop">
                                 <td  class="name">
@@ -47,16 +53,6 @@
                                 <td  class="value ${hasErrors(bean: personInstance, field: 'phone1', 'errors')}">
                                     <g:textField name="phone1" value="${personInstance?.phone1}" />
                                     <g:render template="/shared/fieldError" model="['instance':personInstance,'field':'phone1']" plugin="footy-core"/>
-                                </td>
-                            </tr>
-                        
-                            <tr class="prop">
-                                <td  class="name">
-                                    <label for="email"><g:message code="org.davisononline.footy.tournament.views.entry.apply.email.label" default="Email" /></label>
-                                </td>
-                                <td  class="value ${hasErrors(bean: personInstance, field: 'email', 'errors')}">
-                                    <g:textField name="email" value="${personInstance?.email}" />
-                                    <g:render template="/shared/fieldError" model="['instance':personInstance,'field':'email']" plugin="footy-core"/>
                                 </td>
                             </tr>
                         
