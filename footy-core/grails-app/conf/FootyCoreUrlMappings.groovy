@@ -4,6 +4,18 @@ class FootyCoreUrlMappings {
 
 	static mappings = {
         /*
+         * defaults
+         */
+        "/$controller/$action?/$id?"{
+            constraints {
+                // apply constraints here
+            }
+        }
+
+        "/"(view:"/index")
+        "500"(view:'/error')
+
+        /*
          * main
          */
 		// hide standard searchable controller and views from plugin
@@ -38,7 +50,9 @@ class FootyCoreUrlMappings {
         /*
          * tournament
          */
-        "/entry/delete/$tournamentId/$entryId" (controller: "entry", action: "delete")
+        "/entry/delete/$tournamentId/$compId/$entryId" (controller: "tournament", action: "deleteEntry")
+        "/entry/promote/$tournamentId/$compId/$entryId" (controller: "tournament", action: "promoteEntry")
+        "/entry/relegate/$tournamentId/$compId/$entryId" (controller: "tournament", action: "relegateEntry")
         "/tournament/signup/$name" (controller: "tournament", action: "signup")
 
 

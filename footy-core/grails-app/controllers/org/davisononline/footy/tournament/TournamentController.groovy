@@ -185,8 +185,18 @@ class TournamentController {
 
     def deleteEntry = {
         def entry = Entry.get(params.entryId)
-        def tourney = Tournament.get(params.tournamentId)
-        tournamentService.deleteEntry(tourney, entry)
+        def comp = Competition.get(params.compId)
+        tournamentService.deleteEntry(comp, entry)
+        redirect(controller: "tournament", action: "show", id: params.tournamentId)
+    }
+
+    def promoteEntry = {
+        tournamentService.moveEntryToEntered(Competition.get(params.compId), Entry.get(params.entryId))
+        redirect(controller: "tournament", action: "show", id: params.tournamentId)
+    }
+
+    def relegateEntry = {
+        tournamentService.moveEntryToWaiting(Competition.get(params.compId), Entry.get(params.entryId))
         redirect(controller: "tournament", action: "show", id: params.tournamentId)
     }
 

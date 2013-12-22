@@ -80,15 +80,28 @@ class TournamentService {
         payment
     }
 
-    def deleteEntry(tournament, entry) {
-        tournament?.competitions?.each {c->
-            if (c.entered.contains(entry)) {
-                c.removeFromEntered(entry)
-            }
-            else if (c.waiting.contains(entry)) {
-                c.removeFromWaiting(entry)
-            }
+    def deleteEntry(comp, entry) {
+        if (comp.entered.contains(entry)) {
+            comp.removeFromEntered(entry)
         }
+        else if (comp.waiting.contains(entry)) {
+            comp.removeFromWaiting(entry)
+        }
+
         entry.delete(flush:true)
+    }
+
+    def moveEntryToWaiting(comp, entry) {
+        if (comp.entered.contains(entry)) {
+            comp.removeFromEntered(entry)
+            comp.addToWaiting(entry)
+        }
+    }
+
+    def moveEntryToEntered(comp, entry) {
+        if (comp.waiting.contains(entry)) {
+            comp.addToEntered(entry)
+            comp.removeFromWaiting(entry)
+        }
     }
 }
