@@ -8,8 +8,7 @@
     <body>
         <div class="dialog">
         <div class="nav">
-            <span class="menuButton"><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></span>
-            <span class="menuButton"><g:link class="list" action="list"><g:message code="default.list.label" args="[entityName]" /></g:link></span>
+            <g:render template="/shared/editNavButtons" model="${[entityName:entityName]}"/>
             <span class="menuButton">
                 <g:link class="create" controller="competition" action="create" params="${['tournament.id':tournamentInstance.id]}"><g:message code="default.new.label" args="['Competition']" /></g:link>
             </span>

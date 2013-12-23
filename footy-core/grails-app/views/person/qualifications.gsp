@@ -17,8 +17,7 @@
                 <g:message code="org.davisononline.footy.core.qualificationexpiry.text" default="Qualifications in order of most urgent for renewal"/>
             </p>
             <div class="nav">
-                <span class="menuButton"><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></span>
-                <span class="menuButton"><g:link class="list" action="list"><g:message code="default.list.label" args="['Person']" /></g:link></span>
+                <g:render template="/shared/editNavButtons" model="${[entityName:entityName]}"/>
             </div>
 
             <table class="list">

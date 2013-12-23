@@ -12,7 +12,7 @@
                 <g:message code="org.davisononline.footy.core.nopayment.text" default="Payment reconciliations"/>
             </p>
             <div class="nav">
-                <span class="menuButton"><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></span>
+                <span class="menuButton"><a class="home" href="${createLink(uri: '/login/profile')}"><g:message code="default.home.label"/></a></span>
                 <span class="menuButton"><g:link class="list" action="list"><g:message code="org.davisononline.footy.core.invoicelist.label" default="Payment Reconciliation" /></g:link></span>
             </div>
             <table class="list">
