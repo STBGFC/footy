@@ -143,7 +143,7 @@ ul.nice-list li {
 ul.nice-list li:first-child {border-top: none;}
 ul.nice-list li .right {color: #999;}
 
-
+ol#confirmEntryList {font-size: 17px}
 
 
 /* Tables */
@@ -291,7 +291,7 @@ td.errors textarea {
 
 /* ACTION BUTTONS */
 .buttons {
-    width: 490px;
+    width: 640px;
     background: #fff url(../images/skin/shadow.jpg) bottom repeat-x;
     border: 1px solid #ccc;
     color: #666;
@@ -508,7 +508,8 @@ div.chrm {
 /* DIALOG */
 
 .dialog {
-    width: 490px;
+    width: 640px;
+    font-size: 13px;
     padding-right: 40px;
 }
 

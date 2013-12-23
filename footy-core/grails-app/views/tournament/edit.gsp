@@ -8,8 +8,10 @@
     <body>
         <div class="dialog">
         <div class="nav">
-            <span class="menuButton"><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></span>
-            <span class="menuButton"><g:link class="list" action="list"><g:message code="default.list.label" args="[entityName]" /></g:link></span>
+            <g:render template="/shared/editNavButtons" model="${[entityName:entityName]}"/>
+            <span class="menuButton">
+                <g:link class="create" controller="competition" action="create" params="${['tournament.id':tournamentInstance.id]}"><g:message code="default.new.label" args="['Competition']" /></g:link>
+            </span>
         </div>
             <g:hasErrors bean="${tournamentInstance}">
             <div class="errors">
@@ -21,7 +23,7 @@
                 <g:hiddenField name="id" value="${tournamentInstance?.id}" />
                 <g:hiddenField name="version" value="${tournamentInstance?.version}" />
                 </g:if>
-                <g:if test="${tournamentInstance.entries}">
+                <g:if test="${tournamentInstance.hasEntries()}">
                 <div class="notice">
                     <g:message code="org.davisononline.footy.tournament.views.tournament.edit.entriesexist" default="NB: Entries already exist for this tournament!"/>
                 </div>
@@ -75,13 +77,35 @@
                                 </td>
                             </tr>
 
+                            <tr class="prop">
+                                <td valign="top" class="name">
+                                  <label for="cclist"><g:message code="tournament.cclist.label" default="cc List on confirmation emails" /></label>
+                                </td>
+                                <td valign="top" class="value ${hasErrors(bean: tournamentInstance, field: 'cclist', 'errors')}">
+                                    <g:textField name="cclist" value="${tournamentInstance?.cclist}" />
+                                </td>
+                            </tr>
+
                             <g:if test="${tournamentInstance.id}">
                             <tr class="prop">
                                 <td valign="top" class="name">
-                                  <label><g:message code="tournament.applyLink.label" default="Application Link" /></label>
+                                  <label><g:message code="tournament.applyLink.label" default="Link to Enter" /></label>
                                 </td>
                                 <td valign="top" class="value">
-                                    <g:createLink absolute="true" action="apply" controller="entry" params='[name: "${tournamentInstance.name.encodeAsHTML()}"]'/>
+                                    <g:createLink absolute="true" action="signup" controller="tournament" params='[name: "${tournamentInstance.name.encodeAsHTML()}"]'/>
+                                </td>
+                            </tr>
+
+                            <tr class="prop">
+                                <td valign="top" class="name">
+                                    <label><g:message code="tournament.competitions.label" default="Competitions/Sections" /></label>
+                                </td>
+                                <td valign="top" class="value">
+                                    <ul>
+                                    <g:each in="${tournamentInstance.competitions.sort{it.name}}" var="c">
+                                        <li><g:link controller="competition" action="edit" id="${c.id}">${c}</g:link></li>
+                                    </g:each>
+                                    </ul>
                                 </td>
                             </tr>
                             </g:if>

@@ -1,5 +1,7 @@
 package org.davisononline.footy.tournament
 
+import org.davisononline.footy.core.Person
+
 
 /**
  * describes a tournament that multiple teams can enter
@@ -14,20 +16,27 @@ class Tournament implements Serializable {
     Date endDate
     boolean openForEntry = false
     double costPerTeam = 10.00
+    String cclist
     
-    static hasMany = [entries: Entry]
+    static hasMany = [competitions: Competition]
     
     static constraints = {
         endDate(validator: { v, t->
             v >= t.startDate
         })
     }
-    
-    def teamsEntered() {
-        def results = []
-        entries.each { e ->
-            results << e.teams
+
+    boolean hasEntries() {
+        def signups = false
+        competitions.each { c->
+            if (c.entered.size() > 0 || c.waiting.size() > 0)
+                signups = true
         }
-        results.flatten()
+        return signups
     }
+
+    public String toString() {
+        name
+    }
+
 }

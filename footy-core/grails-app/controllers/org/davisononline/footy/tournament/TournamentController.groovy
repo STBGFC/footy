@@ -1,6 +1,7 @@
 package org.davisononline.footy.tournament
 
 import org.codehaus.groovy.grails.commons.ConfigurationHolder
+import org.davisononline.footy.core.Person
 import org.grails.paypal.*
 import grails.plugins.springsecurity.Secured
 
@@ -12,6 +13,9 @@ class TournamentController {
     
     // from the export plugin
     def exportService
+
+    def tournamentService
+
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
@@ -56,15 +60,6 @@ class TournamentController {
             render(view: "edit", model: [tournamentInstance: tournamentInstance])
         }
     }
-    
-    /**
-     * display entries in order to see payment status and which teams
-     * were registered together
-     */
-    def entryList = {
-        def t = checkInstance(params)
-        [entries: t.entries.sort()]
-    }
 
     /**
      * show tournament details and includes a teamList sorted by age band
@@ -72,49 +67,59 @@ class TournamentController {
      */
     def show = {
         def t = checkInstance(params)
-        def teamList = t.teamsEntered().sort { a,b-> 
-            a.ageBand == b.ageBand? 0 : a.ageBand < b.ageBand ? -1 : 1 
-        }
-        
+
         /*
          * export of the current tournament values
          */
-        if(params?.format && params.format != "html"){
-            List fields = ["ageBand", "name", "league", "division", "manager", "manager.email", "manager.phone1", "paymentStatus"]
+        if(params?.format && params.format != "html") {
+
+            def teamList = t.competitions*.entered.flatten()
+
+            List fields = [
+                    "competition",
+                    "clubAndTeam",
+                    "league",
+                    "strength",
+                    "contact",
+                    "contact.email",
+                    "contact.phone1",
+                    "paymentStatus"
+            ]
+
             Map labels = [
-                    "ageBand": "Age Group",
-                    "name": "Team",
+                    "competition": "Competition",
+                    "clubAndTeam": "Team",
                     "league": "League",
-                    "division": "Division",
-                    "manager": "Manager",
-                    "manager.email": "Email",
-                    "manager.phone1": "Tel.",
+                    "strength": "Strength",
+                    "contact": "Contact",
+                    "contact.email": "Email",
+                    "contact.phone1": "Tel.",
                     "paymentStatus": "Payment Status"
             ]
 
-            // Formatter closure 
-            def teamName = { team, value -> 
-                return "${team.club} ${team.name}"
-            }
-            def ageBandLabel = { team, value ->
-                return "U${value}" + (team.girlsTeam ? " (Girls)" : "")
-            }
-            def paymentStatusLabel = { team, value ->
-                def status = "UNKNOWN"
-                t.entries.each {
-                    if (it.teams.contains(team))
-                        status = it.payment.status
-                }
-                return status
+            // Formatter closure
+            def paymentStatusFmt = { team, value ->
+                team?.payment?.status ?: "UNKNOWN"
             }
 
-            Map formatters = [name: teamName, ageBand: ageBandLabel, paymentStatus: paymentStatusLabel]
-            Map parameters = [title: t.name, "column.widths": [0.1, 0.4, 0.1, 0.2, 0.2, 0.4, 0.2, 0.3]]
+            def competitionStatusFmt = { team, value ->
+                def comp
+                t.competitions.each {c->
+                    if (c.entered.contains(team)) {
+                        comp = c
+                        return
+                    }
+                }
+                comp.name
+            }
+
+            Map formatters = [competition: competitionStatusFmt, paymentStatus: paymentStatusFmt]
+            Map parameters = [title: t.name, "column.widths": [0.1, 0.4, 0.1, 0.1, 0.2, 0.25, 0.2, 0.15]]
         
             response.contentType = ConfigurationHolder.config.grails.mime.types[params.format] 
             response.setHeader(
                 "Content-disposition", 
-                "attachment; filename=${URLEncoder.encode(t.name,'UTF-8')}.${params.extension}"
+                "attachment; filename=${URLEncoder.encode(t.name,'UTF-8')}-tournament.${params.extension}"
             )            
             exportService.export(
                 params.format, 
@@ -127,7 +132,7 @@ class TournamentController {
             ) 
         }
         else
-            render (view: 'show', model: [tournamentInstance: t, teamList: teamList])        
+            render (view: 'show', model: [tournamentInstance: t])
     }
 
     /**
@@ -176,6 +181,141 @@ class TournamentController {
             flash.message = "${message(code: 'default.not.deleted.message', args: [message(code: 'tournament.label', default: 'Tournament'), params.id])}"
             redirect(action: "show", id: params.id)
         }
+    }
+
+    def deleteEntry = {
+        def entry = Entry.get(params.entryId)
+        def comp = Competition.get(params.compId)
+        tournamentService.deleteEntry(comp, entry)
+        redirect(controller: "tournament", action: "show", id: params.tournamentId)
+    }
+
+    def promoteEntry = {
+        tournamentService.moveEntryToEntered(Competition.get(params.compId), Entry.get(params.entryId))
+        redirect(controller: "tournament", action: "show", id: params.tournamentId)
+    }
+
+    def relegateEntry = {
+        tournamentService.moveEntryToWaiting(Competition.get(params.compId), Entry.get(params.entryId))
+        redirect(controller: "tournament", action: "show", id: params.tournamentId)
+    }
+
+//    @Secured(["ROLE_TOURNAMENT_ADMIN"])
+//    def paymentMade = {
+//        def e = checkEntry (params)
+//        e.payment.status = Payment.COMPLETE
+//        e.payment.save()
+//        redirect(controller: "tournament", action: "entryList", id: e.tournament.id)
+//    }
+
+    /**
+     * main application flow
+     */
+    @Secured(["permitAll"])
+    def signupFlow = {
+
+        setup {
+            action {
+                if (!params.name) {
+                    log.error "no tournament name supplied"
+                    return notFound()
+                }
+                def t = Tournament.findByName(params.name)
+                if (! t?.openForEntry || t?.competitions?.size() == 0) {
+                    log.error "Tournament ${params.name} not found, not setup correctly, or not open for entry ()"
+                    return notFound()
+                }
+                flow.entries = []
+                flow.tournament = t
+                flow.competitions = []
+                flow.entry = new Entry()
+            }
+            on(Exception).to("error")
+            on("notFound").to("notFound")
+            on("success").to("enterEmail")
+        }
+
+        enterEmail {
+            on("submit") {
+                // in the domain class a null email is allowed, we don't want that here
+                if (!params.email) params.email = ' '
+                // check if person already known
+                def _p = new Person(email: params.email)
+                flow.personInstance = Person.findByEmail(params.email) ?: _p
+                if (!flow.personInstance.validate(['email']))
+                    return error()
+
+            }.to("checkContactDetails")
+        }
+
+        checkContactDetails {
+            action {
+                return (flow.personInstance.validate() ? enterTeamDetails() : enterContactDetails())
+            }
+            on("enterContactDetails") {
+                [personInstance: null, email: params.email]
+            }.to "enterContactDetails"
+            on("enterTeamDetails").to "enterTeamDetails"
+
+        }
+
+        enterContactDetails {
+            on("submit") {
+                flow.personInstance = new Person(params)
+                if (!flow.personInstance.validate()) {
+                    return error()
+                }
+            }.to "enterTeamDetails"
+        }
+
+        enterTeamDetails {
+            on("submit") {
+                flow.entry = new Entry(params)
+                flow.entry.contact = flow.personInstance
+                flow.competition = Competition.get(params.competition)
+                if (!flow.entry.validate())
+                    return error()
+            }.to "updateEntry"
+        }
+
+        updateEntry {
+            action {
+                flow.entries << flow.entry
+                flow.competitions << flow.competition
+            }
+            on("success").to "confirmEntry"
+        }
+
+        confirmEntry {
+            on("createMore") {
+                flow.entry = new Entry()
+            }.to "enterTeamDetails"
+
+            on("submit") {
+                def payment
+                try {
+                    payment = tournamentService.createPayment(flow.tournament, flow.entries, flow.competitions)
+                } catch (Exception ex) {
+                    log.error(ex)
+                }
+
+                [payment:payment]
+
+            }.to("invoice")
+        }
+
+        invoice {
+            redirect (controller: 'invoice', action: 'show', id: flow.payment.transactionId)
+        }
+
+        notFound {
+            redirect view: "/404"
+        }
+
+        error() {
+            render view:'/error'
+        }
+
     }
 
     private checkInstance(params) {

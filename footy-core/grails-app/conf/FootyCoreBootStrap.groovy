@@ -14,6 +14,8 @@ class FootyCoreBootStrap {
         def officerRole = SecRole.findByAuthority('ROLE_OFFICER') ?: new SecRole(authority: 'ROLE_OFFICER').save(failOnError: true)
         def coachRole = SecRole.findByAuthority('ROLE_COACH') ?: new SecRole(authority: 'ROLE_COACH').save(failOnError: true)
         def editorRole = SecRole.findByAuthority('ROLE_EDITOR') ?: new SecRole(authority: 'ROLE_EDITOR').save(failOnError: true)
+        def fixSecRole = SecRole.findByAuthority('ROLE_FIXTURE_ADMIN') ?: new SecRole(authority: 'ROLE_FIXTURE_ADMIN').save(failOnError: true)
+        def tournamentRole = SecRole.findByAuthority('ROLE_TOURNAMENT_ADMIN') ?: new SecRole(authority: 'ROLE_TOURNAMENT_ADMIN').save(failOnError: true)
 
         def adminUser = SecUser.findByUsername('sa') ?: new SecUser(
             username: 'sa',
@@ -25,17 +27,20 @@ class FootyCoreBootStrap {
         if (!adminUser.authorities.contains(adminRole)) {
             SecUserSecRole.create adminUser, adminRole
         }
-
         if (!adminUser.authorities.contains(officerRole)) {
             SecUserSecRole.create adminUser, officerRole
         }
-
         if (!adminUser.authorities.contains(clubAdminRole)) {
             SecUserSecRole.create adminUser, clubAdminRole
         }
-
         if (!adminUser.authorities.contains(coachRole)) {
             SecUserSecRole.create adminUser, coachRole
+        }
+        if (adminUser && !adminUser.authorities.contains(fixSecRole)) {
+            SecUserSecRole.create adminUser, fixSecRole
+        }
+        if (!adminUser.authorities.contains(tournamentRole)) {
+            SecUserSecRole.create adminUser, tournamentRole
         }
 
         // qualifications
