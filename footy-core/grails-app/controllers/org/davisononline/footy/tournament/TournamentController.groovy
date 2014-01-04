@@ -239,10 +239,13 @@ class TournamentController {
             on("submit") {
                 // in the domain class a null email is allowed, we don't want that here
                 if (!params.email) params.email = ' '
-                // check if person already known
-                def _p = new Person(email: params.email)
-                flow.personInstance = Person.findByEmail(params.email) ?: _p
-                if (!flow.personInstance.validate(['email']))
+
+                // check if person already known or use dummy
+                def p = Person.findByEmail(params.email)
+                if (!p) p = new Person(email: params.email)
+
+                flow.personInstance = p
+                if (!flow.personInstance?.validate(['email']))
                     return error()
 
             }.to("checkContactDetails")
