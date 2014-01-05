@@ -221,10 +221,15 @@ class TournamentController {
                     return notFound()
                 }
                 def t = Tournament.findByName(params.name)
-                if (! t?.openForEntry || t?.competitions?.size() == 0) {
-                    log.error "Tournament ${params.name} not found, not setup correctly, or not open for entry ()"
+                if (! t) {
+                    log.error "Tournament ${params.name} not found"
                     return notFound()
                 }
+                if (! t?.openForEntry || t?.competitions?.size() == 0) {
+                    log.error "Tournament ${params.name} not setup correctly, or not open for entry"
+                    return closed()
+                }
+
                 flow.entries = []
                 flow.tournament = t
                 flow.competitions = []
@@ -232,6 +237,7 @@ class TournamentController {
             }
             on(Exception).to("error")
             on("notFound").to("notFound")
+            on("closed").to("closed")
             on("success").to("enterEmail")
         }
 
@@ -314,6 +320,8 @@ class TournamentController {
         notFound {
             redirect view: "/404"
         }
+
+        closed() {}
 
         error() {
             render view:'/error'
