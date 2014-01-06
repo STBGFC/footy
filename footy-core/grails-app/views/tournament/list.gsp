@@ -32,7 +32,8 @@
                     <td><g:formatDate date="${tourney.startDate}" format="dd/MM/yyyy"/></td>
                     <td><g:formatNumber currencyCode="GBP" type="currency" number="${tourney.costPerTeam}"/></td>
                     <td>
-                        <g:link action="edit" id="${tourney.id}">edit</g:link>
+                        <g:link action="edit" id="${tourney.id}">edit tournament</g:link> |
+                        <g:link action="signup" params="${[name:tourney.name]}">view signup page</g:link>
                         <g:if test="${tourney.hasEntries()}"> |
                         <g:link action="show" id="${tourney.id}">show entries</g:link>
                         </g:if>
