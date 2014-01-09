@@ -230,6 +230,7 @@ class TournamentController {
                     return closed()
                 }
 
+                // map of entry:competition
                 flow.entries = [:]
                 flow.tournament = t
                 //flow.competitions = []
@@ -282,7 +283,7 @@ class TournamentController {
                 def entry = new Entry(params)
                 entry.contact = flow.personInstance
                 if (!entry.validate()) {
-                    [entry:entry]
+                    flow.entry = entry
                     return error()
                 }
 

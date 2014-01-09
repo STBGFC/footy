@@ -41,21 +41,23 @@ class TournamentService {
             transactionIdPrefix: "TRN"
         )
 
-        entries.eachWithIndex { e, i ->
-            e.save(flush:true)
-            entries[e].addEntry(e)
+        entries.each { kv ->
+            def entry = kv.key
+            def competition = kv.value
+            entry.save(flush:true)
+            competition.addEntry(entry)
             payment.addToPaymentItems(
                 new PaymentItem (
-                    itemName: "${e.clubAndTeam} entry to ${tournament.name}",
-                    itemNumber: "${tournament.id}-${e.id}",
+                    itemName: "${entry.clubAndTeam} entry to ${tournament.name}",
+                    itemNumber: "${tournament.id}-${entry.id}",
                     amount: tournament.costPerTeam
                 )
             )
         }
         payment.save()
         entries.each {
-            it.payment = payment
-            it.save(flush:true)
+            it.key.payment = payment
+            it.key.save(flush:true)
         }
 
         try {
@@ -67,7 +69,7 @@ class TournamentService {
                 from    fromEmail
                 subject "Tournament Entry Confirmation"
                 body    (view: '/email/tournament/registrationComplete',
-                         model: [tournament: tournament, entries: entries, contact: contact])
+                         model: [tournament: tournament, entries: entries.keySet(), contact: contact])
             }
         }
         catch (Exception ex) {
