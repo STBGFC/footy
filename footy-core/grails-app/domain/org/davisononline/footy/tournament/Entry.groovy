@@ -40,4 +40,19 @@ class Entry implements Serializable, Comparable {
     public String toString() {
         clubAndTeam
     }
+
+    boolean equals(o) {
+        if (this.is(o)) return true
+        if (getClass() != o.class) return false
+
+        Entry entry = (Entry) o
+
+        if (clubAndTeam != entry.clubAndTeam) return false
+
+        return true
+    }
+
+    int hashCode() {
+        return clubAndTeam.hashCode()
+    }
 }

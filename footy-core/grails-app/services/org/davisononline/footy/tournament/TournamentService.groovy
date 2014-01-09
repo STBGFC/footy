@@ -24,16 +24,13 @@ class TournamentService {
      * create and persist Payment for invoice based on tournament entry flow
      *
      * @param entries
-     * @param competitions
      * @return the payment
      */
-    Payment createPayment(tournament, entries, competitions) {
+    Payment createPayment(tournament, entries, contact) throws Exception {
 
-        if (!entries || !competitions || entries.size() == 0 || entries.size() != competitions.size()) {
+        if (!entries || entries.size() == 0) {
             throw new Exception("Invalid data received for tournament entries, cannot create payment")
         }
-
-        def contact = entries[0].contact
 
         if (!contact.id)
             contact.save(flush:true)
@@ -46,7 +43,7 @@ class TournamentService {
 
         entries.eachWithIndex { e, i ->
             e.save(flush:true)
-            competitions[i].addEntry(e)
+            entries[e].addEntry(e)
             payment.addToPaymentItems(
                 new PaymentItem (
                     itemName: "${e.clubAndTeam} entry to ${tournament.name}",

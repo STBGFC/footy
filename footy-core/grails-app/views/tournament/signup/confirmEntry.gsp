@@ -9,7 +9,7 @@
         <h1><g:message code="org.davisononline.footy.tournament.views.entry.apply.confirmentry.title" default="Confirm Entry" /></h1>
         <div class="dialog">
         <p>
-            The following teams are ready to be entered.  Please choose whether to add more 
+            The following teams are ready to be entered.  Please choose whether to add more
             teams or proceed to payment. You can use the "back" button in your browser if you
             wish to amend the most recent team added to this list.
         </p>
@@ -21,14 +21,14 @@
         <ol id="confirmEntryList" >
         <g:each in="${entries}" var="entry" status="i">
             <li>
-                ${entry.clubAndTeam} will be entered into the ${competitions[i]}
-                ${competitions[i].entered.size() >= competitions[i].teamLimit ? "waiting list" : "competition"}
+                ${entry.key.clubAndTeam} will be entered into the ${entry.value}
+                ${entry.value.entered.size() >= entry.value.teamLimit ? "waiting list" : "competition"}
             </li>
         </g:each>       
         </ol>
 
         <p>
-            Team Contact: <strong>${entry.contact} (${entry.contact.phone1})  ${entry.contact.email}</strong>
+            Team Contact: <strong>${personInstance} (${personInstance.phone1})  ${personInstance.email}</strong>
         </p>
         <p>
             Please note, that if you pay online on the following screen, your place in the

@@ -230,9 +230,9 @@ class TournamentController {
                     return closed()
                 }
 
-                flow.entries = []
+                flow.entries = [:]
                 flow.tournament = t
-                flow.competitions = []
+                //flow.competitions = []
                 flow.entry = new Entry()
             }
             on(Exception).to("error")
@@ -279,31 +279,29 @@ class TournamentController {
 
         enterTeamDetails {
             on("submit") {
-                flow.entry = new Entry(params)
-                flow.entry.contact = flow.personInstance
-                flow.competition = Competition.get(params.competition)
-                if (!flow.entry.validate())
+                def entry = new Entry(params)
+                entry.contact = flow.personInstance
+                if (!entry.validate()) {
+                    [entry:entry]
                     return error()
-            }.to "updateEntry"
-        }
+                }
 
-        updateEntry {
-            action {
-                flow.entries << flow.entry
-                flow.competitions << flow.competition
-            }
-            on("success").to "confirmEntry"
+                def competition = Competition.get(params.competition)
+                flow.entries[entry] = competition
+
+            }.to "confirmEntry"
         }
 
         confirmEntry {
             on("createMore") {
-                flow.entry = new Entry()
+                //flow.entry = new Entry()
+                [entry: new Entry()]
             }.to "enterTeamDetails"
 
             on("submit") {
                 def payment
                 try {
-                    payment = tournamentService.createPayment(flow.tournament, flow.entries, flow.competitions)
+                    payment = tournamentService.createPayment(flow.tournament, flow.entries, flow.personInstance)
                 } catch (Exception ex) {
                     log.error(ex)
                 }
