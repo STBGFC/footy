@@ -50,16 +50,14 @@
                     <tbody>
                         <tr>
                             <th></th>
-                            <th class="text-right">Max Places</th>
-                            <th class="text-right">Places Taken</th>
+                            <th class="text-right">Places Left</th>
                             <th class="text-right">Wait List</th>
                             <th>Entry Status</th>
                         </tr>
                     <g:each in="${tournament.competitions.sort{it.name}}" var="comp">
                         <tr class="${comp.open ? 'openTournament':'closedTournament'}">
                             <td><strong>${comp}</strong></td>
-                            <td class="text-right">${comp.teamLimit}</td>
-                            <td class="text-right">${comp.entered.size()}</td>
+                            <td class="text-right">${comp.teamLimit - comp.entered.size()}</td>
                             <td class="text-right">${comp.waiting.size()}</td>
                             <td>${comp.open ? 'OPEN':'closed'}</td>
                         </tr>
