@@ -14,10 +14,22 @@ class Entry implements Serializable, Comparable {
 
     Payment payment
     Person contact
-    String clubAndTeam
+    String clubAndTeam = ""
     String league
     String strength
     Date dateEntered = new Date()
+
+    static belongsTo = [competition: Competition]
+    Competition entered
+    Competition waiting
+
+
+    /*
+     * don't allow entered and waiting to be null
+     */
+    static atLeastOneEntryValidator = { val, obj ->
+        !( (obj.entered == null) && (obj.waiting == null) )
+    }
 
     /**
      * sort by date entered
@@ -33,8 +45,10 @@ class Entry implements Serializable, Comparable {
     static constraints = {
         league nullable: true
         payment nullable: true
-        clubAndTeam nullable: false, blank: false, unique: true
+        clubAndTeam nullable: false, blank: false, unique: ['competition']
         strength inList: STRENGTH_LIST
+        entered validator: atLeastOneEntryValidator, nullable: true
+        waiting validator: atLeastOneEntryValidator, nullable: true
     }
 
     public String toString() {
@@ -53,6 +67,6 @@ class Entry implements Serializable, Comparable {
     }
 
     int hashCode() {
-        return clubAndTeam.hashCode()
+        return clubAndTeam ? clubAndTeam.hashCode() : 0
     }
 }

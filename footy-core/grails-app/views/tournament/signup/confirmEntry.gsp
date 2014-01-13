@@ -21,8 +21,8 @@
         <ol id="confirmEntryList" >
         <g:each in="${entries}" var="entry" status="i">
             <li>
-                ${entry.key.clubAndTeam} will be entered into the ${entry.value}
-                ${entry.value.entered.size() >= entry.value.teamLimit ? "waiting list" : "competition"}
+                ${entry.clubAndTeam} will be entered into the ${entry.competition}
+                ${entry.competition.entered.size() >= entry.competition.teamLimit ? "waiting list" : "competition"}
             </li>
         </g:each>       
         </ol>

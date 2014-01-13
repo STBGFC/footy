@@ -230,11 +230,8 @@ class TournamentController {
                     return closed()
                 }
 
-                // map of entry:competition
-                flow.entries = [:]
+                flow.entries = [] as Set<Entry>
                 flow.tournament = t
-                //flow.competitions = []
-                flow.entry = new Entry()
             }
             on(Exception).to("error")
             on("notFound").to("notFound")
@@ -281,14 +278,15 @@ class TournamentController {
         enterTeamDetails {
             on("submit") {
                 def entry = new Entry(params)
+                def competition = Competition.get(params['competition.id'])
+                competition.addEntry(entry)
                 entry.contact = flow.personInstance
                 if (!entry.validate()) {
                     flow.entry = entry
                     return error()
                 }
 
-                def competition = Competition.get(params.competition)
-                flow.entries[entry] = competition
+                flow.entries << entry
 
             }.to "confirmEntry"
         }
@@ -307,6 +305,7 @@ class TournamentController {
                     log.error(ex)
                 }
 
+                //TODO: check valid and return error/closing page
                 [payment:payment]
 
             }.to("invoice")
