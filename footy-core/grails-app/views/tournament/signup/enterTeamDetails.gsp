@@ -52,11 +52,11 @@
 
                         <tr class="prop">
                             <td  class="name">
-                                <label for="competition"><g:message code="org.davisononline.footy.tournament.views.entry.apply.competition.label"
+                                <label for="competition.id"><g:message code="org.davisononline.footy.tournament.views.entry.apply.competition.label"
                                                                     default="Competition/Section to enter" /></label>
                             </td>
                             <td  class="value">
-                                <g:select name="competition" value="${competition}" from="${tournament.competitions.findAll{it.open}.sort{it.name}}" optionKey="id" />
+                                <g:select name="competition.id" value="${entry?.competition?.id}" from="${tournament.competitions.findAll{it.open}.sort{it.name}}" optionKey="id" />
                             </td>
                         </tr>
 

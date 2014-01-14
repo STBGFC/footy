@@ -3,7 +3,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title><g:message code="org.davisononline.footy.tournament.views.entry.apply.title" default="${tournament.name} Entry" /></title>
+        <title><g:message code="org.davisononline.footy.tournament.views.entry.apply.title" default="${tournament.name} Tournament Entry" /></title>
     </head>
     <body>
 
@@ -11,7 +11,7 @@
             <div class="left" id="main-left">
 
 
-                <h1><g:message code="org.davisononline.footy.tournament.views.entry.apply.title" default="${tournament.name} Entry" /></h1>
+                <h1><g:message code="org.davisononline.footy.tournament.views.entry.apply.title" default="${tournament.name} Tournament Entry" /></h1>
                 <div class="dialog">
                     <g:form action="signup" >
                         <p>
@@ -50,16 +50,14 @@
                     <tbody>
                         <tr>
                             <th></th>
-                            <th class="text-right">Max Places</th>
-                            <th class="text-right">Places Taken</th>
+                            <th class="text-right">Places Left</th>
                             <th class="text-right">Wait List</th>
                             <th>Entry Status</th>
                         </tr>
                     <g:each in="${tournament.competitions.sort{it.name}}" var="comp">
                         <tr class="${comp.open ? 'openTournament':'closedTournament'}">
                             <td><strong>${comp}</strong></td>
-                            <td class="text-right">${comp.teamLimit}</td>
-                            <td class="text-right">${comp.entered.size()}</td>
+                            <td class="text-right">${comp.teamLimit - comp.entered.size()}</td>
                             <td class="text-right">${comp.waiting.size()}</td>
                             <td>${comp.open ? 'OPEN':'closed'}</td>
                         </tr>

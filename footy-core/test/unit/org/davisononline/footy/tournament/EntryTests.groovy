@@ -11,7 +11,9 @@ class EntryTests extends GrailsUnitTestCase {
         super.tearDown()
     }
 
-    void testSomething() {
-
+    void testEntryEqualsByClubAndName() {
+        def e = new Entry(clubAndTeam: "Foo")
+        def e2 = new Entry(clubAndTeam: "Foo")
+        assertTrue(e == e2)
     }
 }

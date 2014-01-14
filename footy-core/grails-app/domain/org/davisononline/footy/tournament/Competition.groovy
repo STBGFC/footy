@@ -1,5 +1,6 @@
 package org.davisononline.footy.tournament
 
+
 /**
  * @author: darren
  */
@@ -15,6 +16,8 @@ class Competition implements Serializable {
     static belongsTo = [tournament: Tournament]
 
     static hasMany = [entered: Entry, waiting: Entry]
+
+    static mappedBy = [entered: 'entered', waiting: 'waiting']
 
     static constraints = {
         teamLimit min: 2
@@ -46,6 +49,7 @@ class Competition implements Serializable {
         else {
             this.addToWaiting(entry)
         }
+        entry.competition = this
     }
 
     /**
