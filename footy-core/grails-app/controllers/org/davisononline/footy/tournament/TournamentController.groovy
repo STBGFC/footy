@@ -103,14 +103,7 @@ class TournamentController {
             }
 
             def competitionStatusFmt = { team, value ->
-                def comp
-                t.competitions.each {c->
-                    if (c.entered.contains(team)) {
-                        comp = c
-                        return
-                    }
-                }
-                comp.name
+                team.entered.name
             }
 
             Map formatters = [competition: competitionStatusFmt, paymentStatus: paymentStatusFmt]
@@ -124,7 +117,7 @@ class TournamentController {
             exportService.export(
                 params.format, 
                 response.outputStream, 
-                teamList, 
+                teamList.sort {it.entered.name},
                 fields, 
                 labels, 
                 formatters, 
