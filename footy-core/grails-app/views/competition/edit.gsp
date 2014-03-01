@@ -54,7 +54,7 @@
                                     <g:render template="/shared/fieldError" model="['instance':competitionInstance,'field':'gameFormat']" plugin="footy-core"/>
                                 </td>
                             </tr>
-
+                            <sec:ifAllGranted roles="ROLE_CLUB_ADMIN">
                             <tr class="prop">
                                 <td valign="top" class="name">
                                     <label for="teamLimit"><g:message code="competition.code.label" default="Max. Teams"/></label>
@@ -64,7 +64,7 @@
                                     <g:render template="/shared/fieldError" model="['instance':competitionInstance,'field':'teamLimit']" plugin="footy-core"/>
                                 </td>
                             </tr>
-
+                            </sec:ifAllGranted>
                             <tr class="prop">
                                 <td valign="top" class="name">
                                   <label for="open"><g:message code="competition.open.label" default="Open For Entry" /></label>
