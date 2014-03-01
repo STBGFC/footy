@@ -8,7 +8,7 @@ class Competition implements Serializable {
 
     public static def GAME_FORMATS = ['5v5', '7v7', '9v9', '11v11']
 
-    int teamLimit
+    int teamLimit = 8
     String name
     String gameFormat
     boolean open = true

@@ -57,16 +57,20 @@ class Entry implements Serializable, Comparable {
 
     boolean equals(o) {
         if (this.is(o)) return true
-        if (getClass() != o.class) return false
+        if (!(o instanceof Entry)) return false
 
         Entry entry = (Entry) o
 
         if (clubAndTeam != entry.clubAndTeam) return false
+        if (competition != entry.competition) return false
 
         return true
     }
 
     int hashCode() {
-        return clubAndTeam ? clubAndTeam.hashCode() : 0
+        int result
+        result = (clubAndTeam != null ? clubAndTeam.hashCode() : 0)
+        result = 31 * result + (competition != null ? competition.hashCode() : 0)
+        return result
     }
 }

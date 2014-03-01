@@ -280,6 +280,7 @@ class TournamentController {
                 }
 
                 flow.entries << entry
+                println flow.entries
 
             }.to "confirmEntry"
         }
