@@ -28,12 +28,15 @@ class TournamentService {
      */
     Payment createPayment(tournament, entries, contact) throws Exception {
 
+        log.info("Creating payment for $entries into $tournament")
         if (!entries || entries.size() == 0) {
             throw new Exception("Invalid data received for tournament entries, cannot create payment")
         }
 
-        if (!contact.id)
+        if (!contact.id) {
+            log.debug("Saving contact details for $contact")
             contact.save(flush:true)
+        }
 
         def payment = new Payment (
             buyerId: contact.id,
@@ -42,6 +45,7 @@ class TournamentService {
         )
 
         entries.each { entry ->
+            log.debug("Saving entry $entry to db..")
             entry.save(flush:true)
             payment.addToPaymentItems(
                 new PaymentItem (
@@ -51,6 +55,8 @@ class TournamentService {
                 )
             )
         }
+
+        log.debug("Saving payment record $payment")
         payment.save()
         entries.each {
             it.payment = payment

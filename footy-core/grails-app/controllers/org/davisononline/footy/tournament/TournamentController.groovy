@@ -280,7 +280,7 @@ class TournamentController {
                 }
 
                 flow.entries << entry
-                println flow.entries
+                log.debug flow.entries
 
             }.to "confirmEntry"
         }
@@ -295,18 +295,18 @@ class TournamentController {
                 def payment
                 try {
                     payment = tournamentService.createPayment(flow.tournament, flow.entries, flow.personInstance)
+                    flow.transactionId = payment.transactionId
+
                 } catch (Exception ex) {
                     log.error(ex)
+                    return error()
                 }
-
-                //TODO: check valid and return error/closing page
-                [payment:payment]
 
             }.to("invoice")
         }
 
         invoice {
-            redirect (controller: 'invoice', action: 'show', id: flow.payment.transactionId)
+            redirect (controller: 'invoice', action: 'show', id: flow.transactionId)
         }
 
         notFound {
