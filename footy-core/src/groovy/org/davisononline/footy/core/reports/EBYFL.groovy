@@ -22,8 +22,8 @@ class EBYFL {
 
         def teamY = 455
         def txaxis = [103,193,520]
-        def p1y = 247
-        def ysize = 27
+        def p1y = 254
+        def ysize = 25.5
         def xaxis = [70,280,405,495,543]
         def playersPerPage = 6
 
@@ -58,8 +58,8 @@ class EBYFL {
 
                     // secretary, date
                     content.setFontAndSize(bf, 10)
-                    content.showTextAligned(PdfContentByte.ALIGN_LEFT, team.club.secretary.toString(), 530, 45, 0)
-                    content.showTextAligned(PdfContentByte.ALIGN_LEFT, today.format("dd   MM   yyyy"), 715, 45, 0)
+                    content.showTextAligned(PdfContentByte.ALIGN_LEFT, team.club.secretary.toString(), 430, 57, 0)
+                    content.showTextAligned(PdfContentByte.ALIGN_LEFT, today.format("dd  M   yyyy"), 578, 57, 0)
                 }
 
                 // player
