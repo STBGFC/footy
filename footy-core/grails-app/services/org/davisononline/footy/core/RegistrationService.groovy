@@ -20,7 +20,26 @@ class RegistrationService {
     def fromEmail = CFG?.email
 
     def currencyCode = CFG?.currency ?: "GBP"
-    
+
+
+    /**
+     * send a token by email for registration renewals.
+     */
+    void sendTokenByEmail(String emailAddress, String token) {
+
+        try {
+            mailService.sendMail {
+                // ensure mail address override is set in dev/test in Config.groovy
+                to      emailAddress
+                subject 'Email Validation'
+                body    ( view:'/email/core/validate',
+                          model:[token:token, club: Club.homeClub])
+            }
+        }
+        catch (Exception ex) {
+            log.error "Unable to send email for validation during registration; $ex"
+        }
+    }
 
     /**
      * save domain objects for registration flow and return generated payment to

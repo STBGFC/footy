@@ -6,33 +6,39 @@
         <title><g:message code="org.davisononline.org.footy.core.registration.renewal.selectplayer.label" default="Select Player" /></title>
     </head>
     <body>
-        <h3>
+        <h1>
            <g:message
                    code="org.davisononline.footy.core.registration.renew.selectplayer.text"
-                   default="Please select the player to renew a registration for"/>
-        </h3>
+                   default="Select player(s)"/>
+        </h1>
         <div class="dialog">
             <g:form name="registration" action="renewRegistration">
 
+                <p>
+                    For each player you wish to re-register, select the
+                    correct registration tier based on age range for the FORTHCOMING season.  It is <strong>very
+                    important</strong> to select the correct tier.
+                </p>
+
                 <table>
                     <tbody>
+                        <g:each var="player" in="${playersAvailable}">
                         <tr class="prop">
                             <td  class="name">
-                                <label for="playerId"><g:message code="org.davisononline.org.footy.core.player.label" default="Player" /></label>
+                                <strong>${player} - ${player.team}</strong> <br/>
+                                (current/last expiry date: <g:formatDate date="${player.currentRegistration.date}" format="yyyy-MM-dd"/>)
                             </td>
-                            <td  class="value">
-                                <g:select name="playerId" from="${players}" optionKey="id"/>
-                            </td>
-                        </tr>
-                        <tr class="prop">
-                            <td valign="top" class="name">
-                                <label for="dateOfBirth"><g:message code="org.davisononline.footy.registration.playerDob.label" default="Date of Birth" /></label>
-                            </td>
-                            <td valign="top" class="value date">
-                                <g:set var="now" value="${new Date()}"/>
-                                <g:datePicker name="dateOfBirth" precision="day" noSelection="[null:'-select-']" years="${(now.year-19+1900)..(now.year-2+1900)}" value="${null}"  />
+                            <td class="value">
+                                <g:if test="${player.currentRegistration?.date > new Date()}">
+                                    registration is currently up to date
+                                </g:if>
+                                <g:else>
+                                    <g:hiddenField name="playerId" value="${player.id}"/>
+                                    <g:select name="regTierId" from="${tiers}" optionKey="id" noSelection="${['x':'-- Do Not Register --']}"/>
+                                </g:else>
                             </td>
                         </tr>
+                        </g:each>
                     </tbody>
                 </table>
 

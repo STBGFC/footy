@@ -16,8 +16,6 @@ class RegistrationController {
 
     def registrationService
 
-    def mailService
-
     
     def index = {
         redirect (action:'registerPlayer')
@@ -71,19 +69,7 @@ class RegistrationController {
 
                 // send mail with token
                 flow.token = UUID.randomUUID().toString()[0..7]
-
-                try {
-                    mailService.sendMail {
-                        // ensure mail address override is set in dev/test in Config.groovy
-                        to      flow.registrantEmail
-                        subject 'Email Validation'
-                        body    ( view:'/email/core/validate',
-                                  model:[token:flow.token, club: Club.homeClub])
-                    }
-                }
-                catch (Exception ex) {
-                    log.error "Unable to send email for validation during registration; $ex"
-                }
+                registrationService.sendTokenByEmail(flow.registrantEmail, flow.token)
 
             }.to "validateToken"
         }
@@ -312,20 +298,83 @@ class RegistrationController {
      */
     def renewRegistrationFlow = {
 
-        start {
-            on ("continue") {
-                flow.registrations = flow.registrations ?: []
-                flow.registeredPlayers = flow.registeredPlayers ?: []
-                def team = Team.get(params.teamId)
-                [players:team.players]
+        checkOpen {
+            def tiers = []
+            action {
+                tiers = RegistrationTier.findAllByEnabledAndValidUntilGreaterThan(true, new Date());
+                if (tiers.size() > 0) {
+                    return ok()
+                }
+                else
+                    return closed()
+            }
 
+            on ("ok") {
+                [tiers: tiers, person: new Person()]
+            }.to "start"
+
+            on ("closed") {
+                [endMessage:"Registration is currently closed"]
+            }.to "registrationClosed"
+        }
+
+        registrationClosed() {
+            render(view: '/registration/registerPlayer/registrationClosed')
+        }
+
+        start {
+            render(view: "/registration/registerPlayer/start")
+            on ("continue") {
+                def p = Person.findByEmail(params.email)
+                if (p) {
+                    flow.registrant = p
+                    flow.token = UUID.randomUUID().toString()[0..7]
+                    registrationService.sendTokenByEmail(p.email, flow.token)
+                }
+                else {
+                    flow.person = new Person(params)
+                    if(!flow.person.email || ! (flow.person.validate(["email"]))) {
+                        return error()
+                    }
+                }
+
+            }.to "validateToken"
+        }
+
+        validateToken() {
+            render(view: "/registration/registerPlayer/validateToken")
+            on ("continue") {
+                //if (params.token != flow.token) return error()
+                if (params.token != 'a') return error()
+
+                if (flow.registrant == null) return error()
+
+                // model for view
+                [
+                    tiers: RegistrationTier.findAllByEnabledAndValidUntilGreaterThan(true, new Date()),
+                    playersAvailable: Player.findAllByGuardianOrSecondGuardian(flow.registrant, flow.registrant)
+                ]
             }.to "selectPlayer"
         }
 
         selectPlayer {
             on ("continue") {
-                Player player = Player.get(params.playerId)
-                flow.player = player
+                flow.registrations = []
+                flow.registeredPlayers = []
+
+                if (params.regTierId) {
+                    def regIds = [params.regTierId].flatten()
+                    def playerIds = [params.playerId].flatten()
+                    regIds.eachWithIndex { reg, i ->
+                        if (reg != 'x') {
+                            def player = Player.get(playerIds[i])
+                            def tier = RegistrationTier.get(reg)
+                            def registration = Registration.createFrom(tier)
+                            flow.registrations << registration
+                            flow.registeredPlayers << player
+                        }
+                    }
+                }
 
             }.to "checkRegistration"
         }
@@ -333,40 +382,27 @@ class RegistrationController {
         checkRegistration {
             def endMessage
             action {
-                if (flow.player.dateOfBirth != params.dateOfBirth) {
-                    endMessage = "${message(code:'org.davisononline.footy.core.registration.renewal.wrongdob.text', args:[flow.player], default:'{0}\'s DoB is supplied incorrectly.')}"
-                    return end()
-                }
-                if (flow.player.currentRegistration?.date > new Date()) {
-                    endMessage = "${message(code:'org.davisononline.footy.core.registration.renewal.indate.text', args:[flow.player], default:'{0}\'s registration details are already up to date.  No re-registration is required at this time')}"
-                    return end()
-                }
-                else
+                if (flow.registeredPlayers.size() > 0)
                     return valid()
+                else {
+                    endMessage = "You have chosen not to register any players at this time, the registration process is now complete."
+                    return end()
+                }
             }
 
             on ("end") {
                 [endMessage:endMessage]
             }.to "end"
             
-            on ("valid").to "selectTier"
+            on ("valid").to "confirm"
         }
 
-        end { /* end flow with a message */ }
-
-        selectTier {
-            on ("continue") {
-                def tier = RegistrationTier.get(params.regTierId)
-                def registration = Registration.createFrom(tier)
-                flow.registrations << registration
-                flow.registeredPlayers << flow.player
-
-            }.to "addMore"
-        }
-
-        addMore {
-            on ("yes").to "start"
+        confirm {
             on ("no") {
+                [endMessage: "You have chosen NOT to accept the terms and conditions, the registration process has ended."]
+            }.to "end"
+
+            on ("yes") {
                 flow.registeredPlayers.eachWithIndex { p,i ->
                     p.currentRegistration = flow.registrations[i]
                     flow.registrations[i].player = p
@@ -382,6 +418,8 @@ class RegistrationController {
         invoice {
             redirect (controller: 'invoice', action: 'show', id: flow.payment.transactionId)
         }
+
+        end { /* end flow with a message */ }
     }
 
 }

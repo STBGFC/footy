@@ -12,7 +12,7 @@
                 <p>
                    <g:message
                            code="org.davisononline.footy.core.registration.token.text"
-                           default="An email containing a token has been sent to the address you entered.  Please enter that token here so that we know your email address works."/>
+                           default="An email containing a token has been sent to the address you entered.  Please enter that token here so that we know your email address works.  Note that you only have a few minutes before the token will expire and you will then need to start again."/>
                 </p>
 
                 <table>
