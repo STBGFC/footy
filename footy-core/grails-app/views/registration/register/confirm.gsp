@@ -11,7 +11,11 @@
         </h1>
 
         <div class="dialog">
-            <g:form name="registration" action="renewRegistration">
+            <g:form name="registration" action="register">
+
+                <p>
+                    The players below are to be registered.
+                </p>
 
                 <ul>
                     <g:each in="${registeredPlayers}" var="p">
@@ -19,9 +23,7 @@
                     </g:each>
                 </ul>
 
-                <p>
-                    The above players are to be re-registered.  *** NATHAN's BLURB HERE ***
-                </p>
+                <g:message code="org.davisononline.footy.registration.views.registration.conditions" default="Terms and Conditions not specified"/>
 
                 <div class="buttons flowcontrol">
                     <span class="button"><g:submitButton name="yes" class="save" value="${message(code: 'default.button.final.addmoreplayers.label', default: 'I accept, generate an invoice...')}" /></span>

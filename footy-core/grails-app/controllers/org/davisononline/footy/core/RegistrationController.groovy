@@ -1,11 +1,6 @@
 package org.davisononline.footy.core
 
 
-import org.grails.paypal.Payment
-import org.grails.paypal.PaymentItem
-import org.codehaus.groovy.grails.commons.ConfigurationHolder
-import org.apache.commons.validator.Validator
-
 /**
  * flows for the registration and creation of players, parents and other
  * staff at the club.
@@ -20,12 +15,13 @@ class RegistrationController {
     def index = {
         redirect (action:'registerPlayer')
     }
-    
+
     /**
-     * main web flow for player registration 
+     * registration of new players, and/or one or more existing players following a rollover
+     * of team age bands (and archival of ex-U18 players)
      */
-    def registerPlayerFlow = {
-        
+    def registerFlow = {
+
         checkOpen {
             def tiers = []
             action {
@@ -42,21 +38,16 @@ class RegistrationController {
             }.to "start"
 
             on ("closed") {
-                [endMessage:"Registration is currently closed"]
-            }.to "registrationClosed"
+                [endMessage:"Registration is currently closed, please check with the club and try again when open."]
+            }.to "end"
         }
 
-        registrationClosed() {}
-
-        /*
-         * request an email address and send a token to it to be re-submitted to
-         * validate the address.
-         */
         start {
             on ("continue") {
-                def p = Person.findByEmail(params.email)
+                flow.registrantEmail = params.email?.toLowerCase()
+                def p = Person.findByEmail(flow.registrantEmail)
                 if (p) {
-                    flow.guardian1 = p
+                    flow.registrant = p
                 }
                 else {
                     flow.person = new Person(params)
@@ -65,108 +56,43 @@ class RegistrationController {
                     }
                 }
 
-                flow.registrantEmail = params.email
-
-                // send mail with token
-                flow.token = UUID.randomUUID().toString()[0..7]
+                flow.token = UUID.randomUUID().toString()[0..17]
+                log.info "Token ${flow.token} sent by email to ${flow.registrantEmail}"
                 registrationService.sendTokenByEmail(flow.registrantEmail, flow.token)
 
-            }.to "validateToken"
+            }.to "gatherToken"
         }
 
-        validateToken() {
+        gatherToken() {
             on ("continue") {
                 if (params.token != flow.token) return error()
-            }.to "chooseTier"
+            }.to "checkCanSelectPlayers"
         }
 
-        chooseTier() {
-            on ("continue") {
-                def tier = RegistrationTier.get(params.regTierId)
-                flow.registration = Registration.createFrom(tier)
-
-            }.to "setupPlayer"
-        }
-
-        setupPlayer {
+        checkCanSelectPlayers() {
             action {
-                flow.player = new Player(person: new Person(eligibleParent: false, phone1: 'x'))
-                flow.player.guardian = flow.guardian1 // may not exist if new parent registering
-                [playerInstance: flow.player,parents: Person.findAllByEligibleParent(true, [sort:'familyName'])]
-            }
-            on ("success").to "enterPlayerDetails"
-        }
-
-        /*
-         * main form for player details, not including team
-         */
-        enterPlayerDetails {
-            on("submit") {
-                def player = flow.player
-                player.properties = params
-
-                if (!player.validate(["person", "doctor", "doctorTelephone", "medical", "ethnicOrigin", "dateOfBirth"])
-                    | !player.person?.validate()) {
-                    // odd.. if i don't do this, the errors object is not visible in the view.
-                    // TODO: log this in grails JIRA
-                    flow.person = player.person
-                    return error()
+                if (flow.registrant == null) {
+                    return addGuardian()
                 }
-                
-            }.to "checkPlayerRegistered"
-        }
-
-        /*
-         * ensure player not already in DB
-         */
-        checkPlayerRegistered {
-            action {
-                def p = flow.player
-                def pe = Player.find(
-                        "from Player p where p.dateOfBirth = :dob and p.person.familyName = :familyName and p.person.givenName like :givenName",
-                        [dob: p.dateOfBirth, familyName: p.person.familyName, givenName: "${p.person.givenName.split()[0]}%"]
-                )
-                if (pe?.currentRegistration) {
-                    def pmnt = PaymentItem.findByItemNumber(pe.currentRegistration.id)?.payment
-                    if (pmnt) {
-                        flow.payment = pmnt
-                    }
-                    return duplicate()
+                else {
+                    return selectPlayer()
                 }
-                else
-                    return no()
             }
 
-            on("invoice").to "invoice"
-            on("duplicate").to "duplicate"
-            on("no").to "checkGuardianNeeded"
-        }
+            on ("selectPlayer") {
+                flow.playersAvailable = Player.findAllByGuardianOrSecondGuardian(flow.registrant, flow.registrant)
+                if (flow.addedPlayer) flow.playersAvailable << flow.addedPlayer
 
-        /*
-         * if player age < [cutoff] we must have at least one
-         * parent/guardian details too
-         */
-        checkGuardianNeeded {
-            action {
-                def p = flow.player
-                if (p.isMinor() && !p.guardian && !p.secondGuardian)
-                    return yes()
-                else
-                    return no()
-            }
+                [tiers: RegistrationTier.findAllByEnabledAndValidUntilGreaterThan(true, new Date())]
 
-            on("yes") {
+            }.to "selectPlayer"
+
+            on ("addGuardian") {
                 // cope with back button better..
-                flow.personCommand = flow.guardian1 ?: new Person (
-                    familyName: flow.player.person.familyName
+                flow.personCommand = new Person (
+                    email: flow.registrantEmail
                 )
-                flow.personCommand.email = flow.registrantEmail
-
             }.to "enterGuardianDetails"
-
-            // TODO: if no guardian required, must get player contact details instead
-            on("no").to "prepTeam"
-
         }
 
         /*
@@ -186,7 +112,7 @@ class RegistrationController {
                     flow.address = person.address // see earlier to do item about grails bug
                     return error()
                 }
-                flow.guardian1 = person
+                flow.registrant = person
                 flow.personCommand = new Person(familyName: person.familyName, address: person.address)
 
             }.to "enterSecondGuardianDetails"
@@ -202,9 +128,9 @@ class RegistrationController {
                     flow.address = person.address // see earlier to do item about grails bug
                     return error()
                 }
-                flow.guardian1 = person
+                flow.registrant = person
 
-            }.to "prepTeam"
+            }.to "selectPlayer"
         }
 
         /*
@@ -212,7 +138,7 @@ class RegistrationController {
          */
         enterSecondGuardianDetails {
             render(view:"enterGuardianDetails")
-            
+
             on ("continue") { Person person ->
                 person.address = person.address ?: new Address()
                 person.email = person.email ?: ''
@@ -225,7 +151,7 @@ class RegistrationController {
                  * validation won't trigger at this point - needs an explicit
                  * check
                  */
-                if (person.email == flow.guardian1?.email) {
+                if (person.email == flow.registrant?.email) {
                     person.errors.rejectValue('email', 'org.davisononline.footy.core.parentemailduplication.message', 'Cannot use the same email for both parents')
                 }
 
@@ -236,128 +162,15 @@ class RegistrationController {
 
                 flow.guardian2 = person
 
-            }.to "prepTeam"
-        }
-
-        /*
-         * select a team and enter league reg number if available
-         */
-        prepTeam {
-            action {
-                // use only valid teams
-                def age = flow.player.getAgeAtNextCutoff()
-                def upperAge = (age < 7) ? 6 : age + 2
-                def vt = Team.findAllByClubAndAgeBandBetween(Club.getHomeClub(), age, upperAge, [sort:'ageBand'])
-                [validTeams: vt]
-            }
-            on("success").to("assignTeam")
-        }
-
-        assignTeam {
-            on ("continue") {
-
-                // create domain from flow objects
-                Player player = flow.player
-                player.properties = params
-
-                if (flow.guardian1) {
-                    player.guardian = flow.guardian1
-                }
-                if (flow.guardian2) {
-                    player.secondGuardian = flow.guardian2
-                }
-
-                if (!player.validate()) return error()
-
-                // seems odd..
-                player.currentRegistration = flow.registration
-                flow.registration.player = player
-
-                // eventually will allow several registrations per flow..
-                def registrations = [flow.registration]
-
-                // start transaction to create/save domain
-                def payment
-                payment = registrationService.createPayment(registrations)
-
-                [payment:payment]
-
-            }.to "invoice"
-        }
-
-        duplicate() {}
-
-        invoice {
-            redirect (controller: 'invoice', action: 'show', id: flow.payment.transactionId)
-        }
-    }
-
-    /**
-     * re-registration of one or more existing players following a rollover
-     * of team age bands (and archival of ex-U18 players)
-     */
-    def renewRegistrationFlow = {
-
-        checkOpen {
-            def tiers = []
-            action {
-                tiers = RegistrationTier.findAllByEnabledAndValidUntilGreaterThan(true, new Date());
-                if (tiers.size() > 0) {
-                    return ok()
-                }
-                else
-                    return closed()
-            }
-
-            on ("ok") {
-                [tiers: tiers, person: new Person()]
-            }.to "start"
-
-            on ("closed") {
-                [endMessage:"Registration is currently closed"]
-            }.to "registrationClosed"
-        }
-
-        registrationClosed() {
-            render(view: '/registration/registerPlayer/registrationClosed')
-        }
-
-        start {
-            render(view: "/registration/registerPlayer/start")
-            on ("continue") {
-                def p = Person.findByEmail(params.email)
-                if (p) {
-                    flow.registrant = p
-                    flow.token = UUID.randomUUID().toString()[0..7]
-                    registrationService.sendTokenByEmail(p.email, flow.token)
-                }
-                else {
-                    flow.person = new Person(params)
-                    if(!flow.person.email || ! (flow.person.validate(["email"]))) {
-                        return error()
-                    }
-                }
-
-            }.to "validateToken"
-        }
-
-        validateToken() {
-            render(view: "/registration/registerPlayer/validateToken")
-            on ("continue") {
-                //if (params.token != flow.token) return error()
-                if (params.token != 'a') return error()
-
-                if (flow.registrant == null) return error()
-
-                // model for view
-                [
-                    tiers: RegistrationTier.findAllByEnabledAndValidUntilGreaterThan(true, new Date()),
-                    playersAvailable: Player.findAllByGuardianOrSecondGuardian(flow.registrant, flow.registrant)
-                ]
             }.to "selectPlayer"
         }
 
+        /*
+         * choose existing players and select registration tiers
+         */
         selectPlayer {
+            on ("addPlayer").to "setupPlayer"
+
             on ("continue") {
                 flow.registrations = []
                 flow.registeredPlayers = []
@@ -367,7 +180,7 @@ class RegistrationController {
                     def playerIds = [params.playerId].flatten()
                     regIds.eachWithIndex { reg, i ->
                         if (reg != 'x') {
-                            def player = Player.get(playerIds[i])
+                            def player = flow.playersAvailable[i]
                             def tier = RegistrationTier.get(reg)
                             def registration = Registration.createFrom(tier)
                             flow.registrations << registration
@@ -379,13 +192,52 @@ class RegistrationController {
             }.to "checkRegistration"
         }
 
+        /*
+         * create the flow and model items for the player edit screen
+         */
+        setupPlayer {
+            action {
+                flow.addedPlayer = new Player(person: new Person(eligibleParent: false, phone1: 'x'))
+                flow.addedPlayer.guardian = flow.registrant
+                [playerInstance: flow.addedPlayer]
+            }
+            on ("success").to "enterPlayerDetails"
+        }
+
+        /*
+         * main form for player details, not including team
+         */
+        enterPlayerDetails {
+            on("submit") {
+                def p = flow.addedPlayer
+                p.properties = params
+
+                if (!p.validate(["person", "doctor", "doctorTelephone", "medical", "ethnicOrigin", "dateOfBirth"])
+                    | !p.person?.validate()) {
+                    // odd.. if i don't do this, the errors object is not visible in the view.
+                    // TODO: log this in grails JIRA
+                    flow.person = p.person
+                    return error()
+                }
+
+                flow.duplicate = Player.find(
+                        "from Player p where p.dateOfBirth = :dob and p.person.familyName = :familyName and p.person.givenName like :givenName",
+                        [dob: p.dateOfBirth, familyName: p.person.familyName, givenName: "${p.person.givenName.split()[0]}%"]
+                )
+
+            }.to "checkCanSelectPlayers"
+        }
+
+        /*
+         * validate that some players have been selected for registration and move to confirm or end the flow if not
+         */
         checkRegistration {
             def endMessage
             action {
                 if (flow.registeredPlayers.size() > 0)
                     return valid()
                 else {
-                    endMessage = "You have chosen not to register any players at this time, the registration process is now complete."
+                    endMessage = "You have chosen not to register any players at this time, the registration process is now complete and any details entered have NOT been saved."
                     return end()
                 }
             }
