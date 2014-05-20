@@ -58,6 +58,7 @@ class RegistrationController {
 
                 flow.token = UUID.randomUUID().toString()[0..17]
                 log.info "Token ${flow.token} sent by email to ${flow.registrantEmail}"
+                println flow.token
                 registrationService.sendTokenByEmail(flow.registrantEmail, flow.token)
 
             }.to "gatherToken"
@@ -72,7 +73,7 @@ class RegistrationController {
         checkCanSelectPlayers() {
             action {
                 if (flow.registrant == null) {
-                    return addGuardian()
+                    return verifyFirstTime()
                 }
                 else {
                     return selectPlayer()
@@ -87,12 +88,24 @@ class RegistrationController {
 
             }.to "selectPlayer"
 
-            on ("addGuardian") {
+            on ("verifyFirstTime").to "verifyFirstTime"
+
+        }
+
+        /*
+         * ask for confirmation that you really,really REALLY aren't registered
+         */
+        verifyFirstTime() {
+            on ("continue") {
                 // cope with back button better..
                 flow.personCommand = new Person (
                     email: flow.registrantEmail
                 )
             }.to "enterGuardianDetails"
+
+            on ("end") {
+                [endMessage: "Registration process has ended, please use hit the back button in your browser and enter the email address that we currently hold for you in the database in order to continue."]
+            }.to "end"
         }
 
         /*
