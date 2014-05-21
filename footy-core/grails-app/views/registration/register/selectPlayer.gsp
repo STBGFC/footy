@@ -19,18 +19,19 @@
                 <g:if test="${duplicate}"><span class="error"><g:message code="org.davisononline.footy.core.registration.duplicate" default="A player with that name and date of birth already exists"/></span></g:if>
                 <table>
                     <tbody>
-                        <g:each var="player" in="${playersAvailable}" status="idx">
+                        <g:each var="player" in="${playersAvailable}">
                         <tr class="prop">
                             <td  class="name">
                                 <strong>${player} - ${player.team ?: "no team"}</strong> <br/>
                                 (current/last expiry date: <g:formatDate date="${player.currentRegistration?.date}" format="yyyy-MM-dd"/>)
+                                <g:hiddenField name="playerId" value="${player.id}"/>
                             </td>
                             <td class="value">
                                 <g:if test="${player.currentRegistration?.date > new Date()}">
                                     registration is currently up to date
+                                    <g:hiddenField name="regTierId" value="x"/>
                                 </g:if>
                                 <g:else>
-                                    <g:hiddenField name="idx" value="${idx}"/>
                                     <g:select name="regTierId" from="${tiers}" optionKey="id" noSelection="${['x':'-- Do Not Register --']}"/>
                                 </g:else>
                             </td>
