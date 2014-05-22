@@ -3,11 +3,11 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <g:set var="entityName" value="${message(code: 'club.label', default: 'Club')}" />
-        <title><g:message code="org.davisononline.org.footy.core.registration.renewal.confirms.label" default="Confirm Re-registrations" /></title>
+        <title><g:message code="org.davisononline.org.footy.core.registration.renewal.confirms.label" default="Confirm Registrations" /></title>
     </head>
     <body>
         <h1>
-            <g:message code="org.davisononline.org.footy.core.registration.renewal.confirms.label" default="Confirm Re-registrations" />
+            <g:message code="org.davisononline.org.footy.core.registration.renewal.confirms.label" default="Confirm Registrations" />
         </h1>
 
         <div class="dialog">

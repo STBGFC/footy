@@ -274,8 +274,7 @@ class RegistrationController {
                 }
                 
                 // start transaction to create/save domain
-                def payment = registrationService.createPayment(flow.registrations)
-                [payment:payment]
+                flow.payment = registrationService.createPayment(flow.registrations)
 
             }.to "invoice"
         }
