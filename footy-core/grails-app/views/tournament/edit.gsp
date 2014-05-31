@@ -1,4 +1,4 @@
-<%@ page import="org.davisononline.footy.tournament.Tournament" %>
+<%@ page import="org.davisononline.footy.core.Person; org.davisononline.footy.tournament.Tournament" %>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -74,6 +74,15 @@
                                 </td>
                                 <td valign="top" class="value ${hasErrors(bean: tournamentInstance, field: 'openForEntry', 'errors')}">
                                     <g:checkBox name="openForEntry" value="${tournamentInstance?.openForEntry}" />
+                                </td>
+                            </tr>
+
+                            <tr class="prop">
+                                <td valign="top" class="name">
+                                  <label for="treasurer.id"><g:message code="tournament.treasurer.label" default="Treasurer (person to send cheques to)" /></label>
+                                </td>
+                                <td valign="top" class="value ${hasErrors(bean: tournamentInstance, field: 'treasurer', 'errors')}">
+                                    <g:select name="treasurer.id" from="${treasurerCandidates}" noSelection="[null:'-- None Needed --']" value="${tournamentInstance.treasurer?.id}" optionKey="id" />
                                 </td>
                             </tr>
 

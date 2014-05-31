@@ -17,6 +17,7 @@ class Tournament implements Serializable {
     boolean openForEntry = false
     double costPerTeam = 10.00
     String cclist
+    Person treasurer
     
     static hasMany = [competitions: Competition]
     
@@ -24,6 +25,7 @@ class Tournament implements Serializable {
         endDate(validator: { v, t->
             v >= t.startDate
         })
+        treasurer nullable: true
     }
 
     boolean hasEntries() {

@@ -133,7 +133,10 @@ class TournamentController {
      */
     def edit = {
         def t = checkInstance(params)
-        render (view: 'edit', model:[tournamentInstance: t])
+        render (view: 'edit', model:[
+                tournamentInstance: t,
+                treasurerCandidates: Person.findAllByEligibleParent(true).sort()
+        ])
     }
     
     /**
