@@ -8,11 +8,15 @@
     <body>
         <h1><g:message code="org.davisononline.org.footy.core.registration.start.title" default="Player Registration" /></h1>
         <div class="dialog">
-            <g:form name="registration" action="registerPlayer">
+            <g:form name="registration" action="register">
                 <p>
                    <g:message
                            code="org.davisononline.footy.core.registrationemail.text"
                            default="First, please confirm your email address so that we can validate it (a working email address is an absolute requirement for player registration). Enter it CAREFULLY as we will send a token (password) to it which you must be able to receive in order to continue."/>
+                </p>
+
+                <p>
+                    If you are already registered in the database, you MUST use the email address that we have stored for you.
                 </p>
 
                 <table>

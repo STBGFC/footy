@@ -36,6 +36,19 @@
             be refunded online in the event that the tournament or competition is cancelled
             or your team was unable to be included.
         </p>
+        <g:if test="${tournament.treasurer}">
+        <p>
+            If you cannot pay online (which is our STRONG preference as it helps keep
+            our costs down) then please send a cheque to:
+        </p>
+        <address>
+            ${tournament.treasurer}<br/>
+            ${tournament.treasurer.address}
+        </address>
+        <p>
+            Ensure you write your team name and invoice number on the back.
+        </p>
+        </g:if>
         <div class="buttons">
             <span class="button"><g:submitButton name="createMore" class="create" value="Add More Teams"></g:submitButton></span>
             <span class="button"><g:submitButton name="submit" class="save" value="Continue to Payment"></g:submitButton></span>

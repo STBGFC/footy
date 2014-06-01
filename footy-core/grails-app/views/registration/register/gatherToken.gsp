@@ -3,35 +3,30 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <g:set var="entityName" value="${message(code: 'club.label', default: 'Club')}" />
-        <title><g:message code="org.davisononline.org.footy.core.registration.label" default="Registration Type" /></title>
+        <title><g:message code="org.davisononline.org.footy.core.registration.validatetoken.title" default="Email Validation Token" /></title>
     </head>
     <body>
-        <h1><g:message code="org.davisononline.org.footy.core.registration.label" default="Registration Type" /></h1>
+        <h1><g:message code="org.davisononline.org.footy.core.registration.validatetoken.title" default="Email Validation Token" /></h1>
         <div class="dialog">
-            <g:form name="registration" action="registerPlayer">
+            <g:form name="registration" action="register">
                 <p>
                    <g:message
-                           code="org.davisononline.footy.core.registrationtype.text"
-                           default="Please select the registration type (your coach or manager can advise you if you're unsure which one to pick)"/>
+                           code="org.davisononline.footy.core.registration.token.text"
+                           default="An email containing a token has been sent to the address you entered.  Please enter that token here so that we know your email address works.  Note that you only have a few minutes before the token will expire and you will then need to start again."/>
                 </p>
 
                 <table>
                     <tbody>
                         <tr class="prop">
                             <td  class="name">
-                                <label for="regTierId"><g:message code="org.davisononline.org.footy.core.registration.label" default="Registration Type" /></label>
+                                <label for="token"><g:message code="org.davisononline.org.footy.core.registration.token.label" default="Token from your email" /></label>
                             </td>
                             <td  class="value">
-                                <g:select name="regTierId" from="${tiers}" optionKey="id"/>
+                                <g:textField name="token" value="" />
                             </td>
                         </tr>
                     </tbody>
                 </table>
-                <p>
-                   <g:message
-                           code="org.davisononline.footy.core.registrationtype.text2"
-                           default=""/>
-                </p>
 
                 <div class="buttons flowcontrol">
                     <span class="button"><g:submitButton name="continue" class="save" value="${message(code: 'default.button.continue.label', default: 'Continue')}" /></span>

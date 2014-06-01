@@ -4,6 +4,7 @@ import org.codehaus.groovy.grails.commons.ConfigurationHolder
 import org.davisononline.footy.core.Person
 import org.grails.paypal.*
 import grails.plugins.springsecurity.Secured
+import org.springframework.validation.BeanPropertyBindingResult
 
 /**
  * @author darren
@@ -133,7 +134,10 @@ class TournamentController {
      */
     def edit = {
         def t = checkInstance(params)
-        render (view: 'edit', model:[tournamentInstance: t])
+        render (view: 'edit', model:[
+                tournamentInstance: t,
+                treasurerCandidates: Person.findAllByEligibleParent(true).sort()
+        ])
     }
     
     /**
@@ -294,6 +298,8 @@ class TournamentController {
             on("submit") {
                 def payment
                 try {
+                    // hack to workaround this fucking grails bug: https://jira.grails.org/browse/GRAILS-7471
+                    if (!flow.personInstance.errors) flow.personInstance.errors = new BeanPropertyBindingResult(flow.personInstance, "name")
                     payment = tournamentService.createPayment(flow.tournament, flow.entries, flow.personInstance)
                     flow.transactionId = payment.transactionId
 
