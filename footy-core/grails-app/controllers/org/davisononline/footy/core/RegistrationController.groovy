@@ -81,7 +81,13 @@ class RegistrationController {
             }
 
             on ("selectPlayer") {
-                flow.playersAvailable = Player.findAllByGuardianOrSecondGuardian(flow.registrant, flow.registrant)
+                // if the registrant is transient, (s)he won't have kids in the DB and the findAll would fail
+                if (flow.registrant.id) {
+                    flow.playersAvailable = Player.findAllByGuardianOrSecondGuardian(flow.registrant, flow.registrant)
+                }
+                else {
+                    flow.playersAvailable = []
+                }
                 if (flow.addedPlayer) flow.playersAvailable << flow.addedPlayer
 
                 [tiers: RegistrationTier.findAllByEnabledAndValidUntilGreaterThan(true, new Date())]

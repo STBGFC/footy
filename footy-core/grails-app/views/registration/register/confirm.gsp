@@ -12,6 +12,19 @@
 
         <div class="dialog">
             <g:form name="registration" action="register">
+                <g:if test="${registrant.id != null}">
+                <p>
+                    First, please check our current records of your details are up to date...
+                    <address>
+                    ${registrant}<br/>
+                    ${registrant.address}<br/>
+                    ${registrant.phone1}
+                    </address>
+                    If any of the above details are wrong, please
+                    <a href="mailto:${Club.homeClub.secretary.email}?subject=STBGFC:%20Incorrect%20Details&body=Please%20update%20my%20details%20as%20follows...%0A%0A(your%20changes%20here)%0A%0A:::%20do%20not%20modify%20below%20here%20:::%0A${g.createLink(absolute:true,controller:'person',action:'edit',id:registrant.id)}">click here to tell us what&apos;s changed</a> before continuing below.
+                    <hr/>
+                </p>
+                </g:if>
 
                 <p>
                     The players below are to be registered.
