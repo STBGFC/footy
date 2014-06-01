@@ -22,8 +22,8 @@
                         <g:each var="player" in="${playersAvailable}">
                         <tr class="prop">
                             <td  class="name">
-                                <strong>${player} - ${player.team ?: "no team"}</strong> <br/>
-                                (current/last expiry date: <g:formatDate date="${player.currentRegistration?.date}" format="yyyy-MM-dd"/>)
+                                <strong>${player}: ${player.team ?: ""}</strong> <br/>
+                                (current/last expiry date: ${player.currentRegistration ? g.formatDate(date:player.currentRegistration.date, format:"yyyy-MM-dd") : 'n/a'})
                                 <g:hiddenField name="playerId" value="${player.id}"/>
                             </td>
                             <td class="value">
