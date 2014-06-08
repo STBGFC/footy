@@ -246,6 +246,8 @@ class TournamentController {
                 if (!p) p = new Person(email: params.email)
 
                 flow.personInstance = p
+                // hack to workaround this fucking grails bug: https://jira.grails.org/browse/GRAILS-7471
+                if (!flow.personInstance.errors) flow.personInstance.errors = new BeanPropertyBindingResult(flow.personInstance, "name")
                 if (!flow.personInstance?.validate(['email']))
                     return error()
 
