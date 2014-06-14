@@ -58,7 +58,6 @@ class RegistrationController {
 
                 flow.token = UUID.randomUUID().toString()[0..17]
                 log.info "Token ${flow.token} sent by email to ${flow.registrantEmail}"
-                println flow.token
                 registrationService.sendTokenByEmail(flow.registrantEmail, flow.token)
 
             }.to "gatherToken"

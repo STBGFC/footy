@@ -1,4 +1,4 @@
-<%@ page import="org.davisononline.footy.core.*" %>
+<%@ page import="grails.util.GrailsUtil; org.davisononline.footy.core.*" %>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -22,7 +22,7 @@
                                 <label for="token"><g:message code="org.davisononline.org.footy.core.registration.token.label" default="Token from your email" /></label>
                             </td>
                             <td  class="value">
-                                <g:textField name="token" value="" />
+                                <g:textField name="token" value="${GrailsUtil.isDevelopmentEnv() ? token : ''}" />
                             </td>
                         </tr>
                     </tbody>

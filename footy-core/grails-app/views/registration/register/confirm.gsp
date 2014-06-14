@@ -21,7 +21,7 @@
                     ${registrant.phone1}
                     </address>
                     If any of the above details are wrong, please
-                    <a href="mailto:${Club.homeClub.secretary.email}?subject=STBGFC:%20Incorrect%20Details&body=Please%20update%20my%20details%20as%20follows...%0A%0A(your%20changes%20here)%0A%0A:::%20do%20not%20modify%20below%20here%20:::%0A${g.createLink(absolute:true,controller:'person',action:'edit',id:registrant.id)}">click here to tell us what&apos;s changed</a> before continuing below.
+                    <a href="mailto:${Club.homeClub.chairman.email}?subject=${Club.homeClub.name}:%20Incorrect%20Details&body=Please%20update%20my%20details%20as%20follows...%0A%0A(your%20changes%20here)%0A%0A%3A%3A%3A%20do%20not%20modify%20below%20here%20%3A%3A%3A%0A${g.createLink(absolute:true,controller:'person',action:'edit',id:registrant.id)}">click here to tell us what&apos;s changed</a> before continuing below.
                     <hr/>
                 </p>
                 </g:if>
