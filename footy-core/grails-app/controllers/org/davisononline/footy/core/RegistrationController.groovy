@@ -13,7 +13,7 @@ class RegistrationController {
 
     
     def index = {
-        redirect (action:'registerPlayer')
+        redirect (action:'register')
     }
 
     /**

@@ -65,14 +65,19 @@ class RegistrationService {
         )
         
         // and again to create items..
-        registrations.each { registration ->
+        registrations.sort{it.player.dateOfBirth}.each { registration ->
             def p = registration.player
             def regItem = new PaymentItem (
                     itemName: "${p} ${registration.tier}",
                     itemNumber: "${registration.id}",
                     amount: registration.tier.amount
             )
-            if (p.sibling && p.sibling.dateOfBirth < p.dateOfBirth && registration.tier.siblingDiscount != 0) {
+            if (
+                p.sibling &&
+                p.sibling.dateOfBirth < p.dateOfBirth &&
+                registration.tier.siblingDiscount != 0 &&
+                p.sibling.currentRegistration.inDate()
+            ) {
                 regItem.discountAmount = registration.tier.siblingDiscount
             }
             payment.addToPaymentItems(regItem)
