@@ -10,7 +10,7 @@ import org.davisononline.footy.core.Player
 /**
  * PDF output for EBYFL
  */
-class EBYFL {
+class EBFA {
 
     def team
     def out

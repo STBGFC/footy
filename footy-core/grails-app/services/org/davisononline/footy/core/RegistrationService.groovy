@@ -1,9 +1,9 @@
 package org.davisononline.footy.core
-
-import org.grails.paypal.Payment
 import org.codehaus.groovy.grails.commons.ConfigurationHolder
+import org.grails.paypal.Payment
 import org.grails.paypal.PaymentItem
 import org.hibernate.jdbc.Work
+
 import java.sql.Connection
 
 class RegistrationService {
@@ -128,26 +128,15 @@ class RegistrationService {
      */
     void generateRegistrationForm(team, out) {
 
-        def reporter
-
-        // GRrrrrr.. WTF does Class.forName fail??
-        switch (team.league.name) {
-            case "NEHYL":
-                reporter = org.davisononline.footy.core.reports.NEHYL.newInstance()
-                break
-
-            default:
-                reporter = org.davisononline.footy.core.reports.EBYFL.newInstance()
-                break
-        }
-
-        if (!reporter) {
-            log.error "Unable to find report class for league name ${team?.league?.name}"
-        }
-        else {
+        try {
+            def reporter = Class.forName("org.davisononline.footy.core.reports.${team.league.name}", true, getClass().getClassLoader()).newInstance()
             reporter.team = team
             reporter.out = out
             reporter.createPdf()
         }
+        catch (Exception ex) {
+            log.error "Unable to load league registration form class for ${team.league.name}"
+        }
+
     }
 }
