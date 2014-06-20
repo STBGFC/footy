@@ -11,8 +11,8 @@ class TeamService {
         // remove ref reports/fixtures
         def fixtures = Fixture.findAllByTeam(team)
         fixtures.each { fixture ->
-            def report = RefereeReport.findByFixture(fixture)
-            if (report) report.delete()
+            def reports = RefereeReport.findAllByFixture(fixture)
+            reports.each { it.delete() }
             fixture.delete()
         }
 
