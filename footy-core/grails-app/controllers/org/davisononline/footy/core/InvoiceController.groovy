@@ -19,15 +19,20 @@ class InvoiceController {
     def list = {
         if(params?.format && params.format != "html"){
             // includes unpaid
+    /*<g:if test="${payment.paypalTransactionId}">
+    ${payment?.buyerInformation?.receiverName ?: 'n/a'}<br/>
+    ${payment?.buyerInformation?.street ?: ''}, ${payment?.buyerInformation?.zip ?: ''}
+    </g:if>*/
             List fields = [
-                    "transactionId", "status", "paypalTransactionId", "paymentMethod", "total"
+                    "transactionId", "status", "paypalTransactionId", "paymentMethod", "total", "accountHolder"
             ]
             Map labels = [
                     "transactionId": "Number",
                     "status": "Payment Status",
                     "paypalTransactionId": "PayPal Transaction ID",
                     "paymentMethod": "Payment Method",
-                    "total": "Amount"
+                    "total": "Amount",
+                    "accountHolder": "PayPal Account Holder"
             ]
 
             // Formatter closure
@@ -39,9 +44,17 @@ class InvoiceController {
                 else if (payment.status == Payment.COMPLETE) "Cash/Chq/CC"
                 else ""
             }
+            def accountHolder = { payment, value ->
+                def bi = payment.buyerInformation
+                if (bi?.receiverName) {
+                    "${bi.receiverName}, ${bi.street} ${bi.city}. ${bi.zip?.toUpperCase()}".replace('\n', ' ')
+                }
+                else ''
+            }
             Map formatters = [
                     total: calculated,
-                    paymentMethod: method
+                    paymentMethod: method,
+                    accountHolder: accountHolder
             ]
             Map parameters = [title: "All Invoices"]
 
