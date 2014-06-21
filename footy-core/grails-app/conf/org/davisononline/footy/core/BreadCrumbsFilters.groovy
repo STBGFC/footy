@@ -14,8 +14,10 @@ class BreadCrumbsFilters {
                 def uri = request.forwardURI - request.contextPath
                 if (request.queryString) uri += ('?' + request.queryString)
                 
-                session['breadcrumb'] = uri
-                log.debug "breadcrumb=${session['breadcrumb']}"
+                if (!response.committed) {
+                    session['breadcrumb'] = uri
+                    log.debug "breadcrumb=${session['breadcrumb']}"
+                }
             }
         }
     }
