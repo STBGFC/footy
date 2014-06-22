@@ -19,10 +19,6 @@ class InvoiceController {
     def list = {
         if(params?.format && params.format != "html"){
             // includes unpaid
-    /*<g:if test="${payment.paypalTransactionId}">
-    ${payment?.buyerInformation?.receiverName ?: 'n/a'}<br/>
-    ${payment?.buyerInformation?.street ?: ''}, ${payment?.buyerInformation?.zip ?: ''}
-    </g:if>*/
             List fields = [
                     "transactionId", "status", "paypalTransactionId", "paymentMethod", "total", "accountHolder"
             ]
