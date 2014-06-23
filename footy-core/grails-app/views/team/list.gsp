@@ -5,6 +5,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <g:set var="entityName" value="${message(code: 'team.label', default: 'Team')}" />
         <title><g:message code="default.list.label" args="[entityName]" /></title>
+        <export:resource/>
     </head>
     <body>
         <h1>
@@ -46,6 +47,7 @@
             <div class="paginateButtons">
                 <g:paginate total="${teamInstanceTotal}" />
             </div>
+            <export:formats formats="['excel', 'pdf']" />
         </div>
     </body>
 </html>

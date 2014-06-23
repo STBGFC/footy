@@ -1,8 +1,9 @@
 package org.davisononline.footy.core
 
 import grails.plugins.springsecurity.Secured
+import org.codehaus.groovy.grails.commons.ConfigurationHolder
 import org.davisononline.footy.core.utils.ImageUtils
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+
 
 /**
  * controller methods for CRUD on Team
@@ -22,6 +23,8 @@ class TeamController {
 
     def teamService
 
+    def exportService
+
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST", photoUpload: "POST"]
 
@@ -31,9 +34,62 @@ class TeamController {
     }
 
     def list = {
-        params.max = Math.min(params.max ? params.int('max') : 25, 100)
-        params.sort = params.sort ?: 'ageBand'
-        [teamInstanceList: Team.findAllByClub(Club.homeClub, params), teamInstanceTotal: Team.countByClub(Club.homeClub)]
+        if(params?.format && params.format != "html") {
+            // export
+            List fields = [
+                    "team", "manager", "manager.email", "manager.phone1", "coach", "coachEmail", "coachPhone"
+            ]
+            Map labels = [
+                    "team": "Team",
+                    "manager": "Manager",
+                    "manager.email": "Manager Email",
+                    "manager.phone1": "Manager Phone",
+                    "coach": "Coach",
+                    "coachEmail": "Coach Email",
+                    "coachPhone": "Coach Phone"
+            ]
+
+            // Formatter closure
+            def teamLabel = { team, value ->
+                team
+            }
+            def coach = { team, value ->
+                team.coaches.join("\n")
+            }
+            def coachEmail = { team, value ->
+                team.coaches*.email.join("\n")
+            }
+            def coachPhone = { team, value ->
+                team.coaches*.phone1.join("\n")
+            }
+            Map formatters = [
+                    team: teamLabel,
+                    coach: coach,
+                    coachEmail: coachEmail,
+                    coachPhone: coachPhone
+            ]
+            Map parameters = [title: "All Teams"]
+
+            response.contentType = ConfigurationHolder.config.grails.mime.types[params.format]
+            response.setHeader(
+                "Content-disposition",
+                "attachment; filename=${URLEncoder.encode('team-list','UTF-8')}.${params.extension}"
+            )
+            exportService.export(
+                params.format,
+                response.outputStream,
+                Team.list([sort:'ageBand', order: 'asc']),
+                fields,
+                labels,
+                formatters,
+                parameters
+            )
+        }
+        else {
+            params.max = Math.min(params.max ? params.int('max') : 25, 100)
+            params.sort = params.sort ?: 'ageBand'
+            [teamInstanceList: Team.findAllByClub(Club.homeClub, params), teamInstanceTotal: Team.countByClub(Club.homeClub)]
+        }
     }
 
     @Secured(["permitAll"])
