@@ -109,7 +109,7 @@ class PersonController {
         def personInstance = Person.get(params.id)
         if (personInstance) {
             try {
-                personInstance.delete(flush: true)
+                personService.deletePerson(personInstance)
                 flash.message = "${message(code: 'default.deleted.message', args: [message(code: 'person.label', default: 'Person'), personInstance])}"
             }
             catch (org.springframework.dao.DataIntegrityViolationException e) {
@@ -119,7 +119,73 @@ class PersonController {
         else {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'person.label', default: 'Person'), params.id])}"
         }
-        redirect(session.breadcrumb ? [uri: session.breadcrumb] : [action: "list"])
+        redirect([action: "list"])
+    }
+
+    /*
+     * User based stuff
+     */
+    @Secured(["ROLE_SYSADMIN"])
+    def editLogin = {
+        def person = Person.get(params.id)
+        if (!person) {
+            flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'person.label', default: 'User'), params.id])}"
+            redirect(session.breadcrumb ? [uri: session.breadcrumb] : [action: "listLogins"])
+        }
+        else {
+            def user = person.user ?: new SecUser(enabled: true, username: person.fullName.toLowerCase().replace(' ',''))
+
+            String authorityFieldName = SpringSecurityUtils.securityConfig.authority.nameField
+            String authoritiesPropertyName = SpringSecurityUtils.securityConfig.userLookup.authoritiesPropertyName
+            List roles = SecRole.list().sort { it.authority }
+            Set userRoleNames = []
+            if (user.id) {
+                userRoleNames = user[authoritiesPropertyName].collect { it[authorityFieldName] }
+            }
+            def granted = [:]
+            def notGranted = [:]
+            for (role in roles) {
+                String authority = role[authorityFieldName]
+                if (userRoleNames.contains(authority)) {
+                    granted[(role)] = userRoleNames.contains(authority)
+                } else {
+                    notGranted[(role)] = userRoleNames.contains(authority)
+                }
+            }
+
+            render(view: 'editLogin', model: [personCommand: person, userCommand: user, roleMap: granted + notGranted])
+        }
+    }
+
+    @Secured(["ROLE_SYSADMIN"])
+    def saveLogin = {def person = Person.get(params.id)
+        if (!person) {
+            flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'person.label', default: 'User'), params.id])}"
+        }
+        else {
+            personService.updateLogin(params, person)
+        }
+
+        redirect(session.breadcrumb ? [uri: session.breadcrumb] : [action: "listLogins"])
+    }
+
+    def listLogins = {
+        params.max = Math.min(params.max ? params.int('max') : 100, 200)
+        if (!params.sort) params.sort = 'familyName'
+        if (!params.order) params.order = 'asc'
+        params.cache = true
+
+        def l = Person.findAllByUserIsNotNull(params)
+        [personInstanceList: l, personInstanceTotal: Person.countByUserIsNotNull()]
+    }
+
+    def toggleLock = {
+        def personInstance = Person.get(params.id)
+        if (personInstance?.user) {
+            personInstance.user.accountLocked = !personInstance.user.accountLocked
+            personInstance.user.save()
+        }
+        redirect(session.breadcrumb ? [uri: session.breadcrumb] : [action: "listLogins"])
     }
 
     def assignQualification = {

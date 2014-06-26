@@ -166,6 +166,6 @@ class PlayerController {
         else {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'player.label', default: 'Player'), params.id])}"
         }
-        redirect(session.breadcrumb ? [uri: session.breadcrumb] : [action: "list"])
+        redirect([action: "list"])
     }
 }
