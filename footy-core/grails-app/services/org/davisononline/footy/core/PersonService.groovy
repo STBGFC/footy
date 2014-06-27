@@ -14,6 +14,8 @@ class PersonService {
 
     def userCache
 
+    def mailService
+
 
     def deletePerson(Person person) {
         if (!person) return
@@ -70,6 +72,19 @@ class PersonService {
 
         String usernameFieldName = SpringSecurityUtils.securityConfig.userLookup.usernamePropertyName
         userCache.removeUserFromCache user[usernameFieldName]
+
+        try {
+            mailService.sendMail {
+                // ensure mail address override is set in dev/test in Config.groovy
+                to      person.email
+                subject "${Club.homeClub.name} Login Setup"
+                body    (view: '/email/core/loginSetup',
+                         model: [person: person, homeClub: Club.homeClub])
+            }
+        }
+        catch (Exception ex) {
+            log.error "Unable to send email after login setup; $ex"
+        }
 
     }
 
