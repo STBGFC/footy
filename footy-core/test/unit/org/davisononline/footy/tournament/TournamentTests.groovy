@@ -17,7 +17,8 @@ class TournamentTests extends GrailsUnitTestCase {
         def t = new Tournament(
             name:'May Tourney', 
             startDate: Date.parse('yyyy/MM/dd', '2011/05/14'),
-            endDate: Date.parse('yyyy/MM/dd', '2011/05/15')
+            endDate: Date.parse('yyyy/MM/dd', '2011/05/15'),
+            cclist: 'foo@bar.com'
             )
         assertTrue t.validate()
         
@@ -28,8 +29,19 @@ class TournamentTests extends GrailsUnitTestCase {
         assertFalse t.validate()
         assertEquals "validator", t.errors["endDate"]
     }
+
+    void testOtherConstraints() {
+        mockForConstraintsTests(Tournament)
+        def t = new Tournament(
+            name:'May Tourney',
+            startDate: Date.parse('yyyy/MM/dd', '2011/05/14'),
+            endDate: Date.parse('yyyy/MM/dd', '2011/05/15')
+            )
+        assertTrue t.validate()  // no cclist
+    }
     
     void teamsEnteredTests() {
+        def ag8 = new AgeGroup(year:8)
         def t = new Tournament(
             name:'May Tourney', 
             startDate: Date.parse('yyyy/MM/dd', '2011/05/14'),
@@ -37,17 +49,17 @@ class TournamentTests extends GrailsUnitTestCase {
             )
         def c1 = new Person(givenName: 'Fred', familyName: 'Bloggs')
         def e1 = new Entry(contact: c1)
-        def t1 = new Team(name:'Reds', ageBand:8, manager: c1)
+        def t1 = new Team(name:'Reds', ageGroup: ag8, manager: c1)
         e1.addToTeams(t1)
         
         def c2 = new Person(givenName: 'Gary', familyName: 'Player')
         def e2 = new Entry(contact: c2)
-        def t2 = new Team(name:'Blues', ageBand:8, manager: c2)
+        def t2 = new Team(name:'Blues', ageGroup: ag8, manager: c2)
         e1.addToTeams(t2)
         
         def c3 = new Person(givenName: 'Harry', familyName: 'Adam')
         def e3 = new Entry(contact: c3)
-        def t3 = new Team(name:'Greens', ageBand:8, manager: c3)
+        def t3 = new Team(name:'Greens', ageGroup: ag8, manager: c3)
         e1.addToTeams(t3)
         
         t.addToEntries(e1)

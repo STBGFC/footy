@@ -78,7 +78,7 @@ class TeamController {
             exportService.export(
                 params.format,
                 response.outputStream,
-                Team.list([sort:'ageBand', order: 'asc']),
+                Team.list([sort:'ageGroup', order: 'asc']),
                 fields,
                 labels,
                 formatters,
@@ -87,7 +87,7 @@ class TeamController {
         }
         else {
             params.max = Math.min(params.max ? params.int('max') : 25, 100)
-            params.sort = params.sort ?: 'ageBand'
+            params.sort = params.sort ?: 'ageGroup'
             [teamInstanceList: Team.findAllByClub(Club.homeClub, params), teamInstanceTotal: Team.countByClub(Club.homeClub)]
         }
     }
@@ -96,7 +96,9 @@ class TeamController {
     def show = {
         cache 'authed_page'
 
-        def teamInstance = Team.findWhere(club: Club.homeClub, ageBand:params.ageBand.toInteger(), name:params.teamName)
+        def ag = AgeGroup.findByYear(params.ageBand.toInteger())
+
+        def teamInstance = Team.findWhere(club: Club.homeClub, ageGroup: ag, name:params.teamName)
         if (!teamInstance || teamInstance.club != Club.homeClub) {
             response.sendError(404)
         }
@@ -104,7 +106,7 @@ class TeamController {
             return [
                     teamInstance: teamInstance,
                     players: Player.findAllByTeam(teamInstance, [sort:"person.familyName", order:"asc"]),
-                    otherTeamsThisAge: Team.findAllByClubAndAgeBand(Club.homeClub, teamInstance.ageBand),
+                    otherTeamsThisAge: Team.findAllByClubAndAgeGroup(Club.homeClub, teamInstance.ageGroup),
                     latestNews: NewsItem.findAllByTeam(teamInstance, [max: params?.maxNews ?: 5, sort:'createdDate', order:'desc'])
             ]
         }
@@ -374,8 +376,8 @@ class TeamController {
             params.defaultTeamId = t.id
         }
 
-        def teams = Team.findAllByClub(Club.homeClub, [sort:'ageBand', order:'asc'])
-        def ages = teams*.ageBand.unique()
+        def teams = Team.findAllByClub(Club.homeClub, [sort:'ageGroup', order:'asc'])
+        def ages = teams*.ageGroup.year.unique()
 
         render (template: 'messageDialog', model: [ages:ages], contentType: 'text/plain', plugin: 'footy-core')
     }
@@ -390,7 +392,8 @@ class TeamController {
             return
         }
         else {
-            def teams = Team.findAllByClubAndAgeBand(Club.homeClub, params.ageBand, [sort:'division', order:'asc'])
+            def ag = AgeGroup.findByYear(params.ageBand)
+            def teams = Team.findAllByClubAndAgeGroup(Club.homeClub, ag, [sort:'division', order:'asc'])
             // really nasty kludge.. because the & between params in the remote function call gets URL encoded
             // it prefixes the parameter name with "amp;"
             def defaultId = params["amp;defaultTeamId"] ?: teams[0].id

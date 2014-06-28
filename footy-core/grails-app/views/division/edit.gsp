@@ -1,5 +1,5 @@
 
-<%@ page import="org.davisononline.footy.core.Division" %>
+<%@ page import="org.davisononline.footy.core.AgeGroup; org.davisononline.footy.core.Division" %>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -40,7 +40,7 @@
                                     <label for="ageBand"><g:message code="division.ageBand.label" default="Age Band"/></label>
                                 </td>
                                 <td valign="top" class="value ${hasErrors(bean: divisionInstance, field: 'ageBand', 'errors')}">
-                                    <g:select name="ageBand" from="${8..18}"
+                                    <g:select name="ageBand" from="${AgeGroup.constraints.year.inList}"
                                               value="${fieldValue(bean: divisionInstance, field: 'ageBand')}"/>
                                     <g:render template="/shared/fieldError" model="['instance':divisionInstance,'field':'ageBand']" plugin="footy-core"/>
                                 </td>

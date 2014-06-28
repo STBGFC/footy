@@ -19,7 +19,7 @@
             <table class="list">
                 <thead>
                     <tr>
-                        <g:sortableColumn property="ageBand" title="${message(code: 'team.name.label', default: 'Name')}" />
+                        <th><g:message code="team.name.label" default="Name" /></th>
                         <g:sortableColumn property="division" title="${message(code: 'team.division.label', default: 'Division')}" />
                         <g:sortableColumn property="manager" title="${message(code: 'team.manager.label', default: 'Manager')}" />
                         <th><g:message code="team.coaches.label" default="Coaches"/></th>

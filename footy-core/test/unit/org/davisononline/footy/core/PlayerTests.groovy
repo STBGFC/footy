@@ -19,7 +19,7 @@ class PlayerTests extends GrailsUnitTestCase {
 
         p.guardian = null
         p.dateOfBirth = new Date(92, 1, 1)
-        p.team = new Team(name:'foo', manager:PersonTests.getGood(), ageBand: 17)
+        p.team = new Team(name:'foo', manager:PersonTests.getGood(), ageGroup: new AgeGroup(year: 17))
         //until we restore the Person.MINOR_UNTIL, this won't work
         //assertTrue p.validate()
         
@@ -61,11 +61,11 @@ class PlayerTests extends GrailsUnitTestCase {
         def p = getGood()
         def d = new Date()
         def currYr = d.format('yyyy') as int
-        def currMonth = d.month
-        def birthYr = currYr - 10 - ((currMonth < 8) ? 0 : 1)
+        def currMonth = d.format('MM') as int
+        def birthYr = currYr - 10 + ((currMonth > 8) ? 0 : 1)
         p.dateOfBirth = new Date("$birthYr/08/31")
-        assertEquals(12, p.getAgeAtNextCutoff())
+        assertEquals(9, p.getAgeAtNextCutoff())
         p.dateOfBirth = new Date("$birthYr/09/01")
-        assertEquals(11, p.getAgeAtNextCutoff())
+        assertEquals(8, p.getAgeAtNextCutoff())
     }
 }

@@ -12,8 +12,9 @@ class EntryTests extends GrailsUnitTestCase {
     }
 
     void testEntryEqualsByClubAndName() {
-        def e = new Entry(clubAndTeam: "Foo")
-        def e2 = new Entry(clubAndTeam: "Foo")
+        Competition c = new Competition(name: 'Foo', teamLimit: 2)
+        def e = new Entry(clubAndTeam: "Foo", competition: c)
+        def e2 = new Entry(clubAndTeam: "Foo", competition: c)
         assertTrue(e == e2)
     }
 }
