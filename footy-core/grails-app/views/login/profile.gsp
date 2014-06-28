@@ -139,6 +139,9 @@
                               <g:link controller="person" action="list">Member List</g:link>
                           </li>
                           <li>
+                              <g:link controller="person" action="listLogins">Login List</g:link>
+                          </li>
+                          <li>
                               <g:link controller="person" action="qualifications">Qualifications expiring soon</g:link>
                           </li>
                           <li>

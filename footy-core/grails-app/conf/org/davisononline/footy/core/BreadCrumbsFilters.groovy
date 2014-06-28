@@ -9,7 +9,7 @@ package org.davisononline.footy.core
 class BreadCrumbsFilters {
 
     def filters = {
-        listShow (controller:'(team|player|person)', action:'(list|show)', regex: true) {
+        listShow (controller:'(team|player|person)', action:'(list|listLogins|show|edit)', regex: true) {
             after = {
                 def uri = request.forwardURI - request.contextPath
                 if (request.queryString) uri += ('?' + request.queryString)

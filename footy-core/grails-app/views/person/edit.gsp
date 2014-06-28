@@ -128,6 +128,53 @@
 					</div>
 				</div>
                 </g:if>
+                <div class="section">
+					<div class="section-title">
+						<div class="left">
+                            <g:message code="org.davisononline.footy.core.userlogin.label"
+                                default="Login Details" />
+                        </div>
+                        <div class="clearer">&nbsp;</div>
+					</div>
+
+					<div class="section-content">
+						<ul class="nice-list">
+                            <g:if test="${personCommand.user}">
+                            <g:set var="user" value="${personCommand.user}"/>
+                            <g:set var="blocked" value="${user.accountExpired || user.accountLocked || !user.enabled}"/>
+							<li>
+                                Username: <strong>${user.username}</strong>
+                                <img align="middle" alt="${blocked ? 'Un' : ''}able to login" src="${r.resource(dir:'images',file:'registration-' + (blocked ? 'expired' : 'paid') + '.png', plugin:'footy-core')}"/>
+                                <g:if test="${blocked}">
+                                    (${user.accountLocked ? "Locked Account" : ""}
+                                    ${user.accountExpired ? "Account pending deletion" : ""}
+                                    ${user.enabled ? "" : "Disabled Account"})
+                                </g:if>
+                            </li>
+                            <li>
+                                <g:link action="toggleLock" id="${personCommand.id}">${user.accountLocked ? 'un' : ''}lock this account</g:link>
+                            </li>
+                            <sec:ifAnyGranted roles="ROLE_SYSADMIN">
+                            <li>
+                                <g:link action="editLogin" id="${personCommand.id}">edit user or roles</g:link>
+                            </li>
+                            </sec:ifAnyGranted>
+						</g:if>
+                        <g:else>
+                            <sec:ifAnyGranted roles="ROLE_SYSADMIN">
+                            <li>
+                                <g:link action="editLogin" id="${personCommand.id}">Create a login for ${personCommand}</g:link>
+                            </li>
+                            </sec:ifAnyGranted>
+                            <sec:ifNotGranted roles="ROLE_SYSADMIN">
+                            <li>
+                                No login for ${personCommand}
+                            </li>
+                            </sec:ifNotGranted>
+                        </g:else>
+                        </ul>
+					</div>
+				</div>
                 </sec:ifAnyGranted>
             </g:if>
             </div>
