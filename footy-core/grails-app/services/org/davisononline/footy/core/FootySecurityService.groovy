@@ -8,7 +8,10 @@ import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
  */
 class FootySecurityService {
 
+    static transactional = true
+
     def springSecurityService
+
 
     /**
      * checks if the current security principal can be treated as the manager
