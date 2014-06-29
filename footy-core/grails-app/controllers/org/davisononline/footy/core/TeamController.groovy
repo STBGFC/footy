@@ -116,7 +116,7 @@ class TeamController {
         def teamInstance = Team.get(params?.id)
         if (teamInstance) {
             response.setHeader("Content-disposition", "attachment;filename=${teamInstance.toString().replace(" ", "_")}_contacts.vcf")
-            boolean includeParents = footySecurityService.isAuthorisedForManager(teamInstance)
+            boolean includeParents = footySecurityService.isAuthorisedForManager(teamInstance.id)
             def contacts = [teamInstance.manager, teamInstance.coaches, (includeParents ? teamInstance.players*.guardian : [])].flatten()
             render (
                 template: '/team/vcard',

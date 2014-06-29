@@ -118,7 +118,8 @@ class PlayerController {
         def upperAge = (age < 6) ? 6 : age + 2
         def vt = Team.findAllByClubAndAgeBandBetween(Club.getHomeClub(), age, upperAge, [sort:'ageBand'])
         def parents = Person.findAllByEligibleParent(true, [sort:'familyName'])
-        return [playerInstance: playerInstance, validTeams: vt, parents: parents]
+        def siblings = Player.findAllByDateOfBirthLessThanEquals(playerInstance.dateOfBirth, [sort:'person.familyName'])
+        return [playerInstance: playerInstance, validTeams: vt, parents: parents, siblings: siblings]
     }
 
     @Secured(["ROLE_COACH"]) // <-- TEMP
