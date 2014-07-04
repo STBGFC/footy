@@ -200,7 +200,7 @@ class TeamController {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'team.label', default: 'Team'), params.id])}"
         }
 
-        redirect(session.breadcrumb ? [uri: session.breadcrumb] : [action: "list"])
+        redirect([action: "list"])
     }
 
     /**

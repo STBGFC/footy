@@ -21,9 +21,9 @@ class PersonService {
         if (!person) return
         if (person.user) {
             SecUserSecRole.findAllBySecUser(person.user)*.delete()
+            person.user.delete()
         }
-        person.delete()
-        person.user.delete(flush: true)
+        person.delete(flush: true)
     }
 
     def getManagers() {

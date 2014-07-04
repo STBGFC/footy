@@ -8,15 +8,20 @@ package org.davisononline.footy.core
  */
 class BreadCrumbsFilters {
 
+    def springSecurityService
+
+
     def filters = {
         listShow (controller:'(team|player|person)', action:'(list|listLogins|show|edit)', regex: true) {
             after = {
-                def uri = request.forwardURI - request.contextPath
-                if (request.queryString) uri += ('?' + request.queryString)
-                
-                if (!response.committed) {
-                    session['breadcrumb'] = uri
-                    log.debug "breadcrumb=${session['breadcrumb']}"
+                if (springSecurityService.currentUser) {
+                    def uri = request.forwardURI - request.contextPath
+                    if (request.queryString) uri += ('?' + request.queryString)
+
+                    if (!response.committed) {
+                        session['breadcrumb'] = uri
+                        log.debug "breadcrumb=${session['breadcrumb']}"
+                    }
                 }
             }
         }
