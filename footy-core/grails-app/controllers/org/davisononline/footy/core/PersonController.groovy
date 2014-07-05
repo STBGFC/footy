@@ -177,11 +177,7 @@ class PersonController {
     }
 
     def toggleLock = {
-        def personInstance = Person.get(params.id)
-        if (personInstance?.user) {
-            personInstance.user.accountLocked = !personInstance.user.accountLocked
-            personInstance.user.save()
-        }
+        personService.toggleAccountLock(params.id as long)
         redirect(session.breadcrumb ? [uri: session.breadcrumb] : [action: "listLogins"])
     }
 
@@ -190,15 +186,12 @@ class PersonController {
     }
 
     def addQualification = {
-
-        def p = Person.get(params.personId)
-        def qual = new Qualification(params)
-                
+        Person p
         try {
-           personService.addQualificationToPerson(qual, p)
+           p = personService.addQualificationToPerson(params)
         }
         catch (Exception ex) {
-            log.warn "Unable to add qualification: $ex"
+            log.error "Unable to add qualification: $ex"
             response.sendError 500, "Error adding qualification"
             return
         }
@@ -211,17 +204,12 @@ class PersonController {
      * URL mapping: /person/delQualification/${personId}/${qualificationId}
      */
     def delQualification = {
-        def p = Person.get(params.personId)
+        Person p
         try {
-            Qualification.withTransaction {status ->
-                // WHY does this not cascade.. the qualification 'belongsTo' the Person
-                def q = Qualification.get(params.qualificationId)
-                p.removeFromQualifications(q)
-                q.delete()
-            }
+            p = personService.deleteQualificationFromPerson(params.personId as long, params.qualificationId as long)
         }
         catch (Exception ex) {
-            log.warn("Unable to delete qualification: $ex")
+            log.error("Unable to delete qualification: $ex")
         }
         // text/plain prevents sitemesh decoreation
         render template: '/person/qualificationsList', plugin: 'footy-core', model: [person: p], contentType: 'text/plain'

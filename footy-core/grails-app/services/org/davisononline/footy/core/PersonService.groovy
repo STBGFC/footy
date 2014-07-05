@@ -34,7 +34,10 @@ class PersonService {
         getPeopleWithQualType(QualificationType.REFEREEING)
     }
 
-    def addQualificationToPerson(qual, person) {
+    def addQualificationToPerson(GrailsParameterMap params) {
+        def person = Person.get(params.personId)
+        def qual = new Qualification(params)
+
         log.debug "Adding [$qual] to [$person]..."
 
         // remove expiring qualifications of the same type
@@ -49,6 +52,18 @@ class PersonService {
         person.addToQualifications(qual)
         log.debug "Quals list now [${person.qualifications}]"
         person.save(flush:true)
+        return person
+    }
+
+    def deleteQualificationFromPerson(long personId, long qualificationId) {
+        def p = Person.get(personId)
+        Qualification.withTransaction {status ->
+            // WHY does this not cascade.. the qualification 'belongsTo' the Person
+            def q = Qualification.get(qualificationId)
+            p.removeFromQualifications(q)
+            q.delete()
+        }
+        return p
     }
 
     def updateLogin(GrailsParameterMap params) {
@@ -87,6 +102,14 @@ class PersonService {
             log.error "Unable to send email after login setup; $ex"
         }
 
+    }
+
+    def toggleAccountLock(long personId) {
+        def personInstance = Person.get(personId)
+        if (personInstance?.user) {
+            personInstance.user.accountLocked = !personInstance.user.accountLocked
+            personInstance.user.save()
+        }
     }
 
 
