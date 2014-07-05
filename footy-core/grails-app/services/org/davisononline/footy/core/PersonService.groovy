@@ -51,7 +51,8 @@ class PersonService {
         person.save(flush:true)
     }
 
-    def updateLogin(GrailsParameterMap params, Person person) {
+    def updateLogin(GrailsParameterMap params) {
+        def person = Person.get(params.id)
         if (!person.user) {
             // deliberately store plain text password here.. user will activate
             person.user = new SecUser(enabled: true, password: 'temp')

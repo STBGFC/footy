@@ -104,8 +104,6 @@ class PlayerController {
             redirect(action: "list")
         }
         else {
-            // GRAILS-7471 (yawn)
-            if (!playerInstance.person.errors) playerInstance.person.errors = new BeanPropertyBindingResult(playerInstance.person, "name")
             return modelForPlayerEdit(playerInstance)
         }
     }
@@ -122,6 +120,10 @@ class PlayerController {
         def vt = Team.findAllByClubAndAgeBandBetween(Club.getHomeClub(), age, upperAge, [sort:'ageBand'])
         def parents = Person.findAllByEligibleParent(true, [sort:'familyName'])
         def siblings = Player.findAllByDateOfBirthLessThanEquals(playerInstance.dateOfBirth, [sort:'person.familyName'])
+
+        // GRAILS-7471 (yawn)
+        if (!playerInstance.person.errors) playerInstance.person.errors = new BeanPropertyBindingResult(playerInstance.person, "name")
+
         return [playerInstance: playerInstance, validTeams: vt, parents: parents, siblings: siblings]
     }
 

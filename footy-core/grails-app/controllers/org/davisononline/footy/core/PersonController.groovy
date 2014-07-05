@@ -153,12 +153,14 @@ class PersonController {
     }
 
     @Secured(["ROLE_SYSADMIN"])
-    def saveLogin = {def person = Person.get(params.id)
-        if (!person) {
-            flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'person.label', default: 'User'), params.id])}"
+    def saveLogin = {
+        try {
+            personService.updateLogin(params)
+            flash.message = "${message(code: 'default.updated.message', args: [message(code: 'person.label', default: ''), params.id])}"
         }
-        else {
-            personService.updateLogin(params, person)
+        catch (Exception ex) {
+            log.error "Exception updating login for person with id ${params.id}: $ex"
+            flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'person.label', default: 'User'), params.id])}"
         }
 
         redirect(session.breadcrumb ? [uri: session.breadcrumb] : [action: "listLogins"])
