@@ -62,7 +62,7 @@ class AgeGroupController {
             }
             ageGroupInstance.properties = params
             if (!ageGroupInstance.hasErrors() && ageGroupInstance.save(flush: true)) {
-                flash.message = "${message(code: 'default.updated.message', args: [message(code: 'ageGroup.label', default: 'AgeGroup'), ageGroupInstance.name])}"
+                flash.message = "${message(code: 'default.updated.message', args: [message(code: 'ageGroup.label', default: 'AgeGroup'), ageGroupInstance])}"
                 redirect(action: "list")
             }
             else {
