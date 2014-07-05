@@ -238,7 +238,7 @@ class FootyTagLib {
             doTagError "'team' attribute not found in tag"
         }
 
-        footySecurityService.isAuthorisedForManager(attrs.team)
+        footySecurityService.isAuthorisedForManager(attrs.team.id)
     }
 
     private void doTagError(String message) {

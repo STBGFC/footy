@@ -13,9 +13,9 @@ class CoreSecurityFilters {
             before = {
                 def allowed
                 if (controllerName == 'player')
-                    allowed = footySecurityService.canEditPlayer(Player.get(params.id))
+                    allowed = footySecurityService.canEditPlayer(params.id)
                 else
-                    allowed = footySecurityService.canEditPerson(Person.get(params.id))
+                    allowed = footySecurityService.canEditPerson(params.id)
 
                 if (!allowed) {
                     response.sendError 403
@@ -26,7 +26,7 @@ class CoreSecurityFilters {
 
         newsAdd(controller: 'team', action: 'addNews') {
             before = {
-                if (!footySecurityService.isAuthorisedForManager(Team.get(params['team.id']))) {
+                if (!footySecurityService.isAuthorisedForManager(params['team.id'])) {
                     response.sendError 403
                     return false
                 }

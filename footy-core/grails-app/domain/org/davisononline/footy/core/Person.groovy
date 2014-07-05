@@ -109,7 +109,9 @@ class Person implements Comparable, Serializable {
      * force lower case email
      */
     void setEmail(String email) {
-        this.email = email?.toLowerCase()?.trim()
+        if (email) {
+            this.email = email.toLowerCase().trim()
+        }
     }
 
     /**

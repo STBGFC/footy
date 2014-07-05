@@ -8,7 +8,10 @@ import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
  */
 class FootySecurityService {
 
+    static transactional = true
+
     def springSecurityService
+
 
     /**
      * checks if the current security principal can be treated as the manager
@@ -18,7 +21,8 @@ class FootySecurityService {
      * @param team
      * @return true if the principal can act as manager or false if not
      */
-    def isAuthorisedForManager(team) {
+    def isAuthorisedForManager(teamId) {
+        Team team = Team.get(teamId)
         return checkParam(team, {t, principal -> principal == t?.manager})
     }
 
@@ -29,7 +33,8 @@ class FootySecurityService {
      * @param player
      * @return true if the principal can act as manager or false if not
      */
-    def canEditPlayer(player) {
+    def canEditPlayer(playerId) {
+        Player player = Player.get(playerId)
         return checkParam(player, {p, principal -> principal == p?.team?.manager})
     }
 
@@ -41,7 +46,10 @@ class FootySecurityService {
      * @param person
      * @return true if the principal can act as manager or false if not
      */
-    def canEditPerson(person) {
+    def canEditPerson(personId) {
+
+        Person person = Person.get(personId)
+
         /*
          * the closure will obtain all teams that the person / person's
          * kids play for.  If the principal is the manager of any of

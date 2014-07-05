@@ -56,7 +56,7 @@ REQUEST INFO: ${params}
 		else {
 			log.debug "Error with PayPal IPN response: [$result] and Payment: [${payment?.transactionId}]"
 		}
-		render "OK" // Paypal needs a response, otherwise it will send the notification several times!
+		render text: "OK", contentType: "text/plain", encoding: "UTF-8" // Paypal needs a response, otherwise it will send the notification several times!
 	}
 
     void markPaid(payment, params, status) {

@@ -106,18 +106,13 @@ class PersonController {
     }
 
     def delete = {
-        def personInstance = Person.get(params.id)
-        if (personInstance) {
-            try {
-                personService.deletePerson(personInstance)
-                flash.message = "${message(code: 'default.deleted.message', args: [message(code: 'person.label', default: 'Person'), personInstance])}"
-            }
-            catch (org.springframework.dao.DataIntegrityViolationException e) {
-                flash.message = "${message(code: 'default.not.deleted.message', args: [message(code: 'person.label', default: 'Person'), personInstance])}"
-            }
+        try {
+            personService.deletePerson(params.id as long)
+            flash.message = "${message(code: 'default.deleted.message', args: [message(code: 'person.label', default: 'Person'), params.id])}"
         }
-        else {
-            flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'person.label', default: 'Person'), params.id])}"
+        catch (Exception e) {
+            log.error "Unable to delete person with id ${params.id}: $e"
+            flash.message = "${message(code: 'default.not.deleted.message', args: [message(code: 'person.label', default: 'Person'), params.id])}"
         }
         redirect([action: "list"])
     }
@@ -158,12 +153,14 @@ class PersonController {
     }
 
     @Secured(["ROLE_SYSADMIN"])
-    def saveLogin = {def person = Person.get(params.id)
-        if (!person) {
-            flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'person.label', default: 'User'), params.id])}"
+    def saveLogin = {
+        try {
+            personService.updateLogin(params)
+            flash.message = "${message(code: 'default.updated.message', args: [message(code: 'person.label', default: ''), params.id])}"
         }
-        else {
-            personService.updateLogin(params, person)
+        catch (Exception ex) {
+            log.error "Exception updating login for person with id ${params.id}: $ex"
+            flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'person.label', default: 'User'), params.id])}"
         }
 
         redirect(session.breadcrumb ? [uri: session.breadcrumb] : [action: "listLogins"])
@@ -180,11 +177,7 @@ class PersonController {
     }
 
     def toggleLock = {
-        def personInstance = Person.get(params.id)
-        if (personInstance?.user) {
-            personInstance.user.accountLocked = !personInstance.user.accountLocked
-            personInstance.user.save()
-        }
+        personService.toggleAccountLock(params.id as long)
         redirect(session.breadcrumb ? [uri: session.breadcrumb] : [action: "listLogins"])
     }
 
@@ -193,15 +186,12 @@ class PersonController {
     }
 
     def addQualification = {
-
-        def p = Person.get(params.personId)
-        def qual = new Qualification(params)
-                
+        Person p
         try {
-           personService.addQualificationToPerson(qual, p)
+           p = personService.addQualificationToPerson(params)
         }
         catch (Exception ex) {
-            log.warn "Unable to add qualification: $ex"
+            log.error "Unable to add qualification: $ex"
             response.sendError 500, "Error adding qualification"
             return
         }
@@ -214,17 +204,12 @@ class PersonController {
      * URL mapping: /person/delQualification/${personId}/${qualificationId}
      */
     def delQualification = {
-        def p = Person.get(params.personId)
+        Person p
         try {
-            Qualification.withTransaction {status ->
-                // WHY does this not cascade.. the qualification 'belongsTo' the Person
-                def q = Qualification.get(params.qualificationId)
-                p.removeFromQualifications(q)
-                q.delete()
-            }
+            p = personService.deleteQualificationFromPerson(params.personId as long, params.qualificationId as long)
         }
         catch (Exception ex) {
-            log.warn("Unable to delete qualification: $ex")
+            log.error("Unable to delete qualification: $ex")
         }
         // text/plain prevents sitemesh decoreation
         render template: '/person/qualificationsList', plugin: 'footy-core', model: [person: p], contentType: 'text/plain'

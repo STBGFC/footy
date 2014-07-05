@@ -22,14 +22,14 @@ class PersonService {
                 "select distinct q.person from Qualification q where q.type.name=:name and q.expiresOn>:now order by q.person.familyName asc",
                 [name: "CRB", now: new Date()]) // CRB should be created in BootStrap
     }
-
-    def deletePerson(Person person) {
-        if (!person) return
+    
+    def deletePerson(long personId) {
+        def person = Person.get(personId)
         if (person.user) {
             SecUserSecRole.findAllBySecUser(person.user)*.delete()
+            person.user.delete()
         }
-        person.delete()
-        person.user.delete(flush: true)
+        person.delete(flush: true)
     }
 
     def getManagers() {
@@ -40,7 +40,10 @@ class PersonService {
         getPeopleWithQualType(QualificationType.REFEREEING)
     }
 
-    def addQualificationToPerson(qual, person) {
+    def addQualificationToPerson(GrailsParameterMap params) {
+        def person = Person.get(params.personId)
+        def qual = new Qualification(params)
+
         log.debug "Adding [$qual] to [$person]..."
 
         // remove expiring qualifications of the same type
@@ -55,9 +58,22 @@ class PersonService {
         person.addToQualifications(qual)
         log.debug "Quals list now [${person.qualifications}]"
         person.save(flush:true)
+        return person
     }
 
-    def updateLogin(GrailsParameterMap params, Person person) {
+    def deleteQualificationFromPerson(long personId, long qualificationId) {
+        def p = Person.get(personId)
+        Qualification.withTransaction {status ->
+            // WHY does this not cascade.. the qualification 'belongsTo' the Person
+            def q = Qualification.get(qualificationId)
+            p.removeFromQualifications(q)
+            q.delete()
+        }
+        return p
+    }
+
+    def updateLogin(GrailsParameterMap params) {
+        def person = Person.get(params.id)
         if (!person.user) {
             // deliberately store plain text password here.. user will activate
             person.user = new SecUser(enabled: true, password: 'temp')
@@ -92,6 +108,14 @@ class PersonService {
             log.error "Unable to send email after login setup; $ex"
         }
 
+    }
+
+    def toggleAccountLock(long personId) {
+        def personInstance = Person.get(personId)
+        if (personInstance?.user) {
+            personInstance.user.accountLocked = !personInstance.user.accountLocked
+            personInstance.user.save()
+        }
     }
 
 

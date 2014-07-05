@@ -1,5 +1,7 @@
 package org.davisononline.footy.core
 
+import org.springframework.validation.BeanPropertyBindingResult
+
 /**
  * transactional service methods for Player functionality
  */
@@ -43,13 +45,12 @@ class PlayerService {
         // This often throws an NPE in prod (only) which seems to be due to:
         // http://jira.grails.org/browse/GRAILS-7471
         try {
+            if (!player.person.errors) player.person.errors = new BeanPropertyBindingResult(player.person, "name")
             return (player.person.save() && player.save())
-        }
-        catch (NullPointerException npe) {
-            log.error "NPE saving player data"
-            log.error "Player is [${player}]"
-            log.error "Errors are [${player?.errors}]"
-            return false
+
+        } catch (Exception ex) {
+            log.error(ex)
+            return error()
         }
     }
 }
