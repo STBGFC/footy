@@ -106,18 +106,13 @@ class PersonController {
     }
 
     def delete = {
-        def personInstance = Person.get(params.id)
-        if (personInstance) {
-            try {
-                personService.deletePerson(personInstance)
-                flash.message = "${message(code: 'default.deleted.message', args: [message(code: 'person.label', default: 'Person'), personInstance])}"
-            }
-            catch (org.springframework.dao.DataIntegrityViolationException e) {
-                flash.message = "${message(code: 'default.not.deleted.message', args: [message(code: 'person.label', default: 'Person'), personInstance])}"
-            }
+        try {
+            personService.deletePerson(params.id as long)
+            flash.message = "${message(code: 'default.deleted.message', args: [message(code: 'person.label', default: 'Person'), params.id])}"
         }
-        else {
-            flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'person.label', default: 'Person'), params.id])}"
+        catch (Exception e) {
+            log.error "Unable to delete person with id ${params.id}: $e"
+            flash.message = "${message(code: 'default.not.deleted.message', args: [message(code: 'person.label', default: 'Person'), params.id])}"
         }
         redirect([action: "list"])
     }

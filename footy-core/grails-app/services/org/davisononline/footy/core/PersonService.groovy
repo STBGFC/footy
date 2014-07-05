@@ -17,8 +17,8 @@ class PersonService {
     def mailService
 
 
-    def deletePerson(Person person) {
-        if (!person) return
+    def deletePerson(long personId) {
+        def person = Person.get(personId)
         if (person.user) {
             SecUserSecRole.findAllBySecUser(person.user)*.delete()
             person.user.delete()
