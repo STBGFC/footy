@@ -4,6 +4,7 @@ import grails.plugins.springsecurity.Secured
 import org.grails.paypal.Payment
 import org.codehaus.groovy.grails.commons.ConfigurationHolder
 import org.grails.paypal.PaymentItem
+import org.springframework.validation.BeanPropertyBindingResult
 
 @Secured(['ROLE_CLUB_ADMIN'])
 class PlayerController {
@@ -103,6 +104,8 @@ class PlayerController {
             redirect(action: "list")
         }
         else {
+            // GRAILS-7471 (yawn)
+            if (!playerInstance.person.errors) playerInstance.person.errors = new BeanPropertyBindingResult(playerInstance.person, "name")
             return modelForPlayerEdit(playerInstance)
         }
     }
