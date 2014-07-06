@@ -151,6 +151,9 @@
                               <g:link controller="team" action="list">Team List</g:link>
                           </li>
                           <li>
+                              <g:link controller="ageGroup" action="list">Age Groups List</g:link>
+                          </li>
+                          <li>
                               <g:link controller="league" action="list">Leagues/Divisions List</g:link>
                           </li>
                           <li>

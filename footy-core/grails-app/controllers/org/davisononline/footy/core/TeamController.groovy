@@ -273,7 +273,7 @@ class TeamController {
         if (teamInstance) {
             try {
                 response.contentType = 'application/octet-stream'
-                response.setHeader 'Content-disposition', "attachment; filename=U${teamInstance.ageBand}-${teamInstance.name}_${teamInstance.league}-registration.pdf"
+                response.setHeader 'Content-disposition', "attachment; filename=${teamInstance.ageGroup}-${teamInstance.name}_${teamInstance.league}-registration.pdf".replace(' ', '_')
                 def out = response.outputStream
                 registrationService.generateRegistrationForm(teamInstance, out)
                 out.flush()
@@ -369,7 +369,6 @@ class TeamController {
      */
     @Secured(["ROLE_COACH"])
     def messageDialog = {
-        def defaultTeamList
         if (params.id) {
             def t = Team.get(params.id)
             params.ageBand = t.ageBand
@@ -377,9 +376,9 @@ class TeamController {
         }
 
         def teams = Team.findAllByClub(Club.homeClub, [sort:'ageGroup', order:'asc'])
-        def ages = teams*.ageGroup.year.unique()
+        def ageGroups = teams*.ageGroup.unique()
 
-        render (template: 'messageDialog', model: [ages:ages], contentType: 'text/plain', plugin: 'footy-core')
+        render (template: 'messageDialog', model: [ageGroups:ageGroups], contentType: 'text/plain', plugin: 'footy-core')
     }
 
     /**
@@ -392,7 +391,7 @@ class TeamController {
             return
         }
         else {
-            def ag = AgeGroup.findByYear(params.ageBand)
+            def ag = AgeGroup.get(params.ageBand)
             def teams = Team.findAllByClubAndAgeGroup(Club.homeClub, ag, [sort:'division', order:'asc'])
             // really nasty kludge.. because the & between params in the remote function call gets URL encoded
             // it prefixes the parameter name with "amp;"
@@ -428,19 +427,25 @@ class TeamController {
         // tidy up, remove any null/blank emails (shouldn't be any, but..)
         recipients = recipients.flatten().unique() - null - ''
 
-        // do it!
-        def user = springSecurityService.currentUser
-        def person = Person.findByUser(user)
-        mailService.sendMail {
-            to      person.email
-            bcc     recipients
-            from    person.email
-            subject cmd.subject
-            body    cmd.body
+        if (recipients.size() > 0) {
+            // do it!
+            def user = springSecurityService.currentUser
+            def person = Person.findByUser(user)
+            mailService.sendMail {
+                to person.email
+                bcc recipients
+                from person.email
+                subject cmd.subject
+                body cmd.body
+            }
+
+            flash.message = "Email sent to ${recipients.size()} people"
+        }
+        else {
+            flash.message = "Email not sent - no recipients found."
         }
 
-        flash.message = "Email sent to ${recipients.size()} people"
-        redirect(session.breadcrumb ? [uri: session.breadcrumb] : [uri:'/'])
+        redirect(session.breadcrumb ? [uri: session.breadcrumb] : [uri: '/'])
 
     }
     

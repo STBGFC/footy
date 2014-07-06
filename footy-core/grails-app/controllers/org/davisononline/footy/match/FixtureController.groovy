@@ -49,8 +49,8 @@ class FixtureController {
             flash.message = "No such team found"
             return
         }
-        def oppos = Team.findAllByAgeBand(team.ageBand, [sort:"club.name", order: "asc"])
-        render (template: 'createDialog', model: [teamInstance: team, oppositionTeams: oppos], contentType: 'text/plain', plugin: 'footy-core')
+        //def oppos = Team.findAllByAgeGroup(team.ageGroup, [sort:"club.name", order: "asc"])
+        render (template: 'createDialog', model: [teamInstance: team], contentType: 'text/plain', plugin: 'footy-core')
     }
 
     def save = {

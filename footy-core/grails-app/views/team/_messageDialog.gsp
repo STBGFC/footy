@@ -10,9 +10,9 @@
             default="First, select which age group your message will go to:"/></strong><br/>
         <g:select
                 name="ageBand"
-                from="${ages}"
-                optionValue="${{'U' + it}}"
+                from="${ageGroups}"
                 noSelection="${['0':'ALL TEAMS']}"
+                optionKey="id"
                 value="${params.ageBand}"
                 style="width: 100px"
                 onchange="${remoteFunction(

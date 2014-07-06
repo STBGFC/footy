@@ -260,16 +260,16 @@
 
                 <div class="section">
 
-                    <div class="section-title">All U${teamInstance.ageBand} Teams</div>
+                    <div class="section-title">All ${teamInstance.ageGroup} Teams</div>
 
                     <div class="section-content">
                         <ul class="nice-list">
                             <g:each in="${otherTeamsThisAge.sort {a,b-> (a?.division && b?.division) ? a.division.compareTo(b.division) : 0}}" var="t">
                             <g:if test="${t != teamInstance}">
-                            <li><g:link action="show" params="${[ageBand:t.ageBand, teamName:t.name]}">U${t.ageBand}&nbsp;${t.name}</g:link></li>
+                            <li><g:link action="show" params="${[ageBand:t.ageBand, teamName:t.name]}">${t.ageGroup}&nbsp;${t.name}</g:link></li>
                             </g:if>
                             <g:else>
-                            <li><strong>U${t.ageBand}&nbsp;${t.name}</strong></li>
+                            <li><strong>${t.ageGroup}&nbsp;${t.name}</strong></li>
                             </g:else>
                             </g:each>
                         </ul>
