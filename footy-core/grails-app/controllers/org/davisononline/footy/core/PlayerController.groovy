@@ -121,9 +121,10 @@ class PlayerController {
          */
         def age = playerInstance.getAgeAtNextCutoff()
         def upperAge = (age < 6) ? 6 : age + 2
+        log.debug "Age range for eligible teams is $age to $upperAge"
+
         def vt = Team.findAllByClubAndAgeBandBetween(Club.getHomeClub(), age, upperAge, [sort:'ageBand'])
         def parents = Person.findAllByEligibleParent(true, [sort:'familyName'])
-        //def siblings = Player.findAllByDateOfBirthLessThanEquals(playerInstance.dateOfBirth, [sort:'person.familyName'])
         def siblings = Player.findAll("from Player p where dateOfBirth <= ? order by p.person.familyName", [playerInstance.dateOfBirth])
 
         return [playerInstance: playerInstance, validTeams: vt, parents: parents, siblings: siblings]
