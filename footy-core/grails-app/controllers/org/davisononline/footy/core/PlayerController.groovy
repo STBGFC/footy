@@ -113,10 +113,6 @@ class PlayerController {
 
     private modelForPlayerEdit(playerInstance) {
 
-        // GRAILS-7471 (yawn)
-        log.debug "playerInstance.errors = ${playerInstance.errors}"
-        if (!playerInstance.errors) playerInstance.errors = new BeanPropertyBindingResult(playerInstance, "name")
-
         /*
          * use only valid teams.  Difficult to calculate this accurately (which should normally
          * be currentAge or currentAge plus 1) because team age bands might be rolled forward
@@ -127,22 +123,8 @@ class PlayerController {
         def upperAge = (age < 6) ? 6 : age + 2
         def vt = Team.findAllByClubAndAgeBandBetween(Club.getHomeClub(), age, upperAge, [sort:'ageBand'])
         def parents = Person.findAllByEligibleParent(true, [sort:'familyName'])
-        def siblings
-        try {
-            siblings = Player.findAllByDateOfBirthLessThanEquals(playerInstance.dateOfBirth, [sort:'person.familyName'])
-        }
-        catch (NullPointerException ex) {
-            // yet another GRAILS-7471
-            siblings = Player.list([sort:'person.familyName'])
-        }
-
-        // GRAILS-7471 (yawn)
-        log.debug "playerInstance.person.errors = ${playerInstance.person.errors}"
-        if (!playerInstance.person?.errors) playerInstance.person.errors = new BeanPropertyBindingResult(playerInstance.person, "name")
-        log.debug "playerInstance.guardian.errors = ${playerInstance.guardian.errors}"
-        if (!playerInstance.guardian?.errors) playerInstance.guardian.errors = new BeanPropertyBindingResult(playerInstance.guardian, "name")
-        log.debug "playerInstance.secondGuardian.[errors] = ${playerInstance.secondGuardian}[${playerInstance.secondGuardian?.errors}]"
-        if (playerInstance.secondGuardian && !playerInstance.secondGuardian?.errors) playerInstance.secondGuardian.errors = new BeanPropertyBindingResult(playerInstance.secondGuardian, "name")
+        //def siblings = Player.findAllByDateOfBirthLessThanEquals(playerInstance.dateOfBirth, [sort:'person.familyName'])
+        def siblings = Player.findAll("from Player p where dateOfBirth <= ? order by p.person.familyName", [playerInstance.dateOfBirth])
 
         return [playerInstance: playerInstance, validTeams: vt, parents: parents, siblings: siblings]
     }
