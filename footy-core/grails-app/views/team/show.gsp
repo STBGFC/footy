@@ -272,6 +272,17 @@
                             <li><strong>${t.ageGroup}&nbsp;${t.name}</strong></li>
                             </g:else>
                             </g:each>
+                            <g:if test="${teamInstance.ageGroup?.coordinator}">
+                            <g:set var="coord" value="${teamInstance.ageGroup.coordinator}"/>
+                            <li>Age Group Co-ordinator:
+                                <footy:tooltip link="mailto:${coord.email}" value="${coord}">
+                                    Click to send email to ${coord.givenName}.
+                                    <footy:personPhoto person="${coord}"/>
+                                    <br/>Contact ${coord.givenName} on: <strong>${coord.bestPhone().encodeAsHTML()}</strong>
+                                </footy:tooltip>
+                                <g:render template="coachPhotoLink" model="[person:coord]"/>
+                            </li>
+                            </g:if>
                         </ul>
                     </div>
 
