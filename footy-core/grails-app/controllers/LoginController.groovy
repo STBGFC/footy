@@ -161,11 +161,14 @@ class LoginController {
      */
     def updatePassword = {
         String username = session[UsernamePasswordAuthenticationFilter.SPRING_SECURITY_LAST_USERNAME_KEY] ?: springSecurityService.authentication.name
+
+        log.info "Change password request for user ${username}"
         if (!username) {
             flash.message = 'Sorry, an error has occurred'
             redirect controller: 'login', action:'auth'
             return
         }
+
         String password = params.password
         String newPassword = params.password_new
         String newPassword2 = params.password_new_2
@@ -219,6 +222,7 @@ class LoginController {
                 user.save(flush:true)
 
                 try {
+                    log.info "Sending password reset email to ${person.email}"
                     mailService.sendMail {
                         // ensure mail address override is set in dev/test in Config.groovy
                         to      person.email
@@ -258,7 +262,7 @@ class LoginController {
         }
         
         if (new Date() > (user.resetTokenDate + 1)) {
-            render text: 'This token expired.  Please request a new reset'
+            render text: 'This token expired.  Please request a new reset', contentType: 'text/plain'
             return
         }
 
@@ -271,6 +275,7 @@ class LoginController {
         user.save(flush:true)
 
         try {
+            log.info "Sending password reset completion email to ${person.email}"
             mailService.sendMail {
                 // ensure mail address override is set in dev/test in Config.groovy
                 to      person.email
@@ -279,11 +284,11 @@ class LoginController {
                          model: [pwd:pwd, person: person, club: Club.homeClub])
             }
 
-            render text: 'Password reset successful.  A temporary password has been sent to you by email.'
+            render text: 'Password reset successful.  A temporary password has been sent to you by email.', contentType: 'text/plain'
 
         }
         catch (Exception ex) {
-            render text: 'Error occurred attempting to send your email.  Contact site admin.'
+            render text: 'Error occurred attempting to send your email.  Contact site admin.', contentType: 'text/plain'
             log.warn "Unable to send email for password reset attempt ($user.username); $ex"
         }
         
