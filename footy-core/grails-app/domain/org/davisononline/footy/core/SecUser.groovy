@@ -26,4 +26,8 @@ class SecUser implements Serializable {
 	Set<SecRole> getAuthorities() {
 		SecUserSecRole.findAllBySecUser(this).collect { it.secRole } as Set
 	}
+
+    String toString() {
+        "$username (enabled: $enabled, expired: $accountExpired, locked: $accountLocked)"
+    }
 }
