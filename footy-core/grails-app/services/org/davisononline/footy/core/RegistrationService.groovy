@@ -80,7 +80,7 @@ class RegistrationService {
             
             if (
                 p.sibling &&
-                p.sibling.dateOfBirth < p.dateOfBirth &&
+                p.sibling.dateOfBirth <= p.dateOfBirth &&
                 registration.tier.siblingDiscount != 0 &&
                 p.sibling.currentRegistration.inDate()
             ) {
