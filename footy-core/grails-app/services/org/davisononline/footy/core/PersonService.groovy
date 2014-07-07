@@ -19,7 +19,9 @@ class PersonService {
 
     def deletePerson(long personId) {
         def person = Person.get(personId)
+        log.info "Request to delete Person ${person} received"
         if (person.user) {
+            log.debug "Deleting user account ${person.user}"
             SecUserSecRole.findAllBySecUser(person.user)*.delete()
             person.user.delete()
         }
@@ -27,10 +29,12 @@ class PersonService {
     }
 
     def getManagers() {
+        log.debug "Returning a list of people with COACHING qualification"
         getPeopleWithQualType(QualificationType.COACHING)
     }
 
     def getReferees() {
+        log.debug "Returning a list of people with REFEREEING qualification"
         getPeopleWithQualType(QualificationType.REFEREEING)
     }
 
@@ -38,19 +42,19 @@ class PersonService {
         def person = Person.get(params.personId)
         def qual = new Qualification(params)
 
-        log.debug "Adding [$qual] to [$person]..."
+        log.info "Adding ${qual} to ${person}"
 
         // remove expiring qualifications of the same type
         def old = person.qualifications?.find {it.type == qual.type}
         old?.each {
-            log.debug "Removing old qualification [$it] from [$person]"
+            log.debug "Removing old qualification ${it} from ${person}"
             person.removeFromQualifications(it)
             it.delete()
         }
 
         // add new, save
         person.addToQualifications(qual)
-        log.debug "Quals list now [${person.qualifications}]"
+        log.debug "Quals list is now ${person.qualifications}"
         person.save(flush:true)
         return person
     }
@@ -60,6 +64,7 @@ class PersonService {
         Qualification.withTransaction {status ->
             // WHY does this not cascade.. the qualification 'belongsTo' the Person
             def q = Qualification.get(qualificationId)
+            log.info "Removing qualification ${q} from Person ${p}"
             p.removeFromQualifications(q)
             q.delete()
         }
@@ -68,9 +73,14 @@ class PersonService {
 
     def updateLogin(GrailsParameterMap params) {
         def person = Person.get(params.id)
+        log.info "Updating login details for Person ${person}"
+
+        def newUser = false
         if (!person.user) {
             // deliberately store plain text password here.. user will activate
+            log.debug "  .. creating user account"
             person.user = new SecUser(enabled: true, password: 'temp')
+            newUser = true
         }
 
         SecUser user = person.user
@@ -82,6 +92,7 @@ class PersonService {
 
         for (String key in params.keySet()) {
             if (key.contains('ROLE') && 'on' == params.get(key)) {
+                log.debug "  ..adding role ${key}"
                 SecUserSecRole.create user, SecRole."findBy$upperAuthorityFieldName"(key), true
             }
         }
@@ -89,17 +100,20 @@ class PersonService {
         String usernameFieldName = SpringSecurityUtils.securityConfig.userLookup.usernamePropertyName
         userCache.removeUserFromCache user[usernameFieldName]
 
-        try {
-            mailService.sendMail {
-                // ensure mail address override is set in dev/test in Config.groovy
-                to      person.email
-                subject "${Club.homeClub.name} Login Setup"
-                body    (view: '/email/core/loginSetup',
-                         model: [person: person, homeClub: Club.homeClub])
+        if (newUser) {
+            try {
+                log.info "Sending email to ${person.email} for account creation"
+                mailService.sendMail {
+                    // ensure mail address override is set in dev/test in Config.groovy
+                    to      person.email
+                    subject "${Club.homeClub.name} Login Setup"
+                    body    (view: '/email/core/loginSetup',
+                             model: [person: person, homeClub: Club.homeClub])
+                }
             }
-        }
-        catch (Exception ex) {
-            log.error "Unable to send email after login setup; $ex"
+            catch (Exception ex) {
+                log.error "Unable to send email after login setup; $ex"
+            }
         }
 
     }
@@ -107,6 +121,7 @@ class PersonService {
     def toggleAccountLock(long personId) {
         def personInstance = Person.get(personId)
         if (personInstance?.user) {
+            log.info "Toggling account lock status for Person ${personInstance} to ${!personInstance.user.accountLocked}"
             personInstance.user.accountLocked = !personInstance.user.accountLocked
             personInstance.user.save()
         }
