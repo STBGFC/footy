@@ -1,5 +1,6 @@
 package org.davisononline.footy.core.jobs
 
+import grails.util.Environment
 import org.codehaus.groovy.grails.commons.ConfigurationHolder
 
 
@@ -15,7 +16,9 @@ class UpdateStandingsJob {
     }
 
     def execute(){
-        log.info "Starting job execution; UpdateStandings"
-        leagueService.updateAllLeagueTables()
+        if (Environment.getCurrent().equals(Environment.PRODUCTION)) {
+            log.info "Starting job execution; UpdateStandings"
+            leagueService.updateAllLeagueTables()
+        }
     }
 }
