@@ -1,4 +1,4 @@
-package grails.plugin.runtimelogging
+package org.grails.runtimelogging
 
 import grails.plugins.springsecurity.Secured
 import grails.util.GrailsUtil
