@@ -221,6 +221,8 @@ class LoginController {
                 user.resetTokenDate = new Date()
                 user.save(flush:true)
 
+                def msg
+
                 try {
                     log.info "Sending password reset email to ${person.email}"
                     mailService.sendMail {
@@ -231,15 +233,15 @@ class LoginController {
                                   model:[link: user.resetToken, person: person, club: Club.homeClub])
                     }
 
-                    flash.message = 'An email has been sent to the registered address for this account.'
+                    msg = 'An email has been sent to the registered address for this account.'
 
                 }
                 catch (Exception ex) {
-                    flash.message = 'Error occurred attempting to send your email.  Contact site admin.'
+                    msg = 'Error occurred attempting to send your email.  Contact site admin.'
                     log.warn "Unable to send email for password reset attempt ($user.username); $ex"
                 }
 
-                redirect uri: '/'
+                render view: '/shared/simplemessage', model: [simpleMessage: msg, title: 'Password Reset']
             }
         }
     }
@@ -262,7 +264,8 @@ class LoginController {
         }
         
         if (new Date() > (user.resetTokenDate + 1)) {
-            render text: 'This token expired.  Please request a new reset', contentType: 'text/plain'
+            render view: '/shared/simplemessage',
+                   model: [simpleMessage: 'This token expired.  Please request a new reset']
             return
         }
 
@@ -274,6 +277,8 @@ class LoginController {
         user.resetToken = null
         user.save(flush:true)
 
+        def msg
+
         try {
             log.info "Sending password reset completion email to ${person.email}"
             mailService.sendMail {
@@ -284,13 +289,15 @@ class LoginController {
                          model: [pwd:pwd, person: person, club: Club.homeClub])
             }
 
-            render text: 'Password reset successful.  A temporary password has been sent to you by email.', contentType: 'text/plain'
+            msg = 'Password reset successful.  A temporary password has been sent to you by email.'
 
         }
         catch (Exception ex) {
-            render text: 'Error occurred attempting to send your email.  Contact site admin.', contentType: 'text/plain'
+            msg = 'Error occurred attempting to send your email.  Contact site admin.'
             log.warn "Unable to send email for password reset attempt ($user.username); $ex"
         }
+
+        render view: '/shared/simplemessage', model: [simpleMessage: msg, title: 'Password Reset Complete']
         
     }
 
