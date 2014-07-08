@@ -6,10 +6,10 @@
 	</head>
     <body>
         <div class="dialog">
-            <p>
+            <h1>
                 <g:message code="org.davisononline.footy.core.body.denied"
-                    default="Sorry, you're not authorized to view that page."/>
-            </p>
+                    default="Sorry, you're not authorized to do that."/>
+            </h1>
         </div>
 	</body>
 

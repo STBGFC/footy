@@ -1,5 +1,5 @@
 <%@ page import="org.davisononline.footy.match.Fixture" %>
-
+    <r:require module="modalBox"/>
     <g:set var="now" value="${new Date()}"/>
                 <div class="section-title">
                     <div class="left">

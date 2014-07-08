@@ -215,6 +215,33 @@
                     
                 </div>
 
+                <sec:ifAnyGranted roles="ROLE_SYSADMIN">
+                <div class="section">
+
+                    <div class="section-title">
+                        <g:message code="org.davisononline.sysadlist.label" default="SysAdmin" />
+                    </div>
+
+                    <div class="section-content">
+                      <ul class="nice-list">
+                          <li>
+                              <g:link controller="runtimeLogging" action="index">
+                                  <g:message code="org.grails.runtimelogging.label" default="Runtime Logging" />
+                              </g:link>
+                          </li>
+                          <%-- roll database forward (end of season)
+                          <li>
+                              <g:link controller="" action="">
+                                  <g:message code="org.davisononline.sysad.rollforward.label" default="Roll Forward Database" />
+                              </g:link>
+                          </li>
+                          --%>
+                      </ul>
+                    </div>
+
+                </div>
+                </sec:ifAnyGranted>
+
             </div>
 
             <div class="clearer">&nbsp;</div>

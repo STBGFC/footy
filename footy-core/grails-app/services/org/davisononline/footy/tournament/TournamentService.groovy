@@ -65,6 +65,7 @@ class TournamentService {
 
         try {
             def cclist = tournament?.cclist?.split(/(;|,)/) ?: ""
+            log.info "Sending mail to ${contact.email} for tournament entry confirmation"
             mailService.sendMail {
                 // ensure mail address override is set in dev/test in Config.groovy
                 to      contact.email
@@ -83,6 +84,7 @@ class TournamentService {
     }
 
     def deleteEntry(comp, entry) {
+        log.info "Deleting entry ${entry} from competition ${comp}"
         if (comp.entered.contains(entry)) {
             comp.removeFromEntered(entry)
         }
@@ -94,6 +96,7 @@ class TournamentService {
     }
 
     def moveEntryToWaiting(comp, entry) {
+        log.debug "Moving entry ${entry} to waiting list for competition ${comp}"
         if (comp.entered.contains(entry)) {
             comp.removeFromEntered(entry)
             comp.addToWaiting(entry)
@@ -101,6 +104,7 @@ class TournamentService {
     }
 
     def moveEntryToEntered(comp, entry) {
+        log.debug "Moving entry ${entry} to main list for competition ${comp}"
         if (comp.waiting.contains(entry)) {
             comp.addToEntered(entry)
             comp.removeFromWaiting(entry)

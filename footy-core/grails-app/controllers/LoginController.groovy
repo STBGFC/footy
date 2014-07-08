@@ -161,11 +161,14 @@ class LoginController {
      */
     def updatePassword = {
         String username = session[UsernamePasswordAuthenticationFilter.SPRING_SECURITY_LAST_USERNAME_KEY] ?: springSecurityService.authentication.name
+
+        log.info "Change password request for user ${username}"
         if (!username) {
             flash.message = 'Sorry, an error has occurred'
             redirect controller: 'login', action:'auth'
             return
         }
+
         String password = params.password
         String newPassword = params.password_new
         String newPassword2 = params.password_new_2
@@ -218,7 +221,10 @@ class LoginController {
                 user.resetTokenDate = new Date()
                 user.save(flush:true)
 
+                def msg
+
                 try {
+                    log.info "Sending password reset email to ${person.email}"
                     mailService.sendMail {
                         // ensure mail address override is set in dev/test in Config.groovy
                         to      person.email
@@ -227,15 +233,15 @@ class LoginController {
                                   model:[link: user.resetToken, person: person, club: Club.homeClub])
                     }
 
-                    flash.message = 'An email has been sent to the registered address for this account.'
+                    msg = 'An email has been sent to the registered address for this account.'
 
                 }
                 catch (Exception ex) {
-                    flash.message = 'Error occurred attempting to send your email.  Contact site admin.'
+                    msg = 'Error occurred attempting to send your email.  Contact site admin.'
                     log.warn "Unable to send email for password reset attempt ($user.username); $ex"
                 }
 
-                redirect uri: '/'
+                render view: '/shared/simplemessage', model: [simpleMessage: msg, title: 'Password Reset']
             }
         }
     }
@@ -258,7 +264,8 @@ class LoginController {
         }
         
         if (new Date() > (user.resetTokenDate + 1)) {
-            render text: 'This token expired.  Please request a new reset'
+            render view: '/shared/simplemessage',
+                   model: [simpleMessage: 'This token expired.  Please request a new reset']
             return
         }
 
@@ -270,7 +277,10 @@ class LoginController {
         user.resetToken = null
         user.save(flush:true)
 
+        def msg
+
         try {
+            log.info "Sending password reset completion email to ${person.email}"
             mailService.sendMail {
                 // ensure mail address override is set in dev/test in Config.groovy
                 to      person.email
@@ -279,13 +289,15 @@ class LoginController {
                          model: [pwd:pwd, person: person, club: Club.homeClub])
             }
 
-            render text: 'Password reset successful.  A temporary password has been sent to you by email.'
+            msg = 'Password reset successful.  A temporary password has been sent to you by email.'
 
         }
         catch (Exception ex) {
-            render text: 'Error occurred attempting to send your email.  Contact site admin.'
+            msg = 'Error occurred attempting to send your email.  Contact site admin.'
             log.warn "Unable to send email for password reset attempt ($user.username); $ex"
         }
+
+        render view: '/shared/simplemessage', model: [simpleMessage: msg, title: 'Password Reset Complete']
         
     }
 

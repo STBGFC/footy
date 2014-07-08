@@ -26,12 +26,18 @@ class FootyMatchService {
      * @return
      */
     def getAllFixtures(Team team) {
+        log.debug "Obtaining all fixtures for Team ${team}"
         def fc = Fixture.createCriteria()
         def list = fc.list () {
             eq ("team", team)
             ge ("dateTime", DateTimeUtils.getCurrentSeasonStart())
             order ("dateTime", "desc")
         }
+
+        if (log.debugEnabled) {
+            log.debug "Returning: ${list}"
+        }
+
         list
     }
 
@@ -58,6 +64,8 @@ class FootyMatchService {
      */
     def getFixtures(Team team, int n, Date date) {
         if (!team) return null
+        log.debug "Obtaining fixtures for Team ${team} (max: ${n}, before ${date})"
+
         def fc = Fixture.createCriteria()
         def list = fc.list (max:n) {
             eq ("team", team)
@@ -68,6 +76,11 @@ class FootyMatchService {
             }
             order ("dateTime", "asc")
         }
+
+        if (log.debugEnabled) {
+            log.debug "Returning: ${list}"
+        }
+
         list
     }
 
@@ -80,6 +93,8 @@ class FootyMatchService {
     def getHomeGamesOn(Date date) {
         Date from = DateTimeUtils.setMidnight(date)
 
+        log.debug "Obtaining home games on ${from}"
+
         def fc = Fixture.createCriteria()
         def list = fc.list () {
             eq ("homeGame", true)
@@ -90,6 +105,11 @@ class FootyMatchService {
             }
             order ("dateTime", "asc")
         }
+
+        if (log.debugEnabled) {
+            log.debug "Returning: ${list}"
+        }
+
         list
     }
 
@@ -102,6 +122,8 @@ class FootyMatchService {
     def getRefReportsOn(Date date) {
         Date from = DateTimeUtils.setMidnight(date)
 
+        log.debug "Obtaining ref reports on ${from}"
+
         def rc = RefereeReport.createCriteria()
         def list = rc.list () {
             fixture {
@@ -112,6 +134,11 @@ class FootyMatchService {
                 order ("dateTime", "asc")
             }
         }
+
+        if (log.debugEnabled) {
+            log.debug "Returning: ${list}"
+        }
+
         list
     }
 
@@ -123,8 +150,12 @@ class FootyMatchService {
      */
     def saveResourceAllocations(fixtures) {
 
+        log.info "Saving all resource allocations for fixtures"
+
         // ensure we have a valid logged-in person with an email address to send the emails
         String username =  springSecurityService.authentication.name
+        log.debug "Username is ${username}"
+
         def user = SecUser.findByUsername(username)
         def person = Person.findByUser(user)
         if (!person) {
@@ -138,6 +169,8 @@ class FootyMatchService {
 
         // save all and gather set of refs to send email to
         fixtures?.each {fixture ->
+            log.debug "Processing fixture ${fixture}"
+
             if (fixture.referee) refs.add(fixture.referee)
             if (fixture.isDirty('dateTime')) fixture.adjustedKickOff = true
 
@@ -146,6 +179,7 @@ class FootyMatchService {
             }
             if (fixture.isDirty() || fixture.amendedResources) {
                 try {
+                    log.info "Sending email for fixture resource confirmation to manager ${fixture.team.manager.email}"
                     mailService.sendMail {
                         to      fixture.team.manager.email
                         from    person.email
@@ -166,6 +200,7 @@ class FootyMatchService {
         refs?.each {ref ->
             def myFixtures = fixtures.grep{it.referee?.id == ref?.id}
             try {
+                log.info "Sending email for fixture resource confirmation to referee ${ref.email}"
                 mailService.sendMail {
                     to      getRefEmail(ref)
                     from    person.email
@@ -186,6 +221,8 @@ class FootyMatchService {
      * resources allocated
      */
     def saveFixture(Fixture fixtureInstance) {
+        log.debug "Saving fixture ${fixtureInstance}"
+
         if (!fixtureInstance.save(flush: true))
             return false
 
@@ -195,6 +232,7 @@ class FootyMatchService {
             // send email to fixture sec.
             def fixSecEmails = getFixtureSec()*.email
             try {
+                log.info "Sending email for fixture creation to fixture sec ${fixSecEmails}"
                 mailService.sendMail {
                     to      fixSecEmails
                     subject "New Fixture Created"
@@ -213,14 +251,16 @@ class FootyMatchService {
      * allocated.  Any exception will be thrown back to the caller
      */
     def deleteFixture(fixtureInstance) {
-        try {
 
+        log.info "Deleting fixture ${fixtureInstance}"
+        try {
             if (fixtureInstance.resources.size() > 0 || fixtureInstance.referee) {
                 fixtureInstance.resources.clear()
                 fixtureInstance.delete(flush: true)
                 def fixSecEmails = getFixtureSec()*.email
                 if (fixtureInstance.referee?.email) fixSecEmails << getRefEmail(fixtureInstance.referee)
                 mailService.sendMail {
+                    log.info "Sending email for fixture deletion to fixture sec ${fixSecEmails}"
                     to      fixSecEmails
                     subject "Deleted Fixture ${fixtureInstance.dateTime.format('dd/MM/yyyy')}"
                     body    (view: '/email/match/deletedFixture',

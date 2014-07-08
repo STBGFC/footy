@@ -22,6 +22,7 @@ class FootySecurityService {
      * @return true if the principal can act as manager or false if not
      */
     def isAuthorisedForManager(teamId) {
+        log.debug "Checking authorised as manager for team id $teamId"
         Team team = Team.get(teamId)
         return checkParam(team, {t, principal ->
             principal == t?.manager ||
@@ -37,6 +38,7 @@ class FootySecurityService {
      * @return true if the principal can act as manager or false if not
      */
     def canEditPlayer(playerId) {
+        log.debug "Checking can edit player with id $playerId"
         Player player = Player.get(playerId)
         return checkParam(player, {p, principal ->
             principal == p?.team?.manager ||
@@ -54,6 +56,7 @@ class FootySecurityService {
      */
     def canEditPerson(personId) {
 
+        log.debug "Checking can edit Person with id $personId"
         Person person = Person.get(personId)
 
         /*
@@ -83,10 +86,12 @@ class FootySecurityService {
         if (!p) return false
 
         def user = springSecurityService.currentUser
+        log.debug "  .. user is $user"
         if (!user) return false
         if (SpringSecurityUtils.ifAllGranted('ROLE_CLUB_ADMIN')) return true
 
         // up to the caller to decide
+        log.debug "  .. delegating to closure"
         return fn(p, Person.findByUser(user))
     }
 }

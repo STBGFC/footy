@@ -246,8 +246,6 @@ class TournamentController {
                 if (!p) p = new Person(email: params.email)
 
                 flow.personInstance = p
-                // hack to workaround this fucking grails bug: https://jira.grails.org/browse/GRAILS-7471
-                if (!flow.personInstance.errors) flow.personInstance.errors = new BeanPropertyBindingResult(flow.personInstance, "name")
                 if (!flow.personInstance?.validate(['email']))
                     return error()
 
@@ -300,13 +298,11 @@ class TournamentController {
             on("submit") {
                 def payment
                 try {
-                    // hack to workaround this fucking grails bug: https://jira.grails.org/browse/GRAILS-7471
-                    if (!flow.personInstance.errors) flow.personInstance.errors = new BeanPropertyBindingResult(flow.personInstance, "name")
                     payment = tournamentService.createPayment(flow.tournament, flow.entries, flow.personInstance)
                     flow.transactionId = payment.transactionId
 
                 } catch (Exception ex) {
-                    log.error(ex)
+                    log.error("Unable to generate payment for entries $flow.entries : $ex")
                     return error()
                 }
 

@@ -28,6 +28,7 @@ class RegistrationService {
     void sendTokenByEmail(String emailAddress, String token) {
 
         try {
+            log.info "Sending token ${token} to ${emailAddress} for registration"
             mailService.sendMail {
                 // ensure mail address override is set in dev/test in Config.groovy
                 to      emailAddress
@@ -50,7 +51,9 @@ class RegistrationService {
      */
     Payment createPayment(registrations) {
 
+        log.info "Creating payment for registration set ${registrations}"
         registrations.each { registration ->
+            log.debug "Saving player ${registration.player} and registration ${registration}"
             registration.player.save()
             registration.save()
         }
@@ -63,6 +66,7 @@ class RegistrationService {
             transactionIdPrefix: "REG",
             currency: Currency.getInstance(currencyCode)
         )
+        log.debug "Created payment ${payment}"
         
         // and again to create items..
         registrations.sort{it.player.dateOfBirth}.each { registration ->
@@ -72,12 +76,15 @@ class RegistrationService {
                     itemNumber: "${registration.id}",
                     amount: registration.tier.amount
             )
+            log.debug "Creating registration item ${regItem}"
+            
             if (
                 p.sibling &&
-                p.sibling.dateOfBirth < p.dateOfBirth &&
+                p.sibling.dateOfBirth <= p.dateOfBirth &&
                 registration.tier.siblingDiscount != 0 &&
                 p.sibling.currentRegistration.inDate()
             ) {
+                log.debug "Adding sibling discount for ${p} with sibling ${p.sibling}"
                 regItem.discountAmount = registration.tier.siblingDiscount
             }
             payment.addToPaymentItems(regItem)
@@ -102,6 +109,7 @@ class RegistrationService {
 
 
         try {
+            log.info "Sending email to ${buyer.email} with registration confirmation"
             mailService.sendMail {
                 // ensure mail address override is set in dev/test in Config.groovy
                 to      buyer.email
@@ -128,6 +136,7 @@ class RegistrationService {
      */
     void generateRegistrationForm(team, out) {
 
+        log.info "Generating registration form for Team ${team}"
         try {
             def reporter = Class.forName("org.davisononline.footy.core.reports.${team.league.name}", true, getClass().getClassLoader()).newInstance()
             reporter.team = team

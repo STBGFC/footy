@@ -1,6 +1,5 @@
 package org.davisononline.footy.core
 
-import org.springframework.validation.BeanPropertyBindingResult
 
 /**
  * transactional service methods for Player functionality
@@ -18,6 +17,7 @@ class PlayerService {
      * @return
      */
     def deletePlayer(Player player, boolean removePerson) {
+        log.info "Deleting Player ${player}" + (removePerson ? " and associated Person" : "")
         Player.findAllBySibling(player).each { p->
             p.sibling = null
             p.save()
@@ -42,15 +42,6 @@ class PlayerService {
      * @return true if successful, false otherwise
      */
     def updatePlayer(Player player) {
-        // This often throws an NPE in prod (only) which seems to be due to:
-        // http://jira.grails.org/browse/GRAILS-7471
-        try {
-            if (!player.person.errors) player.person.errors = new BeanPropertyBindingResult(player.person, "name")
-            return (player.person.save() && player.save())
-
-        } catch (Exception ex) {
-            log.error(ex)
-            return error()
-        }
+        return (player.person.save() && player.save())
     }
 }

@@ -21,6 +21,7 @@ class LeagueService {
      * @return
      */
     def updateAllLeagueTables() {
+        log.info "Starting update of all league tables"
         Division.findAllByCodeIsNotNull().each {updateLeagueTable(it)}
     }
 
@@ -32,10 +33,12 @@ class LeagueService {
      */
     def updateLeagueTable(Division division) {
         if (!division.code || division.code == '') {
-            log.info "Cannot update [$division] with no code set"
+            log.warn "Cannot update [$division] with no code set"
         }
         else {
+            log.debug "Updating division $division"
             def divUrl = FULL_TIME_URL + "?cs=${division.code}&random=${random.nextLong()}"
+            log.debug "URL to connect to is: $divUrl"
             URLConnection conn = new URL(divUrl).openConnection()
             conn.connectTimeout = LEAGUE_TABLE_LOOKUP_TIMEOUT
             conn.readTimeout = LEAGUE_TABLE_LOOKUP_TIMEOUT
@@ -44,6 +47,7 @@ class LeagueService {
                 String result = conn.content.text
 
                 if (conn.responseCode == 200 && result.startsWith('document.getElementById')) {
+                    log.debug "Update successful"
                     result = result[result.indexOf("innerHTML = ")+13..result.lastIndexOf("'")-1]
                     division.standings = result
                     division.save()
