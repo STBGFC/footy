@@ -5,17 +5,19 @@
             default="Authentication Required"/></title>
 	</head>
     <body>
-        <%--
-            simple auth form that should be overridden by individual applications not already
-            providing alternative login forms or ajax auth
-        --%>
+        <g:if test="${failureMessage}">
         <h1>
-            <g:message code="org.davisononline.footy.core.title.auth" default="Authentication Required"/>
+            <g:message code="org.davisononline.footy.core.title.authfail" default="Authentication Failed"/>
         </h1>
-        <p>
-            <g:message code="org.davisononline.footy.core.body.auth"
-                default="Please login to access this page."/>
+        <p class="notice largest">
+            ${failureMessage}
         </p>
+        </g:if>
+        <g:else>
+        <h1>
+            <g:message code="org.davisononline.footy.core.title.auth" default="Authentication Required - Please Login"/>
+        </h1>
+        </g:else>
         <p>
             <g:message code="org.davisononline.footy.core.body.forgottenpassword"
                 default="If you have forgotten your password, click the link below in order to reset it."/>
