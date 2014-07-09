@@ -17,12 +17,6 @@ class PersonService {
     def mailService
 
 
-    def getCrbs() {
-        Person.executeQuery(
-                "select distinct q.person from Qualification q where q.type.name=:name and q.expiresOn>:now order by q.person.familyName asc",
-                [name: "CRB", now: new Date()]) // CRB should be created in BootStrap
-    }
-    
     def deletePerson(long personId) {
         def person = Person.get(personId)
         log.info "Request to delete Person ${person} received"
@@ -78,20 +72,26 @@ class PersonService {
     }
 
     def updateLogin(GrailsParameterMap params) {
-        def person = Person.get(params.id)
-        log.info "Updating login details for Person ${person}"
 
+        def person = Person.get(params.id)
         def newUser = false
+        def SecUser user
+
         if (!person.user) {
             // deliberately store plain text password here.. user will activate
-            log.debug "  .. creating user account"
-            person.user = new SecUser(enabled: true, password: 'temp')
+            log.info "Creating login details for Person ${person}"
+            user = new SecUser(params)
+            user.password = 'xxx'
+            user.save(flush: true)
+            person.user = user
             newUser = true
         }
+        else {
+            log.info "Updating login details for Person ${person}"
+            user = person.user
+            user.properties = params
+        }
 
-        SecUser user = person.user
-        user.properties = params
-        person.user.save(flush: true)
         SecUserSecRole.removeAll(user)
         String upperAuthorityFieldName = GrailsNameUtils.getClassName(
                 SpringSecurityUtils.securityConfig.authority.nameField, null)
