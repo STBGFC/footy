@@ -78,7 +78,7 @@ class TeamController {
             exportService.export(
                 params.format,
                 response.outputStream,
-                Team.list([sort:'ageBand', order: 'asc']),
+                Team.list([sort:'ageGroup', order: 'asc']),
                 fields,
                 labels,
                 formatters,
@@ -87,7 +87,7 @@ class TeamController {
         }
         else {
             params.max = Math.min(params.max ? params.int('max') : 25, 100)
-            params.sort = params.sort ?: 'ageBand'
+            params.sort = params.sort ?: 'ageGroup'
             [teamInstanceList: Team.findAllByClub(Club.homeClub, params), teamInstanceTotal: Team.countByClub(Club.homeClub)]
         }
     }
@@ -96,7 +96,9 @@ class TeamController {
     def show = {
         cache 'authed_page'
 
-        def teamInstance = Team.findWhere(club: Club.homeClub, ageBand:params.ageBand.toInteger(), name:params.teamName)
+        def ag = AgeGroup.findByYear(params.ageBand.toInteger())
+
+        def teamInstance = Team.findWhere(club: Club.homeClub, ageGroup: ag, name:params.teamName)
         if (!teamInstance || teamInstance.club != Club.homeClub) {
             response.sendError(404)
         }
@@ -104,7 +106,7 @@ class TeamController {
             return [
                     teamInstance: teamInstance,
                     players: Player.findAllByTeam(teamInstance, [sort:"person.familyName", order:"asc"]),
-                    otherTeamsThisAge: Team.findAllByClubAndAgeBand(Club.homeClub, teamInstance.ageBand),
+                    otherTeamsThisAge: Team.findAllByClubAndAgeGroup(Club.homeClub, teamInstance.ageGroup),
                     latestNews: NewsItem.findAllByTeam(teamInstance, [max: params?.maxNews ?: 5, sort:'createdDate', order:'desc'])
             ]
         }
@@ -271,7 +273,7 @@ class TeamController {
         if (teamInstance) {
             try {
                 response.contentType = 'application/octet-stream'
-                response.setHeader 'Content-disposition', "attachment; filename=U${teamInstance.ageBand}-${teamInstance.name}_${teamInstance.league}-registration.pdf"
+                response.setHeader 'Content-disposition', "attachment; filename=${teamInstance.ageGroup}-${teamInstance.name}_${teamInstance.league}-registration.pdf".replace(' ', '_')
                 def out = response.outputStream
                 registrationService.generateRegistrationForm(teamInstance, out)
                 out.flush()
@@ -367,17 +369,16 @@ class TeamController {
      */
     @Secured(["ROLE_COACH"])
     def messageDialog = {
-        def defaultTeamList
         if (params.id) {
             def t = Team.get(params.id)
             params.ageBand = t.ageBand
             params.defaultTeamId = t.id
         }
 
-        def teams = Team.findAllByClub(Club.homeClub, [sort:'ageBand', order:'asc'])
-        def ages = teams*.ageBand.unique()
+        def teams = Team.findAllByClub(Club.homeClub, [sort:'ageGroup', order:'asc'])
+        def ageGroups = teams*.ageGroup.unique()
 
-        render (template: 'messageDialog', model: [ages:ages], contentType: 'text/plain', plugin: 'footy-core')
+        render (template: 'messageDialog', model: [ageGroups:ageGroups], contentType: 'text/plain', plugin: 'footy-core')
     }
 
     /**
@@ -390,7 +391,8 @@ class TeamController {
             return
         }
         else {
-            def teams = Team.findAllByClubAndAgeBand(Club.homeClub, params.ageBand, [sort:'division', order:'asc'])
+            def ag = AgeGroup.get(params.ageBand)
+            def teams = Team.findAllByClubAndAgeGroup(Club.homeClub, ag, [sort:'division', order:'asc'])
             // really nasty kludge.. because the & between params in the remote function call gets URL encoded
             // it prefixes the parameter name with "amp;"
             def defaultId = params["amp;defaultTeamId"] ?: teams[0].id
@@ -425,19 +427,25 @@ class TeamController {
         // tidy up, remove any null/blank emails (shouldn't be any, but..)
         recipients = recipients.flatten().unique() - null - ''
 
-        // do it!
-        def user = springSecurityService.currentUser
-        def person = Person.findByUser(user)
-        mailService.sendMail {
-            to      person.email
-            bcc     recipients
-            from    person.email
-            subject cmd.subject
-            body    cmd.body
+        if (recipients.size() > 0) {
+            // do it!
+            def user = springSecurityService.currentUser
+            def person = Person.findByUser(user)
+            mailService.sendMail {
+                to person.email
+                bcc recipients
+                from person.email
+                subject cmd.subject
+                body cmd.body
+            }
+
+            flash.message = "Email sent to ${recipients.size()} people"
+        }
+        else {
+            flash.message = "Email not sent - no recipients found."
         }
 
-        flash.message = "Email sent to ${recipients.size()} people"
-        redirect(session.breadcrumb ? [uri: session.breadcrumb] : [uri:'/'])
+        redirect(session.breadcrumb ? [uri: session.breadcrumb] : [uri: '/'])
 
     }
     

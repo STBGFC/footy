@@ -24,7 +24,10 @@ class FootySecurityService {
     def isAuthorisedForManager(teamId) {
         log.debug "Checking authorised as manager for team id $teamId"
         Team team = Team.get(teamId)
-        return checkParam(team, {t, principal -> principal == t?.manager})
+        return checkParam(team, {t, principal ->
+            principal == t?.manager ||
+            principal == t?.ageGroup?.coordinator
+        })
     }
 
     /**
@@ -37,7 +40,10 @@ class FootySecurityService {
     def canEditPlayer(playerId) {
         log.debug "Checking can edit player with id $playerId"
         Player player = Player.get(playerId)
-        return checkParam(player, {p, principal -> principal == p?.team?.manager})
+        return checkParam(player, {p, principal ->
+            principal == p?.team?.manager ||
+            principal == p?.team?.ageGroup?.coordinator
+        })
     }
 
     /**
@@ -65,7 +71,7 @@ class FootySecurityService {
             all << Player.findAllByGuardianOrSecondGuardian(p, p)
             all = all.flatten()
             def teams = all.collect {it.team}
-            (teams*.manager).contains(principal)
+            (teams*.manager).contains(principal) || (teams*.ageGroup.coordinator).contains(principal)
         })
     }
 

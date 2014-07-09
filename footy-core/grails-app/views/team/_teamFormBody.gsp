@@ -43,13 +43,12 @@
                         
                             <tr class="prop">
                                 <td  class="name">
-                                    <label for="ageBand"><g:message code="entry.ageBand.label" default="Age Group" /></label>
+                                    <label for="ageGroup.id"><g:message code="entry.ageGroup.label" default="Age Group" /></label>
                                 </td>
-                                <td  class="value ${hasErrors(bean: teamCommand, field: 'ageBand', 'errors')}">
-                                    Under: <g:select class="short" name="ageBand" from="${Team.constraints.ageBand.inList}" value="${teamCommand?.ageBand}" valueMessagePrefix="entry.ageBand"  />
+                                <td  class="value ${hasErrors(bean: teamCommand, field: 'ageGroup', 'errors')}">
+                                    <g:select class="short" name="ageGroup.id" from="${AgeGroup.list()}" value="${teamCommand?.ageGroup?.id}" optionKey="id" />
                                     <br/>
                                     <g:checkBox name="girlsTeam" value="${teamCommand?.girlsTeam}" /> (Girls)
-                                    <g:checkBox name="vetsTeam" value="${teamCommand?.vetsTeam}" /> (Vets/Parents)
                                 </td>
                             </tr>
                         

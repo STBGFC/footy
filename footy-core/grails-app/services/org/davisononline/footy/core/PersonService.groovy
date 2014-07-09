@@ -17,6 +17,12 @@ class PersonService {
     def mailService
 
 
+    def getCrbs() {
+        Person.executeQuery(
+                "select distinct q.person from Qualification q where q.type.name=:name and q.expiresOn>:now order by q.person.familyName asc",
+                [name: "CRB", now: new Date()]) // CRB should be created in BootStrap
+    }
+    
     def deletePerson(long personId) {
         def person = Person.get(personId)
         log.info "Request to delete Person ${person} received"

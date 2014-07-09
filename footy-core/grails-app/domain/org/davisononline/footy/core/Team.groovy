@@ -19,9 +19,8 @@ class Team implements Serializable {
     Sponsor sponsor
     SortedSet coaches
     SortedSet players
-    int ageBand = 8
+    AgeGroup ageGroup
     boolean girlsTeam = false
-    boolean vetsTeam = false
     byte[] photo
 
     static belongsTo = [club: Club]
@@ -29,10 +28,9 @@ class Team implements Serializable {
 
     static constraints = {
         division(nullable: true)
-        name(blank: false, size: 2..30, unique: ['ageBand','club'])
+        name(blank: false, size: 2..30, unique: ['ageGroup','club'])
         players(nullable: true)
 		coaches(nullable: true)
-        ageBand(inList: [6,7,8,9,10,11,12,13,14,15,16,17,18,21,35])
         photo(nullable: true)
         sponsor(nullable:true)
     }
@@ -44,20 +42,20 @@ class Team implements Serializable {
     def beforeInsert() {
         checkAges()
     }
+
+    def getAgeBand() {
+        ageGroup.year
+    }
     
     private checkAges() {
-        if (ageBand < 11) girlsTeam = false
-        if (vetsTeam) ageBand = 35
+        if (ageGroup.year < 11) girlsTeam = false
     }
 
     /**
      * @see java.lang.Object#toString()
      */
     public String toString() {
-        if (!vetsTeam)
-            "U${ageBand} ${name}" + (girlsTeam ? " (Girls)" : "")
-        else
-            "${name} (" + (girlsTeam ? "Girls, " : "") + "Vets)"
+        "${ageGroup} ${name}" + (girlsTeam ? " (Girls)" : "")
     }
 
     /**
@@ -69,9 +67,8 @@ class Team implements Serializable {
     public boolean equals(otherTeam) {
         return (
             otherTeam?.name == name &&
-            otherTeam?.ageBand == ageBand &&
+            otherTeam?.ageGroup == ageGroup &&
             otherTeam?.girlsTeam == girlsTeam &&
-            otherTeam?.vetsTeam == vetsTeam &&
             otherTeam?.club == club
         )
     }

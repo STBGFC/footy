@@ -1,3 +1,4 @@
+import org.davisononline.footy.core.AgeGroup
 import org.davisononline.footy.core.SecRole
 import org.davisononline.footy.core.SecUser
 import org.davisononline.footy.core.SecUserSecRole
@@ -49,6 +50,13 @@ class FootyCoreBootStrap {
             new QualificationType(name: "FA Level 2").save()
             new QualificationType(name: "CRB", yearsValidFor: 3, category: QualificationType.OTHER).save()
             new QualificationType(name: "Emergency Aid", yearsValidFor: 3).save()
+        }
+
+        // age groups
+        if (AgeGroup.count() == 0) {
+            12.times { age ->
+                new AgeGroup(year: age + 7).save()
+            }
         }
     }
     def destroy = {

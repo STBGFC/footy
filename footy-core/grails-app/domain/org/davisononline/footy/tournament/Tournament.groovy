@@ -26,6 +26,7 @@ class Tournament implements Serializable {
             v >= t.startDate
         })
         treasurer nullable: true
+        cclist nullable: true
     }
 
     boolean hasEntries() {

@@ -13,7 +13,8 @@ class TeamTests extends GrailsUnitTestCase {
 	
 	void testConstraints() {
         def c = new Club(name:'FooClub')
-		def existing = new Team(club: c, name:"Reds", ageBand:8, manager:new Person())
+        def ag = new AgeGroup(year: 8)
+		def existing = new Team(club: c, name:"Reds", ageGroup: ag, manager:new Person())
 		mockForConstraintsTests(Team, [existing])
 		
 		def t = new Team(name:'', club: c)
@@ -36,38 +37,20 @@ class TeamTests extends GrailsUnitTestCase {
 
         // not unique, age band
         t.name = "Reds"
-        t.ageBand = 8
+        t.ageGroup = ag
         assertFalse t.validate()
         assertEquals "unique", t.errors["name"]
 		
         // unique outside ageBand
         t.name = "Reds"
-        t.ageBand = 9
+        t.ageGroup = new AgeGroup(year: 9)
         assertTrue t.validate()
         
         // unique only within club
         t.club = new Club(name:'BarClub')
         t.name = "Reds"
-        t.ageBand = 8
-        assertTrue t.validate()        
-		
-		// too young
-		t.ageBand = 5
-		assertFalse t.validate()
-		assertEquals "inList", t.errors["ageBand"]
-		
-		// too old
-		t.ageBand = 19
-		assertFalse t.validate()
-		assertEquals "inList", t.errors["ageBand"]
-
-		// vet
-		t.ageBand = 35
-		assertTrue t.validate()
-		
-        t.ageBand = 10
-		assertTrue t.validate()
-		
+        t.ageGroup = ag
+        assertTrue t.validate()
 	}
     
     void testGirlsTeamAgeBand() {
@@ -76,7 +59,7 @@ class TeamTests extends GrailsUnitTestCase {
             league: new League(name:"EBYFL"),
             club: new Club(name:'FooClub'), 
             name:"Reds", 
-            ageBand:8, 
+            ageGroup: new AgeGroup(year: 8),
             manager:new Person()
             )
         assertTrue t.validate()
@@ -84,37 +67,20 @@ class TeamTests extends GrailsUnitTestCase {
         t.save()
         assertFalse t.girlsTeam
         
-        t.ageBand = 14
+        t.ageGroup = new AgeGroup(year: 14)
         t.girlsTeam = true
         t.save()
         assertTrue t.girlsTeam
         
     }
 
-    void testVetsTeamAgeBand() {
-        mockDomain(Team)
-        def t = new Team(
-            league: new League(name:"EBYFL"),
-            club: new Club(name:'FooClub'),
-            name:"Reds",
-            ageBand:8,
-            manager:new Person()
-            )
-        assertTrue t.validate()
-        t.vetsTeam = true
-        t.save()
-        assertEquals(35, t.ageBand)        
-    }
-
     void testToString() {
-		def reds = new Team(name:'Reds', ageBand: 8, club: new Club(name:'STBGFC'))
+        def ag = new AgeGroup(year: 8)
+        def ag13 = new AgeGroup(year: 13)
+		def reds = new Team(name:'Reds', ageGroup: ag, club: new Club(name:'STBGFC'))
 		assertEquals("U8 Reds", reds.toString())
-		def ravens = new Team(name:'Ravens', ageBand: 13, girlsTeam: true)
+		def ravens = new Team(name:'Ravens', ageGroup: ag13, girlsTeam: true)
 		assertEquals("U13 Ravens (Girls)", ravens.toString())
-        def vets = new Team(name: "Dads United", ageBand: 8, vetsTeam: true)
-		assertEquals("Dads United (Vets)", vets.toString())
-        vets.girlsTeam = true
-		assertEquals("Dads United (Girls, Vets)", vets.toString())
     }
     
     /**
@@ -122,8 +88,9 @@ class TeamTests extends GrailsUnitTestCase {
      */
     void testEquals() {
         def c = new Club(name:'STBGFC')
-        def reds = new Team(name:'Reds', ageBand: 8, club: c)
-        def reds2 = new Team(name:'Reds', ageBand: 8, club: c)
+        def ag = new AgeGroup(year: 8)
+        def reds = new Team(name:'Reds', ageGroup: ag, club: c)
+        def reds2 = new Team(name:'Reds', ageGroup: ag, club: c)
         assertEquals reds, reds2
         
         reds.girlsTeam = false
@@ -139,10 +106,10 @@ class TeamTests extends GrailsUnitTestCase {
         reds2.name = "Foo"
         assertEquals reds, reds2
         
-        reds.ageBand = 9
+        reds.ageGroup = new AgeGroup(year: 9)
         assert reds != reds2
         
-        reds2.ageBand = 9
+        reds2.ageGroup = new AgeGroup(year: 9)
         assertEquals reds, reds2
         
         reds2.club = new Club(name: "Foo")

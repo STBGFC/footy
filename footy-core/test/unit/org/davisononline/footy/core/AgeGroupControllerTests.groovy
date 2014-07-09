@@ -1,8 +1,8 @@
-package org.davisononline.footy.match
+package org.davisononline.footy.core
 
 import grails.test.*
 
-class FixtureControllerTests extends ControllerUnitTestCase {
+class AgeGroupControllerTests extends ControllerUnitTestCase {
     protected void setUp() {
         super.setUp()
     }
