@@ -44,7 +44,7 @@ class AgeGroupController {
             redirect(session.breadcrumb ? [uri: session.breadcrumb] : [action: "list"])
         }
         else {
-            return [ageGroupInstance: ageGroupInstance, coordinators: personService.getCrbs()]
+            return [ageGroupInstance: ageGroupInstance, coordinators: personService.managers]
         }
     }
     
