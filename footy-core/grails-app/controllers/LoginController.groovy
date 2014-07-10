@@ -24,14 +24,8 @@ class LoginController {
     private static final String PASSWORD_REGEX = '^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\\s).*$'
 
 
-    /**
-     * Dependency injection for the authenticationTrustResolver.
-     */
     def authenticationTrustResolver
 
-    /**
-     * Dependency injection for the springSecurityService.
-     */
     def springSecurityService
 
     def passwordEncoder
@@ -104,25 +98,32 @@ class LoginController {
     def authfail = {
 
         def username = session[UsernamePasswordAuthenticationFilter.SPRING_SECURITY_LAST_USERNAME_KEY]
+        def prefix = "Authentication failure for $username"
+
         String msg = ''
         def exception = session[WebAttributes.AUTHENTICATION_EXCEPTION]
         if (exception) {
             if (exception instanceof AccountExpiredException) {
                 msg = g.message(code: "springSecurity.errors.login.expired")
+                log.warn "$prefix - user has an expired account"
             }
             else if (exception instanceof CredentialsExpiredException) {
                 msg = g.message(code: "springSecurity.errors.login.passwordExpired")
+                log.warn "$prefix - user logged in with expired password"
                 if (!springSecurityService.isAjax(request))
                     redirect (action:'changePassword')
             }
             else if (exception instanceof DisabledException) {
                 msg = g.message(code: "springSecurity.errors.login.disabled")
+                log.warn "$prefix - user has a disabled account"
             }
             else if (exception instanceof LockedException) {
                 msg = g.message(code: "springSecurity.errors.login.locked")
+                log.warn "$prefix - user has a locked account"
             }
             else {
                 msg = g.message(code: "springSecurity.errors.login.fail")
+                log.warn "$prefix - bad credentials or other unknown failure reason"
             }
         }
 
@@ -130,8 +131,7 @@ class LoginController {
             render([error: msg] as JSON)
         }
         else {
-            flash.message = msg
-            redirect controller: 'login', action:'auth', params: params
+            render view:'auth', model:[failureMessage: msg], params: params
         }
     }
 
@@ -157,7 +157,7 @@ class LoginController {
     }
 
     /**
-     * called from the change pwd form: chnages the user's pwd if all checks pass
+     * called from the change pwd form: changes the user's pwd if all checks pass
      */
     def updatePassword = {
         String username = session[UsernamePasswordAuthenticationFilter.SPRING_SECURITY_LAST_USERNAME_KEY] ?: springSecurityService.authentication.name
