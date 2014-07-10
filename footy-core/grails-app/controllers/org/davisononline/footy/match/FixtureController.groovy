@@ -33,16 +33,6 @@ class FixtureController {
         redirect(action: "list", params: params)
     }
 
-    @Secured(["permitAll"])
-    def list = {
-        def myteam = Team.get(params.id)
-        if (!myteam) {
-            response.sendError 404
-        }
-
-        [fixtures: footyMatchService.getAllFixtures(myteam), myteam: myteam]
-    }
-
     def createDialog = {
         Team team = Team.get(params.id)
         if (!team) {
@@ -70,7 +60,7 @@ class FixtureController {
         }
         else
             render template: 'fixtureList',
-                   model: [fixtures: footyMatchService.getFixtures(fixtureInstance.team), myteam: fixtureInstance.team],
+                   model: [fixtures: footyMatchService.getFixtures(fixtureInstance.team), teamInstance: fixtureInstance.team],
                    plugin: 'footy-core',
                    contentType: 'text/plain'
     }
@@ -200,8 +190,8 @@ class FixtureController {
 
     def delete = {
         def fixtureInstance = Fixture.get(params.fixtureId)
-        def myteam = Team.get(params.teamId)
-        if (fixtureInstance && myteam) {
+        def teamInstance = Team.get(params.teamId)
+        if (fixtureInstance && teamInstance) {
             try {
                 footyMatchService.deleteFixture(fixtureInstance)
             }
@@ -213,7 +203,7 @@ class FixtureController {
             response.status = 404
         }
 
-        render template: 'fixtureList', model: [fixtures: footyMatchService.getFixtures(myteam), myteam: myteam], plugin: 'footy-core', contentType: 'text/plain'
+        render template: 'fixtureList', model: [fixtures: footyMatchService.getFixtures(teamInstance), teamInstance: teamInstance], plugin: 'footy-core', contentType: 'text/plain'
     }
 
     /**

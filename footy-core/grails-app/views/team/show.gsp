@@ -1,5 +1,5 @@
 
-<%@ page import="org.grails.paypal.PaymentItem; org.grails.paypal.Payment; org.davisononline.footy.core.*" %>
+<%@ page import="org.davisononline.footy.match.Fixture; org.grails.paypal.PaymentItem; org.grails.paypal.Payment; org.davisononline.footy.core.*" %>
 <html>
     <head>
         <meta name="description" content="News, fixtures and information about the ${teamInstance} team"/>
@@ -75,34 +75,53 @@
                 <g:if test="${teamInstance?.division?.standings}">
                 <div id="leagueTable">
                     <h3>${teamInstance.division}</h3>
-                    <%--<footy:fullTimeLeagueTable division="${teamInstance?.division}"/>--%>
                     ${teamInstance.division.standings}
                 </div>
                 </g:if>
 
-                <g:if test="${latestNews.size() != 0}">
-                <g:each in="${latestNews}" var="news">
+                <g:if test="${newsAndFixtures.size() != 0}">
+                <g:each in="${newsAndFixtures}" var="news">
                 <g:set var="abst" value="${news.abstractText()}"/>
-
+                <g:set var="body" value="${news.class == NewsItem ? news.body : news.matchReport}"/>
                 <div class="post">
 
-                    <div class="post-title"><h2>${news.subject.encodeAsHTML()}</h2></div>
+                    <div class="post-title">
+                        <h2>${news}</h2>
+                    </div>
 
-                    <div class="post-date"><g:formatDate date="${news.createdDate}" format="HH:mm EEEE, MMMM dd yyyy"/></div>
+                    <div class="post-date">
+                        <g:formatDate date="${news.sortableDate()}" format="HH:mm EEEE, MMMM dd yyyy"/>
+                    </div>
+
+                    <footy:isManager team="${teamInstance}">
+                    <g:if test="${news.class == Fixture}">
+                    <div>
+                        <g:link
+                                controller="fixture"
+                                action="addResult"
+                                id="${news.id}"
+                                title="Add result/report"
+                                width="450">
+                            <r:img dir="images" file="edit.png" plugin="footy-core" title="Edit this fixture or add a report"/> Edit fixture or add report
+                        </g:link>
+                    </div>
+                    </g:if>
+                    </footy:isManager>
 
                     <div class="post-body" id="abstractNewsBody${news.id}">
                         ${abst.encodeAsHTML()}
                         <g:if test="${abst.endsWith(' ...')}">
                         <a href="#"
                            title="Read the full article"
-                           onclick="$('abstractNewsBody${news.id}').hide();Effect.BlindDown('fullNewsBody${news.id}', { duration: 0.5 });return false">
+                           onclick="Effect.BlindUp('abstractNewsBody${news.id}',{duration:0.15});Effect.BlindDown('fullNewsBody${news.id}', { duration: 0.7 });return false">
                             <g:message code="org.davisononline.footy.core.team.readmore.label" default="&gt;&gt;"/>
                         </a>
                         </g:if>
                     </div>
+
                     <g:if test="${abst.endsWith(' ...')}">
                     <div class="post-body" style="display:none" id="fullNewsBody${news.id}">
-                        ${news.body.encodeAsHTML().replace('\n\n', '<br/><br/>').replace('\r\n\r\n', '<br/><br/>').replace('\r\r', '<br/><br/>')}
+                        ${body.encodeAsHTML().replace('\n\n', '<br/><br/>').replace('\r\n\r\n', '<br/><br/>').replace('\r\r', '<br/><br/>')}
                     </div>
                     </g:if>
 
@@ -264,17 +283,9 @@
 
                     <div class="section-content">
                         <ul class="nice-list">
-                            <g:each in="${otherTeamsThisAge.sort {a,b-> (a?.division && b?.division) ? a.division.compareTo(b.division) : 0}}" var="t">
-                            <g:if test="${t != teamInstance}">
-                            <li><g:link action="show" params="${[ageBand:t.ageBand, teamName:t.name]}">${t.ageGroup}&nbsp;${t.name}</g:link></li>
-                            </g:if>
-                            <g:else>
-                            <li><strong>${t.ageGroup}&nbsp;${t.name}</strong></li>
-                            </g:else>
-                            </g:each>
                             <g:if test="${teamInstance.ageGroup?.coordinator}">
                             <g:set var="coord" value="${teamInstance.ageGroup.coordinator}"/>
-                            <li>Age Group Co-ordinator:
+                            <li><g:message code="org.davisononline.footy.core.agc.label" default="AGC:"/>
                                 <footy:tooltip link="mailto:${coord.email}" value="${coord}">
                                     Click to send email to ${coord.givenName}.
                                     <footy:personPhoto person="${coord}"/>
@@ -283,6 +294,14 @@
                                 <g:render template="coachPhotoLink" model="[person:coord]"/>
                             </li>
                             </g:if>
+                            <g:each in="${otherTeamsThisAge.sort {a,b-> (a?.division && b?.division) ? a.division.compareTo(b.division) : 0}}" var="t">
+                            <g:if test="${t != teamInstance}">
+                            <li><g:link action="show" params="${[ageBand:t.ageBand, teamName:t.name]}">${t.ageGroup}&nbsp;${t.name}</g:link></li>
+                            </g:if>
+                            <g:else>
+                            <li><strong>${t.ageGroup}&nbsp;${t.name}</strong></li>
+                            </g:else>
+                            </g:each>
                         </ul>
                     </div>
 
