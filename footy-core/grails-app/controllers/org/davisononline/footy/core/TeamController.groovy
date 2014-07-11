@@ -109,7 +109,9 @@ class TeamController {
 
             def newsAndFixtures = new TreeSet()
             def fixtures = footyMatchService.getFixtures(teamInstance)
-            newsAndFixtures.addAll(footyMatchService.getPlayedFixtures(teamInstance))
+            newsAndFixtures.addAll(
+                    footyMatchService.getPlayedFixtures(teamInstance, params?.maxNews as int ?: 5)
+            )
             newsAndFixtures.addAll(
                     NewsItem.findAllByTeam(teamInstance, [max: params?.maxNews ?: 5, sort:'createdDate', order:'desc'])
             )

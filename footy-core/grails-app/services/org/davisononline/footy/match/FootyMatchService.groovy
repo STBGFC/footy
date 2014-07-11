@@ -40,10 +40,10 @@ class FootyMatchService {
     /**
      * returns a list of all fixtures for the supplied team for the season
      */
-    def getPlayedFixtures(Team team) {
+    def getPlayedFixtures(Team team, int n = 10) {
         log.debug "Obtaining played fixtures for Team ${team}"
         def fc = Fixture.createCriteria()
-        def list = fc.list () {
+        def list = fc.list (max:n) {
             eq ("team", team)
             ge ("dateTime", DateTimeUtils.getCurrentSeasonStart())
             eq ("played", true)
