@@ -106,12 +106,17 @@ class TeamController {
             response.sendError(404)
         }
         else {
-
+            def cfg = grailsApplication.config.org?.davisononline?.footy?.match
+            def minAge = cfg.minimumagetopublishresults as Integer ?: 11
             def newsAndFixtures = new TreeSet()
             def fixtures = footyMatchService.getFixtures(teamInstance)
-            newsAndFixtures.addAll(
-                    footyMatchService.getPlayedFixtures(teamInstance, params?.maxNews as int ?: 5)
-            )
+
+
+            if (teamInstance.ageBand >= minAge) {
+                newsAndFixtures.addAll(
+                        footyMatchService.getPlayedFixtures(teamInstance, params?.maxNews as int ?: 5)
+                )
+            }
             newsAndFixtures.addAll(
                     NewsItem.findAllByTeam(teamInstance, [max: params?.maxNews ?: 5, sort:'createdDate', order:'desc'])
             )
