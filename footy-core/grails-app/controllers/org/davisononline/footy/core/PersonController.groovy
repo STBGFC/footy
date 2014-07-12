@@ -14,6 +14,10 @@ class PersonController {
 
     def personService
 
+    def exportService
+
+    def grailsApplication
+
 
     def index = {
         redirect(action: "list", params: params)
@@ -30,19 +34,54 @@ class PersonController {
     }
 
     def list = {
-        params.max = Math.min(params.max ? params.int('max') : 100, 200)
         if (!params.sort) params.sort = 'familyName'
         if (!params.order) params.order = 'asc'
         params.cache = true
 
-        /*
-         * I want to do Person.findAllByEligibleParent(true, params)
-         * but the pagination fails because it does the select from the db, then filters the list, so I
-         * get pages with 'gaps' where the non-eligibleParent records would be.  The hql version works
-         * but now I lose sortableColumns as that would have to be specified in the order by clause
-         */
-        def l = Person.findAll("from Person p where eligibleParent = ? order by p.familyName", [true], params)
-        [personInstanceList: l, personInstanceTotal: Person.countByEligibleParent(true)]
+        def listQuery = "from Person p where eligibleParent = true and address is not null order by p.${params.sort} ${params.order}"
+
+        if(params?.format && params.format != "html") {
+            def l = Person.findAll(
+                    "from Person p where eligibleParent = true and address is not null order by p.${params.sort} ${params.order}",
+                    [], params)
+
+            // export
+            List fields = [
+                    "familyName", "givenName", "email", "phone1", "phone2", "address", "fanNumber"
+            ]
+            Map labels = [
+                    "familyName": "Surname",
+                    "givenName": "Names",
+                    "email": "Email",
+                    "phone1": "Phone",
+                    "phone2": "Alt Phone",
+                    "address": "Address",
+                    "fanNumber": "FAN"
+            ]
+
+            Map parameters = [title: "All Members"]
+
+            response.contentType = grailsApplication.config.grails.mime.types[params.format]
+            response.setHeader(
+                "Content-disposition",
+                "attachment; filename=${URLEncoder.encode('member-list','UTF-8')}.${params.extension}"
+            )
+            exportService.export(
+                params.format,
+                response.outputStream,
+                l,
+                fields,
+                labels,
+                [:],
+                parameters
+            )
+        }
+        else {
+            params.max = Math.min(params.max ? params.int('max') : 100, 200)
+            def l = Person.findAll(listQuery, [], params)
+            def c = Person.countByEligibleParentAndAddressIsNotNull(true)
+            [personInstanceList: l, personInstanceTotal: c]
+        }
     }
 
     def create = {
