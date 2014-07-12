@@ -76,15 +76,27 @@ class Fixture implements Comparable {
             s
     }
 
+    String abstractText() {
+        if (!matchReport) "(No match report)"
+        else if (matchReport.length() < 300) matchReport
+        else "${matchReport[0..300]} ..."
+    }
+
+    Date sortableDate() {
+        dateTime
+    }
+
+    int compareTo(Object other) {
+        // kludge to make it sort with news items too
+        def d = other?.sortableDate()
+        if (!d) return -1
+        return (d.compareTo(this.sortableDate()))
+    }
+
     private finalScore() {
         if (!extraTime)
             "${homeGoalsFullTime} - ${awayGoalsFullTime}"
         else
             "${homeGoalsExtraTime} - ${awayGoalsExtraTime}"
-    }
-
-    int compareTo(Object f) {
-        if (! f?.dateTime) return -1
-        return (f?.dateTime?.compareTo(dateTime))
     }
 }

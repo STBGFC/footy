@@ -20,10 +20,6 @@ class FootyMatchService {
 
     /**
      * returns a list of all fixtures for the supplied team for the season
-     *
-     * @param team
-     * @param n number of fixtures to return, defaults to 10
-     * @return
      */
     def getAllFixtures(Team team) {
         log.debug "Obtaining all fixtures for Team ${team}"
@@ -42,12 +38,28 @@ class FootyMatchService {
     }
 
     /**
+     * returns a list of all fixtures for the supplied team for the season
+     */
+    def getPlayedFixtures(Team team, int n = 10) {
+        log.debug "Obtaining played fixtures for Team ${team}"
+        def fc = Fixture.createCriteria()
+        def list = fc.list (max:n) {
+            eq ("team", team)
+            ge ("dateTime", DateTimeUtils.getCurrentSeasonStart())
+            eq ("played", true)
+            order ("dateTime", "desc")
+        }
+
+        if (log.debugEnabled) {
+            log.debug "Returning: ${list}"
+        }
+
+        list
+    }
+
+    /**
      * returns a list of up to n fixtures for the supplied team from the current date
      * (ie future)
-     *
-     * @param team
-     * @param n number of fixtures to return, defaults to 10
-     * @return
      */
     def getFixtures(Team team, int n = 10) {
         getFixtures(team, n, new Date())
@@ -56,11 +68,6 @@ class FootyMatchService {
     /**
      * returns a list of up to n fixtures for the supplied team from the supplied date
      * or any that are in the past but have not been played
-     *
-     * @param myteam
-     * @param n
-     * @param date
-     * @return
      */
     def getFixtures(Team team, int n, Date date) {
         if (!team) return null
@@ -86,9 +93,6 @@ class FootyMatchService {
 
     /**
      * returns a list of fixtures that are being played at home on a certain date
-     *
-     * @param date the date that the fixtures are being played
-     * @return
      */
     def getHomeGamesOn(Date date) {
         Date from = DateTimeUtils.setMidnight(date)
@@ -115,9 +119,6 @@ class FootyMatchService {
 
     /**
      * returns a list of ref reports that are for fixtures on a certain date
-     *
-     * @param date the date that the fixtures are being played
-     * @return
      */
     def getRefReportsOn(Date date) {
         Date from = DateTimeUtils.setMidnight(date)

@@ -4,18 +4,7 @@
                     <div class="left">
                         <g:message code="org.davisononline.footy.match.fixturecal.title" default="Fixture Calendar"/>
                     </div>
-                    <div class="right">
-                        <g:link controller="fixture" action="list" id="${myteam.id}" title="View All">
-                            <r:img dir="images" file="view.png" plugin="footy-core" alt="View All"/>
-                        </g:link>
-                        <a href="${createLink(absolute:true, controller:'fixture', action:'calendar', id:myteam.id).replace('http','webcal').replace('https','webcal')}"
-                            title="Subscribe to ${myteam} calendar (Outlook/Thunderbird/iPhone etc.)">
-                            <r:img dir="images" file="cal.png" plugin="footy-core" alt="ICS"/>
-                        </a>
-                    </div>
-
                     <div class="clearer">&nbsp;</div>
-
                 </div>
 
                 <div class="section-content">
@@ -29,7 +18,7 @@
                                 <strong><g:formatDate date="${fixture.dateTime}" format="dd'-'MMM HH:mm"/></strong>
                             </td>
                             <td>
-                            <footy:isManager team="${myteam}">
+                            <footy:isManager team="${teamInstance}">
                                 <g:if test="${fixture.dateTime < now}">
                                 <g:link
                                         controller="fixture"
@@ -46,7 +35,7 @@
                                 <g:remoteLink
                                         controller="fixture"
                                         action="delete"
-                                        params="[fixtureId:fixture.id,teamId:myteam.id]"
+                                        params="[fixtureId:fixture.id,teamId:teamInstance.id]"
                                         update="fixtureList"
                                         on500="alert('An error occurred attempting to delete this fixture')"
                                         on404="alert('Fixture not found')"
@@ -59,7 +48,7 @@
                                 </g:link>
                                 </g:if>
                             </footy:isManager>
-                            <footy:isNotManager team="${myteam}">
+                            <footy:isNotManager team="${teamInstance}">
                                 ${fixture.opposition}
                             </footy:isNotManager>
                             </td>
@@ -80,16 +69,26 @@
                         <p><g:message code="org.davisononline.footy.match.text.nofixtures" default="No upcoming fixtures listed."/></p>
                     </g:else>
 
-                    <footy:isManager team="${myteam}">
-                    <r:img dir="images" file="add.png" plugin="footy-core"/>
-                    <modalbox:createLink
-                            controller="fixture"
-                            action="createDialog"
-                            id="${myteam.id}"
-                            title="Create new ${myteam} Fixture"
-                            width="450">
-                        <g:message code="org.davisononline.footy.match.label.create" default="New"/>
-                    </modalbox:createLink>
+                    <div>
+                        <r:img dir="images" file="cal.png" plugin="footy-core" alt="ICS"/>
+                        <a href="${createLink(absolute:true, controller:'fixture', action:'calendar', id:teamInstance.id).replace('http','webcal').replace('https','webcal')}"
+                            title="Subscribe to ${teamInstance} calendar to view it in Outlook/Thunderbird/iPhone/Android etc. and be kept up to date all the time!">
+                            <g:message code="org.davisononline.footy.match.calendarsubscribe.text" default="Subscribe to this fixture calendar"/>
+                        </a>
+                    </div>
+
+                    <footy:isManager team="${teamInstance}">
+                    <div>
+                        <r:img dir="images" file="add.png" plugin="footy-core"/>
+                        <modalbox:createLink
+                                controller="fixture"
+                                action="createDialog"
+                                id="${teamInstance.id}"
+                                title="Create new ${teamInstance} Fixture"
+                                width="450">
+                            <g:message code="org.davisononline.footy.match.label.create" default="New"/>
+                        </modalbox:createLink>
+                    </div>
                     </footy:isManager>
                     
                 </div>

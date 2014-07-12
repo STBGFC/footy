@@ -4,7 +4,7 @@ package org.davisononline.footy.core
  * simple record of a subject/body news item that can be displayed on the team
  * site or emailed out etc.
  */
-class NewsItem implements Serializable {
+class NewsItem implements Serializable, Comparable {
 
     Date createdDate = new Date()
     String subject
@@ -22,11 +22,22 @@ class NewsItem implements Serializable {
     }
 
     String toString() {
-        "${team} (${createdDate}): ${subject}"
+        subject
     }
 
     String abstractText() {
         if (body.length() < 300) body
         else "${body[0..300]} ..."
+    }
+
+    Date sortableDate() {
+        createdDate
+    }
+
+    int compareTo(Object other) {
+        // kludge to make it sort with fixtures too
+        def d = other?.sortableDate()
+        if (!d) return -1
+        return (d.compareTo(this.sortableDate()))
     }
 }

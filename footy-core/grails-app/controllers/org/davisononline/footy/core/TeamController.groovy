@@ -3,6 +3,7 @@ package org.davisononline.footy.core
 import grails.plugins.springsecurity.Secured
 import org.codehaus.groovy.grails.commons.ConfigurationHolder
 import org.davisononline.footy.core.utils.ImageUtils
+import org.davisononline.footy.match.Fixture
 
 
 /**
@@ -24,6 +25,8 @@ class TeamController {
     def teamService
 
     def exportService
+
+    def footyMatchService
 
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST", photoUpload: "POST"]
@@ -103,11 +106,27 @@ class TeamController {
             response.sendError(404)
         }
         else {
+            def cfg = grailsApplication.config.org?.davisononline?.footy?.match
+            def minAge = cfg.minimumagetopublishresults as Integer ?: 11
+            def newsAndFixtures = new TreeSet()
+            def fixtures = footyMatchService.getFixtures(teamInstance)
+
+
+            if (teamInstance.ageBand >= minAge) {
+                newsAndFixtures.addAll(
+                        footyMatchService.getPlayedFixtures(teamInstance, params?.maxNews as int ?: 5)
+                )
+            }
+            newsAndFixtures.addAll(
+                    NewsItem.findAllByTeam(teamInstance, [max: params?.maxNews ?: 5, sort:'createdDate', order:'desc'])
+            )
+
             return [
                     teamInstance: teamInstance,
                     players: Player.findAllByTeam(teamInstance, [sort:"person.familyName", order:"asc"]),
                     otherTeamsThisAge: Team.findAllByClubAndAgeGroup(Club.homeClub, teamInstance.ageGroup),
-                    latestNews: NewsItem.findAllByTeam(teamInstance, [max: params?.maxNews ?: 5, sort:'createdDate', order:'desc'])
+                    newsAndFixtures: newsAndFixtures,
+                    fixtures: fixtures
             ]
         }
 
