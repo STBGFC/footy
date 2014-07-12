@@ -243,11 +243,6 @@
                                 <g:render template="coachPhotoLink" model="[person:c]"/>
                             </li>
                             </g:each>
-                            <footy:isNotManager team="${teamInstance}">
-                            <li>Players:<br/>
-                                ${players.join(", ")}
-                            </li>
-                            </footy:isNotManager>
                         </ul>
 
                         <div id="sponsor">
