@@ -1,6 +1,6 @@
 package org.davisononline.footy.core
 
-class AgeGroup implements Comparable {
+class AgeGroup implements Comparable, Serializable {
 
     int year
     boolean under = true
