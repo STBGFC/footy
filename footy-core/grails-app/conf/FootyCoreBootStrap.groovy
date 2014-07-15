@@ -23,7 +23,7 @@ class FootyCoreBootStrap {
             password: springSecurityService.encodePassword('admin'),
             enabled: true,
             passwordExpired: true
-        ).save(failOnError: true)
+        ).save(flush:true, failOnError: true)
 
         if (!adminUser.authorities.contains(adminRole)) {
             SecUserSecRole.create adminUser, adminRole
