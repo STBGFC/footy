@@ -65,9 +65,7 @@
                 <g:if test="${teams.size()>0}">
 				<div class="section">
 
-					<div class="section-title">
-                        <g:message code="org.davisononline.footy.core.myteams.label" default="My Teams" />
-                    </div>
+					<div class="section-title"><g:message code="org.davisononline.footy.core.myteams.label" default="My Teams" /></div>
 
                     <div class="section-content">
                           <ul class="nice-list">
@@ -88,24 +86,16 @@
 
 				<div class="section">
 
-					<div class="section-title">
-                        <g:message code="org.davisononline.footy.core.links.label" default="Pages and Links" />
-                    </div>
+					<div class="section-title"><g:message code="org.davisononline.footy.core.links.label" default="Pages and Links" /></div>
 
                     <div class="section-content">
                       <ul class="nice-list">
                           <li>
-                              <g:link controller="resource" action="summary">
-                                  <g:message code="org.davisononline.footy.match.pitches.label" default="Pitch Allocations" />
-                              </g:link>
+                              <g:link controller="resource" action="summary"><g:message code="org.davisononline.footy.match.pitches.label" default="Pitch Allocations" /></g:link>
                           </li>
                           <g:if test="${pluginManager.hasGrailsPlugin('weceem')}">
                           <li>
-                              <g:link url="../content/staff/">
-                                  <g:message
-                                          code="org.davisononline.footy.core.staffcontent.label"
-                                          default="Managers Pages" />
-                              </g:link>
+                              <g:link url="../content/staff/"><g:message code="org.davisononline.footy.core.staffcontent.label" default="Managers Pages" /></g:link>
                           </li>
                           </g:if>
                       </ul>
@@ -115,9 +105,7 @@
 
 				<div class="section">
 
-					<div class="section-title">
-                        <g:message code="org.davisononline.footy.core.administration.label" default="Administration" />
-                    </div>
+					<div class="section-title"><g:message code="org.davisononline.footy.core.administration.label" default="Administration" /></div>
 
                     <div class="section-content">
                       <ul class="nice-list">
@@ -177,37 +165,21 @@
                           <sec:ifAnyGranted roles="ROLE_EDITOR">
                           <g:if test="${pluginManager.hasGrailsPlugin('weceem')}">
                           <li>
-                              <g:link url="../wcm-admin">
-                                  <g:message
-                                          code="org.davisononline.footy.core.contentadministration.label"
-                                          default="Content Administration" />
-                              </g:link>
+                              <g:link url="../wcm-admin"><g:message code="org.davisononline.footy.core.contentadministration.label" default="Content Administration" /></g:link>
                           </li>
                           </g:if>
                           </sec:ifAnyGranted>
                           <sec:ifAnyGranted roles="ROLE_TOURNAMENT_ADMIN">
                           <li>
-                              <g:link controller="tournament" action="list">
-                                  <g:message
-                                          code="org.davisononline.footy.core.tournamentadmin.label"
-                                          default="Tournament Administration" />
-                              </g:link>
+                              <g:link controller="tournament" action="list"><g:message code="org.davisononline.footy.core.tournamentadmin.label" default="Tournament Administration" /></g:link>
                           </li>
                           </sec:ifAnyGranted>
                           <sec:ifAnyGranted roles="ROLE_FIXTURE_ADMIN">
                           <li>
-                              <g:link controller="resource" action="index">
-                                  <g:message
-                                          code="org.davisononline.footy.match.fixtureadmin.label"
-                                          default="Fixture Resource Allocations" />
-                              </g:link>
+                              <g:link controller="resource" action="index"><g:message code="org.davisononline.footy.match.fixtureadmin.label" default="Fixture Resource Allocations" /></g:link>
                           </li>
                           <li>
-                              <g:link controller="resource" action="reports">
-                                  <g:message
-                                          code="org.davisononline.footy.match.refreportsummary.label"
-                                          default="Referee Report Summary" />
-                              </g:link>
+                              <g:link controller="resource" action="reports"><g:message code="org.davisononline.footy.match.refreportsummary.label" default="Referee Report Summary" /></g:link>
                           </li>
                           </sec:ifAnyGranted>
                       </ul>
@@ -218,16 +190,12 @@
                 <sec:ifAnyGranted roles="ROLE_SYSADMIN">
                 <div class="section">
 
-                    <div class="section-title">
-                        <g:message code="org.davisononline.sysadlist.label" default="SysAdmin" />
-                    </div>
+                    <div class="section-title"><g:message code="org.davisononline.sysadlist.label" default="SysAdmin" /></div>
 
                     <div class="section-content">
                       <ul class="nice-list">
                           <li>
-                              <g:link controller="runtimeLogging" action="index">
-                                  <g:message code="org.grails.runtimelogging.label" default="Runtime Logging" />
-                              </g:link>
+                              <g:link controller="runtimeLogging" action="index"><g:message code="org.grails.runtimelogging.label" default="Runtime Logging" /></g:link>
                           </li>
                           <%-- roll database forward (end of season)
                           <li>
