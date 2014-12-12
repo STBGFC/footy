@@ -1,8 +1,8 @@
 package org.davisononline.footy.core
 
 import grails.plugins.springsecurity.Secured
-import org.davisononline.footy.core.utils.ImageUtils
 import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
+import org.davisononline.footy.core.utils.ImageUtils
 
 /**
  * admin controller for Person operations
@@ -45,9 +45,11 @@ class PersonController {
                     "from Person p where eligibleParent = true and address is not null order by p.${params.sort} ${params.order}",
                     [], params)
 
+            def teamList = Team.list([sort: 'ageGroup'])
+
             // export
             List fields = [
-                    "familyName", "givenName", "email", "phone1", "phone2", "address", "fanNumber"
+                    "familyName", "givenName", "email", "phone1", "phone2", "address", "fanNumber", "teams", "qualifications"
             ]
             Map labels = [
                     "familyName": "Surname",
@@ -56,9 +58,26 @@ class PersonController {
                     "phone1": "Phone",
                     "phone2": "Alt Phone",
                     "address": "Address",
-                    "fanNumber": "FAN"
+                    "fanNumber": "FAN",
+                    "teams": "Teams",
+                    "qualifications": "Qualifications"
             ]
 
+            def qualFormatter = { member, value ->
+                member.qualifications.join("\r\n")
+            }
+
+            def teamFormatter = { member, value ->
+                def isCoachOrManagerIn = []
+                teamList.each { t ->
+                    if (t.manager == member || t.coaches.contains(member)) {
+                        isCoachOrManagerIn << t
+                    }
+                }
+                isCoachOrManagerIn.join("\r\n")
+            }
+
+            Map formatters = [qualifications: qualFormatter, teams: teamFormatter]
             Map parameters = [title: "All Members"]
 
             response.contentType = grailsApplication.config.grails.mime.types[params.format]
@@ -72,7 +91,7 @@ class PersonController {
                 l,
                 fields,
                 labels,
-                [:],
+                formatters,
                 parameters
             )
         }
