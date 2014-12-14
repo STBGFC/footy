@@ -49,11 +49,12 @@ class PersonController {
 
             // export
             List fields = [
-                    "familyName", "givenName", "email", "phone1", "phone2", "address", "fanNumber", "teams", "qualifications"
+                    "familyName", "givenName", "dateOfBirth", "email", "phone1", "phone2", "address", "fanNumber", "teams", "qualifications"
             ]
             Map labels = [
                     "familyName": "Surname",
                     "givenName": "Names",
+                    "dateOfBirth": "DoB",
                     "email": "Email",
                     "phone1": "Phone",
                     "phone2": "Alt Phone",
@@ -77,7 +78,15 @@ class PersonController {
                 isCoachOrManagerIn.join("\r\n")
             }
 
-            Map formatters = [qualifications: qualFormatter, teams: teamFormatter]
+            def dobFormatter = { member, value ->
+                g.formatDate([date: value, format: "yyyy-MM-dd"])
+            }
+
+            Map formatters = [
+                    qualifications: qualFormatter,
+                    teams: teamFormatter,
+                    dateOfBirth: dobFormatter
+            ]
             Map parameters = [title: "All Members"]
 
             response.contentType = grailsApplication.config.grails.mime.types[params.format]
