@@ -20,7 +20,7 @@ class InvoiceController {
         if(params?.format && params.format != "html"){
             // includes unpaid
             List fields = [
-                    "transactionId", "status", "paypalTransactionId", "paymentMethod", "total", "accountHolder"
+                    "transactionId", "status", "paypalTransactionId", "paymentMethod", "total", "accountHolder", "description"
             ]
             Map labels = [
                     "transactionId": "Number",
@@ -28,7 +28,8 @@ class InvoiceController {
                     "paypalTransactionId": "PayPal Transaction ID",
                     "paymentMethod": "Payment Method",
                     "total": "Amount",
-                    "accountHolder": "PayPal Account Holder"
+                    "accountHolder": "PayPal Account Holder",
+                    "description": "Items"
             ]
 
             // Formatter closure
@@ -47,10 +48,14 @@ class InvoiceController {
                 }
                 else ''
             }
+            def description = { payment, value ->
+                payment.paymentItems*.itemName.join("\r\n")
+            }
             Map formatters = [
                     total: calculated,
                     paymentMethod: method,
-                    accountHolder: accountHolder
+                    accountHolder: accountHolder,
+                    description: description
             ]
             Map parameters = [title: "All Invoices"]
 
