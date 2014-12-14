@@ -3,6 +3,8 @@ package org.davisononline.footy.core
 import grails.util.GrailsNameUtils
 import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
 import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap
+import org.davisononline.footy.match.Fixture
+import org.davisononline.footy.match.RefereeReport
 
 /**
  * transactional service code for the Person controller and related
@@ -25,6 +27,21 @@ class PersonService {
             SecUserSecRole.findAllBySecUser(person.user)*.delete()
             person.user.delete()
         }
+
+        // ref reports
+        def reports = RefereeReport.findAllByReferee(person)
+        if (reports.size() > 0) {
+            log.debug "Deleting referee reports for ${person}"
+            reports*.delete()
+        }
+
+        // fixtures
+        def fixtures = Fixture.findAllByReferee(person)
+        if (fixtures.size() > 0) {
+            log.debug "Setting referee to null for fixtures where ${person} was the ref"
+            fixtures*.referee = null
+        }
+
         person.delete(flush: true)
     }
 
