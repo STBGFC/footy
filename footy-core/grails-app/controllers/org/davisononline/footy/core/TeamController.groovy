@@ -3,8 +3,6 @@ package org.davisononline.footy.core
 import grails.plugins.springsecurity.Secured
 import org.codehaus.groovy.grails.commons.ConfigurationHolder
 import org.davisononline.footy.core.utils.ImageUtils
-import org.davisononline.footy.match.Fixture
-
 
 /**
  * controller methods for CRUD on Team
@@ -57,13 +55,13 @@ class TeamController {
                 team
             }
             def coach = { team, value ->
-                team.coaches.join("\n")
+                team.coaches.join("\r\n")
             }
             def coachEmail = { team, value ->
-                team.coaches*.email.join("\n")
+                team.coaches*.email.join("\r\n")
             }
             def coachPhone = { team, value ->
-                team.coaches*.phone1.join("\n")
+                team.coaches*.phone1.join("\r\n")
             }
             Map formatters = [
                     team: teamLabel,

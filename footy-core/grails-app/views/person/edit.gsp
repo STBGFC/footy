@@ -35,9 +35,21 @@
                                 <tbody>
                                     <g:render template="personFormBody" plugin="footy-core" />
                                     <%-- following is kept off the template so it doesn't appear when registering for parents --%>
+                                    <tr class="prop"><td class="name" colspan="2">Coaches/managers/referees only</td></tr>
+                                    <g:set var="now" value="${new Date()}"/>
                                     <tr class="prop">
                                         <td  class="name">
-                                            <label for="fanNumber"><g:message code="org.davisononline.org.footy.core.fanNumber.label" default="FAN Number (coaches only)" /></label>
+                                            <label for="dateOfBirth"><g:message code="org.davisononline.org.footy.core.dateOfBirth.label" default="Date Of Birth" /></label>
+                                        </td>
+                                        <td  class="value date ${hasErrors(bean: personCommand, field: 'dateOfBirth', 'errors')}">
+                                            <g:datePicker name="dateOfBirth" default="none" noSelection="['':'']" precision="day" years="${(now.year-79+1900)..(now.year-15+1900)}" value="${personCommand?.dateOfBirth}" />
+                                            <g:render template="/shared/fieldError" model="['instance':personCommand,'field':'dateOfBirth']" plugin="footy-core"/>
+                                        </td>
+                                    </tr>
+
+                                    <tr class="prop">
+                                        <td  class="name">
+                                            <label for="fanNumber"><g:message code="org.davisononline.org.footy.core.fanNumber.label" default="FAN Number" /></label>
                                         </td>
                                         <td  class="value ${hasErrors(bean: personCommand, field: 'fanNumber', 'errors')}">
                                             <g:textField name="fanNumber" value="${personCommand?.fanNumber}" />

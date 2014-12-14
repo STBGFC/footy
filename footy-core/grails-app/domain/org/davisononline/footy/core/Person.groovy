@@ -22,6 +22,7 @@ class Person implements Comparable, Serializable {
     String givenName
     String familyName
     String knownAsName
+    Date dateOfBirth
     String email
     String occupation
     String phone1
@@ -50,6 +51,7 @@ class Person implements Comparable, Serializable {
         givenName(blank: false, size: 2..50)
         knownAsName(nullable: true, blank: true)
         email(nullable: true, email: true, blank: false, unique: true)
+        dateOfBirth(nullable: true)
         address(nullable: true)
         occupation(nullable: true, blank: true)
         phone1(validator: atLeastOnePhoneValidator, nullable: true, blank: false)
