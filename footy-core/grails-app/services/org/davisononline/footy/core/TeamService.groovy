@@ -16,8 +16,17 @@ class TeamService {
         log.debug "${fixtures.size()} Fixtures found for ${team}"
         fixtures.each { fixture ->
             def reports = RefereeReport.findAllByFixture(fixture)
-            if (reports.size() > 0) log.debug "Removing referee reports for Fixture ${fixture}"
+            if (reports.size() > 0) {
+                log.debug "Removing referee reports for Fixture ${fixture}"
+            }
             reports.each { it.delete() }
+
+            // somehow, resources are not auto deleted sometimes #107
+            if (fixture.resources.size() > 0) {
+                log.debug "Removing resources for Fixture ${fixture}"
+            }
+            fixture.resources.each { it.delete() }
+
             log.debug "Deleting Fixture ${fixture}"
             fixture.delete()
         }
