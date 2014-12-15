@@ -1,5 +1,7 @@
 package org.davisononline.footy.core
 
+import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
+
 
 /**
  * flows for the registration and creation of players, parents and other
@@ -10,6 +12,8 @@ package org.davisononline.footy.core
 class RegistrationController {
 
     def registrationService
+
+    def springSecurityService
 
     
     def index = {
@@ -43,24 +47,39 @@ class RegistrationController {
         }
 
         start {
-            on ("continue") {
+            on("continue") {
                 flow.registrantEmail = params.email?.toLowerCase()
                 def p = Person.findByEmail(flow.registrantEmail)
                 if (p) {
                     flow.registrant = p
-                }
-                else {
+                } else {
                     flow.person = new Person(params)
-                    if(!flow.person.email || ! (flow.person.validate(["email"]))) {
+                    if (!flow.person.email || !(flow.person.validate(["email"]))) {
                         return error()
                     }
                 }
 
                 flow.token = UUID.randomUUID().toString()[0..17]
-                log.info "Token ${flow.token} sent by email to ${flow.registrantEmail}"
-                registrationService.sendTokenByEmail(flow.registrantEmail, flow.token)
 
-            }.to "gatherToken"
+            }.to "checkTokenRequired"
+        }
+
+        checkTokenRequired() {
+            action {
+                // send mail if not logged in or not a club admin
+                if (SpringSecurityUtils.ifNotGranted("ROLE_CLUB_ADMIN")) {
+                    registrationService.sendTokenByEmail(flow.registrantEmail, flow.token)
+                    log.info "Token ${flow.token} sent by email to ${flow.registrantEmail}"
+                    return tokenRequired()
+                } else {
+                    log.info "Bypassing token sending for registration - ${springSecurityService.currentUser} is logged in as CLUB ADMIN"
+                    return tokenNotRequired()
+                }
+
+            }
+
+            on ("tokenRequired").to "gatherToken"
+            on ("tokenNotRequired").to "checkCanSelectPlayers"
         }
 
         gatherToken() {
