@@ -6,10 +6,6 @@
         <feed:meta kind="rss" version="2.0" controller="team" action="feed" id="${teamInstance.id}"/>
         <title>${teamInstance}</title>
         <r:require modules="footyCore, modalBox"/>
-        <g:set var="fb" value="${grailsApplication.config.org?.davisononline?.footy?.usefacebook}"/>
-        <g:if test="${fb}">
-        <script src="https://connect.facebook.net/en_US/all.js#xfbml=1"></script>
-        </g:if>
     </head>
     <body>
 
@@ -174,11 +170,6 @@
                     </tbody>
                 </table>
                 </footy:isManager>
-
-                <%-- obligatory facebook stuff --%>
-                <g:if test="${fb}">
-                <div class="fb-like" data-href="${grailsApplication.config.grails.serverURL}/u${teamInstance.ageBand}/${teamInstance.name}" style="margin-top:50px;"></div>
-                </g:if>
 
             </div>
 
