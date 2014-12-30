@@ -49,6 +49,7 @@ class Team implements Serializable {
     
     private checkAges() {
         if (ageGroup.year < 11) girlsTeam = false
+        return true
     }
 
     /**
