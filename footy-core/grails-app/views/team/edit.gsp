@@ -27,9 +27,9 @@
                                 <td  class="name">
                                     <label for="sponsor.id"><g:message code="entry.sponsor.label" default="Sponsor" /></label>
                                 </td>
-                                <td  class="value ${hasErrors(bean: teamCommand, field: 'sponsor', 'errors')}">
-                                    <g:select name="sponsor.id" from="${Sponsor.list()}" value="${teamCommand?.sponsor?.id}" optionKey="id" noSelection="${['null':'-- none --']}"/>
-                                    <g:render template="/shared/fieldError" model="['instance':teamCommand,'field':'sponsor']" plugin="footy-core"/>
+                                <td  class="value ${hasErrors(bean: teamInstance, field: 'sponsor', 'errors')}">
+                                    <g:select name="sponsor.id" from="${Sponsor.list()}" value="${teamInstance?.sponsor?.id}" optionKey="id" noSelection="${['null':'-- none --']}"/>
+                                    <g:render template="/shared/fieldError" model="['instance':teamInstance,'field':'sponsor']" plugin="footy-core"/>
                                 </td>
                             </tr>
 
