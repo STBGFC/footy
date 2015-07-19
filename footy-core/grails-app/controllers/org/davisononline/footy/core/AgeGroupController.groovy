@@ -20,7 +20,7 @@ class AgeGroupController {
     }
 
     def create = {
-        def ageGroupInstance = new Division()
+        def ageGroupInstance = new AgeGroup()
         ageGroupInstance.properties = params
 
         render view:'edit', model:[ageGroupInstance: ageGroupInstance]
