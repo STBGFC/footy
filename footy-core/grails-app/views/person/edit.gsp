@@ -49,7 +49,7 @@
 
                                     <tr class="prop">
                                         <td  class="name">
-                                            <label for="fanNumber"><g:message code="org.davisononline.org.footy.core.fanNumber.label" default="FAN Number" /></label>
+                                            <label for="fanNumber"><g:message code="org.davisononline.org.footy.core.fanNumber.label" default="FAN Number / Ref registration number" /></label>
                                         </td>
                                         <td  class="value ${hasErrors(bean: personCommand, field: 'fanNumber', 'errors')}">
                                             <g:textField name="fanNumber" value="${personCommand?.fanNumber}" />
