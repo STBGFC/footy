@@ -23,7 +23,7 @@ class AgeGroupController {
         def ageGroupInstance = new AgeGroup()
         ageGroupInstance.properties = params
 
-        render view:'edit', model:[ageGroupInstance: ageGroupInstance]
+        render view:'edit', model:[ageGroupInstance: ageGroupInstance, coordinators: personService.managers]
     }
     
     def save = {
