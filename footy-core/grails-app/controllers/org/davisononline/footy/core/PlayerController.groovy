@@ -4,7 +4,6 @@ import grails.plugins.springsecurity.Secured
 import org.grails.paypal.Payment
 import org.codehaus.groovy.grails.commons.ConfigurationHolder
 import org.grails.paypal.PaymentItem
-import org.hibernate.mapping.Map
 import org.springframework.validation.BeanPropertyBindingResult
 
 @Secured(['ROLE_CLUB_ADMIN'])
