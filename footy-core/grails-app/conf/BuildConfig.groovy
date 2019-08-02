@@ -22,7 +22,7 @@ grails.project.dependency.resolution = {
         //mavenRepo "http://repository.codehaus.org"
         //mavenRepo "http://download.java.net/maven/2/"
         //mavenRepo "http://repository.jboss.com/maven2/"
-        mavenRepo "http://m2.modularity.net.au/releases"
+        mavenRepo "https://repo.grails.org/grails/plugins"
     }
     plugins {
         compile ':searchable:0.6.4'
