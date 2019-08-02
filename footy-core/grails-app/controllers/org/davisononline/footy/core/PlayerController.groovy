@@ -4,6 +4,7 @@ import grails.plugins.springsecurity.Secured
 import org.grails.paypal.Payment
 import org.codehaus.groovy.grails.commons.ConfigurationHolder
 import org.grails.paypal.PaymentItem
+import org.hibernate.mapping.Map
 import org.springframework.validation.BeanPropertyBindingResult
 
 @Secured(['ROLE_CLUB_ADMIN'])
@@ -30,13 +31,14 @@ class PlayerController {
         Player.withTransaction {
             if (params?.format && params.format != "html") {
                 List fields = [
-                        "name", "dateOfBirth", "team", "guardian", "guardian.phone1",
+                        "person.familyName", "person.givenName", "dateOfBirth", "team", "guardian", "guardian.phone1",
                         "guardian.email", "secondGuardian", "secondGuardian.phone1",
                         "secondGuardian.email", "dateJoinedClub", "currentRegistration",
                         "paymentStatus", "ethnicOrigin", "doctor", "doctorTelephone", "medical"
                 ]
                 Map labels = [
-                        "name"                 : "Name",
+                        "person.familyName"    : "Last Name",
+                        "person.givenName"     : "First Name(s)",
                         "dateOfBirth"          : "Date of Birth",
                         "team"                 : "Team",
                         "guardian"             : "Parent/Guardian",
@@ -55,18 +57,14 @@ class PlayerController {
                 ]
 
                 // Formatter closure
-                def name = { player, value ->
-                    return "${player.toString()}"
-                }
                 def formattedDate = { player, value ->
-                    value?.format('dd/MM/yyyy')
+                    value?.format('dd/MM/yy')
                 }
                 def payment = { player, value ->
                     PaymentItem.findByItemNumber(player?.currentRegistration?.id)?.payment?.status
                 }
 
                 Map formatters = [
-                        name          : name,
                         dateOfBirth   : formattedDate,
                         dateJoinedClub: formattedDate,
                         paymentStatus : payment
